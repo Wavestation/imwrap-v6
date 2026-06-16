@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for render1496.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/render1496.dir/compiler_depend.make
 include test/CMakeFiles/render1496.dir/progress.make
 
 test/CMakeFiles/render1496: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering reverb test issue 1496"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/reverb && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 1 -C 0 -g 0.5 -o synth.reverb.width=0.0 -F /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/reverb/1496.raw mrbumpys_rev_width_test.mid 1496.sf2
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering reverb test issue 1496"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/reverb && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 1 -C 0 -g 0.5 -o synth.reverb.width=0.0 -F /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/reverb/1496.raw mrbumpys_rev_width_test.mid 1496.sf2
 
 test/CMakeFiles/render1496.dir/codegen:
 .PHONY : test/CMakeFiles/render1496.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/render1496.dir/build: render1496
 .PHONY : test/CMakeFiles/render1496.dir/build
 
 test/CMakeFiles/render1496.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/render1496.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/render1496.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/render1496.dir/clean
 
 test/CMakeFiles/render1496.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/render1496.dir/DependInfo.cmake "--color=$(COLOR)" render1496
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/render1496.dir/DependInfo.cmake "--color=$(COLOR)" render1496
 .PHONY : test/CMakeFiles/render1496.dir/depend
 

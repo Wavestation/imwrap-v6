@@ -61,6 +61,7 @@ private:
     std::string _name;
     SoundVariantView _gmd;
     SoundVariantView _rol;
+    SoundVariantView _adl;
 };
 
 class ResourceBank {

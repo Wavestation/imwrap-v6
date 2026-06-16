@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for renderDMOD.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/renderDMOD.dir/compiler_depend.make
 include test/CMakeFiles/renderDMOD.dir/progress.make
 
 test/CMakeFiles/renderDMOD: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering Test MIDI for DMOD SF2"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/sfe/dmod && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 0.2 -F /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/sfe/DMOD.raw DMOD.sf2 test-rpn-00-00-pitch-bend-range.mid
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering Test MIDI for DMOD SF2"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/sfe/dmod && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 0.2 -F /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/sfe/DMOD.raw DMOD.sf2 test-rpn-00-00-pitch-bend-range.mid
 
 test/CMakeFiles/renderDMOD.dir/codegen:
 .PHONY : test/CMakeFiles/renderDMOD.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/renderDMOD.dir/build: renderDMOD
 .PHONY : test/CMakeFiles/renderDMOD.dir/build
 
 test/CMakeFiles/renderDMOD.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderDMOD.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderDMOD.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/renderDMOD.dir/clean
 
 test/CMakeFiles/renderDMOD.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/renderDMOD.dir/DependInfo.cmake "--color=$(COLOR)" renderDMOD
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/renderDMOD.dir/DependInfo.cmake "--color=$(COLOR)" renderDMOD
 .PHONY : test/CMakeFiles/renderDMOD.dir/depend
 

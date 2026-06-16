@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for renderExcl.
 
@@ -67,7 +67,7 @@ include test/CMakeFiles/renderExcl.dir/compiler_depend.make
 include test/CMakeFiles/renderExcl.dir/progress.make
 
 test/CMakeFiles/renderExcl: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering exclusive class cutoff tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering exclusive class cutoff tests"
 
 test/CMakeFiles/renderExcl.dir/codegen:
 .PHONY : test/CMakeFiles/renderExcl.dir/codegen
@@ -81,10 +81,10 @@ test/CMakeFiles/renderExcl.dir/build: renderExcl
 .PHONY : test/CMakeFiles/renderExcl.dir/build
 
 test/CMakeFiles/renderExcl.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderExcl.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderExcl.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/renderExcl.dir/clean
 
 test/CMakeFiles/renderExcl.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/renderExcl.dir/DependInfo.cmake "--color=$(COLOR)" renderExcl
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/renderExcl.dir/DependInfo.cmake "--color=$(COLOR)" renderExcl
 .PHONY : test/CMakeFiles/renderExcl.dir/depend
 

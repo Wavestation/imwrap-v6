@@ -29,7 +29,8 @@ namespace AgsImuse
     public enum ImuseAuthoringProfile : int
     {
         GeneralMidi = 0,
-        Mt32 = 1
+        Mt32 = 1,
+        Adlib = 2
     }
 
     public static class ImuseShim

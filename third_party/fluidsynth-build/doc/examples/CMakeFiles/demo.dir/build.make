@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for demo.
 
@@ -77,10 +77,10 @@ doc/examples/CMakeFiles/demo.dir/build: demo
 .PHONY : doc/examples/CMakeFiles/demo.dir/build
 
 doc/examples/CMakeFiles/demo.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -P CMakeFiles/demo.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -P CMakeFiles/demo.dir/cmake_clean.cmake
 .PHONY : doc/examples/CMakeFiles/demo.dir/clean
 
 doc/examples/CMakeFiles/demo.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples/CMakeFiles/demo.dir/DependInfo.cmake "--color=$(COLOR)" demo
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples/CMakeFiles/demo.dir/DependInfo.cmake "--color=$(COLOR)" demo
 .PHONY : doc/examples/CMakeFiles/demo.dir/depend
 

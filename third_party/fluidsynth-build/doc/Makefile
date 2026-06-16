@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsyn
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -98,7 +98,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -162,14 +162,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc//CMakeFiles/progress.marks
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc//CMakeFiles/progress.marks
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/clean
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/clean
 .PHONY : clean
 
 # The main clean target
@@ -178,17 +178,17 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Help Target
@@ -217,6 +217,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

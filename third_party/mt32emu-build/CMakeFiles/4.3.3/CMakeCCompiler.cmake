@@ -1,4 +1,4 @@
-set(CMAKE_C_COMPILER "/Library/Developer/CommandLineTools/usr/bin/cc")
+set(CMAKE_C_COMPILER "/usr/bin/cc")
 set(CMAKE_C_COMPILER_ARG1 "")
 set(CMAKE_C_COMPILER_ID "AppleClang")
 set(CMAKE_C_COMPILER_VERSION "15.0.0.15000309")
@@ -17,18 +17,18 @@ set(CMAKE_C23_COMPILE_FEATURES "c_std_23")
 set(CMAKE_C_PLATFORM_ID "Darwin")
 set(CMAKE_C_SIMULATE_ID "")
 set(CMAKE_C_COMPILER_FRONTEND_VARIANT "GNU")
-set(CMAKE_C_COMPILER_APPLE_SYSROOT "")
+set(CMAKE_C_COMPILER_APPLE_SYSROOT "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk")
 set(CMAKE_C_SIMULATE_VERSION "")
 set(CMAKE_C_COMPILER_ARCHITECTURE_ID "arm64")
 
 
 
 
-set(CMAKE_AR "/Library/Developer/CommandLineTools/usr/bin/ar")
+set(CMAKE_AR "/usr/bin/ar")
 set(CMAKE_C_COMPILER_AR "")
-set(CMAKE_RANLIB "/Library/Developer/CommandLineTools/usr/bin/ranlib")
+set(CMAKE_RANLIB "/usr/bin/ranlib")
 set(CMAKE_C_COMPILER_RANLIB "")
-set(CMAKE_LINKER "/Library/Developer/CommandLineTools/usr/bin/ld")
+set(CMAKE_LINKER "/usr/bin/ld")
 set(CMAKE_LINKER_LINK "")
 set(CMAKE_LINKER_LLD "")
 set(CMAKE_C_COMPILER_LINKER "/Library/Developer/CommandLineTools/usr/bin/ld")
@@ -79,7 +79,7 @@ endif()
 
 
 
-set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include;/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include;/Library/Developer/CommandLineTools/usr/include")
+set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "/usr/local/include;/Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include;/Library/Developer/CommandLineTools/usr/include")
 set(CMAKE_C_IMPLICIT_LINK_LIBRARIES "")
-set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/lib;/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/lib/swift")
-set(CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/System/Library/Frameworks")
+set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib;/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/swift")
+set(CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks")

@@ -668,6 +668,7 @@ struct ImuseProjectView: View {
             )) {
                 Text("General MIDI (GMD)").tag("GMD ")
                 Text("Roland MT-32 (ROL)").tag("ROL ")
+                Text("AdLib (ADL)").tag("ADL ")
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)

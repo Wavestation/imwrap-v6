@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for renderUplift.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/renderUplift.dir/compiler_depend.make
 include test/CMakeFiles/renderUplift.dir/progress.make
 
 test/CMakeFiles/renderUplift: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering AWE32 NRPN test file Uplift.mid"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/awe32_nrpn/Uplift && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 1 -C 0 -g 0.7 -f fluidsynth.cfg -F /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn/Uplift-fixed.raw ../../sf2/synthgs-sf2_04-compat.sf2 -b 1 Uplift.sf2 Uplift-fixed.mid
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering AWE32 NRPN test file Uplift.mid"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/awe32_nrpn/Uplift && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 1 -C 0 -g 0.7 -f fluidsynth.cfg -F /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn/Uplift-fixed.raw ../../sf2/synthgs-sf2_04-compat.sf2 -b 1 Uplift.sf2 Uplift-fixed.mid
 
 test/CMakeFiles/renderUplift.dir/codegen:
 .PHONY : test/CMakeFiles/renderUplift.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/renderUplift.dir/build: renderUplift
 .PHONY : test/CMakeFiles/renderUplift.dir/build
 
 test/CMakeFiles/renderUplift.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderUplift.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderUplift.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/renderUplift.dir/clean
 
 test/CMakeFiles/renderUplift.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/renderUplift.dir/DependInfo.cmake "--color=$(COLOR)" renderUplift
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/renderUplift.dir/DependInfo.cmake "--color=$(COLOR)" renderUplift
 .PHONY : test/CMakeFiles/renderUplift.dir/depend
 

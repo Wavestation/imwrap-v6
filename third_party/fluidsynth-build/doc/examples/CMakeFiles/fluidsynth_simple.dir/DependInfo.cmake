@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_simple.c" "doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o" "gcc" "doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o.d"
+  "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_simple.c" "doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o" "gcc" "doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

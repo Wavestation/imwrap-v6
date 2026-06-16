@@ -45,12 +45,14 @@ struct ImsHeader {
 enum class VariantKind : uint16_t {
     None = 0,
     Gmd  = 1u << 0,
-    Rol  = 1u << 1
+    Rol  = 1u << 1,
+    Adl  = 1u << 2
 };
 
 enum class TargetProfile {
     GeneralMidi,
-    Mt32
+    Mt32,
+    Adlib
 };
 
 struct DirectoryEntry {

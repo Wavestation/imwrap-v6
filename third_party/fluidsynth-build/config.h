@@ -216,22 +216,22 @@
 #define STDC_HEADERS 1
 
 /* Soundfont to load for unit testing */
-#define TEST_SOUNDFONT "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf2"
+#define TEST_SOUNDFONT "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf2"
 
 /* DLS to load for unit testing */
-#define TEST_DLS "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.dls"
+#define TEST_DLS "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.dls"
 
 /* Soundfont to load for UTF-8 unit testing */
-#define TEST_SOUNDFONT_UTF8_1 "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/sf2/\xE2\x96\xA0VintageDreamsWaves-v2\xE2\x96\xA0.sf2"
-#define TEST_SOUNDFONT_UTF8_2 "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/sf2/VìntàgèDrèàmsWàvès-v2.sf2"
-#define TEST_MIDI_UTF8 "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/ⓉⒺⓈⓉ.mid"
-#define TEST_WAV_UTF8 "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/ⓉⒺⓈⓉ.wav"
+#define TEST_SOUNDFONT_UTF8_1 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/\xE2\x96\xA0VintageDreamsWaves-v2\xE2\x96\xA0.sf2"
+#define TEST_SOUNDFONT_UTF8_2 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VìntàgèDrèàmsWàvès-v2.sf2"
+#define TEST_MIDI_UTF8 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/ⓉⒺⓈⓉ.mid"
+#define TEST_WAV_UTF8 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/ⓉⒺⓈⓉ.wav"
 
 /* SF3 Soundfont to load for unit testing */
-#define TEST_SOUNDFONT_SF3 "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf3"
+#define TEST_SOUNDFONT_SF3 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf3"
 
 /* Command lines to use for shell parse unit testing */
-#define TEST_COMMAND_LINES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/command-lines.txt"
+#define TEST_COMMAND_LINES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/command-lines.txt"
 
 /* Define to enable SIGFPE assertions */
 /* #undef TRAP_ON_FPE */

@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsyn
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -98,7 +98,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -162,14 +162,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test//CMakeFiles/progress.marks
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test//CMakeFiles/progress.marks
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -178,22 +178,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 test/CMakeFiles/check.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check.dir/rule
 .PHONY : test/CMakeFiles/check.dir/rule
 
 # Convenience name for target.
@@ -202,12 +202,12 @@ check: test/CMakeFiles/check.dir/rule
 
 # fast build rule for target.
 check/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check.dir/build.make test/CMakeFiles/check.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check.dir/build.make test/CMakeFiles/check.dir/build
 .PHONY : check/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_reset_cc.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_reset_cc.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_reset_cc.dir/rule
 .PHONY : test/CMakeFiles/test_synth_reset_cc.dir/rule
 
 # Convenience name for target.
@@ -216,12 +216,12 @@ test_synth_reset_cc: test/CMakeFiles/test_synth_reset_cc.dir/rule
 
 # fast build rule for target.
 test_synth_reset_cc/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/build
 .PHONY : test_synth_reset_cc/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sample_cache.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_cache.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_cache.dir/rule
 .PHONY : test/CMakeFiles/test_sample_cache.dir/rule
 
 # Convenience name for target.
@@ -230,12 +230,12 @@ test_sample_cache: test/CMakeFiles/test_sample_cache.dir/rule
 
 # fast build rule for target.
 test_sample_cache/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/build
 .PHONY : test_sample_cache/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sfont_loading.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_loading.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_loading.dir/rule
 .PHONY : test/CMakeFiles/test_sfont_loading.dir/rule
 
 # Convenience name for target.
@@ -244,12 +244,12 @@ test_sfont_loading: test/CMakeFiles/test_sfont_loading.dir/rule
 
 # fast build rule for target.
 test_sfont_loading/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/build
 .PHONY : test_sfont_loading/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_preset_sample_loading.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_preset_sample_loading.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_preset_sample_loading.dir/rule
 .PHONY : test/CMakeFiles/test_preset_sample_loading.dir/rule
 
 # Convenience name for target.
@@ -258,12 +258,12 @@ test_preset_sample_loading: test/CMakeFiles/test_preset_sample_loading.dir/rule
 
 # fast build rule for target.
 test_preset_sample_loading/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/build
 .PHONY : test_preset_sample_loading/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_preset_pinning.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_preset_pinning.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_preset_pinning.dir/rule
 .PHONY : test/CMakeFiles/test_preset_pinning.dir/rule
 
 # Convenience name for target.
@@ -272,12 +272,12 @@ test_preset_pinning: test/CMakeFiles/test_preset_pinning.dir/rule
 
 # fast build rule for target.
 test_preset_pinning/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/build
 .PHONY : test_preset_pinning/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_bug_635.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_bug_635.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_bug_635.dir/rule
 .PHONY : test/CMakeFiles/test_bug_635.dir/rule
 
 # Convenience name for target.
@@ -286,12 +286,12 @@ test_bug_635: test/CMakeFiles/test_bug_635.dir/rule
 
 # fast build rule for target.
 test_bug_635/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/build
 .PHONY : test_bug_635/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_settings_unregister_callback.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_settings_unregister_callback.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_settings_unregister_callback.dir/rule
 .PHONY : test/CMakeFiles/test_settings_unregister_callback.dir/rule
 
 # Convenience name for target.
@@ -300,12 +300,12 @@ test_settings_unregister_callback: test/CMakeFiles/test_settings_unregister_call
 
 # fast build rule for target.
 test_settings_unregister_callback/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/build
 .PHONY : test_settings_unregister_callback/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_pointer_alignment.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_pointer_alignment.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_pointer_alignment.dir/rule
 .PHONY : test/CMakeFiles/test_pointer_alignment.dir/rule
 
 # Convenience name for target.
@@ -314,12 +314,12 @@ test_pointer_alignment: test/CMakeFiles/test_pointer_alignment.dir/rule
 
 # fast build rule for target.
 test_pointer_alignment/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/build
 .PHONY : test_pointer_alignment/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_seqbind_unregister.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seqbind_unregister.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seqbind_unregister.dir/rule
 .PHONY : test/CMakeFiles/test_seqbind_unregister.dir/rule
 
 # Convenience name for target.
@@ -328,12 +328,12 @@ test_seqbind_unregister: test/CMakeFiles/test_seqbind_unregister.dir/rule
 
 # fast build rule for target.
 test_seqbind_unregister/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/build
 .PHONY : test_seqbind_unregister/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_chorus_reverb.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_chorus_reverb.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_chorus_reverb.dir/rule
 .PHONY : test/CMakeFiles/test_synth_chorus_reverb.dir/rule
 
 # Convenience name for target.
@@ -342,12 +342,12 @@ test_synth_chorus_reverb: test/CMakeFiles/test_synth_chorus_reverb.dir/rule
 
 # fast build rule for target.
 test_synth_chorus_reverb/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/build
 .PHONY : test_synth_chorus_reverb/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_snprintf.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_snprintf.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_snprintf.dir/rule
 .PHONY : test/CMakeFiles/test_snprintf.dir/rule
 
 # Convenience name for target.
@@ -356,12 +356,12 @@ test_snprintf: test/CMakeFiles/test_snprintf.dir/rule
 
 # fast build rule for target.
 test_snprintf/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/build
 .PHONY : test_snprintf/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_process.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_process.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_process.dir/rule
 .PHONY : test/CMakeFiles/test_synth_process.dir/rule
 
 # Convenience name for target.
@@ -370,12 +370,12 @@ test_synth_process: test/CMakeFiles/test_synth_process.dir/rule
 
 # fast build rule for target.
 test_synth_process/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/build
 .PHONY : test_synth_process/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_ct2hz.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_ct2hz.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_ct2hz.dir/rule
 .PHONY : test/CMakeFiles/test_ct2hz.dir/rule
 
 # Convenience name for target.
@@ -384,12 +384,12 @@ test_ct2hz: test/CMakeFiles/test_ct2hz.dir/rule
 
 # fast build rule for target.
 test_ct2hz/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/build
 .PHONY : test_ct2hz/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sample_validate.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_validate.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_validate.dir/rule
 .PHONY : test/CMakeFiles/test_sample_validate.dir/rule
 
 # Convenience name for target.
@@ -398,12 +398,12 @@ test_sample_validate: test/CMakeFiles/test_sample_validate.dir/rule
 
 # fast build rule for target.
 test_sample_validate/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/build
 .PHONY : test_sample_validate/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sfont_unloading.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_unloading.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_unloading.dir/rule
 .PHONY : test/CMakeFiles/test_sfont_unloading.dir/rule
 
 # Convenience name for target.
@@ -412,12 +412,12 @@ test_sfont_unloading: test/CMakeFiles/test_sfont_unloading.dir/rule
 
 # fast build rule for target.
 test_sfont_unloading/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/build
 .PHONY : test_sfont_unloading/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sfont_zone.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_zone.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sfont_zone.dir/rule
 .PHONY : test/CMakeFiles/test_sfont_zone.dir/rule
 
 # Convenience name for target.
@@ -426,12 +426,12 @@ test_sfont_zone: test/CMakeFiles/test_sfont_zone.dir/rule
 
 # fast build rule for target.
 test_sfont_zone/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/build
 .PHONY : test_sfont_zone/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_seq_event_queue_sort.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_event_queue_sort.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_event_queue_sort.dir/rule
 .PHONY : test/CMakeFiles/test_seq_event_queue_sort.dir/rule
 
 # Convenience name for target.
@@ -440,12 +440,12 @@ test_seq_event_queue_sort: test/CMakeFiles/test_seq_event_queue_sort.dir/rule
 
 # fast build rule for target.
 test_seq_event_queue_sort/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/build
 .PHONY : test_seq_event_queue_sort/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_seq_scale.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_scale.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_scale.dir/rule
 .PHONY : test/CMakeFiles/test_seq_scale.dir/rule
 
 # Convenience name for target.
@@ -454,12 +454,12 @@ test_seq_scale: test/CMakeFiles/test_seq_scale.dir/rule
 
 # fast build rule for target.
 test_seq_scale/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/build
 .PHONY : test_seq_scale/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_seq_evt_order.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_evt_order.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_evt_order.dir/rule
 .PHONY : test/CMakeFiles/test_seq_evt_order.dir/rule
 
 # Convenience name for target.
@@ -468,12 +468,12 @@ test_seq_evt_order: test/CMakeFiles/test_seq_evt_order.dir/rule
 
 # fast build rule for target.
 test_seq_evt_order/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/build
 .PHONY : test_seq_evt_order/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_seq_event_queue_remove.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_event_queue_remove.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_seq_event_queue_remove.dir/rule
 .PHONY : test/CMakeFiles/test_seq_event_queue_remove.dir/rule
 
 # Convenience name for target.
@@ -482,12 +482,12 @@ test_seq_event_queue_remove: test/CMakeFiles/test_seq_event_queue_remove.dir/rul
 
 # fast build rule for target.
 test_seq_event_queue_remove/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/build
 .PHONY : test_seq_event_queue_remove/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_jack_obtaining_synth.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_jack_obtaining_synth.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_jack_obtaining_synth.dir/rule
 .PHONY : test/CMakeFiles/test_jack_obtaining_synth.dir/rule
 
 # Convenience name for target.
@@ -496,12 +496,12 @@ test_jack_obtaining_synth: test/CMakeFiles/test_jack_obtaining_synth.dir/rule
 
 # fast build rule for target.
 test_jack_obtaining_synth/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/build
 .PHONY : test_jack_obtaining_synth/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_utf8_open.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_utf8_open.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_utf8_open.dir/rule
 .PHONY : test/CMakeFiles/test_utf8_open.dir/rule
 
 # Convenience name for target.
@@ -510,12 +510,12 @@ test_utf8_open: test/CMakeFiles/test_utf8_open.dir/rule
 
 # fast build rule for target.
 test_utf8_open/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/build
 .PHONY : test_utf8_open/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_portamento_time.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_portamento_time.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_portamento_time.dir/rule
 .PHONY : test/CMakeFiles/test_portamento_time.dir/rule
 
 # Convenience name for target.
@@ -524,12 +524,12 @@ test_portamento_time: test/CMakeFiles/test_portamento_time.dir/rule
 
 # fast build rule for target.
 test_portamento_time/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/build
 .PHONY : test_portamento_time/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_modulator.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_modulator.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_modulator.dir/rule
 .PHONY : test/CMakeFiles/test_modulator.dir/rule
 
 # Convenience name for target.
@@ -538,12 +538,12 @@ test_modulator: test/CMakeFiles/test_modulator.dir/rule
 
 # fast build rule for target.
 test_modulator/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/build
 .PHONY : test_modulator/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_default_mod.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_default_mod.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_default_mod.dir/rule
 .PHONY : test/CMakeFiles/test_default_mod.dir/rule
 
 # Convenience name for target.
@@ -552,12 +552,12 @@ test_default_mod: test/CMakeFiles/test_default_mod.dir/rule
 
 # fast build rule for target.
 test_default_mod/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/build
 .PHONY : test_default_mod/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_render_s16.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s16.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s16.dir/rule
 .PHONY : test/CMakeFiles/test_synth_render_s16.dir/rule
 
 # Convenience name for target.
@@ -566,12 +566,12 @@ test_synth_render_s16: test/CMakeFiles/test_synth_render_s16.dir/rule
 
 # fast build rule for target.
 test_synth_render_s16/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/build
 .PHONY : test_synth_render_s16/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_render_s24.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s24.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s24.dir/rule
 .PHONY : test/CMakeFiles/test_synth_render_s24.dir/rule
 
 # Convenience name for target.
@@ -580,12 +580,12 @@ test_synth_render_s24: test/CMakeFiles/test_synth_render_s24.dir/rule
 
 # fast build rule for target.
 test_synth_render_s24/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/build
 .PHONY : test_synth_render_s24/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_synth_render_s32.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s32.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_synth_render_s32.dir/rule
 .PHONY : test/CMakeFiles/test_synth_render_s32.dir/rule
 
 # Convenience name for target.
@@ -594,12 +594,12 @@ test_synth_render_s32: test/CMakeFiles/test_synth_render_s32.dir/rule
 
 # fast build rule for target.
 test_synth_render_s32/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/build
 .PHONY : test_synth_render_s32/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_round_clip.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_round_clip.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_round_clip.dir/rule
 .PHONY : test/CMakeFiles/test_round_clip.dir/rule
 
 # Convenience name for target.
@@ -608,12 +608,12 @@ test_round_clip: test/CMakeFiles/test_round_clip.dir/rule
 
 # fast build rule for target.
 test_round_clip/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/build
 .PHONY : test_round_clip/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_ABI.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_ABI.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_ABI.dir/rule
 .PHONY : test/CMakeFiles/test_ABI.dir/rule
 
 # Convenience name for target.
@@ -622,12 +622,12 @@ test_ABI: test/CMakeFiles/test_ABI.dir/rule
 
 # fast build rule for target.
 test_ABI/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/build
 .PHONY : test_ABI/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_file_seek_tell.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_file_seek_tell.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_file_seek_tell.dir/rule
 .PHONY : test/CMakeFiles/test_file_seek_tell.dir/rule
 
 # Convenience name for target.
@@ -636,12 +636,12 @@ test_file_seek_tell: test/CMakeFiles/test_file_seek_tell.dir/rule
 
 # fast build rule for target.
 test_file_seek_tell/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/build
 .PHONY : test_file_seek_tell/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_shell_server_auto_port.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_shell_server_auto_port.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_shell_server_auto_port.dir/rule
 .PHONY : test/CMakeFiles/test_shell_server_auto_port.dir/rule
 
 # Convenience name for target.
@@ -650,12 +650,12 @@ test_shell_server_auto_port: test/CMakeFiles/test_shell_server_auto_port.dir/rul
 
 # fast build rule for target.
 test_shell_server_auto_port/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/build
 .PHONY : test_shell_server_auto_port/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_sample_pitch_calculation.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_pitch_calculation.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_sample_pitch_calculation.dir/rule
 .PHONY : test/CMakeFiles/test_sample_pitch_calculation.dir/rule
 
 # Convenience name for target.
@@ -664,12 +664,12 @@ test_sample_pitch_calculation: test/CMakeFiles/test_sample_pitch_calculation.dir
 
 # fast build rule for target.
 test_sample_pitch_calculation/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/build
 .PHONY : test_sample_pitch_calculation/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_mts_cc_tuning.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_mts_cc_tuning.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_mts_cc_tuning.dir/rule
 .PHONY : test/CMakeFiles/test_mts_cc_tuning.dir/rule
 
 # Convenience name for target.
@@ -678,12 +678,12 @@ test_mts_cc_tuning: test/CMakeFiles/test_mts_cc_tuning.dir/rule
 
 # fast build rule for target.
 test_mts_cc_tuning/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/build
 .PHONY : test_mts_cc_tuning/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_voice_callback.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_voice_callback.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_voice_callback.dir/rule
 .PHONY : test/CMakeFiles/test_voice_callback.dir/rule
 
 # Convenience name for target.
@@ -692,12 +692,12 @@ test_voice_callback: test/CMakeFiles/test_voice_callback.dir/rule
 
 # fast build rule for target.
 test_voice_callback/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/build
 .PHONY : test_voice_callback/fast
 
 # Convenience name for target.
 test/CMakeFiles/test_threading.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_threading.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/test_threading.dir/rule
 .PHONY : test/CMakeFiles/test_threading.dir/rule
 
 # Convenience name for target.
@@ -706,12 +706,12 @@ test_threading: test/CMakeFiles/test_threading.dir/rule
 
 # fast build rule for target.
 test_threading/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/build
 .PHONY : test_threading/fast
 
 # Convenience name for target.
 test/CMakeFiles/dump_sfont.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/dump_sfont.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/dump_sfont.dir/rule
 .PHONY : test/CMakeFiles/dump_sfont.dir/rule
 
 # Convenience name for target.
@@ -720,12 +720,12 @@ dump_sfont: test/CMakeFiles/dump_sfont.dir/rule
 
 # fast build rule for target.
 dump_sfont/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/build
 .PHONY : dump_sfont/fast
 
 # Convenience name for target.
 test/CMakeFiles/check_rendering.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check_rendering.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check_rendering.dir/rule
 .PHONY : test/CMakeFiles/check_rendering.dir/rule
 
 # Convenience name for target.
@@ -734,12 +734,12 @@ check_rendering: test/CMakeFiles/check_rendering.dir/rule
 
 # fast build rule for target.
 check_rendering/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check_rendering.dir/build.make test/CMakeFiles/check_rendering.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check_rendering.dir/build.make test/CMakeFiles/check_rendering.dir/build
 .PHONY : check_rendering/fast
 
 # Convenience name for target.
 test/CMakeFiles/check_manual.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check_manual.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/check_manual.dir/rule
 .PHONY : test/CMakeFiles/check_manual.dir/rule
 
 # Convenience name for target.
@@ -748,12 +748,12 @@ check_manual: test/CMakeFiles/check_manual.dir/rule
 
 # fast build rule for target.
 check_manual/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check_manual.dir/build.make test/CMakeFiles/check_manual.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/check_manual.dir/build.make test/CMakeFiles/check_manual.dir/build
 .PHONY : check_manual/fast
 
 # Convenience name for target.
 test/CMakeFiles/create_out_dir.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/create_out_dir.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/create_out_dir.dir/rule
 .PHONY : test/CMakeFiles/create_out_dir.dir/rule
 
 # Convenience name for target.
@@ -762,12 +762,12 @@ create_out_dir: test/CMakeFiles/create_out_dir.dir/rule
 
 # fast build rule for target.
 create_out_dir/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/create_out_dir.dir/build.make test/CMakeFiles/create_out_dir.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/create_out_dir.dir/build.make test/CMakeFiles/create_out_dir.dir/build
 .PHONY : create_out_dir/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1415.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1415.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1415.dir/rule
 .PHONY : test/CMakeFiles/render1415.dir/rule
 
 # Convenience name for target.
@@ -776,12 +776,12 @@ render1415: test/CMakeFiles/render1415.dir/rule
 
 # fast build rule for target.
 render1415/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1415.dir/build.make test/CMakeFiles/render1415.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1415.dir/build.make test/CMakeFiles/render1415.dir/build
 .PHONY : render1415/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1417.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1417.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1417.dir/rule
 .PHONY : test/CMakeFiles/render1417.dir/rule
 
 # Convenience name for target.
@@ -790,12 +790,12 @@ render1417: test/CMakeFiles/render1417.dir/rule
 
 # fast build rule for target.
 render1417/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1417.dir/build.make test/CMakeFiles/render1417.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1417.dir/build.make test/CMakeFiles/render1417.dir/build
 .PHONY : render1417/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1424.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1424.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1424.dir/rule
 .PHONY : test/CMakeFiles/render1424.dir/rule
 
 # Convenience name for target.
@@ -804,12 +804,12 @@ render1424: test/CMakeFiles/render1424.dir/rule
 
 # fast build rule for target.
 render1424/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1424.dir/build.make test/CMakeFiles/render1424.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1424.dir/build.make test/CMakeFiles/render1424.dir/build
 .PHONY : render1424/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1427.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1427.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1427.dir/rule
 .PHONY : test/CMakeFiles/render1427.dir/rule
 
 # Convenience name for target.
@@ -818,12 +818,12 @@ render1427: test/CMakeFiles/render1427.dir/rule
 
 # fast build rule for target.
 render1427/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1427.dir/build.make test/CMakeFiles/render1427.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1427.dir/build.make test/CMakeFiles/render1427.dir/build
 .PHONY : render1427/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderRealtimeIIR.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRealtimeIIR.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRealtimeIIR.dir/rule
 .PHONY : test/CMakeFiles/renderRealtimeIIR.dir/rule
 
 # Convenience name for target.
@@ -832,12 +832,12 @@ renderRealtimeIIR: test/CMakeFiles/renderRealtimeIIR.dir/rule
 
 # fast build rule for target.
 renderRealtimeIIR/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRealtimeIIR.dir/build.make test/CMakeFiles/renderRealtimeIIR.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRealtimeIIR.dir/build.make test/CMakeFiles/renderRealtimeIIR.dir/build
 .PHONY : renderRealtimeIIR/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1481.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1481.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1481.dir/rule
 .PHONY : test/CMakeFiles/render1481.dir/rule
 
 # Convenience name for target.
@@ -846,12 +846,12 @@ render1481: test/CMakeFiles/render1481.dir/rule
 
 # fast build rule for target.
 render1481/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1481.dir/build.make test/CMakeFiles/render1481.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1481.dir/build.make test/CMakeFiles/render1481.dir/build
 .PHONY : render1481/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderAltitude.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderAltitude.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderAltitude.dir/rule
 .PHONY : test/CMakeFiles/renderAltitude.dir/rule
 
 # Convenience name for target.
@@ -860,12 +860,12 @@ renderAltitude: test/CMakeFiles/renderAltitude.dir/rule
 
 # fast build rule for target.
 renderAltitude/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderAltitude.dir/build.make test/CMakeFiles/renderAltitude.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderAltitude.dir/build.make test/CMakeFiles/renderAltitude.dir/build
 .PHONY : renderAltitude/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderFilter.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter.dir/rule
 .PHONY : test/CMakeFiles/renderFilter.dir/rule
 
 # Convenience name for target.
@@ -874,54 +874,54 @@ renderFilter: test/CMakeFiles/renderFilter.dir/rule
 
 # fast build rule for target.
 renderFilter/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter.dir/build.make test/CMakeFiles/renderFilter.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter.dir/build.make test/CMakeFiles/renderFilter.dir/build
 .PHONY : renderFilter/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderFilter__16ce3b63de08.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__16ce3b63de08.dir/rule
-.PHONY : test/CMakeFiles/renderFilter__16ce3b63de08.dir/rule
+test/CMakeFiles/renderFilter__a08a54640bd3.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__a08a54640bd3.dir/rule
+.PHONY : test/CMakeFiles/renderFilter__a08a54640bd3.dir/rule
 
 # Convenience name for target.
-renderFilter__16ce3b63de08: test/CMakeFiles/renderFilter__16ce3b63de08.dir/rule
-.PHONY : renderFilter__16ce3b63de08
+renderFilter__a08a54640bd3: test/CMakeFiles/renderFilter__a08a54640bd3.dir/rule
+.PHONY : renderFilter__a08a54640bd3
 
 # fast build rule for target.
-renderFilter__16ce3b63de08/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__16ce3b63de08.dir/build.make test/CMakeFiles/renderFilter__16ce3b63de08.dir/build
-.PHONY : renderFilter__16ce3b63de08/fast
+renderFilter__a08a54640bd3/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__a08a54640bd3.dir/build.make test/CMakeFiles/renderFilter__a08a54640bd3.dir/build
+.PHONY : renderFilter__a08a54640bd3/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderFilter__2509fba49363.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__2509fba49363.dir/rule
-.PHONY : test/CMakeFiles/renderFilter__2509fba49363.dir/rule
+test/CMakeFiles/renderFilter__87e5ccd2c609.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__87e5ccd2c609.dir/rule
+.PHONY : test/CMakeFiles/renderFilter__87e5ccd2c609.dir/rule
 
 # Convenience name for target.
-renderFilter__2509fba49363: test/CMakeFiles/renderFilter__2509fba49363.dir/rule
-.PHONY : renderFilter__2509fba49363
+renderFilter__87e5ccd2c609: test/CMakeFiles/renderFilter__87e5ccd2c609.dir/rule
+.PHONY : renderFilter__87e5ccd2c609
 
 # fast build rule for target.
-renderFilter__2509fba49363/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__2509fba49363.dir/build.make test/CMakeFiles/renderFilter__2509fba49363.dir/build
-.PHONY : renderFilter__2509fba49363/fast
+renderFilter__87e5ccd2c609/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__87e5ccd2c609.dir/build.make test/CMakeFiles/renderFilter__87e5ccd2c609.dir/build
+.PHONY : renderFilter__87e5ccd2c609/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderFilter__9ea3100c7833.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__9ea3100c7833.dir/rule
-.PHONY : test/CMakeFiles/renderFilter__9ea3100c7833.dir/rule
+test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/rule
+.PHONY : test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/rule
 
 # Convenience name for target.
-renderFilter__9ea3100c7833: test/CMakeFiles/renderFilter__9ea3100c7833.dir/rule
-.PHONY : renderFilter__9ea3100c7833
+renderFilter__e5f8f9ce27c4: test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/rule
+.PHONY : renderFilter__e5f8f9ce27c4
 
 # fast build rule for target.
-renderFilter__9ea3100c7833/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__9ea3100c7833.dir/build.make test/CMakeFiles/renderFilter__9ea3100c7833.dir/build
-.PHONY : renderFilter__9ea3100c7833/fast
+renderFilter__e5f8f9ce27c4/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/build.make test/CMakeFiles/renderFilter__e5f8f9ce27c4.dir/build
+.PHONY : renderFilter__e5f8f9ce27c4/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderUplift.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderUplift.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderUplift.dir/rule
 .PHONY : test/CMakeFiles/renderUplift.dir/rule
 
 # Convenience name for target.
@@ -930,12 +930,12 @@ renderUplift: test/CMakeFiles/renderUplift.dir/rule
 
 # fast build rule for target.
 renderUplift/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderUplift.dir/build.make test/CMakeFiles/renderUplift.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderUplift.dir/build.make test/CMakeFiles/renderUplift.dir/build
 .PHONY : renderUplift/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderChrisNRPN.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderChrisNRPN.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderChrisNRPN.dir/rule
 .PHONY : test/CMakeFiles/renderChrisNRPN.dir/rule
 
 # Convenience name for target.
@@ -944,12 +944,12 @@ renderChrisNRPN: test/CMakeFiles/renderChrisNRPN.dir/rule
 
 # fast build rule for target.
 renderChrisNRPN/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderChrisNRPN.dir/build.make test/CMakeFiles/renderChrisNRPN.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderChrisNRPN.dir/build.make test/CMakeFiles/renderChrisNRPN.dir/build
 .PHONY : renderChrisNRPN/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderHybridCol.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol.dir/rule
 .PHONY : test/CMakeFiles/renderHybridCol.dir/rule
 
 # Convenience name for target.
@@ -958,40 +958,40 @@ renderHybridCol: test/CMakeFiles/renderHybridCol.dir/rule
 
 # fast build rule for target.
 renderHybridCol/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol.dir/build.make test/CMakeFiles/renderHybridCol.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol.dir/build.make test/CMakeFiles/renderHybridCol.dir/build
 .PHONY : renderHybridCol/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/rule
-.PHONY : test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/rule
+test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/rule
+.PHONY : test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/rule
 
 # Convenience name for target.
-renderHybridCol__a258b7463c0b: test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/rule
-.PHONY : renderHybridCol__a258b7463c0b
+renderHybridCol__feecf63eecc2: test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/rule
+.PHONY : renderHybridCol__feecf63eecc2
 
 # fast build rule for target.
-renderHybridCol__a258b7463c0b/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/build.make test/CMakeFiles/renderHybridCol__a258b7463c0b.dir/build
-.PHONY : renderHybridCol__a258b7463c0b/fast
+renderHybridCol__feecf63eecc2/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/build.make test/CMakeFiles/renderHybridCol__feecf63eecc2.dir/build
+.PHONY : renderHybridCol__feecf63eecc2/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderHybridCol__661aebc04295.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol__661aebc04295.dir/rule
-.PHONY : test/CMakeFiles/renderHybridCol__661aebc04295.dir/rule
+test/CMakeFiles/renderHybridCol__139ce52de12d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderHybridCol__139ce52de12d.dir/rule
+.PHONY : test/CMakeFiles/renderHybridCol__139ce52de12d.dir/rule
 
 # Convenience name for target.
-renderHybridCol__661aebc04295: test/CMakeFiles/renderHybridCol__661aebc04295.dir/rule
-.PHONY : renderHybridCol__661aebc04295
+renderHybridCol__139ce52de12d: test/CMakeFiles/renderHybridCol__139ce52de12d.dir/rule
+.PHONY : renderHybridCol__139ce52de12d
 
 # fast build rule for target.
-renderHybridCol__661aebc04295/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol__661aebc04295.dir/build.make test/CMakeFiles/renderHybridCol__661aebc04295.dir/build
-.PHONY : renderHybridCol__661aebc04295/fast
+renderHybridCol__139ce52de12d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderHybridCol__139ce52de12d.dir/build.make test/CMakeFiles/renderHybridCol__139ce52de12d.dir/build
+.PHONY : renderHybridCol__139ce52de12d/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderPortamento.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento.dir/rule
 .PHONY : test/CMakeFiles/renderPortamento.dir/rule
 
 # Convenience name for target.
@@ -1000,124 +1000,124 @@ renderPortamento: test/CMakeFiles/renderPortamento.dir/rule
 
 # fast build rule for target.
 renderPortamento/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento.dir/build.make test/CMakeFiles/renderPortamento.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento.dir/build.make test/CMakeFiles/renderPortamento.dir/build
 .PHONY : renderPortamento/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__62e1f78305fb.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__62e1f78305fb.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__62e1f78305fb.dir/rule
+test/CMakeFiles/renderPortamento__6624a021a856.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__6624a021a856.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__6624a021a856.dir/rule
 
 # Convenience name for target.
-renderPortamento__62e1f78305fb: test/CMakeFiles/renderPortamento__62e1f78305fb.dir/rule
-.PHONY : renderPortamento__62e1f78305fb
+renderPortamento__6624a021a856: test/CMakeFiles/renderPortamento__6624a021a856.dir/rule
+.PHONY : renderPortamento__6624a021a856
 
 # fast build rule for target.
-renderPortamento__62e1f78305fb/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__62e1f78305fb.dir/build.make test/CMakeFiles/renderPortamento__62e1f78305fb.dir/build
-.PHONY : renderPortamento__62e1f78305fb/fast
+renderPortamento__6624a021a856/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__6624a021a856.dir/build.make test/CMakeFiles/renderPortamento__6624a021a856.dir/build
+.PHONY : renderPortamento__6624a021a856/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/rule
+test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/rule
 
 # Convenience name for target.
-renderPortamento__1bcaddc433d3: test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/rule
-.PHONY : renderPortamento__1bcaddc433d3
+renderPortamento__a3ed30a52b61: test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/rule
+.PHONY : renderPortamento__a3ed30a52b61
 
 # fast build rule for target.
-renderPortamento__1bcaddc433d3/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/build.make test/CMakeFiles/renderPortamento__1bcaddc433d3.dir/build
-.PHONY : renderPortamento__1bcaddc433d3/fast
+renderPortamento__a3ed30a52b61/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/build.make test/CMakeFiles/renderPortamento__a3ed30a52b61.dir/build
+.PHONY : renderPortamento__a3ed30a52b61/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__a7cb46975edd.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__a7cb46975edd.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__a7cb46975edd.dir/rule
+test/CMakeFiles/renderPortamento__4919c9ec3904.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__4919c9ec3904.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__4919c9ec3904.dir/rule
 
 # Convenience name for target.
-renderPortamento__a7cb46975edd: test/CMakeFiles/renderPortamento__a7cb46975edd.dir/rule
-.PHONY : renderPortamento__a7cb46975edd
+renderPortamento__4919c9ec3904: test/CMakeFiles/renderPortamento__4919c9ec3904.dir/rule
+.PHONY : renderPortamento__4919c9ec3904
 
 # fast build rule for target.
-renderPortamento__a7cb46975edd/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__a7cb46975edd.dir/build.make test/CMakeFiles/renderPortamento__a7cb46975edd.dir/build
-.PHONY : renderPortamento__a7cb46975edd/fast
+renderPortamento__4919c9ec3904/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__4919c9ec3904.dir/build.make test/CMakeFiles/renderPortamento__4919c9ec3904.dir/build
+.PHONY : renderPortamento__4919c9ec3904/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__4b8b4536646e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__4b8b4536646e.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__4b8b4536646e.dir/rule
+test/CMakeFiles/renderPortamento__d45c92d8c717.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__d45c92d8c717.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__d45c92d8c717.dir/rule
 
 # Convenience name for target.
-renderPortamento__4b8b4536646e: test/CMakeFiles/renderPortamento__4b8b4536646e.dir/rule
-.PHONY : renderPortamento__4b8b4536646e
+renderPortamento__d45c92d8c717: test/CMakeFiles/renderPortamento__d45c92d8c717.dir/rule
+.PHONY : renderPortamento__d45c92d8c717
 
 # fast build rule for target.
-renderPortamento__4b8b4536646e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__4b8b4536646e.dir/build.make test/CMakeFiles/renderPortamento__4b8b4536646e.dir/build
-.PHONY : renderPortamento__4b8b4536646e/fast
+renderPortamento__d45c92d8c717/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__d45c92d8c717.dir/build.make test/CMakeFiles/renderPortamento__d45c92d8c717.dir/build
+.PHONY : renderPortamento__d45c92d8c717/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/rule
+test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/rule
 
 # Convenience name for target.
-renderPortamento__f1a59c738ae9: test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/rule
-.PHONY : renderPortamento__f1a59c738ae9
+renderPortamento__d16ffe541a9c: test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/rule
+.PHONY : renderPortamento__d16ffe541a9c
 
 # fast build rule for target.
-renderPortamento__f1a59c738ae9/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/build.make test/CMakeFiles/renderPortamento__f1a59c738ae9.dir/build
-.PHONY : renderPortamento__f1a59c738ae9/fast
+renderPortamento__d16ffe541a9c/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/build.make test/CMakeFiles/renderPortamento__d16ffe541a9c.dir/build
+.PHONY : renderPortamento__d16ffe541a9c/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/rule
+test/CMakeFiles/renderPortamento__e278605ddb0a.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__e278605ddb0a.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__e278605ddb0a.dir/rule
 
 # Convenience name for target.
-renderPortamento__3244a96a2ddf: test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/rule
-.PHONY : renderPortamento__3244a96a2ddf
+renderPortamento__e278605ddb0a: test/CMakeFiles/renderPortamento__e278605ddb0a.dir/rule
+.PHONY : renderPortamento__e278605ddb0a
 
 # fast build rule for target.
-renderPortamento__3244a96a2ddf/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/build.make test/CMakeFiles/renderPortamento__3244a96a2ddf.dir/build
-.PHONY : renderPortamento__3244a96a2ddf/fast
+renderPortamento__e278605ddb0a/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__e278605ddb0a.dir/build.make test/CMakeFiles/renderPortamento__e278605ddb0a.dir/build
+.PHONY : renderPortamento__e278605ddb0a/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__4009d4b3513b.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__4009d4b3513b.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__4009d4b3513b.dir/rule
+test/CMakeFiles/renderPortamento__163b411d078a.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__163b411d078a.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__163b411d078a.dir/rule
 
 # Convenience name for target.
-renderPortamento__4009d4b3513b: test/CMakeFiles/renderPortamento__4009d4b3513b.dir/rule
-.PHONY : renderPortamento__4009d4b3513b
+renderPortamento__163b411d078a: test/CMakeFiles/renderPortamento__163b411d078a.dir/rule
+.PHONY : renderPortamento__163b411d078a
 
 # fast build rule for target.
-renderPortamento__4009d4b3513b/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__4009d4b3513b.dir/build.make test/CMakeFiles/renderPortamento__4009d4b3513b.dir/build
-.PHONY : renderPortamento__4009d4b3513b/fast
+renderPortamento__163b411d078a/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__163b411d078a.dir/build.make test/CMakeFiles/renderPortamento__163b411d078a.dir/build
+.PHONY : renderPortamento__163b411d078a/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderPortamento__1774431be135.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__1774431be135.dir/rule
-.PHONY : test/CMakeFiles/renderPortamento__1774431be135.dir/rule
+test/CMakeFiles/renderPortamento__743eebfae3fd.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderPortamento__743eebfae3fd.dir/rule
+.PHONY : test/CMakeFiles/renderPortamento__743eebfae3fd.dir/rule
 
 # Convenience name for target.
-renderPortamento__1774431be135: test/CMakeFiles/renderPortamento__1774431be135.dir/rule
-.PHONY : renderPortamento__1774431be135
+renderPortamento__743eebfae3fd: test/CMakeFiles/renderPortamento__743eebfae3fd.dir/rule
+.PHONY : renderPortamento__743eebfae3fd
 
 # fast build rule for target.
-renderPortamento__1774431be135/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__1774431be135.dir/build.make test/CMakeFiles/renderPortamento__1774431be135.dir/build
-.PHONY : renderPortamento__1774431be135/fast
+renderPortamento__743eebfae3fd/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderPortamento__743eebfae3fd.dir/build.make test/CMakeFiles/renderPortamento__743eebfae3fd.dir/build
+.PHONY : renderPortamento__743eebfae3fd/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderSfSpecTest.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderSfSpecTest.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderSfSpecTest.dir/rule
 .PHONY : test/CMakeFiles/renderSfSpecTest.dir/rule
 
 # Convenience name for target.
@@ -1126,12 +1126,12 @@ renderSfSpecTest: test/CMakeFiles/renderSfSpecTest.dir/rule
 
 # fast build rule for target.
 renderSfSpecTest/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderSfSpecTest.dir/build.make test/CMakeFiles/renderSfSpecTest.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderSfSpecTest.dir/build.make test/CMakeFiles/renderSfSpecTest.dir/build
 .PHONY : renderSfSpecTest/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1455.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455.dir/rule
 .PHONY : test/CMakeFiles/render1455.dir/rule
 
 # Convenience name for target.
@@ -1140,110 +1140,110 @@ render1455: test/CMakeFiles/render1455.dir/rule
 
 # fast build rule for target.
 render1455/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455.dir/build.make test/CMakeFiles/render1455.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455.dir/build.make test/CMakeFiles/render1455.dir/build
 .PHONY : render1455/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__ec16711243b7.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__ec16711243b7.dir/rule
-.PHONY : test/CMakeFiles/render1455__ec16711243b7.dir/rule
+test/CMakeFiles/render1455__7eec2744731e.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__7eec2744731e.dir/rule
+.PHONY : test/CMakeFiles/render1455__7eec2744731e.dir/rule
 
 # Convenience name for target.
-render1455__ec16711243b7: test/CMakeFiles/render1455__ec16711243b7.dir/rule
-.PHONY : render1455__ec16711243b7
+render1455__7eec2744731e: test/CMakeFiles/render1455__7eec2744731e.dir/rule
+.PHONY : render1455__7eec2744731e
 
 # fast build rule for target.
-render1455__ec16711243b7/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__ec16711243b7.dir/build.make test/CMakeFiles/render1455__ec16711243b7.dir/build
-.PHONY : render1455__ec16711243b7/fast
+render1455__7eec2744731e/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__7eec2744731e.dir/build.make test/CMakeFiles/render1455__7eec2744731e.dir/build
+.PHONY : render1455__7eec2744731e/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__c3b2aaeac8bc.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__c3b2aaeac8bc.dir/rule
-.PHONY : test/CMakeFiles/render1455__c3b2aaeac8bc.dir/rule
+test/CMakeFiles/render1455__e2cd24828a82.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__e2cd24828a82.dir/rule
+.PHONY : test/CMakeFiles/render1455__e2cd24828a82.dir/rule
 
 # Convenience name for target.
-render1455__c3b2aaeac8bc: test/CMakeFiles/render1455__c3b2aaeac8bc.dir/rule
-.PHONY : render1455__c3b2aaeac8bc
+render1455__e2cd24828a82: test/CMakeFiles/render1455__e2cd24828a82.dir/rule
+.PHONY : render1455__e2cd24828a82
 
 # fast build rule for target.
-render1455__c3b2aaeac8bc/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__c3b2aaeac8bc.dir/build.make test/CMakeFiles/render1455__c3b2aaeac8bc.dir/build
-.PHONY : render1455__c3b2aaeac8bc/fast
+render1455__e2cd24828a82/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__e2cd24828a82.dir/build.make test/CMakeFiles/render1455__e2cd24828a82.dir/build
+.PHONY : render1455__e2cd24828a82/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__91a561179337.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__91a561179337.dir/rule
-.PHONY : test/CMakeFiles/render1455__91a561179337.dir/rule
+test/CMakeFiles/render1455__3187cc87161c.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__3187cc87161c.dir/rule
+.PHONY : test/CMakeFiles/render1455__3187cc87161c.dir/rule
 
 # Convenience name for target.
-render1455__91a561179337: test/CMakeFiles/render1455__91a561179337.dir/rule
-.PHONY : render1455__91a561179337
+render1455__3187cc87161c: test/CMakeFiles/render1455__3187cc87161c.dir/rule
+.PHONY : render1455__3187cc87161c
 
 # fast build rule for target.
-render1455__91a561179337/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__91a561179337.dir/build.make test/CMakeFiles/render1455__91a561179337.dir/build
-.PHONY : render1455__91a561179337/fast
+render1455__3187cc87161c/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__3187cc87161c.dir/build.make test/CMakeFiles/render1455__3187cc87161c.dir/build
+.PHONY : render1455__3187cc87161c/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__d8a1b28ddb98.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__d8a1b28ddb98.dir/rule
-.PHONY : test/CMakeFiles/render1455__d8a1b28ddb98.dir/rule
+test/CMakeFiles/render1455__bc050328a01f.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__bc050328a01f.dir/rule
+.PHONY : test/CMakeFiles/render1455__bc050328a01f.dir/rule
 
 # Convenience name for target.
-render1455__d8a1b28ddb98: test/CMakeFiles/render1455__d8a1b28ddb98.dir/rule
-.PHONY : render1455__d8a1b28ddb98
+render1455__bc050328a01f: test/CMakeFiles/render1455__bc050328a01f.dir/rule
+.PHONY : render1455__bc050328a01f
 
 # fast build rule for target.
-render1455__d8a1b28ddb98/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__d8a1b28ddb98.dir/build.make test/CMakeFiles/render1455__d8a1b28ddb98.dir/build
-.PHONY : render1455__d8a1b28ddb98/fast
+render1455__bc050328a01f/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__bc050328a01f.dir/build.make test/CMakeFiles/render1455__bc050328a01f.dir/build
+.PHONY : render1455__bc050328a01f/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__7472dcb04760.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__7472dcb04760.dir/rule
-.PHONY : test/CMakeFiles/render1455__7472dcb04760.dir/rule
+test/CMakeFiles/render1455__ab7d32635232.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__ab7d32635232.dir/rule
+.PHONY : test/CMakeFiles/render1455__ab7d32635232.dir/rule
 
 # Convenience name for target.
-render1455__7472dcb04760: test/CMakeFiles/render1455__7472dcb04760.dir/rule
-.PHONY : render1455__7472dcb04760
+render1455__ab7d32635232: test/CMakeFiles/render1455__ab7d32635232.dir/rule
+.PHONY : render1455__ab7d32635232
 
 # fast build rule for target.
-render1455__7472dcb04760/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__7472dcb04760.dir/build.make test/CMakeFiles/render1455__7472dcb04760.dir/build
-.PHONY : render1455__7472dcb04760/fast
+render1455__ab7d32635232/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__ab7d32635232.dir/build.make test/CMakeFiles/render1455__ab7d32635232.dir/build
+.PHONY : render1455__ab7d32635232/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__b445b1beefd7.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__b445b1beefd7.dir/rule
-.PHONY : test/CMakeFiles/render1455__b445b1beefd7.dir/rule
+test/CMakeFiles/render1455__75bc78a14ce2.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__75bc78a14ce2.dir/rule
+.PHONY : test/CMakeFiles/render1455__75bc78a14ce2.dir/rule
 
 # Convenience name for target.
-render1455__b445b1beefd7: test/CMakeFiles/render1455__b445b1beefd7.dir/rule
-.PHONY : render1455__b445b1beefd7
+render1455__75bc78a14ce2: test/CMakeFiles/render1455__75bc78a14ce2.dir/rule
+.PHONY : render1455__75bc78a14ce2
 
 # fast build rule for target.
-render1455__b445b1beefd7/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__b445b1beefd7.dir/build.make test/CMakeFiles/render1455__b445b1beefd7.dir/build
-.PHONY : render1455__b445b1beefd7/fast
+render1455__75bc78a14ce2/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__75bc78a14ce2.dir/build.make test/CMakeFiles/render1455__75bc78a14ce2.dir/build
+.PHONY : render1455__75bc78a14ce2/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1455__56ab1d11cbc9.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__56ab1d11cbc9.dir/rule
-.PHONY : test/CMakeFiles/render1455__56ab1d11cbc9.dir/rule
+test/CMakeFiles/render1455__beecf2fb1283.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1455__beecf2fb1283.dir/rule
+.PHONY : test/CMakeFiles/render1455__beecf2fb1283.dir/rule
 
 # Convenience name for target.
-render1455__56ab1d11cbc9: test/CMakeFiles/render1455__56ab1d11cbc9.dir/rule
-.PHONY : render1455__56ab1d11cbc9
+render1455__beecf2fb1283: test/CMakeFiles/render1455__beecf2fb1283.dir/rule
+.PHONY : render1455__beecf2fb1283
 
 # fast build rule for target.
-render1455__56ab1d11cbc9/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__56ab1d11cbc9.dir/build.make test/CMakeFiles/render1455__56ab1d11cbc9.dir/build
-.PHONY : render1455__56ab1d11cbc9/fast
+render1455__beecf2fb1283/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1455__beecf2fb1283.dir/build.make test/CMakeFiles/render1455__beecf2fb1283.dir/build
+.PHONY : render1455__beecf2fb1283/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1496.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1496.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1496.dir/rule
 .PHONY : test/CMakeFiles/render1496.dir/rule
 
 # Convenience name for target.
@@ -1252,12 +1252,12 @@ render1496: test/CMakeFiles/render1496.dir/rule
 
 # fast build rule for target.
 render1496/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1496.dir/build.make test/CMakeFiles/render1496.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1496.dir/build.make test/CMakeFiles/render1496.dir/build
 .PHONY : render1496/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderDK64JJU.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU.dir/rule
 .PHONY : test/CMakeFiles/renderDK64JJU.dir/rule
 
 # Convenience name for target.
@@ -1266,110 +1266,110 @@ renderDK64JJU: test/CMakeFiles/renderDK64JJU.dir/rule
 
 # fast build rule for target.
 renderDK64JJU/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU.dir/build.make test/CMakeFiles/renderDK64JJU.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU.dir/build.make test/CMakeFiles/renderDK64JJU.dir/build
 .PHONY : renderDK64JJU/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/rule
+test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__f56cc8efaecc: test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/rule
-.PHONY : renderDK64JJU__f56cc8efaecc
+renderDK64JJU__d12bb0951e44: test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/rule
+.PHONY : renderDK64JJU__d12bb0951e44
 
 # fast build rule for target.
-renderDK64JJU__f56cc8efaecc/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/build.make test/CMakeFiles/renderDK64JJU__f56cc8efaecc.dir/build
-.PHONY : renderDK64JJU__f56cc8efaecc/fast
+renderDK64JJU__d12bb0951e44/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/build.make test/CMakeFiles/renderDK64JJU__d12bb0951e44.dir/build
+.PHONY : renderDK64JJU__d12bb0951e44/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/rule
+test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__f675181e81e0: test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/rule
-.PHONY : renderDK64JJU__f675181e81e0
+renderDK64JJU__fb248f23d3b1: test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/rule
+.PHONY : renderDK64JJU__fb248f23d3b1
 
 # fast build rule for target.
-renderDK64JJU__f675181e81e0/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/build.make test/CMakeFiles/renderDK64JJU__f675181e81e0.dir/build
-.PHONY : renderDK64JJU__f675181e81e0/fast
+renderDK64JJU__fb248f23d3b1/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/build.make test/CMakeFiles/renderDK64JJU__fb248f23d3b1.dir/build
+.PHONY : renderDK64JJU__fb248f23d3b1/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/rule
+test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__e4bce9c8796d: test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/rule
-.PHONY : renderDK64JJU__e4bce9c8796d
+renderDK64JJU__1292fc94cf3e: test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/rule
+.PHONY : renderDK64JJU__1292fc94cf3e
 
 # fast build rule for target.
-renderDK64JJU__e4bce9c8796d/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/build.make test/CMakeFiles/renderDK64JJU__e4bce9c8796d.dir/build
-.PHONY : renderDK64JJU__e4bce9c8796d/fast
+renderDK64JJU__1292fc94cf3e/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/build.make test/CMakeFiles/renderDK64JJU__1292fc94cf3e.dir/build
+.PHONY : renderDK64JJU__1292fc94cf3e/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/rule
+test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__4b7d05290d5d: test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/rule
-.PHONY : renderDK64JJU__4b7d05290d5d
+renderDK64JJU__82352e0f4aa2: test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/rule
+.PHONY : renderDK64JJU__82352e0f4aa2
 
 # fast build rule for target.
-renderDK64JJU__4b7d05290d5d/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/build.make test/CMakeFiles/renderDK64JJU__4b7d05290d5d.dir/build
-.PHONY : renderDK64JJU__4b7d05290d5d/fast
+renderDK64JJU__82352e0f4aa2/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/build.make test/CMakeFiles/renderDK64JJU__82352e0f4aa2.dir/build
+.PHONY : renderDK64JJU__82352e0f4aa2/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/rule
+test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__59cb0898f75e: test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/rule
-.PHONY : renderDK64JJU__59cb0898f75e
+renderDK64JJU__7639a3cb3bde: test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/rule
+.PHONY : renderDK64JJU__7639a3cb3bde
 
 # fast build rule for target.
-renderDK64JJU__59cb0898f75e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/build.make test/CMakeFiles/renderDK64JJU__59cb0898f75e.dir/build
-.PHONY : renderDK64JJU__59cb0898f75e/fast
+renderDK64JJU__7639a3cb3bde/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/build.make test/CMakeFiles/renderDK64JJU__7639a3cb3bde.dir/build
+.PHONY : renderDK64JJU__7639a3cb3bde/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__febf83f97239.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__febf83f97239.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__febf83f97239.dir/rule
+test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__febf83f97239: test/CMakeFiles/renderDK64JJU__febf83f97239.dir/rule
-.PHONY : renderDK64JJU__febf83f97239
+renderDK64JJU__12379edd1bba: test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/rule
+.PHONY : renderDK64JJU__12379edd1bba
 
 # fast build rule for target.
-renderDK64JJU__febf83f97239/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__febf83f97239.dir/build.make test/CMakeFiles/renderDK64JJU__febf83f97239.dir/build
-.PHONY : renderDK64JJU__febf83f97239/fast
+renderDK64JJU__12379edd1bba/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/build.make test/CMakeFiles/renderDK64JJU__12379edd1bba.dir/build
+.PHONY : renderDK64JJU__12379edd1bba/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/rule
-.PHONY : test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/rule
+test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/rule
+.PHONY : test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/rule
 
 # Convenience name for target.
-renderDK64JJU__ef67cd911750: test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/rule
-.PHONY : renderDK64JJU__ef67cd911750
+renderDK64JJU__11ce18a30bb0: test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/rule
+.PHONY : renderDK64JJU__11ce18a30bb0
 
 # fast build rule for target.
-renderDK64JJU__ef67cd911750/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/build.make test/CMakeFiles/renderDK64JJU__ef67cd911750.dir/build
-.PHONY : renderDK64JJU__ef67cd911750/fast
+renderDK64JJU__11ce18a30bb0/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/build.make test/CMakeFiles/renderDK64JJU__11ce18a30bb0.dir/build
+.PHONY : renderDK64JJU__11ce18a30bb0/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderExcl.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl.dir/rule
 .PHONY : test/CMakeFiles/renderExcl.dir/rule
 
 # Convenience name for target.
@@ -1378,96 +1378,96 @@ renderExcl: test/CMakeFiles/renderExcl.dir/rule
 
 # fast build rule for target.
 renderExcl/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl.dir/build.make test/CMakeFiles/renderExcl.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl.dir/build.make test/CMakeFiles/renderExcl.dir/build
 .PHONY : renderExcl/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__7fa2dea16809.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__7fa2dea16809.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__7fa2dea16809.dir/rule
+test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/rule
 
 # Convenience name for target.
-renderExcl__7fa2dea16809: test/CMakeFiles/renderExcl__7fa2dea16809.dir/rule
-.PHONY : renderExcl__7fa2dea16809
+renderExcl__c3c6ed85a4d5: test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/rule
+.PHONY : renderExcl__c3c6ed85a4d5
 
 # fast build rule for target.
-renderExcl__7fa2dea16809/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__7fa2dea16809.dir/build.make test/CMakeFiles/renderExcl__7fa2dea16809.dir/build
-.PHONY : renderExcl__7fa2dea16809/fast
+renderExcl__c3c6ed85a4d5/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/build.make test/CMakeFiles/renderExcl__c3c6ed85a4d5.dir/build
+.PHONY : renderExcl__c3c6ed85a4d5/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__c440145a61bd.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__c440145a61bd.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__c440145a61bd.dir/rule
+test/CMakeFiles/renderExcl__4b2e59e88c05.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__4b2e59e88c05.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__4b2e59e88c05.dir/rule
 
 # Convenience name for target.
-renderExcl__c440145a61bd: test/CMakeFiles/renderExcl__c440145a61bd.dir/rule
-.PHONY : renderExcl__c440145a61bd
+renderExcl__4b2e59e88c05: test/CMakeFiles/renderExcl__4b2e59e88c05.dir/rule
+.PHONY : renderExcl__4b2e59e88c05
 
 # fast build rule for target.
-renderExcl__c440145a61bd/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__c440145a61bd.dir/build.make test/CMakeFiles/renderExcl__c440145a61bd.dir/build
-.PHONY : renderExcl__c440145a61bd/fast
+renderExcl__4b2e59e88c05/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__4b2e59e88c05.dir/build.make test/CMakeFiles/renderExcl__4b2e59e88c05.dir/build
+.PHONY : renderExcl__4b2e59e88c05/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/rule
+test/CMakeFiles/renderExcl__8d16a78f3510.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__8d16a78f3510.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__8d16a78f3510.dir/rule
 
 # Convenience name for target.
-renderExcl__0fcfc0d3cdf1: test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/rule
-.PHONY : renderExcl__0fcfc0d3cdf1
+renderExcl__8d16a78f3510: test/CMakeFiles/renderExcl__8d16a78f3510.dir/rule
+.PHONY : renderExcl__8d16a78f3510
 
 # fast build rule for target.
-renderExcl__0fcfc0d3cdf1/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/build.make test/CMakeFiles/renderExcl__0fcfc0d3cdf1.dir/build
-.PHONY : renderExcl__0fcfc0d3cdf1/fast
+renderExcl__8d16a78f3510/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__8d16a78f3510.dir/build.make test/CMakeFiles/renderExcl__8d16a78f3510.dir/build
+.PHONY : renderExcl__8d16a78f3510/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__3f0199462c18.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__3f0199462c18.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__3f0199462c18.dir/rule
+test/CMakeFiles/renderExcl__a7bbf12a976d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__a7bbf12a976d.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__a7bbf12a976d.dir/rule
 
 # Convenience name for target.
-renderExcl__3f0199462c18: test/CMakeFiles/renderExcl__3f0199462c18.dir/rule
-.PHONY : renderExcl__3f0199462c18
+renderExcl__a7bbf12a976d: test/CMakeFiles/renderExcl__a7bbf12a976d.dir/rule
+.PHONY : renderExcl__a7bbf12a976d
 
 # fast build rule for target.
-renderExcl__3f0199462c18/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__3f0199462c18.dir/build.make test/CMakeFiles/renderExcl__3f0199462c18.dir/build
-.PHONY : renderExcl__3f0199462c18/fast
+renderExcl__a7bbf12a976d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__a7bbf12a976d.dir/build.make test/CMakeFiles/renderExcl__a7bbf12a976d.dir/build
+.PHONY : renderExcl__a7bbf12a976d/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__46390421ae10.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__46390421ae10.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__46390421ae10.dir/rule
+test/CMakeFiles/renderExcl__88e8d4414f1b.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__88e8d4414f1b.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__88e8d4414f1b.dir/rule
 
 # Convenience name for target.
-renderExcl__46390421ae10: test/CMakeFiles/renderExcl__46390421ae10.dir/rule
-.PHONY : renderExcl__46390421ae10
+renderExcl__88e8d4414f1b: test/CMakeFiles/renderExcl__88e8d4414f1b.dir/rule
+.PHONY : renderExcl__88e8d4414f1b
 
 # fast build rule for target.
-renderExcl__46390421ae10/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__46390421ae10.dir/build.make test/CMakeFiles/renderExcl__46390421ae10.dir/build
-.PHONY : renderExcl__46390421ae10/fast
+renderExcl__88e8d4414f1b/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__88e8d4414f1b.dir/build.make test/CMakeFiles/renderExcl__88e8d4414f1b.dir/build
+.PHONY : renderExcl__88e8d4414f1b/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderExcl__ce81e133b457.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__ce81e133b457.dir/rule
-.PHONY : test/CMakeFiles/renderExcl__ce81e133b457.dir/rule
+test/CMakeFiles/renderExcl__4768ac4d4e43.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderExcl__4768ac4d4e43.dir/rule
+.PHONY : test/CMakeFiles/renderExcl__4768ac4d4e43.dir/rule
 
 # Convenience name for target.
-renderExcl__ce81e133b457: test/CMakeFiles/renderExcl__ce81e133b457.dir/rule
-.PHONY : renderExcl__ce81e133b457
+renderExcl__4768ac4d4e43: test/CMakeFiles/renderExcl__4768ac4d4e43.dir/rule
+.PHONY : renderExcl__4768ac4d4e43
 
 # fast build rule for target.
-renderExcl__ce81e133b457/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__ce81e133b457.dir/build.make test/CMakeFiles/renderExcl__ce81e133b457.dir/build
-.PHONY : renderExcl__ce81e133b457/fast
+renderExcl__4768ac4d4e43/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderExcl__4768ac4d4e43.dir/build.make test/CMakeFiles/renderExcl__4768ac4d4e43.dir/build
+.PHONY : renderExcl__4768ac4d4e43/fast
 
 # Convenience name for target.
 test/CMakeFiles/rendere1m1.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1.dir/rule
 .PHONY : test/CMakeFiles/rendere1m1.dir/rule
 
 # Convenience name for target.
@@ -1476,96 +1476,96 @@ rendere1m1: test/CMakeFiles/rendere1m1.dir/rule
 
 # fast build rule for target.
 rendere1m1/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1.dir/build.make test/CMakeFiles/rendere1m1.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1.dir/build.make test/CMakeFiles/rendere1m1.dir/build
 .PHONY : rendere1m1/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__09b313055584.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__09b313055584.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__09b313055584.dir/rule
+test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/rule
 
 # Convenience name for target.
-rendere1m1__09b313055584: test/CMakeFiles/rendere1m1__09b313055584.dir/rule
-.PHONY : rendere1m1__09b313055584
+rendere1m1__79d3d48cf52f: test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/rule
+.PHONY : rendere1m1__79d3d48cf52f
 
 # fast build rule for target.
-rendere1m1__09b313055584/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__09b313055584.dir/build.make test/CMakeFiles/rendere1m1__09b313055584.dir/build
-.PHONY : rendere1m1__09b313055584/fast
+rendere1m1__79d3d48cf52f/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/build.make test/CMakeFiles/rendere1m1__79d3d48cf52f.dir/build
+.PHONY : rendere1m1__79d3d48cf52f/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__5888f2a32d34.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__5888f2a32d34.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__5888f2a32d34.dir/rule
+test/CMakeFiles/rendere1m1__f1087c68776d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__f1087c68776d.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__f1087c68776d.dir/rule
 
 # Convenience name for target.
-rendere1m1__5888f2a32d34: test/CMakeFiles/rendere1m1__5888f2a32d34.dir/rule
-.PHONY : rendere1m1__5888f2a32d34
+rendere1m1__f1087c68776d: test/CMakeFiles/rendere1m1__f1087c68776d.dir/rule
+.PHONY : rendere1m1__f1087c68776d
 
 # fast build rule for target.
-rendere1m1__5888f2a32d34/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__5888f2a32d34.dir/build.make test/CMakeFiles/rendere1m1__5888f2a32d34.dir/build
-.PHONY : rendere1m1__5888f2a32d34/fast
+rendere1m1__f1087c68776d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__f1087c68776d.dir/build.make test/CMakeFiles/rendere1m1__f1087c68776d.dir/build
+.PHONY : rendere1m1__f1087c68776d/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/rule
+test/CMakeFiles/rendere1m1__fdc61866bb67.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__fdc61866bb67.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__fdc61866bb67.dir/rule
 
 # Convenience name for target.
-rendere1m1__323b9e6bb90f: test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/rule
-.PHONY : rendere1m1__323b9e6bb90f
+rendere1m1__fdc61866bb67: test/CMakeFiles/rendere1m1__fdc61866bb67.dir/rule
+.PHONY : rendere1m1__fdc61866bb67
 
 # fast build rule for target.
-rendere1m1__323b9e6bb90f/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/build.make test/CMakeFiles/rendere1m1__323b9e6bb90f.dir/build
-.PHONY : rendere1m1__323b9e6bb90f/fast
+rendere1m1__fdc61866bb67/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__fdc61866bb67.dir/build.make test/CMakeFiles/rendere1m1__fdc61866bb67.dir/build
+.PHONY : rendere1m1__fdc61866bb67/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__e3c559970b23.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__e3c559970b23.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__e3c559970b23.dir/rule
+test/CMakeFiles/rendere1m1__553a2fb67221.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__553a2fb67221.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__553a2fb67221.dir/rule
 
 # Convenience name for target.
-rendere1m1__e3c559970b23: test/CMakeFiles/rendere1m1__e3c559970b23.dir/rule
-.PHONY : rendere1m1__e3c559970b23
+rendere1m1__553a2fb67221: test/CMakeFiles/rendere1m1__553a2fb67221.dir/rule
+.PHONY : rendere1m1__553a2fb67221
 
 # fast build rule for target.
-rendere1m1__e3c559970b23/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__e3c559970b23.dir/build.make test/CMakeFiles/rendere1m1__e3c559970b23.dir/build
-.PHONY : rendere1m1__e3c559970b23/fast
+rendere1m1__553a2fb67221/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__553a2fb67221.dir/build.make test/CMakeFiles/rendere1m1__553a2fb67221.dir/build
+.PHONY : rendere1m1__553a2fb67221/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__4565247d4d7b.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__4565247d4d7b.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__4565247d4d7b.dir/rule
+test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/rule
 
 # Convenience name for target.
-rendere1m1__4565247d4d7b: test/CMakeFiles/rendere1m1__4565247d4d7b.dir/rule
-.PHONY : rendere1m1__4565247d4d7b
+rendere1m1__dc475c4c60a0: test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/rule
+.PHONY : rendere1m1__dc475c4c60a0
 
 # fast build rule for target.
-rendere1m1__4565247d4d7b/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__4565247d4d7b.dir/build.make test/CMakeFiles/rendere1m1__4565247d4d7b.dir/build
-.PHONY : rendere1m1__4565247d4d7b/fast
+rendere1m1__dc475c4c60a0/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/build.make test/CMakeFiles/rendere1m1__dc475c4c60a0.dir/build
+.PHONY : rendere1m1__dc475c4c60a0/fast
 
 # Convenience name for target.
-test/CMakeFiles/rendere1m1__97253e8d653b.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__97253e8d653b.dir/rule
-.PHONY : test/CMakeFiles/rendere1m1__97253e8d653b.dir/rule
+test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/rule
+.PHONY : test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/rule
 
 # Convenience name for target.
-rendere1m1__97253e8d653b: test/CMakeFiles/rendere1m1__97253e8d653b.dir/rule
-.PHONY : rendere1m1__97253e8d653b
+rendere1m1__79d413e8a0c1: test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/rule
+.PHONY : rendere1m1__79d413e8a0c1
 
 # fast build rule for target.
-rendere1m1__97253e8d653b/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__97253e8d653b.dir/build.make test/CMakeFiles/rendere1m1__97253e8d653b.dir/build
-.PHONY : rendere1m1__97253e8d653b/fast
+rendere1m1__79d413e8a0c1/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/build.make test/CMakeFiles/rendere1m1__79d413e8a0c1.dir/build
+.PHONY : rendere1m1__79d413e8a0c1/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderdspInterp.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderdspInterp.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderdspInterp.dir/rule
 .PHONY : test/CMakeFiles/renderdspInterp.dir/rule
 
 # Convenience name for target.
@@ -1574,12 +1574,12 @@ renderdspInterp: test/CMakeFiles/renderdspInterp.dir/rule
 
 # fast build rule for target.
 renderdspInterp/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderdspInterp.dir/build.make test/CMakeFiles/renderdspInterp.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderdspInterp.dir/build.make test/CMakeFiles/renderdspInterp.dir/build
 .PHONY : renderdspInterp/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1484.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484.dir/rule
 .PHONY : test/CMakeFiles/render1484.dir/rule
 
 # Convenience name for target.
@@ -1588,40 +1588,40 @@ render1484: test/CMakeFiles/render1484.dir/rule
 
 # fast build rule for target.
 render1484/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484.dir/build.make test/CMakeFiles/render1484.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484.dir/build.make test/CMakeFiles/render1484.dir/build
 .PHONY : render1484/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1484__8de7e90a3d54.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484__8de7e90a3d54.dir/rule
-.PHONY : test/CMakeFiles/render1484__8de7e90a3d54.dir/rule
+test/CMakeFiles/render1484__3539cf09fa4f.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484__3539cf09fa4f.dir/rule
+.PHONY : test/CMakeFiles/render1484__3539cf09fa4f.dir/rule
 
 # Convenience name for target.
-render1484__8de7e90a3d54: test/CMakeFiles/render1484__8de7e90a3d54.dir/rule
-.PHONY : render1484__8de7e90a3d54
+render1484__3539cf09fa4f: test/CMakeFiles/render1484__3539cf09fa4f.dir/rule
+.PHONY : render1484__3539cf09fa4f
 
 # fast build rule for target.
-render1484__8de7e90a3d54/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484__8de7e90a3d54.dir/build.make test/CMakeFiles/render1484__8de7e90a3d54.dir/build
-.PHONY : render1484__8de7e90a3d54/fast
+render1484__3539cf09fa4f/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484__3539cf09fa4f.dir/build.make test/CMakeFiles/render1484__3539cf09fa4f.dir/build
+.PHONY : render1484__3539cf09fa4f/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1484__5b86098d96bd.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484__5b86098d96bd.dir/rule
-.PHONY : test/CMakeFiles/render1484__5b86098d96bd.dir/rule
+test/CMakeFiles/render1484__56dbe20db2ee.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1484__56dbe20db2ee.dir/rule
+.PHONY : test/CMakeFiles/render1484__56dbe20db2ee.dir/rule
 
 # Convenience name for target.
-render1484__5b86098d96bd: test/CMakeFiles/render1484__5b86098d96bd.dir/rule
-.PHONY : render1484__5b86098d96bd
+render1484__56dbe20db2ee: test/CMakeFiles/render1484__56dbe20db2ee.dir/rule
+.PHONY : render1484__56dbe20db2ee
 
 # fast build rule for target.
-render1484__5b86098d96bd/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484__5b86098d96bd.dir/build.make test/CMakeFiles/render1484__5b86098d96bd.dir/build
-.PHONY : render1484__5b86098d96bd/fast
+render1484__56dbe20db2ee/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1484__56dbe20db2ee.dir/build.make test/CMakeFiles/render1484__56dbe20db2ee.dir/build
+.PHONY : render1484__56dbe20db2ee/fast
 
 # Convenience name for target.
 test/CMakeFiles/render1505.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505.dir/rule
 .PHONY : test/CMakeFiles/render1505.dir/rule
 
 # Convenience name for target.
@@ -1630,40 +1630,40 @@ render1505: test/CMakeFiles/render1505.dir/rule
 
 # fast build rule for target.
 render1505/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505.dir/build.make test/CMakeFiles/render1505.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505.dir/build.make test/CMakeFiles/render1505.dir/build
 .PHONY : render1505/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1505__12c02afd4ba1.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505__12c02afd4ba1.dir/rule
-.PHONY : test/CMakeFiles/render1505__12c02afd4ba1.dir/rule
+test/CMakeFiles/render1505__c62865a5bd3a.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505__c62865a5bd3a.dir/rule
+.PHONY : test/CMakeFiles/render1505__c62865a5bd3a.dir/rule
 
 # Convenience name for target.
-render1505__12c02afd4ba1: test/CMakeFiles/render1505__12c02afd4ba1.dir/rule
-.PHONY : render1505__12c02afd4ba1
+render1505__c62865a5bd3a: test/CMakeFiles/render1505__c62865a5bd3a.dir/rule
+.PHONY : render1505__c62865a5bd3a
 
 # fast build rule for target.
-render1505__12c02afd4ba1/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505__12c02afd4ba1.dir/build.make test/CMakeFiles/render1505__12c02afd4ba1.dir/build
-.PHONY : render1505__12c02afd4ba1/fast
+render1505__c62865a5bd3a/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505__c62865a5bd3a.dir/build.make test/CMakeFiles/render1505__c62865a5bd3a.dir/build
+.PHONY : render1505__c62865a5bd3a/fast
 
 # Convenience name for target.
-test/CMakeFiles/render1505__6e9ebcafe131.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505__6e9ebcafe131.dir/rule
-.PHONY : test/CMakeFiles/render1505__6e9ebcafe131.dir/rule
+test/CMakeFiles/render1505__96024bbe3b67.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/render1505__96024bbe3b67.dir/rule
+.PHONY : test/CMakeFiles/render1505__96024bbe3b67.dir/rule
 
 # Convenience name for target.
-render1505__6e9ebcafe131: test/CMakeFiles/render1505__6e9ebcafe131.dir/rule
-.PHONY : render1505__6e9ebcafe131
+render1505__96024bbe3b67: test/CMakeFiles/render1505__96024bbe3b67.dir/rule
+.PHONY : render1505__96024bbe3b67
 
 # fast build rule for target.
-render1505__6e9ebcafe131/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505__6e9ebcafe131.dir/build.make test/CMakeFiles/render1505__6e9ebcafe131.dir/build
-.PHONY : render1505__6e9ebcafe131/fast
+render1505__96024bbe3b67/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/render1505__96024bbe3b67.dir/build.make test/CMakeFiles/render1505__96024bbe3b67.dir/build
+.PHONY : render1505__96024bbe3b67/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderGeneralUserDemo.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo.dir/rule
 .PHONY : test/CMakeFiles/renderGeneralUserDemo.dir/rule
 
 # Convenience name for target.
@@ -1672,138 +1672,138 @@ renderGeneralUserDemo: test/CMakeFiles/renderGeneralUserDemo.dir/rule
 
 # fast build rule for target.
 renderGeneralUserDemo/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo.dir/build.make test/CMakeFiles/renderGeneralUserDemo.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo.dir/build.make test/CMakeFiles/renderGeneralUserDemo.dir/build
 .PHONY : renderGeneralUserDemo/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__694925b1f3ca: test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/rule
-.PHONY : renderGeneralUserDemo__694925b1f3ca
+renderGeneralUserDemo__abac671ae9fd: test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/rule
+.PHONY : renderGeneralUserDemo__abac671ae9fd
 
 # fast build rule for target.
-renderGeneralUserDemo__694925b1f3ca/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/build.make test/CMakeFiles/renderGeneralUserDemo__694925b1f3ca.dir/build
-.PHONY : renderGeneralUserDemo__694925b1f3ca/fast
+renderGeneralUserDemo__abac671ae9fd/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/build.make test/CMakeFiles/renderGeneralUserDemo__abac671ae9fd.dir/build
+.PHONY : renderGeneralUserDemo__abac671ae9fd/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__a261fcb40f0d: test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/rule
-.PHONY : renderGeneralUserDemo__a261fcb40f0d
+renderGeneralUserDemo__dc085c38bd20: test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/rule
+.PHONY : renderGeneralUserDemo__dc085c38bd20
 
 # fast build rule for target.
-renderGeneralUserDemo__a261fcb40f0d/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/build.make test/CMakeFiles/renderGeneralUserDemo__a261fcb40f0d.dir/build
-.PHONY : renderGeneralUserDemo__a261fcb40f0d/fast
+renderGeneralUserDemo__dc085c38bd20/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/build.make test/CMakeFiles/renderGeneralUserDemo__dc085c38bd20.dir/build
+.PHONY : renderGeneralUserDemo__dc085c38bd20/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__ad0889261c88: test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/rule
-.PHONY : renderGeneralUserDemo__ad0889261c88
+renderGeneralUserDemo__ddeb0fd2e18e: test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/rule
+.PHONY : renderGeneralUserDemo__ddeb0fd2e18e
 
 # fast build rule for target.
-renderGeneralUserDemo__ad0889261c88/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/build.make test/CMakeFiles/renderGeneralUserDemo__ad0889261c88.dir/build
-.PHONY : renderGeneralUserDemo__ad0889261c88/fast
+renderGeneralUserDemo__ddeb0fd2e18e/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/build.make test/CMakeFiles/renderGeneralUserDemo__ddeb0fd2e18e.dir/build
+.PHONY : renderGeneralUserDemo__ddeb0fd2e18e/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__06643ad5f694: test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/rule
-.PHONY : renderGeneralUserDemo__06643ad5f694
+renderGeneralUserDemo__1f9ba0e3e3b5: test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/rule
+.PHONY : renderGeneralUserDemo__1f9ba0e3e3b5
 
 # fast build rule for target.
-renderGeneralUserDemo__06643ad5f694/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/build.make test/CMakeFiles/renderGeneralUserDemo__06643ad5f694.dir/build
-.PHONY : renderGeneralUserDemo__06643ad5f694/fast
+renderGeneralUserDemo__1f9ba0e3e3b5/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/build.make test/CMakeFiles/renderGeneralUserDemo__1f9ba0e3e3b5.dir/build
+.PHONY : renderGeneralUserDemo__1f9ba0e3e3b5/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__44bac27a2eba: test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/rule
-.PHONY : renderGeneralUserDemo__44bac27a2eba
+renderGeneralUserDemo__b4f81fabfcc9: test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/rule
+.PHONY : renderGeneralUserDemo__b4f81fabfcc9
 
 # fast build rule for target.
-renderGeneralUserDemo__44bac27a2eba/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/build.make test/CMakeFiles/renderGeneralUserDemo__44bac27a2eba.dir/build
-.PHONY : renderGeneralUserDemo__44bac27a2eba/fast
+renderGeneralUserDemo__b4f81fabfcc9/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/build.make test/CMakeFiles/renderGeneralUserDemo__b4f81fabfcc9.dir/build
+.PHONY : renderGeneralUserDemo__b4f81fabfcc9/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__b28f6c6a9c52: test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/rule
-.PHONY : renderGeneralUserDemo__b28f6c6a9c52
+renderGeneralUserDemo__20039671e8e0: test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/rule
+.PHONY : renderGeneralUserDemo__20039671e8e0
 
 # fast build rule for target.
-renderGeneralUserDemo__b28f6c6a9c52/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/build.make test/CMakeFiles/renderGeneralUserDemo__b28f6c6a9c52.dir/build
-.PHONY : renderGeneralUserDemo__b28f6c6a9c52/fast
+renderGeneralUserDemo__20039671e8e0/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/build.make test/CMakeFiles/renderGeneralUserDemo__20039671e8e0.dir/build
+.PHONY : renderGeneralUserDemo__20039671e8e0/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__9c7aae902951: test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/rule
-.PHONY : renderGeneralUserDemo__9c7aae902951
+renderGeneralUserDemo__21323a0d2650: test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/rule
+.PHONY : renderGeneralUserDemo__21323a0d2650
 
 # fast build rule for target.
-renderGeneralUserDemo__9c7aae902951/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/build.make test/CMakeFiles/renderGeneralUserDemo__9c7aae902951.dir/build
-.PHONY : renderGeneralUserDemo__9c7aae902951/fast
+renderGeneralUserDemo__21323a0d2650/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/build.make test/CMakeFiles/renderGeneralUserDemo__21323a0d2650.dir/build
+.PHONY : renderGeneralUserDemo__21323a0d2650/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__5995641accd2: test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/rule
-.PHONY : renderGeneralUserDemo__5995641accd2
+renderGeneralUserDemo__ccf5cfc81445: test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/rule
+.PHONY : renderGeneralUserDemo__ccf5cfc81445
 
 # fast build rule for target.
-renderGeneralUserDemo__5995641accd2/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/build.make test/CMakeFiles/renderGeneralUserDemo__5995641accd2.dir/build
-.PHONY : renderGeneralUserDemo__5995641accd2/fast
+renderGeneralUserDemo__ccf5cfc81445/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/build.make test/CMakeFiles/renderGeneralUserDemo__ccf5cfc81445.dir/build
+.PHONY : renderGeneralUserDemo__ccf5cfc81445/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/rule
-.PHONY : test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/rule
+test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/rule
+.PHONY : test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/rule
 
 # Convenience name for target.
-renderGeneralUserDemo__46ae355ec58e: test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/rule
-.PHONY : renderGeneralUserDemo__46ae355ec58e
+renderGeneralUserDemo__e9c060c353c4: test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/rule
+.PHONY : renderGeneralUserDemo__e9c060c353c4
 
 # fast build rule for target.
-renderGeneralUserDemo__46ae355ec58e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/build.make test/CMakeFiles/renderGeneralUserDemo__46ae355ec58e.dir/build
-.PHONY : renderGeneralUserDemo__46ae355ec58e/fast
+renderGeneralUserDemo__e9c060c353c4/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/build.make test/CMakeFiles/renderGeneralUserDemo__e9c060c353c4.dir/build
+.PHONY : renderGeneralUserDemo__e9c060c353c4/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderBankSelect.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect.dir/rule
 .PHONY : test/CMakeFiles/renderBankSelect.dir/rule
 
 # Convenience name for target.
@@ -1812,110 +1812,110 @@ renderBankSelect: test/CMakeFiles/renderBankSelect.dir/rule
 
 # fast build rule for target.
 renderBankSelect/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect.dir/build.make test/CMakeFiles/renderBankSelect.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect.dir/build.make test/CMakeFiles/renderBankSelect.dir/build
 .PHONY : renderBankSelect/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/rule
+test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/rule
 
 # Convenience name for target.
-renderBankSelect__fb99e1afbe8e: test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/rule
-.PHONY : renderBankSelect__fb99e1afbe8e
+renderBankSelect__26c459cbfb70: test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/rule
+.PHONY : renderBankSelect__26c459cbfb70
 
 # fast build rule for target.
-renderBankSelect__fb99e1afbe8e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/build.make test/CMakeFiles/renderBankSelect__fb99e1afbe8e.dir/build
-.PHONY : renderBankSelect__fb99e1afbe8e/fast
+renderBankSelect__26c459cbfb70/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/build.make test/CMakeFiles/renderBankSelect__26c459cbfb70.dir/build
+.PHONY : renderBankSelect__26c459cbfb70/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__7634e348e016.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__7634e348e016.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__7634e348e016.dir/rule
+test/CMakeFiles/renderBankSelect__d861fd949e32.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__d861fd949e32.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__d861fd949e32.dir/rule
 
 # Convenience name for target.
-renderBankSelect__7634e348e016: test/CMakeFiles/renderBankSelect__7634e348e016.dir/rule
-.PHONY : renderBankSelect__7634e348e016
+renderBankSelect__d861fd949e32: test/CMakeFiles/renderBankSelect__d861fd949e32.dir/rule
+.PHONY : renderBankSelect__d861fd949e32
 
 # fast build rule for target.
-renderBankSelect__7634e348e016/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__7634e348e016.dir/build.make test/CMakeFiles/renderBankSelect__7634e348e016.dir/build
-.PHONY : renderBankSelect__7634e348e016/fast
+renderBankSelect__d861fd949e32/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__d861fd949e32.dir/build.make test/CMakeFiles/renderBankSelect__d861fd949e32.dir/build
+.PHONY : renderBankSelect__d861fd949e32/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__cc252305072a.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__cc252305072a.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__cc252305072a.dir/rule
+test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/rule
 
 # Convenience name for target.
-renderBankSelect__cc252305072a: test/CMakeFiles/renderBankSelect__cc252305072a.dir/rule
-.PHONY : renderBankSelect__cc252305072a
+renderBankSelect__03ff3d49934d: test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/rule
+.PHONY : renderBankSelect__03ff3d49934d
 
 # fast build rule for target.
-renderBankSelect__cc252305072a/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__cc252305072a.dir/build.make test/CMakeFiles/renderBankSelect__cc252305072a.dir/build
-.PHONY : renderBankSelect__cc252305072a/fast
+renderBankSelect__03ff3d49934d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/build.make test/CMakeFiles/renderBankSelect__03ff3d49934d.dir/build
+.PHONY : renderBankSelect__03ff3d49934d/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__aab8ae167754.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__aab8ae167754.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__aab8ae167754.dir/rule
+test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/rule
 
 # Convenience name for target.
-renderBankSelect__aab8ae167754: test/CMakeFiles/renderBankSelect__aab8ae167754.dir/rule
-.PHONY : renderBankSelect__aab8ae167754
+renderBankSelect__9ed6ea34b46c: test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/rule
+.PHONY : renderBankSelect__9ed6ea34b46c
 
 # fast build rule for target.
-renderBankSelect__aab8ae167754/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__aab8ae167754.dir/build.make test/CMakeFiles/renderBankSelect__aab8ae167754.dir/build
-.PHONY : renderBankSelect__aab8ae167754/fast
+renderBankSelect__9ed6ea34b46c/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/build.make test/CMakeFiles/renderBankSelect__9ed6ea34b46c.dir/build
+.PHONY : renderBankSelect__9ed6ea34b46c/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/rule
+test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/rule
 
 # Convenience name for target.
-renderBankSelect__c7bf7870cdcc: test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/rule
-.PHONY : renderBankSelect__c7bf7870cdcc
+renderBankSelect__e65a3efb70af: test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/rule
+.PHONY : renderBankSelect__e65a3efb70af
 
 # fast build rule for target.
-renderBankSelect__c7bf7870cdcc/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/build.make test/CMakeFiles/renderBankSelect__c7bf7870cdcc.dir/build
-.PHONY : renderBankSelect__c7bf7870cdcc/fast
+renderBankSelect__e65a3efb70af/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/build.make test/CMakeFiles/renderBankSelect__e65a3efb70af.dir/build
+.PHONY : renderBankSelect__e65a3efb70af/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/rule
+test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/rule
 
 # Convenience name for target.
-renderBankSelect__ac0180e3a89e: test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/rule
-.PHONY : renderBankSelect__ac0180e3a89e
+renderBankSelect__c6fdc1a2af05: test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/rule
+.PHONY : renderBankSelect__c6fdc1a2af05
 
 # fast build rule for target.
-renderBankSelect__ac0180e3a89e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/build.make test/CMakeFiles/renderBankSelect__ac0180e3a89e.dir/build
-.PHONY : renderBankSelect__ac0180e3a89e/fast
+renderBankSelect__c6fdc1a2af05/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/build.make test/CMakeFiles/renderBankSelect__c6fdc1a2af05.dir/build
+.PHONY : renderBankSelect__c6fdc1a2af05/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/rule
-.PHONY : test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/rule
+test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/rule
+.PHONY : test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/rule
 
 # Convenience name for target.
-renderBankSelect__5d100ea75f53: test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/rule
-.PHONY : renderBankSelect__5d100ea75f53
+renderBankSelect__37bf6ecbf0c3: test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/rule
+.PHONY : renderBankSelect__37bf6ecbf0c3
 
 # fast build rule for target.
-renderBankSelect__5d100ea75f53/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/build.make test/CMakeFiles/renderBankSelect__5d100ea75f53.dir/build
-.PHONY : renderBankSelect__5d100ea75f53/fast
+renderBankSelect__37bf6ecbf0c3/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/build.make test/CMakeFiles/renderBankSelect__37bf6ecbf0c3.dir/build
+.PHONY : renderBankSelect__37bf6ecbf0c3/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderDMOD.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDMOD.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderDMOD.dir/rule
 .PHONY : test/CMakeFiles/renderDMOD.dir/rule
 
 # Convenience name for target.
@@ -1924,12 +1924,12 @@ renderDMOD: test/CMakeFiles/renderDMOD.dir/rule
 
 # fast build rule for target.
 renderDMOD/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDMOD.dir/build.make test/CMakeFiles/renderDMOD.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderDMOD.dir/build.make test/CMakeFiles/renderDMOD.dir/build
 .PHONY : renderDMOD/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderRPN.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN.dir/rule
 .PHONY : test/CMakeFiles/renderRPN.dir/rule
 
 # Convenience name for target.
@@ -1938,54 +1938,54 @@ renderRPN: test/CMakeFiles/renderRPN.dir/rule
 
 # fast build rule for target.
 renderRPN/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN.dir/build.make test/CMakeFiles/renderRPN.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN.dir/build.make test/CMakeFiles/renderRPN.dir/build
 .PHONY : renderRPN/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderRPN__846c3e5137c0.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__846c3e5137c0.dir/rule
-.PHONY : test/CMakeFiles/renderRPN__846c3e5137c0.dir/rule
+test/CMakeFiles/renderRPN__ca11d596d4b1.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__ca11d596d4b1.dir/rule
+.PHONY : test/CMakeFiles/renderRPN__ca11d596d4b1.dir/rule
 
 # Convenience name for target.
-renderRPN__846c3e5137c0: test/CMakeFiles/renderRPN__846c3e5137c0.dir/rule
-.PHONY : renderRPN__846c3e5137c0
+renderRPN__ca11d596d4b1: test/CMakeFiles/renderRPN__ca11d596d4b1.dir/rule
+.PHONY : renderRPN__ca11d596d4b1
 
 # fast build rule for target.
-renderRPN__846c3e5137c0/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__846c3e5137c0.dir/build.make test/CMakeFiles/renderRPN__846c3e5137c0.dir/build
-.PHONY : renderRPN__846c3e5137c0/fast
+renderRPN__ca11d596d4b1/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__ca11d596d4b1.dir/build.make test/CMakeFiles/renderRPN__ca11d596d4b1.dir/build
+.PHONY : renderRPN__ca11d596d4b1/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderRPN__d6dad4634c08.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__d6dad4634c08.dir/rule
-.PHONY : test/CMakeFiles/renderRPN__d6dad4634c08.dir/rule
+test/CMakeFiles/renderRPN__c82891f859b3.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__c82891f859b3.dir/rule
+.PHONY : test/CMakeFiles/renderRPN__c82891f859b3.dir/rule
 
 # Convenience name for target.
-renderRPN__d6dad4634c08: test/CMakeFiles/renderRPN__d6dad4634c08.dir/rule
-.PHONY : renderRPN__d6dad4634c08
+renderRPN__c82891f859b3: test/CMakeFiles/renderRPN__c82891f859b3.dir/rule
+.PHONY : renderRPN__c82891f859b3
 
 # fast build rule for target.
-renderRPN__d6dad4634c08/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__d6dad4634c08.dir/build.make test/CMakeFiles/renderRPN__d6dad4634c08.dir/build
-.PHONY : renderRPN__d6dad4634c08/fast
+renderRPN__c82891f859b3/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__c82891f859b3.dir/build.make test/CMakeFiles/renderRPN__c82891f859b3.dir/build
+.PHONY : renderRPN__c82891f859b3/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderRPN__f4aeafaa9483.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__f4aeafaa9483.dir/rule
-.PHONY : test/CMakeFiles/renderRPN__f4aeafaa9483.dir/rule
+test/CMakeFiles/renderRPN__18cce440aaa7.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderRPN__18cce440aaa7.dir/rule
+.PHONY : test/CMakeFiles/renderRPN__18cce440aaa7.dir/rule
 
 # Convenience name for target.
-renderRPN__f4aeafaa9483: test/CMakeFiles/renderRPN__f4aeafaa9483.dir/rule
-.PHONY : renderRPN__f4aeafaa9483
+renderRPN__18cce440aaa7: test/CMakeFiles/renderRPN__18cce440aaa7.dir/rule
+.PHONY : renderRPN__18cce440aaa7
 
 # fast build rule for target.
-renderRPN__f4aeafaa9483/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__f4aeafaa9483.dir/build.make test/CMakeFiles/renderRPN__f4aeafaa9483.dir/build
-.PHONY : renderRPN__f4aeafaa9483/fast
+renderRPN__18cce440aaa7/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderRPN__18cce440aaa7.dir/build.make test/CMakeFiles/renderRPN__18cce440aaa7.dir/build
+.PHONY : renderRPN__18cce440aaa7/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderGSDT1.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1.dir/rule
 .PHONY : test/CMakeFiles/renderGSDT1.dir/rule
 
 # Convenience name for target.
@@ -1994,54 +1994,54 @@ renderGSDT1: test/CMakeFiles/renderGSDT1.dir/rule
 
 # fast build rule for target.
 renderGSDT1/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1.dir/build.make test/CMakeFiles/renderGSDT1.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1.dir/build.make test/CMakeFiles/renderGSDT1.dir/build
 .PHONY : renderGSDT1/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGSDT1__6018b79474f5.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__6018b79474f5.dir/rule
-.PHONY : test/CMakeFiles/renderGSDT1__6018b79474f5.dir/rule
+test/CMakeFiles/renderGSDT1__21101327f56b.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__21101327f56b.dir/rule
+.PHONY : test/CMakeFiles/renderGSDT1__21101327f56b.dir/rule
 
 # Convenience name for target.
-renderGSDT1__6018b79474f5: test/CMakeFiles/renderGSDT1__6018b79474f5.dir/rule
-.PHONY : renderGSDT1__6018b79474f5
+renderGSDT1__21101327f56b: test/CMakeFiles/renderGSDT1__21101327f56b.dir/rule
+.PHONY : renderGSDT1__21101327f56b
 
 # fast build rule for target.
-renderGSDT1__6018b79474f5/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__6018b79474f5.dir/build.make test/CMakeFiles/renderGSDT1__6018b79474f5.dir/build
-.PHONY : renderGSDT1__6018b79474f5/fast
+renderGSDT1__21101327f56b/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__21101327f56b.dir/build.make test/CMakeFiles/renderGSDT1__21101327f56b.dir/build
+.PHONY : renderGSDT1__21101327f56b/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/rule
-.PHONY : test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/rule
+test/CMakeFiles/renderGSDT1__581852094603.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__581852094603.dir/rule
+.PHONY : test/CMakeFiles/renderGSDT1__581852094603.dir/rule
 
 # Convenience name for target.
-renderGSDT1__967af2aaaa77: test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/rule
-.PHONY : renderGSDT1__967af2aaaa77
+renderGSDT1__581852094603: test/CMakeFiles/renderGSDT1__581852094603.dir/rule
+.PHONY : renderGSDT1__581852094603
 
 # fast build rule for target.
-renderGSDT1__967af2aaaa77/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/build.make test/CMakeFiles/renderGSDT1__967af2aaaa77.dir/build
-.PHONY : renderGSDT1__967af2aaaa77/fast
+renderGSDT1__581852094603/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__581852094603.dir/build.make test/CMakeFiles/renderGSDT1__581852094603.dir/build
+.PHONY : renderGSDT1__581852094603/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderGSDT1__d83e17f80436.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__d83e17f80436.dir/rule
-.PHONY : test/CMakeFiles/renderGSDT1__d83e17f80436.dir/rule
+test/CMakeFiles/renderGSDT1__a41ab928552b.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderGSDT1__a41ab928552b.dir/rule
+.PHONY : test/CMakeFiles/renderGSDT1__a41ab928552b.dir/rule
 
 # Convenience name for target.
-renderGSDT1__d83e17f80436: test/CMakeFiles/renderGSDT1__d83e17f80436.dir/rule
-.PHONY : renderGSDT1__d83e17f80436
+renderGSDT1__a41ab928552b: test/CMakeFiles/renderGSDT1__a41ab928552b.dir/rule
+.PHONY : renderGSDT1__a41ab928552b
 
 # fast build rule for target.
-renderGSDT1__d83e17f80436/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__d83e17f80436.dir/build.make test/CMakeFiles/renderGSDT1__d83e17f80436.dir/build
-.PHONY : renderGSDT1__d83e17f80436/fast
+renderGSDT1__a41ab928552b/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderGSDT1__a41ab928552b.dir/build.make test/CMakeFiles/renderGSDT1__a41ab928552b.dir/build
+.PHONY : renderGSDT1__a41ab928552b/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderLimiterTests.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests.dir/rule
 .PHONY : test/CMakeFiles/renderLimiterTests.dir/rule
 
 # Convenience name for target.
@@ -2050,124 +2050,124 @@ renderLimiterTests: test/CMakeFiles/renderLimiterTests.dir/rule
 
 # fast build rule for target.
 renderLimiterTests/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests.dir/build.make test/CMakeFiles/renderLimiterTests.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests.dir/build.make test/CMakeFiles/renderLimiterTests.dir/build
 .PHONY : renderLimiterTests/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/rule
+test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__b8eddd63558e: test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/rule
-.PHONY : renderLimiterTests__b8eddd63558e
+renderLimiterTests__6d7ac325957e: test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/rule
+.PHONY : renderLimiterTests__6d7ac325957e
 
 # fast build rule for target.
-renderLimiterTests__b8eddd63558e/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/build.make test/CMakeFiles/renderLimiterTests__b8eddd63558e.dir/build
-.PHONY : renderLimiterTests__b8eddd63558e/fast
+renderLimiterTests__6d7ac325957e/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/build.make test/CMakeFiles/renderLimiterTests__6d7ac325957e.dir/build
+.PHONY : renderLimiterTests__6d7ac325957e/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/rule
+test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__59403070dfb9: test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/rule
-.PHONY : renderLimiterTests__59403070dfb9
+renderLimiterTests__72ee29c5236d: test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/rule
+.PHONY : renderLimiterTests__72ee29c5236d
 
 # fast build rule for target.
-renderLimiterTests__59403070dfb9/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/build.make test/CMakeFiles/renderLimiterTests__59403070dfb9.dir/build
-.PHONY : renderLimiterTests__59403070dfb9/fast
+renderLimiterTests__72ee29c5236d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/build.make test/CMakeFiles/renderLimiterTests__72ee29c5236d.dir/build
+.PHONY : renderLimiterTests__72ee29c5236d/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__864408474b2a.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__864408474b2a.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__864408474b2a.dir/rule
+test/CMakeFiles/renderLimiterTests__9879198106af.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__9879198106af.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__9879198106af.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__864408474b2a: test/CMakeFiles/renderLimiterTests__864408474b2a.dir/rule
-.PHONY : renderLimiterTests__864408474b2a
+renderLimiterTests__9879198106af: test/CMakeFiles/renderLimiterTests__9879198106af.dir/rule
+.PHONY : renderLimiterTests__9879198106af
 
 # fast build rule for target.
-renderLimiterTests__864408474b2a/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__864408474b2a.dir/build.make test/CMakeFiles/renderLimiterTests__864408474b2a.dir/build
-.PHONY : renderLimiterTests__864408474b2a/fast
+renderLimiterTests__9879198106af/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__9879198106af.dir/build.make test/CMakeFiles/renderLimiterTests__9879198106af.dir/build
+.PHONY : renderLimiterTests__9879198106af/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/rule
+test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__453a27b6c99a: test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/rule
-.PHONY : renderLimiterTests__453a27b6c99a
+renderLimiterTests__6db80f21892d: test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/rule
+.PHONY : renderLimiterTests__6db80f21892d
 
 # fast build rule for target.
-renderLimiterTests__453a27b6c99a/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/build.make test/CMakeFiles/renderLimiterTests__453a27b6c99a.dir/build
-.PHONY : renderLimiterTests__453a27b6c99a/fast
+renderLimiterTests__6db80f21892d/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/build.make test/CMakeFiles/renderLimiterTests__6db80f21892d.dir/build
+.PHONY : renderLimiterTests__6db80f21892d/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/rule
+test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__7eca5c02ab1d: test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/rule
-.PHONY : renderLimiterTests__7eca5c02ab1d
+renderLimiterTests__3a8fba480e05: test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/rule
+.PHONY : renderLimiterTests__3a8fba480e05
 
 # fast build rule for target.
-renderLimiterTests__7eca5c02ab1d/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/build.make test/CMakeFiles/renderLimiterTests__7eca5c02ab1d.dir/build
-.PHONY : renderLimiterTests__7eca5c02ab1d/fast
+renderLimiterTests__3a8fba480e05/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/build.make test/CMakeFiles/renderLimiterTests__3a8fba480e05.dir/build
+.PHONY : renderLimiterTests__3a8fba480e05/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/rule
+test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__15a7605fac95: test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/rule
-.PHONY : renderLimiterTests__15a7605fac95
+renderLimiterTests__70d2d138cb19: test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/rule
+.PHONY : renderLimiterTests__70d2d138cb19
 
 # fast build rule for target.
-renderLimiterTests__15a7605fac95/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/build.make test/CMakeFiles/renderLimiterTests__15a7605fac95.dir/build
-.PHONY : renderLimiterTests__15a7605fac95/fast
+renderLimiterTests__70d2d138cb19/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/build.make test/CMakeFiles/renderLimiterTests__70d2d138cb19.dir/build
+.PHONY : renderLimiterTests__70d2d138cb19/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__33273a9da247.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__33273a9da247.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__33273a9da247.dir/rule
+test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__33273a9da247: test/CMakeFiles/renderLimiterTests__33273a9da247.dir/rule
-.PHONY : renderLimiterTests__33273a9da247
+renderLimiterTests__1a47384cd643: test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/rule
+.PHONY : renderLimiterTests__1a47384cd643
 
 # fast build rule for target.
-renderLimiterTests__33273a9da247/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__33273a9da247.dir/build.make test/CMakeFiles/renderLimiterTests__33273a9da247.dir/build
-.PHONY : renderLimiterTests__33273a9da247/fast
+renderLimiterTests__1a47384cd643/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/build.make test/CMakeFiles/renderLimiterTests__1a47384cd643.dir/build
+.PHONY : renderLimiterTests__1a47384cd643/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/rule
-.PHONY : test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/rule
+test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/rule
+.PHONY : test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/rule
 
 # Convenience name for target.
-renderLimiterTests__c541be03f25d: test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/rule
-.PHONY : renderLimiterTests__c541be03f25d
+renderLimiterTests__cd5beba7eb61: test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/rule
+.PHONY : renderLimiterTests__cd5beba7eb61
 
 # fast build rule for target.
-renderLimiterTests__c541be03f25d/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/build.make test/CMakeFiles/renderLimiterTests__c541be03f25d.dir/build
-.PHONY : renderLimiterTests__c541be03f25d/fast
+renderLimiterTests__cd5beba7eb61/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/build.make test/CMakeFiles/renderLimiterTests__cd5beba7eb61.dir/build
+.PHONY : renderLimiterTests__cd5beba7eb61/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderStreetwise.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderStreetwise.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderStreetwise.dir/rule
 .PHONY : test/CMakeFiles/renderStreetwise.dir/rule
 
 # Convenience name for target.
@@ -2176,12 +2176,12 @@ renderStreetwise: test/CMakeFiles/renderStreetwise.dir/rule
 
 # fast build rule for target.
 renderStreetwise/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderStreetwise.dir/build.make test/CMakeFiles/renderStreetwise.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderStreetwise.dir/build.make test/CMakeFiles/renderStreetwise.dir/build
 .PHONY : renderStreetwise/fast
 
 # Convenience name for target.
 test/CMakeFiles/renderMtsTests.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests.dir/rule
 .PHONY : test/CMakeFiles/renderMtsTests.dir/rule
 
 # Convenience name for target.
@@ -2190,43 +2190,43 @@ renderMtsTests: test/CMakeFiles/renderMtsTests.dir/rule
 
 # fast build rule for target.
 renderMtsTests/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests.dir/build.make test/CMakeFiles/renderMtsTests.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests.dir/build.make test/CMakeFiles/renderMtsTests.dir/build
 .PHONY : renderMtsTests/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderMtsTests__b961f22d295a.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests__b961f22d295a.dir/rule
-.PHONY : test/CMakeFiles/renderMtsTests__b961f22d295a.dir/rule
+test/CMakeFiles/renderMtsTests__01c29ba07588.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests__01c29ba07588.dir/rule
+.PHONY : test/CMakeFiles/renderMtsTests__01c29ba07588.dir/rule
 
 # Convenience name for target.
-renderMtsTests__b961f22d295a: test/CMakeFiles/renderMtsTests__b961f22d295a.dir/rule
-.PHONY : renderMtsTests__b961f22d295a
+renderMtsTests__01c29ba07588: test/CMakeFiles/renderMtsTests__01c29ba07588.dir/rule
+.PHONY : renderMtsTests__01c29ba07588
 
 # fast build rule for target.
-renderMtsTests__b961f22d295a/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests__b961f22d295a.dir/build.make test/CMakeFiles/renderMtsTests__b961f22d295a.dir/build
-.PHONY : renderMtsTests__b961f22d295a/fast
+renderMtsTests__01c29ba07588/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests__01c29ba07588.dir/build.make test/CMakeFiles/renderMtsTests__01c29ba07588.dir/build
+.PHONY : renderMtsTests__01c29ba07588/fast
 
 # Convenience name for target.
-test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/rule
-.PHONY : test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/rule
+test/CMakeFiles/renderMtsTests__7fce302dab91.dir/rule:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/renderMtsTests__7fce302dab91.dir/rule
+.PHONY : test/CMakeFiles/renderMtsTests__7fce302dab91.dir/rule
 
 # Convenience name for target.
-renderMtsTests__922f00a8f56b: test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/rule
-.PHONY : renderMtsTests__922f00a8f56b
+renderMtsTests__7fce302dab91: test/CMakeFiles/renderMtsTests__7fce302dab91.dir/rule
+.PHONY : renderMtsTests__7fce302dab91
 
 # fast build rule for target.
-renderMtsTests__922f00a8f56b/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/build.make test/CMakeFiles/renderMtsTests__922f00a8f56b.dir/build
-.PHONY : renderMtsTests__922f00a8f56b/fast
+renderMtsTests__7fce302dab91/fast:
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/renderMtsTests__7fce302dab91.dir/build.make test/CMakeFiles/renderMtsTests__7fce302dab91.dir/build
+.PHONY : renderMtsTests__7fce302dab91/fast
 
 dump_sfont.o: dump_sfont.c.o
 .PHONY : dump_sfont.o
 
 # target to build an object file
 dump_sfont.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.o
 .PHONY : dump_sfont.c.o
 
 dump_sfont.i: dump_sfont.c.i
@@ -2234,7 +2234,7 @@ dump_sfont.i: dump_sfont.c.i
 
 # target to preprocess a source file
 dump_sfont.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.i
 .PHONY : dump_sfont.c.i
 
 dump_sfont.s: dump_sfont.c.s
@@ -2242,7 +2242,7 @@ dump_sfont.s: dump_sfont.c.s
 
 # target to generate assembly for a file
 dump_sfont.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/dump_sfont.dir/build.make test/CMakeFiles/dump_sfont.dir/dump_sfont.c.s
 .PHONY : dump_sfont.c.s
 
 test_ABI.o: test_ABI.cpp.o
@@ -2250,7 +2250,7 @@ test_ABI.o: test_ABI.cpp.o
 
 # target to build an object file
 test_ABI.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.o
 .PHONY : test_ABI.cpp.o
 
 test_ABI.i: test_ABI.cpp.i
@@ -2258,7 +2258,7 @@ test_ABI.i: test_ABI.cpp.i
 
 # target to preprocess a source file
 test_ABI.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.i
 .PHONY : test_ABI.cpp.i
 
 test_ABI.s: test_ABI.cpp.s
@@ -2266,7 +2266,7 @@ test_ABI.s: test_ABI.cpp.s
 
 # target to generate assembly for a file
 test_ABI.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ABI.dir/build.make test/CMakeFiles/test_ABI.dir/test_ABI.cpp.s
 .PHONY : test_ABI.cpp.s
 
 test_bug_635.o: test_bug_635.c.o
@@ -2274,7 +2274,7 @@ test_bug_635.o: test_bug_635.c.o
 
 # target to build an object file
 test_bug_635.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.o
 .PHONY : test_bug_635.c.o
 
 test_bug_635.i: test_bug_635.c.i
@@ -2282,7 +2282,7 @@ test_bug_635.i: test_bug_635.c.i
 
 # target to preprocess a source file
 test_bug_635.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.i
 .PHONY : test_bug_635.c.i
 
 test_bug_635.s: test_bug_635.c.s
@@ -2290,7 +2290,7 @@ test_bug_635.s: test_bug_635.c.s
 
 # target to generate assembly for a file
 test_bug_635.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_bug_635.dir/build.make test/CMakeFiles/test_bug_635.dir/test_bug_635.c.s
 .PHONY : test_bug_635.c.s
 
 test_ct2hz.o: test_ct2hz.c.o
@@ -2298,7 +2298,7 @@ test_ct2hz.o: test_ct2hz.c.o
 
 # target to build an object file
 test_ct2hz.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.o
 .PHONY : test_ct2hz.c.o
 
 test_ct2hz.i: test_ct2hz.c.i
@@ -2306,7 +2306,7 @@ test_ct2hz.i: test_ct2hz.c.i
 
 # target to preprocess a source file
 test_ct2hz.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.i
 .PHONY : test_ct2hz.c.i
 
 test_ct2hz.s: test_ct2hz.c.s
@@ -2314,7 +2314,7 @@ test_ct2hz.s: test_ct2hz.c.s
 
 # target to generate assembly for a file
 test_ct2hz.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_ct2hz.dir/build.make test/CMakeFiles/test_ct2hz.dir/test_ct2hz.c.s
 .PHONY : test_ct2hz.c.s
 
 test_default_mod.o: test_default_mod.c.o
@@ -2322,7 +2322,7 @@ test_default_mod.o: test_default_mod.c.o
 
 # target to build an object file
 test_default_mod.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.o
 .PHONY : test_default_mod.c.o
 
 test_default_mod.i: test_default_mod.c.i
@@ -2330,7 +2330,7 @@ test_default_mod.i: test_default_mod.c.i
 
 # target to preprocess a source file
 test_default_mod.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.i
 .PHONY : test_default_mod.c.i
 
 test_default_mod.s: test_default_mod.c.s
@@ -2338,7 +2338,7 @@ test_default_mod.s: test_default_mod.c.s
 
 # target to generate assembly for a file
 test_default_mod.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_default_mod.dir/build.make test/CMakeFiles/test_default_mod.dir/test_default_mod.c.s
 .PHONY : test_default_mod.c.s
 
 test_file_seek_tell.o: test_file_seek_tell.c.o
@@ -2346,7 +2346,7 @@ test_file_seek_tell.o: test_file_seek_tell.c.o
 
 # target to build an object file
 test_file_seek_tell.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.o
 .PHONY : test_file_seek_tell.c.o
 
 test_file_seek_tell.i: test_file_seek_tell.c.i
@@ -2354,7 +2354,7 @@ test_file_seek_tell.i: test_file_seek_tell.c.i
 
 # target to preprocess a source file
 test_file_seek_tell.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.i
 .PHONY : test_file_seek_tell.c.i
 
 test_file_seek_tell.s: test_file_seek_tell.c.s
@@ -2362,7 +2362,7 @@ test_file_seek_tell.s: test_file_seek_tell.c.s
 
 # target to generate assembly for a file
 test_file_seek_tell.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_file_seek_tell.dir/build.make test/CMakeFiles/test_file_seek_tell.dir/test_file_seek_tell.c.s
 .PHONY : test_file_seek_tell.c.s
 
 test_jack_obtaining_synth.o: test_jack_obtaining_synth.c.o
@@ -2370,7 +2370,7 @@ test_jack_obtaining_synth.o: test_jack_obtaining_synth.c.o
 
 # target to build an object file
 test_jack_obtaining_synth.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.o
 .PHONY : test_jack_obtaining_synth.c.o
 
 test_jack_obtaining_synth.i: test_jack_obtaining_synth.c.i
@@ -2378,7 +2378,7 @@ test_jack_obtaining_synth.i: test_jack_obtaining_synth.c.i
 
 # target to preprocess a source file
 test_jack_obtaining_synth.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.i
 .PHONY : test_jack_obtaining_synth.c.i
 
 test_jack_obtaining_synth.s: test_jack_obtaining_synth.c.s
@@ -2386,7 +2386,7 @@ test_jack_obtaining_synth.s: test_jack_obtaining_synth.c.s
 
 # target to generate assembly for a file
 test_jack_obtaining_synth.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_jack_obtaining_synth.dir/build.make test/CMakeFiles/test_jack_obtaining_synth.dir/test_jack_obtaining_synth.c.s
 .PHONY : test_jack_obtaining_synth.c.s
 
 test_modulator.o: test_modulator.cpp.o
@@ -2394,7 +2394,7 @@ test_modulator.o: test_modulator.cpp.o
 
 # target to build an object file
 test_modulator.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.o
 .PHONY : test_modulator.cpp.o
 
 test_modulator.i: test_modulator.cpp.i
@@ -2402,7 +2402,7 @@ test_modulator.i: test_modulator.cpp.i
 
 # target to preprocess a source file
 test_modulator.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.i
 .PHONY : test_modulator.cpp.i
 
 test_modulator.s: test_modulator.cpp.s
@@ -2410,7 +2410,7 @@ test_modulator.s: test_modulator.cpp.s
 
 # target to generate assembly for a file
 test_modulator.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_modulator.dir/build.make test/CMakeFiles/test_modulator.dir/test_modulator.cpp.s
 .PHONY : test_modulator.cpp.s
 
 test_mts_cc_tuning.o: test_mts_cc_tuning.c.o
@@ -2418,7 +2418,7 @@ test_mts_cc_tuning.o: test_mts_cc_tuning.c.o
 
 # target to build an object file
 test_mts_cc_tuning.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.o
 .PHONY : test_mts_cc_tuning.c.o
 
 test_mts_cc_tuning.i: test_mts_cc_tuning.c.i
@@ -2426,7 +2426,7 @@ test_mts_cc_tuning.i: test_mts_cc_tuning.c.i
 
 # target to preprocess a source file
 test_mts_cc_tuning.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.i
 .PHONY : test_mts_cc_tuning.c.i
 
 test_mts_cc_tuning.s: test_mts_cc_tuning.c.s
@@ -2434,7 +2434,7 @@ test_mts_cc_tuning.s: test_mts_cc_tuning.c.s
 
 # target to generate assembly for a file
 test_mts_cc_tuning.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_mts_cc_tuning.dir/build.make test/CMakeFiles/test_mts_cc_tuning.dir/test_mts_cc_tuning.c.s
 .PHONY : test_mts_cc_tuning.c.s
 
 test_pointer_alignment.o: test_pointer_alignment.c.o
@@ -2442,7 +2442,7 @@ test_pointer_alignment.o: test_pointer_alignment.c.o
 
 # target to build an object file
 test_pointer_alignment.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.o
 .PHONY : test_pointer_alignment.c.o
 
 test_pointer_alignment.i: test_pointer_alignment.c.i
@@ -2450,7 +2450,7 @@ test_pointer_alignment.i: test_pointer_alignment.c.i
 
 # target to preprocess a source file
 test_pointer_alignment.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.i
 .PHONY : test_pointer_alignment.c.i
 
 test_pointer_alignment.s: test_pointer_alignment.c.s
@@ -2458,7 +2458,7 @@ test_pointer_alignment.s: test_pointer_alignment.c.s
 
 # target to generate assembly for a file
 test_pointer_alignment.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_pointer_alignment.dir/build.make test/CMakeFiles/test_pointer_alignment.dir/test_pointer_alignment.c.s
 .PHONY : test_pointer_alignment.c.s
 
 test_portamento_time.o: test_portamento_time.cpp.o
@@ -2466,7 +2466,7 @@ test_portamento_time.o: test_portamento_time.cpp.o
 
 # target to build an object file
 test_portamento_time.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.o
 .PHONY : test_portamento_time.cpp.o
 
 test_portamento_time.i: test_portamento_time.cpp.i
@@ -2474,7 +2474,7 @@ test_portamento_time.i: test_portamento_time.cpp.i
 
 # target to preprocess a source file
 test_portamento_time.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.i
 .PHONY : test_portamento_time.cpp.i
 
 test_portamento_time.s: test_portamento_time.cpp.s
@@ -2482,7 +2482,7 @@ test_portamento_time.s: test_portamento_time.cpp.s
 
 # target to generate assembly for a file
 test_portamento_time.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_portamento_time.dir/build.make test/CMakeFiles/test_portamento_time.dir/test_portamento_time.cpp.s
 .PHONY : test_portamento_time.cpp.s
 
 test_preset_pinning.o: test_preset_pinning.c.o
@@ -2490,7 +2490,7 @@ test_preset_pinning.o: test_preset_pinning.c.o
 
 # target to build an object file
 test_preset_pinning.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.o
 .PHONY : test_preset_pinning.c.o
 
 test_preset_pinning.i: test_preset_pinning.c.i
@@ -2498,7 +2498,7 @@ test_preset_pinning.i: test_preset_pinning.c.i
 
 # target to preprocess a source file
 test_preset_pinning.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.i
 .PHONY : test_preset_pinning.c.i
 
 test_preset_pinning.s: test_preset_pinning.c.s
@@ -2506,7 +2506,7 @@ test_preset_pinning.s: test_preset_pinning.c.s
 
 # target to generate assembly for a file
 test_preset_pinning.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_pinning.dir/build.make test/CMakeFiles/test_preset_pinning.dir/test_preset_pinning.c.s
 .PHONY : test_preset_pinning.c.s
 
 test_preset_sample_loading.o: test_preset_sample_loading.c.o
@@ -2514,7 +2514,7 @@ test_preset_sample_loading.o: test_preset_sample_loading.c.o
 
 # target to build an object file
 test_preset_sample_loading.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.o
 .PHONY : test_preset_sample_loading.c.o
 
 test_preset_sample_loading.i: test_preset_sample_loading.c.i
@@ -2522,7 +2522,7 @@ test_preset_sample_loading.i: test_preset_sample_loading.c.i
 
 # target to preprocess a source file
 test_preset_sample_loading.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.i
 .PHONY : test_preset_sample_loading.c.i
 
 test_preset_sample_loading.s: test_preset_sample_loading.c.s
@@ -2530,7 +2530,7 @@ test_preset_sample_loading.s: test_preset_sample_loading.c.s
 
 # target to generate assembly for a file
 test_preset_sample_loading.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_preset_sample_loading.dir/build.make test/CMakeFiles/test_preset_sample_loading.dir/test_preset_sample_loading.c.s
 .PHONY : test_preset_sample_loading.c.s
 
 test_round_clip.o: test_round_clip.cpp.o
@@ -2538,7 +2538,7 @@ test_round_clip.o: test_round_clip.cpp.o
 
 # target to build an object file
 test_round_clip.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.o
 .PHONY : test_round_clip.cpp.o
 
 test_round_clip.i: test_round_clip.cpp.i
@@ -2546,7 +2546,7 @@ test_round_clip.i: test_round_clip.cpp.i
 
 # target to preprocess a source file
 test_round_clip.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.i
 .PHONY : test_round_clip.cpp.i
 
 test_round_clip.s: test_round_clip.cpp.s
@@ -2554,7 +2554,7 @@ test_round_clip.s: test_round_clip.cpp.s
 
 # target to generate assembly for a file
 test_round_clip.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_round_clip.dir/build.make test/CMakeFiles/test_round_clip.dir/test_round_clip.cpp.s
 .PHONY : test_round_clip.cpp.s
 
 test_sample_cache.o: test_sample_cache.c.o
@@ -2562,7 +2562,7 @@ test_sample_cache.o: test_sample_cache.c.o
 
 # target to build an object file
 test_sample_cache.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.o
 .PHONY : test_sample_cache.c.o
 
 test_sample_cache.i: test_sample_cache.c.i
@@ -2570,7 +2570,7 @@ test_sample_cache.i: test_sample_cache.c.i
 
 # target to preprocess a source file
 test_sample_cache.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.i
 .PHONY : test_sample_cache.c.i
 
 test_sample_cache.s: test_sample_cache.c.s
@@ -2578,7 +2578,7 @@ test_sample_cache.s: test_sample_cache.c.s
 
 # target to generate assembly for a file
 test_sample_cache.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_cache.dir/build.make test/CMakeFiles/test_sample_cache.dir/test_sample_cache.c.s
 .PHONY : test_sample_cache.c.s
 
 test_sample_pitch_calculation.o: test_sample_pitch_calculation.c.o
@@ -2586,7 +2586,7 @@ test_sample_pitch_calculation.o: test_sample_pitch_calculation.c.o
 
 # target to build an object file
 test_sample_pitch_calculation.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.o
 .PHONY : test_sample_pitch_calculation.c.o
 
 test_sample_pitch_calculation.i: test_sample_pitch_calculation.c.i
@@ -2594,7 +2594,7 @@ test_sample_pitch_calculation.i: test_sample_pitch_calculation.c.i
 
 # target to preprocess a source file
 test_sample_pitch_calculation.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.i
 .PHONY : test_sample_pitch_calculation.c.i
 
 test_sample_pitch_calculation.s: test_sample_pitch_calculation.c.s
@@ -2602,7 +2602,7 @@ test_sample_pitch_calculation.s: test_sample_pitch_calculation.c.s
 
 # target to generate assembly for a file
 test_sample_pitch_calculation.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_pitch_calculation.dir/build.make test/CMakeFiles/test_sample_pitch_calculation.dir/test_sample_pitch_calculation.c.s
 .PHONY : test_sample_pitch_calculation.c.s
 
 test_sample_validate.o: test_sample_validate.c.o
@@ -2610,7 +2610,7 @@ test_sample_validate.o: test_sample_validate.c.o
 
 # target to build an object file
 test_sample_validate.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.o
 .PHONY : test_sample_validate.c.o
 
 test_sample_validate.i: test_sample_validate.c.i
@@ -2618,7 +2618,7 @@ test_sample_validate.i: test_sample_validate.c.i
 
 # target to preprocess a source file
 test_sample_validate.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.i
 .PHONY : test_sample_validate.c.i
 
 test_sample_validate.s: test_sample_validate.c.s
@@ -2626,7 +2626,7 @@ test_sample_validate.s: test_sample_validate.c.s
 
 # target to generate assembly for a file
 test_sample_validate.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sample_validate.dir/build.make test/CMakeFiles/test_sample_validate.dir/test_sample_validate.c.s
 .PHONY : test_sample_validate.c.s
 
 test_seq_event_queue_remove.o: test_seq_event_queue_remove.c.o
@@ -2634,7 +2634,7 @@ test_seq_event_queue_remove.o: test_seq_event_queue_remove.c.o
 
 # target to build an object file
 test_seq_event_queue_remove.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.o
 .PHONY : test_seq_event_queue_remove.c.o
 
 test_seq_event_queue_remove.i: test_seq_event_queue_remove.c.i
@@ -2642,7 +2642,7 @@ test_seq_event_queue_remove.i: test_seq_event_queue_remove.c.i
 
 # target to preprocess a source file
 test_seq_event_queue_remove.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.i
 .PHONY : test_seq_event_queue_remove.c.i
 
 test_seq_event_queue_remove.s: test_seq_event_queue_remove.c.s
@@ -2650,7 +2650,7 @@ test_seq_event_queue_remove.s: test_seq_event_queue_remove.c.s
 
 # target to generate assembly for a file
 test_seq_event_queue_remove.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_remove.dir/build.make test/CMakeFiles/test_seq_event_queue_remove.dir/test_seq_event_queue_remove.c.s
 .PHONY : test_seq_event_queue_remove.c.s
 
 test_seq_event_queue_sort.o: test_seq_event_queue_sort.c.o
@@ -2658,7 +2658,7 @@ test_seq_event_queue_sort.o: test_seq_event_queue_sort.c.o
 
 # target to build an object file
 test_seq_event_queue_sort.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.o
 .PHONY : test_seq_event_queue_sort.c.o
 
 test_seq_event_queue_sort.i: test_seq_event_queue_sort.c.i
@@ -2666,7 +2666,7 @@ test_seq_event_queue_sort.i: test_seq_event_queue_sort.c.i
 
 # target to preprocess a source file
 test_seq_event_queue_sort.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.i
 .PHONY : test_seq_event_queue_sort.c.i
 
 test_seq_event_queue_sort.s: test_seq_event_queue_sort.c.s
@@ -2674,7 +2674,7 @@ test_seq_event_queue_sort.s: test_seq_event_queue_sort.c.s
 
 # target to generate assembly for a file
 test_seq_event_queue_sort.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_event_queue_sort.dir/build.make test/CMakeFiles/test_seq_event_queue_sort.dir/test_seq_event_queue_sort.c.s
 .PHONY : test_seq_event_queue_sort.c.s
 
 test_seq_evt_order.o: test_seq_evt_order.cpp.o
@@ -2682,7 +2682,7 @@ test_seq_evt_order.o: test_seq_evt_order.cpp.o
 
 # target to build an object file
 test_seq_evt_order.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o
 .PHONY : test_seq_evt_order.cpp.o
 
 test_seq_evt_order.i: test_seq_evt_order.cpp.i
@@ -2690,7 +2690,7 @@ test_seq_evt_order.i: test_seq_evt_order.cpp.i
 
 # target to preprocess a source file
 test_seq_evt_order.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i
 .PHONY : test_seq_evt_order.cpp.i
 
 test_seq_evt_order.s: test_seq_evt_order.cpp.s
@@ -2698,7 +2698,7 @@ test_seq_evt_order.s: test_seq_evt_order.cpp.s
 
 # target to generate assembly for a file
 test_seq_evt_order.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_evt_order.dir/build.make test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s
 .PHONY : test_seq_evt_order.cpp.s
 
 test_seq_scale.o: test_seq_scale.c.o
@@ -2706,7 +2706,7 @@ test_seq_scale.o: test_seq_scale.c.o
 
 # target to build an object file
 test_seq_scale.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.o
 .PHONY : test_seq_scale.c.o
 
 test_seq_scale.i: test_seq_scale.c.i
@@ -2714,7 +2714,7 @@ test_seq_scale.i: test_seq_scale.c.i
 
 # target to preprocess a source file
 test_seq_scale.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.i
 .PHONY : test_seq_scale.c.i
 
 test_seq_scale.s: test_seq_scale.c.s
@@ -2722,7 +2722,7 @@ test_seq_scale.s: test_seq_scale.c.s
 
 # target to generate assembly for a file
 test_seq_scale.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seq_scale.dir/build.make test/CMakeFiles/test_seq_scale.dir/test_seq_scale.c.s
 .PHONY : test_seq_scale.c.s
 
 test_seqbind_unregister.o: test_seqbind_unregister.c.o
@@ -2730,7 +2730,7 @@ test_seqbind_unregister.o: test_seqbind_unregister.c.o
 
 # target to build an object file
 test_seqbind_unregister.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.o
 .PHONY : test_seqbind_unregister.c.o
 
 test_seqbind_unregister.i: test_seqbind_unregister.c.i
@@ -2738,7 +2738,7 @@ test_seqbind_unregister.i: test_seqbind_unregister.c.i
 
 # target to preprocess a source file
 test_seqbind_unregister.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.i
 .PHONY : test_seqbind_unregister.c.i
 
 test_seqbind_unregister.s: test_seqbind_unregister.c.s
@@ -2746,7 +2746,7 @@ test_seqbind_unregister.s: test_seqbind_unregister.c.s
 
 # target to generate assembly for a file
 test_seqbind_unregister.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_seqbind_unregister.dir/build.make test/CMakeFiles/test_seqbind_unregister.dir/test_seqbind_unregister.c.s
 .PHONY : test_seqbind_unregister.c.s
 
 test_settings_unregister_callback.o: test_settings_unregister_callback.c.o
@@ -2754,7 +2754,7 @@ test_settings_unregister_callback.o: test_settings_unregister_callback.c.o
 
 # target to build an object file
 test_settings_unregister_callback.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.o
 .PHONY : test_settings_unregister_callback.c.o
 
 test_settings_unregister_callback.i: test_settings_unregister_callback.c.i
@@ -2762,7 +2762,7 @@ test_settings_unregister_callback.i: test_settings_unregister_callback.c.i
 
 # target to preprocess a source file
 test_settings_unregister_callback.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.i
 .PHONY : test_settings_unregister_callback.c.i
 
 test_settings_unregister_callback.s: test_settings_unregister_callback.c.s
@@ -2770,7 +2770,7 @@ test_settings_unregister_callback.s: test_settings_unregister_callback.c.s
 
 # target to generate assembly for a file
 test_settings_unregister_callback.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_settings_unregister_callback.dir/build.make test/CMakeFiles/test_settings_unregister_callback.dir/test_settings_unregister_callback.c.s
 .PHONY : test_settings_unregister_callback.c.s
 
 test_sfont_loading.o: test_sfont_loading.c.o
@@ -2778,7 +2778,7 @@ test_sfont_loading.o: test_sfont_loading.c.o
 
 # target to build an object file
 test_sfont_loading.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.o
 .PHONY : test_sfont_loading.c.o
 
 test_sfont_loading.i: test_sfont_loading.c.i
@@ -2786,7 +2786,7 @@ test_sfont_loading.i: test_sfont_loading.c.i
 
 # target to preprocess a source file
 test_sfont_loading.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.i
 .PHONY : test_sfont_loading.c.i
 
 test_sfont_loading.s: test_sfont_loading.c.s
@@ -2794,7 +2794,7 @@ test_sfont_loading.s: test_sfont_loading.c.s
 
 # target to generate assembly for a file
 test_sfont_loading.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_loading.dir/build.make test/CMakeFiles/test_sfont_loading.dir/test_sfont_loading.c.s
 .PHONY : test_sfont_loading.c.s
 
 test_sfont_unloading.o: test_sfont_unloading.c.o
@@ -2802,7 +2802,7 @@ test_sfont_unloading.o: test_sfont_unloading.c.o
 
 # target to build an object file
 test_sfont_unloading.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.o
 .PHONY : test_sfont_unloading.c.o
 
 test_sfont_unloading.i: test_sfont_unloading.c.i
@@ -2810,7 +2810,7 @@ test_sfont_unloading.i: test_sfont_unloading.c.i
 
 # target to preprocess a source file
 test_sfont_unloading.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.i
 .PHONY : test_sfont_unloading.c.i
 
 test_sfont_unloading.s: test_sfont_unloading.c.s
@@ -2818,7 +2818,7 @@ test_sfont_unloading.s: test_sfont_unloading.c.s
 
 # target to generate assembly for a file
 test_sfont_unloading.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_unloading.dir/build.make test/CMakeFiles/test_sfont_unloading.dir/test_sfont_unloading.c.s
 .PHONY : test_sfont_unloading.c.s
 
 test_sfont_zone.o: test_sfont_zone.c.o
@@ -2826,7 +2826,7 @@ test_sfont_zone.o: test_sfont_zone.c.o
 
 # target to build an object file
 test_sfont_zone.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.o
 .PHONY : test_sfont_zone.c.o
 
 test_sfont_zone.i: test_sfont_zone.c.i
@@ -2834,7 +2834,7 @@ test_sfont_zone.i: test_sfont_zone.c.i
 
 # target to preprocess a source file
 test_sfont_zone.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.i
 .PHONY : test_sfont_zone.c.i
 
 test_sfont_zone.s: test_sfont_zone.c.s
@@ -2842,7 +2842,7 @@ test_sfont_zone.s: test_sfont_zone.c.s
 
 # target to generate assembly for a file
 test_sfont_zone.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_sfont_zone.dir/build.make test/CMakeFiles/test_sfont_zone.dir/test_sfont_zone.c.s
 .PHONY : test_sfont_zone.c.s
 
 test_shell_server_auto_port.o: test_shell_server_auto_port.c.o
@@ -2850,7 +2850,7 @@ test_shell_server_auto_port.o: test_shell_server_auto_port.c.o
 
 # target to build an object file
 test_shell_server_auto_port.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.o
 .PHONY : test_shell_server_auto_port.c.o
 
 test_shell_server_auto_port.i: test_shell_server_auto_port.c.i
@@ -2858,7 +2858,7 @@ test_shell_server_auto_port.i: test_shell_server_auto_port.c.i
 
 # target to preprocess a source file
 test_shell_server_auto_port.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.i
 .PHONY : test_shell_server_auto_port.c.i
 
 test_shell_server_auto_port.s: test_shell_server_auto_port.c.s
@@ -2866,7 +2866,7 @@ test_shell_server_auto_port.s: test_shell_server_auto_port.c.s
 
 # target to generate assembly for a file
 test_shell_server_auto_port.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_shell_server_auto_port.dir/build.make test/CMakeFiles/test_shell_server_auto_port.dir/test_shell_server_auto_port.c.s
 .PHONY : test_shell_server_auto_port.c.s
 
 test_snprintf.o: test_snprintf.c.o
@@ -2874,7 +2874,7 @@ test_snprintf.o: test_snprintf.c.o
 
 # target to build an object file
 test_snprintf.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.o
 .PHONY : test_snprintf.c.o
 
 test_snprintf.i: test_snprintf.c.i
@@ -2882,7 +2882,7 @@ test_snprintf.i: test_snprintf.c.i
 
 # target to preprocess a source file
 test_snprintf.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.i
 .PHONY : test_snprintf.c.i
 
 test_snprintf.s: test_snprintf.c.s
@@ -2890,7 +2890,7 @@ test_snprintf.s: test_snprintf.c.s
 
 # target to generate assembly for a file
 test_snprintf.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_snprintf.dir/build.make test/CMakeFiles/test_snprintf.dir/test_snprintf.c.s
 .PHONY : test_snprintf.c.s
 
 test_synth_chorus_reverb.o: test_synth_chorus_reverb.c.o
@@ -2898,7 +2898,7 @@ test_synth_chorus_reverb.o: test_synth_chorus_reverb.c.o
 
 # target to build an object file
 test_synth_chorus_reverb.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.o
 .PHONY : test_synth_chorus_reverb.c.o
 
 test_synth_chorus_reverb.i: test_synth_chorus_reverb.c.i
@@ -2906,7 +2906,7 @@ test_synth_chorus_reverb.i: test_synth_chorus_reverb.c.i
 
 # target to preprocess a source file
 test_synth_chorus_reverb.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.i
 .PHONY : test_synth_chorus_reverb.c.i
 
 test_synth_chorus_reverb.s: test_synth_chorus_reverb.c.s
@@ -2914,7 +2914,7 @@ test_synth_chorus_reverb.s: test_synth_chorus_reverb.c.s
 
 # target to generate assembly for a file
 test_synth_chorus_reverb.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_chorus_reverb.dir/build.make test/CMakeFiles/test_synth_chorus_reverb.dir/test_synth_chorus_reverb.c.s
 .PHONY : test_synth_chorus_reverb.c.s
 
 test_synth_process.o: test_synth_process.c.o
@@ -2922,7 +2922,7 @@ test_synth_process.o: test_synth_process.c.o
 
 # target to build an object file
 test_synth_process.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.o
 .PHONY : test_synth_process.c.o
 
 test_synth_process.i: test_synth_process.c.i
@@ -2930,7 +2930,7 @@ test_synth_process.i: test_synth_process.c.i
 
 # target to preprocess a source file
 test_synth_process.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.i
 .PHONY : test_synth_process.c.i
 
 test_synth_process.s: test_synth_process.c.s
@@ -2938,7 +2938,7 @@ test_synth_process.s: test_synth_process.c.s
 
 # target to generate assembly for a file
 test_synth_process.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_process.dir/build.make test/CMakeFiles/test_synth_process.dir/test_synth_process.c.s
 .PHONY : test_synth_process.c.s
 
 test_synth_render_s16.o: test_synth_render_s16.c.o
@@ -2946,7 +2946,7 @@ test_synth_render_s16.o: test_synth_render_s16.c.o
 
 # target to build an object file
 test_synth_render_s16.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o
 .PHONY : test_synth_render_s16.c.o
 
 test_synth_render_s16.i: test_synth_render_s16.c.i
@@ -2954,7 +2954,7 @@ test_synth_render_s16.i: test_synth_render_s16.c.i
 
 # target to preprocess a source file
 test_synth_render_s16.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.i
 .PHONY : test_synth_render_s16.c.i
 
 test_synth_render_s16.s: test_synth_render_s16.c.s
@@ -2962,7 +2962,7 @@ test_synth_render_s16.s: test_synth_render_s16.c.s
 
 # target to generate assembly for a file
 test_synth_render_s16.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s16.dir/build.make test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.s
 .PHONY : test_synth_render_s16.c.s
 
 test_synth_render_s24.o: test_synth_render_s24.cpp.o
@@ -2970,7 +2970,7 @@ test_synth_render_s24.o: test_synth_render_s24.cpp.o
 
 # target to build an object file
 test_synth_render_s24.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.o
 .PHONY : test_synth_render_s24.cpp.o
 
 test_synth_render_s24.i: test_synth_render_s24.cpp.i
@@ -2978,7 +2978,7 @@ test_synth_render_s24.i: test_synth_render_s24.cpp.i
 
 # target to preprocess a source file
 test_synth_render_s24.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.i
 .PHONY : test_synth_render_s24.cpp.i
 
 test_synth_render_s24.s: test_synth_render_s24.cpp.s
@@ -2986,7 +2986,7 @@ test_synth_render_s24.s: test_synth_render_s24.cpp.s
 
 # target to generate assembly for a file
 test_synth_render_s24.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s24.dir/build.make test/CMakeFiles/test_synth_render_s24.dir/test_synth_render_s24.cpp.s
 .PHONY : test_synth_render_s24.cpp.s
 
 test_synth_render_s32.o: test_synth_render_s32.cpp.o
@@ -2994,7 +2994,7 @@ test_synth_render_s32.o: test_synth_render_s32.cpp.o
 
 # target to build an object file
 test_synth_render_s32.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.o
 .PHONY : test_synth_render_s32.cpp.o
 
 test_synth_render_s32.i: test_synth_render_s32.cpp.i
@@ -3002,7 +3002,7 @@ test_synth_render_s32.i: test_synth_render_s32.cpp.i
 
 # target to preprocess a source file
 test_synth_render_s32.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.i
 .PHONY : test_synth_render_s32.cpp.i
 
 test_synth_render_s32.s: test_synth_render_s32.cpp.s
@@ -3010,7 +3010,7 @@ test_synth_render_s32.s: test_synth_render_s32.cpp.s
 
 # target to generate assembly for a file
 test_synth_render_s32.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_render_s32.dir/build.make test/CMakeFiles/test_synth_render_s32.dir/test_synth_render_s32.cpp.s
 .PHONY : test_synth_render_s32.cpp.s
 
 test_synth_reset_cc.o: test_synth_reset_cc.c.o
@@ -3018,7 +3018,7 @@ test_synth_reset_cc.o: test_synth_reset_cc.c.o
 
 # target to build an object file
 test_synth_reset_cc.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.o
 .PHONY : test_synth_reset_cc.c.o
 
 test_synth_reset_cc.i: test_synth_reset_cc.c.i
@@ -3026,7 +3026,7 @@ test_synth_reset_cc.i: test_synth_reset_cc.c.i
 
 # target to preprocess a source file
 test_synth_reset_cc.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.i
 .PHONY : test_synth_reset_cc.c.i
 
 test_synth_reset_cc.s: test_synth_reset_cc.c.s
@@ -3034,7 +3034,7 @@ test_synth_reset_cc.s: test_synth_reset_cc.c.s
 
 # target to generate assembly for a file
 test_synth_reset_cc.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_synth_reset_cc.dir/build.make test/CMakeFiles/test_synth_reset_cc.dir/test_synth_reset_cc.c.s
 .PHONY : test_synth_reset_cc.c.s
 
 test_threading.o: test_threading.c.o
@@ -3042,7 +3042,7 @@ test_threading.o: test_threading.c.o
 
 # target to build an object file
 test_threading.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.o
 .PHONY : test_threading.c.o
 
 test_threading.i: test_threading.c.i
@@ -3050,7 +3050,7 @@ test_threading.i: test_threading.c.i
 
 # target to preprocess a source file
 test_threading.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.i
 .PHONY : test_threading.c.i
 
 test_threading.s: test_threading.c.s
@@ -3058,7 +3058,7 @@ test_threading.s: test_threading.c.s
 
 # target to generate assembly for a file
 test_threading.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_threading.dir/build.make test/CMakeFiles/test_threading.dir/test_threading.c.s
 .PHONY : test_threading.c.s
 
 test_utf8_open.o: test_utf8_open.c.o
@@ -3066,7 +3066,7 @@ test_utf8_open.o: test_utf8_open.c.o
 
 # target to build an object file
 test_utf8_open.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.o
 .PHONY : test_utf8_open.c.o
 
 test_utf8_open.i: test_utf8_open.c.i
@@ -3074,7 +3074,7 @@ test_utf8_open.i: test_utf8_open.c.i
 
 # target to preprocess a source file
 test_utf8_open.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.i
 .PHONY : test_utf8_open.c.i
 
 test_utf8_open.s: test_utf8_open.c.s
@@ -3082,7 +3082,7 @@ test_utf8_open.s: test_utf8_open.c.s
 
 # target to generate assembly for a file
 test_utf8_open.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_utf8_open.dir/build.make test/CMakeFiles/test_utf8_open.dir/test_utf8_open.c.s
 .PHONY : test_utf8_open.c.s
 
 test_voice_callback.o: test_voice_callback.c.o
@@ -3090,7 +3090,7 @@ test_voice_callback.o: test_voice_callback.c.o
 
 # target to build an object file
 test_voice_callback.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.o
 .PHONY : test_voice_callback.c.o
 
 test_voice_callback.i: test_voice_callback.c.i
@@ -3098,7 +3098,7 @@ test_voice_callback.i: test_voice_callback.c.i
 
 # target to preprocess a source file
 test_voice_callback.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.i
 .PHONY : test_voice_callback.c.i
 
 test_voice_callback.s: test_voice_callback.c.s
@@ -3106,7 +3106,7 @@ test_voice_callback.s: test_voice_callback.c.s
 
 # target to generate assembly for a file
 test_voice_callback.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f test/CMakeFiles/test_voice_callback.dir/build.make test/CMakeFiles/test_voice_callback.dir/test_voice_callback.c.s
 .PHONY : test_voice_callback.c.s
 
 # Help Target
@@ -3133,105 +3133,105 @@ help:
 	@echo "... render1424"
 	@echo "... render1427"
 	@echo "... render1455"
-	@echo "... render1455__56ab1d11cbc9"
-	@echo "... render1455__7472dcb04760"
-	@echo "... render1455__91a561179337"
-	@echo "... render1455__b445b1beefd7"
-	@echo "... render1455__c3b2aaeac8bc"
-	@echo "... render1455__d8a1b28ddb98"
-	@echo "... render1455__ec16711243b7"
+	@echo "... render1455__3187cc87161c"
+	@echo "... render1455__75bc78a14ce2"
+	@echo "... render1455__7eec2744731e"
+	@echo "... render1455__ab7d32635232"
+	@echo "... render1455__bc050328a01f"
+	@echo "... render1455__beecf2fb1283"
+	@echo "... render1455__e2cd24828a82"
 	@echo "... render1481"
 	@echo "... render1484"
-	@echo "... render1484__5b86098d96bd"
-	@echo "... render1484__8de7e90a3d54"
+	@echo "... render1484__3539cf09fa4f"
+	@echo "... render1484__56dbe20db2ee"
 	@echo "... render1496"
 	@echo "... render1505"
-	@echo "... render1505__12c02afd4ba1"
-	@echo "... render1505__6e9ebcafe131"
+	@echo "... render1505__96024bbe3b67"
+	@echo "... render1505__c62865a5bd3a"
 	@echo "... renderAltitude"
 	@echo "... renderBankSelect"
-	@echo "... renderBankSelect__5d100ea75f53"
-	@echo "... renderBankSelect__7634e348e016"
-	@echo "... renderBankSelect__aab8ae167754"
-	@echo "... renderBankSelect__ac0180e3a89e"
-	@echo "... renderBankSelect__c7bf7870cdcc"
-	@echo "... renderBankSelect__cc252305072a"
-	@echo "... renderBankSelect__fb99e1afbe8e"
+	@echo "... renderBankSelect__03ff3d49934d"
+	@echo "... renderBankSelect__26c459cbfb70"
+	@echo "... renderBankSelect__37bf6ecbf0c3"
+	@echo "... renderBankSelect__9ed6ea34b46c"
+	@echo "... renderBankSelect__c6fdc1a2af05"
+	@echo "... renderBankSelect__d861fd949e32"
+	@echo "... renderBankSelect__e65a3efb70af"
 	@echo "... renderChrisNRPN"
 	@echo "... renderDK64JJU"
-	@echo "... renderDK64JJU__4b7d05290d5d"
-	@echo "... renderDK64JJU__59cb0898f75e"
-	@echo "... renderDK64JJU__e4bce9c8796d"
-	@echo "... renderDK64JJU__ef67cd911750"
-	@echo "... renderDK64JJU__f56cc8efaecc"
-	@echo "... renderDK64JJU__f675181e81e0"
-	@echo "... renderDK64JJU__febf83f97239"
+	@echo "... renderDK64JJU__11ce18a30bb0"
+	@echo "... renderDK64JJU__12379edd1bba"
+	@echo "... renderDK64JJU__1292fc94cf3e"
+	@echo "... renderDK64JJU__7639a3cb3bde"
+	@echo "... renderDK64JJU__82352e0f4aa2"
+	@echo "... renderDK64JJU__d12bb0951e44"
+	@echo "... renderDK64JJU__fb248f23d3b1"
 	@echo "... renderDMOD"
 	@echo "... renderExcl"
-	@echo "... renderExcl__0fcfc0d3cdf1"
-	@echo "... renderExcl__3f0199462c18"
-	@echo "... renderExcl__46390421ae10"
-	@echo "... renderExcl__7fa2dea16809"
-	@echo "... renderExcl__c440145a61bd"
-	@echo "... renderExcl__ce81e133b457"
+	@echo "... renderExcl__4768ac4d4e43"
+	@echo "... renderExcl__4b2e59e88c05"
+	@echo "... renderExcl__88e8d4414f1b"
+	@echo "... renderExcl__8d16a78f3510"
+	@echo "... renderExcl__a7bbf12a976d"
+	@echo "... renderExcl__c3c6ed85a4d5"
 	@echo "... renderFilter"
-	@echo "... renderFilter__16ce3b63de08"
-	@echo "... renderFilter__2509fba49363"
-	@echo "... renderFilter__9ea3100c7833"
+	@echo "... renderFilter__87e5ccd2c609"
+	@echo "... renderFilter__a08a54640bd3"
+	@echo "... renderFilter__e5f8f9ce27c4"
 	@echo "... renderGSDT1"
-	@echo "... renderGSDT1__6018b79474f5"
-	@echo "... renderGSDT1__967af2aaaa77"
-	@echo "... renderGSDT1__d83e17f80436"
+	@echo "... renderGSDT1__21101327f56b"
+	@echo "... renderGSDT1__581852094603"
+	@echo "... renderGSDT1__a41ab928552b"
 	@echo "... renderGeneralUserDemo"
-	@echo "... renderGeneralUserDemo__06643ad5f694"
-	@echo "... renderGeneralUserDemo__44bac27a2eba"
-	@echo "... renderGeneralUserDemo__46ae355ec58e"
-	@echo "... renderGeneralUserDemo__5995641accd2"
-	@echo "... renderGeneralUserDemo__694925b1f3ca"
-	@echo "... renderGeneralUserDemo__9c7aae902951"
-	@echo "... renderGeneralUserDemo__a261fcb40f0d"
-	@echo "... renderGeneralUserDemo__ad0889261c88"
-	@echo "... renderGeneralUserDemo__b28f6c6a9c52"
+	@echo "... renderGeneralUserDemo__1f9ba0e3e3b5"
+	@echo "... renderGeneralUserDemo__20039671e8e0"
+	@echo "... renderGeneralUserDemo__21323a0d2650"
+	@echo "... renderGeneralUserDemo__abac671ae9fd"
+	@echo "... renderGeneralUserDemo__b4f81fabfcc9"
+	@echo "... renderGeneralUserDemo__ccf5cfc81445"
+	@echo "... renderGeneralUserDemo__dc085c38bd20"
+	@echo "... renderGeneralUserDemo__ddeb0fd2e18e"
+	@echo "... renderGeneralUserDemo__e9c060c353c4"
 	@echo "... renderHybridCol"
-	@echo "... renderHybridCol__661aebc04295"
-	@echo "... renderHybridCol__a258b7463c0b"
+	@echo "... renderHybridCol__139ce52de12d"
+	@echo "... renderHybridCol__feecf63eecc2"
 	@echo "... renderLimiterTests"
-	@echo "... renderLimiterTests__15a7605fac95"
-	@echo "... renderLimiterTests__33273a9da247"
-	@echo "... renderLimiterTests__453a27b6c99a"
-	@echo "... renderLimiterTests__59403070dfb9"
-	@echo "... renderLimiterTests__7eca5c02ab1d"
-	@echo "... renderLimiterTests__864408474b2a"
-	@echo "... renderLimiterTests__b8eddd63558e"
-	@echo "... renderLimiterTests__c541be03f25d"
+	@echo "... renderLimiterTests__1a47384cd643"
+	@echo "... renderLimiterTests__3a8fba480e05"
+	@echo "... renderLimiterTests__6d7ac325957e"
+	@echo "... renderLimiterTests__6db80f21892d"
+	@echo "... renderLimiterTests__70d2d138cb19"
+	@echo "... renderLimiterTests__72ee29c5236d"
+	@echo "... renderLimiterTests__9879198106af"
+	@echo "... renderLimiterTests__cd5beba7eb61"
 	@echo "... renderMtsTests"
-	@echo "... renderMtsTests__922f00a8f56b"
-	@echo "... renderMtsTests__b961f22d295a"
+	@echo "... renderMtsTests__01c29ba07588"
+	@echo "... renderMtsTests__7fce302dab91"
 	@echo "... renderPortamento"
-	@echo "... renderPortamento__1774431be135"
-	@echo "... renderPortamento__1bcaddc433d3"
-	@echo "... renderPortamento__3244a96a2ddf"
-	@echo "... renderPortamento__4009d4b3513b"
-	@echo "... renderPortamento__4b8b4536646e"
-	@echo "... renderPortamento__62e1f78305fb"
-	@echo "... renderPortamento__a7cb46975edd"
-	@echo "... renderPortamento__f1a59c738ae9"
+	@echo "... renderPortamento__163b411d078a"
+	@echo "... renderPortamento__4919c9ec3904"
+	@echo "... renderPortamento__6624a021a856"
+	@echo "... renderPortamento__743eebfae3fd"
+	@echo "... renderPortamento__a3ed30a52b61"
+	@echo "... renderPortamento__d16ffe541a9c"
+	@echo "... renderPortamento__d45c92d8c717"
+	@echo "... renderPortamento__e278605ddb0a"
 	@echo "... renderRPN"
-	@echo "... renderRPN__846c3e5137c0"
-	@echo "... renderRPN__d6dad4634c08"
-	@echo "... renderRPN__f4aeafaa9483"
+	@echo "... renderRPN__18cce440aaa7"
+	@echo "... renderRPN__c82891f859b3"
+	@echo "... renderRPN__ca11d596d4b1"
 	@echo "... renderRealtimeIIR"
 	@echo "... renderSfSpecTest"
 	@echo "... renderStreetwise"
 	@echo "... renderUplift"
 	@echo "... renderdspInterp"
 	@echo "... rendere1m1"
-	@echo "... rendere1m1__09b313055584"
-	@echo "... rendere1m1__323b9e6bb90f"
-	@echo "... rendere1m1__4565247d4d7b"
-	@echo "... rendere1m1__5888f2a32d34"
-	@echo "... rendere1m1__97253e8d653b"
-	@echo "... rendere1m1__e3c559970b23"
+	@echo "... rendere1m1__553a2fb67221"
+	@echo "... rendere1m1__79d3d48cf52f"
+	@echo "... rendere1m1__79d413e8a0c1"
+	@echo "... rendere1m1__dc475c4c60a0"
+	@echo "... rendere1m1__f1087c68776d"
+	@echo "... rendere1m1__fdc61866bb67"
 	@echo "... dump_sfont"
 	@echo "... test_ABI"
 	@echo "... test_bug_635"
@@ -3391,6 +3391,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

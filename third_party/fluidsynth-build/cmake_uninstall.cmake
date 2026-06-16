@@ -1,8 +1,8 @@
-IF(NOT EXISTS "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/install_manifest.txt")
-  MESSAGE(FATAL_ERROR "Cannot find install manifest: \"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/install_manifest.txt\"")
-ENDIF(NOT EXISTS "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/install_manifest.txt")
+IF(NOT EXISTS "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/install_manifest.txt")
+  MESSAGE(FATAL_ERROR "Cannot find install manifest: \"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/install_manifest.txt\"")
+ENDIF(NOT EXISTS "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/install_manifest.txt")
 
-FILE(READ "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/install_manifest.txt" files)
+FILE(READ "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/install_manifest.txt" files)
 STRING(REGEX REPLACE "\n" ";" files "${files}")
 FOREACH(file ${files})
   MESSAGE(STATUS "Uninstalling \"${file}\"")

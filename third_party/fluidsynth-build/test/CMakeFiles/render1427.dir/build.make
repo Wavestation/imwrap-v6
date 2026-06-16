@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for render1427.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/render1427.dir/compiler_depend.make
 include test/CMakeFiles/render1427.dir/progress.make
 
 test/CMakeFiles/render1427: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering testfile of issue 1427"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/iir_filter/1427_high-Q-note-cutoff && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 5 -F /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/iir_filter/1427_high-Q-note-cutoff.raw high_Q_note_cutoff_test.mid high_Q_note_cutoff_test.sf2
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering testfile of issue 1427"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/iir_filter/1427_high-Q-note-cutoff && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 5 -F /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/iir_filter/1427_high-Q-note-cutoff.raw high_Q_note_cutoff_test.mid high_Q_note_cutoff_test.sf2
 
 test/CMakeFiles/render1427.dir/codegen:
 .PHONY : test/CMakeFiles/render1427.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/render1427.dir/build: render1427
 .PHONY : test/CMakeFiles/render1427.dir/build
 
 test/CMakeFiles/render1427.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/render1427.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/render1427.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/render1427.dir/clean
 
 test/CMakeFiles/render1427.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/render1427.dir/DependInfo.cmake "--color=$(COLOR)" render1427
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/render1427.dir/DependInfo.cmake "--color=$(COLOR)" render1427
 .PHONY : test/CMakeFiles/render1427.dir/depend
 

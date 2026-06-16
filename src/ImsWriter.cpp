@@ -116,6 +116,9 @@ std::vector<uint8_t> MakeVariantChunk(const VariantSource &variant, std::string 
     if (variant.kind == VariantKind::Rol) {
         return MakeChunk("ROL ", body);
     }
+    if (variant.kind == VariantKind::Adl) {
+        return MakeChunk("ADL ", body);
+    }
 
     if (error) {
         *error = "unknown variant kind";

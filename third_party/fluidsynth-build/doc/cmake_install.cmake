@@ -1,4 +1,4 @@
-# Install script for directory: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc
+# Install script for directory: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,22 +34,22 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/Library/Developer/CommandLineTools/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "fluidsynth_program" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/man/man1" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/fluidsynth.1")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/man/man1" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/fluidsynth.1")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples/cmake_install.cmake")
+  include("/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples/cmake_install.cmake")
 
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/install_local_manifest.txt"
+  file(WRITE "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

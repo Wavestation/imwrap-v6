@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Include any dependencies generated for this target.
 include test/CMakeFiles/test_seq_evt_order.dir/depend.make
@@ -73,18 +73,18 @@ test/CMakeFiles/test_seq_evt_order.dir/codegen:
 .PHONY : test/CMakeFiles/test_seq_evt_order.dir/codegen
 
 test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o: test/CMakeFiles/test_seq_evt_order.dir/flags.make
-test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp
+test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp
 test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o: test/CMakeFiles/test_seq_evt_order.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o -MF CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o.d -o CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o -c /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o -MF CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o.d -o CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp
 
 test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp > CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp > CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.i
 
 test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp -o CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/test_seq_evt_order.cpp -o CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.s
 
 # Object files for target test_seq_evt_order
 test_seq_evt_order_OBJECTS = \
@@ -92,59 +92,59 @@ test_seq_evt_order_OBJECTS = \
 
 # External object files for target test_seq_evt_order
 test_seq_evt_order_EXTERNAL_OBJECTS = \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.o" \
-"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.o"
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.o" \
+"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.o"
 
 test/test_seq_evt_order: test/CMakeFiles/test_seq_evt_order.dir/test_seq_evt_order.cpp.o
 test/test_seq_evt_order: src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.o
@@ -202,18 +202,18 @@ test/test_seq_evt_order: src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_fil
 test/test_seq_evt_order: src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.o
 test/test_seq_evt_order: test/CMakeFiles/test_seq_evt_order.dir/build.make
 test/test_seq_evt_order: test/CMakeFiles/test_seq_evt_order.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_seq_evt_order"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_seq_evt_order.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_seq_evt_order"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_seq_evt_order.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 test/CMakeFiles/test_seq_evt_order.dir/build: test/test_seq_evt_order
 .PHONY : test/CMakeFiles/test_seq_evt_order.dir/build
 
 test/CMakeFiles/test_seq_evt_order.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/test_seq_evt_order.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/test_seq_evt_order.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/test_seq_evt_order.dir/clean
 
 test/CMakeFiles/test_seq_evt_order.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/test_seq_evt_order.dir/DependInfo.cmake "--color=$(COLOR)" test_seq_evt_order
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/test_seq_evt_order.dir/DependInfo.cmake "--color=$(COLOR)" test_seq_evt_order
 .PHONY : test/CMakeFiles/test_seq_evt_order.dir/depend
 

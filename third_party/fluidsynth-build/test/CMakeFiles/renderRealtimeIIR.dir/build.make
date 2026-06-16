@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for renderRealtimeIIR.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/renderRealtimeIIR.dir/compiler_depend.make
 include test/CMakeFiles/renderRealtimeIIR.dir/progress.make
 
 test/CMakeFiles/renderRealtimeIIR: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Realtime-Rendering testfile of issue 1481"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/iir_filter/1481_realtime-playback && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 0.5 -niq "high poly audio breakup.mid" "high poly preset test.sf2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Realtime-Rendering testfile of issue 1481"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/iir_filter/1481_realtime-playback && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 0.5 -niq "high poly audio breakup.mid" "high poly preset test.sf2"
 
 test/CMakeFiles/renderRealtimeIIR.dir/codegen:
 .PHONY : test/CMakeFiles/renderRealtimeIIR.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/renderRealtimeIIR.dir/build: renderRealtimeIIR
 .PHONY : test/CMakeFiles/renderRealtimeIIR.dir/build
 
 test/CMakeFiles/renderRealtimeIIR.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderRealtimeIIR.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderRealtimeIIR.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/renderRealtimeIIR.dir/clean
 
 test/CMakeFiles/renderRealtimeIIR.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/renderRealtimeIIR.dir/DependInfo.cmake "--color=$(COLOR)" renderRealtimeIIR
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/renderRealtimeIIR.dir/DependInfo.cmake "--color=$(COLOR)" renderRealtimeIIR
 .PHONY : test/CMakeFiles/renderRealtimeIIR.dir/depend
 

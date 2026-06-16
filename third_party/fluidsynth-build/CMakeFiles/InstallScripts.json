@@ -1,11 +1,11 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/cmake_install.cmake",
-		"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/cmake_install.cmake",
-		"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/cmake_install.cmake",
-		"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/cmake_install.cmake",
-		"/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples/cmake_install.cmake"
+		"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/cmake_install.cmake",
+		"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/cmake_install.cmake",
+		"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/cmake_install.cmake",
+		"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/cmake_install.cmake",
+		"/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

@@ -39,6 +39,7 @@ constexpr std::array<char, 4> kSidn = {{'S', 'I', 'D', 'N'}};
 constexpr std::array<char, 4> kName = {{'N', 'A', 'M', 'E'}};
 constexpr std::array<char, 4> kGmd  = {{'G', 'M', 'D', ' '}};
 constexpr std::array<char, 4> kRol  = {{'R', 'O', 'L', ' '}};
+constexpr std::array<char, 4> kAdl  = {{'A', 'D', 'L', ' '}};
 constexpr std::array<char, 4> kMdhd = {{'M', 'D', 'h', 'd'}};
 
 uint16_t ReadU16BE(const uint8_t *data) {
@@ -164,9 +165,22 @@ SoundVariantView SoundResource::selectVariant(TargetProfile profile) const {
         return {};
     }
 
+    if (profile == TargetProfile::Adlib) {
+        if (_adl.valid()) {
+            return _adl;
+        }
+        if (_rol.valid()) {
+            return _rol;
+        }
+        return _gmd;
+    }
+
     if (profile == TargetProfile::Mt32) {
         if (_rol.valid()) {
             return _rol;
+        }
+        if (_adl.valid()) {
+            return _adl;
         }
         return _gmd;
     }
@@ -271,6 +285,12 @@ SoundResource ResourceBank::loadSound(uint16_t soundId, std::string *error) cons
                 return {};
             }
             result._variantMask |= static_cast<uint16_t>(VariantKind::Rol);
+        }
+        else if (header.id == kAdl) {
+            if (!ParseVariant(body, VariantKind::Adl, &result._adl, error)) {
+                return {};
+            }
+            result._variantMask |= static_cast<uint16_t>(VariantKind::Adl);
         }
 
         offset += header.size;

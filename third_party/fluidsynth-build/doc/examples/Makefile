@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsyn
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -98,7 +98,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -162,14 +162,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples//CMakeFiles/progress.marks
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples//CMakeFiles/progress.marks
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/clean
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/clean
 .PHONY : clean
 
 # The main clean target
@@ -178,22 +178,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 doc/examples/CMakeFiles/demo.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/demo.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/demo.dir/rule
 .PHONY : doc/examples/CMakeFiles/demo.dir/rule
 
 # Convenience name for target.
@@ -202,12 +202,12 @@ demo: doc/examples/CMakeFiles/demo.dir/rule
 
 # fast build rule for target.
 demo/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/demo.dir/build.make doc/examples/CMakeFiles/demo.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/demo.dir/build.make doc/examples/CMakeFiles/demo.dir/build
 .PHONY : demo/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/example.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/example.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/example.dir/rule
 .PHONY : doc/examples/CMakeFiles/example.dir/rule
 
 # Convenience name for target.
@@ -216,12 +216,12 @@ example: doc/examples/CMakeFiles/example.dir/rule
 
 # fast build rule for target.
 example/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/build
 .PHONY : example/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/rule
 
 # Convenience name for target.
@@ -230,12 +230,12 @@ fluidsynth_arpeggio: doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/rule
 
 # fast build rule for target.
 fluidsynth_arpeggio/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build
 .PHONY : fluidsynth_arpeggio/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_fx.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_fx.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_fx.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_fx.dir/rule
 
 # Convenience name for target.
@@ -244,12 +244,12 @@ fluidsynth_fx: doc/examples/CMakeFiles/fluidsynth_fx.dir/rule
 
 # fast build rule for target.
 fluidsynth_fx/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/build
 .PHONY : fluidsynth_fx/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_metronome.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_metronome.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_metronome.dir/rule
 
 # Convenience name for target.
@@ -258,12 +258,12 @@ fluidsynth_metronome: doc/examples/CMakeFiles/fluidsynth_metronome.dir/rule
 
 # fast build rule for target.
 fluidsynth_metronome/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/build
 .PHONY : fluidsynth_metronome/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_simple.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_simple.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_simple.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_simple.dir/rule
 
 # Convenience name for target.
@@ -272,12 +272,12 @@ fluidsynth_simple: doc/examples/CMakeFiles/fluidsynth_simple.dir/rule
 
 # fast build rule for target.
 fluidsynth_simple/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/build
 .PHONY : fluidsynth_simple/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_instruments.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_instruments.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_instruments.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_instruments.dir/rule
 
 # Convenience name for target.
@@ -286,12 +286,12 @@ fluidsynth_instruments: doc/examples/CMakeFiles/fluidsynth_instruments.dir/rule
 
 # fast build rule for target.
 fluidsynth_instruments/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/build
 .PHONY : fluidsynth_instruments/fast
 
 # Convenience name for target.
 doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/rule
 .PHONY : doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/rule
 
 # Convenience name for target.
@@ -300,7 +300,7 @@ fluidsynth_enumsettings: doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/rul
 
 # fast build rule for target.
 fluidsynth_enumsettings/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build
 .PHONY : fluidsynth_enumsettings/fast
 
 example.o: example.c.o
@@ -308,7 +308,7 @@ example.o: example.c.o
 
 # target to build an object file
 example.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.o
 .PHONY : example.c.o
 
 example.i: example.c.i
@@ -316,7 +316,7 @@ example.i: example.c.i
 
 # target to preprocess a source file
 example.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.i
 .PHONY : example.c.i
 
 example.s: example.c.s
@@ -324,7 +324,7 @@ example.s: example.c.s
 
 # target to generate assembly for a file
 example.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/example.dir/build.make doc/examples/CMakeFiles/example.dir/example.c.s
 .PHONY : example.c.s
 
 fluidsynth_arpeggio.o: fluidsynth_arpeggio.c.o
@@ -332,7 +332,7 @@ fluidsynth_arpeggio.o: fluidsynth_arpeggio.c.o
 
 # target to build an object file
 fluidsynth_arpeggio.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.o
 .PHONY : fluidsynth_arpeggio.c.o
 
 fluidsynth_arpeggio.i: fluidsynth_arpeggio.c.i
@@ -340,7 +340,7 @@ fluidsynth_arpeggio.i: fluidsynth_arpeggio.c.i
 
 # target to preprocess a source file
 fluidsynth_arpeggio.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.i
 .PHONY : fluidsynth_arpeggio.c.i
 
 fluidsynth_arpeggio.s: fluidsynth_arpeggio.c.s
@@ -348,7 +348,7 @@ fluidsynth_arpeggio.s: fluidsynth_arpeggio.c.s
 
 # target to generate assembly for a file
 fluidsynth_arpeggio.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/build.make doc/examples/CMakeFiles/fluidsynth_arpeggio.dir/fluidsynth_arpeggio.c.s
 .PHONY : fluidsynth_arpeggio.c.s
 
 fluidsynth_enumsettings.o: fluidsynth_enumsettings.cxx.o
@@ -356,7 +356,7 @@ fluidsynth_enumsettings.o: fluidsynth_enumsettings.cxx.o
 
 # target to build an object file
 fluidsynth_enumsettings.cxx.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.o
 .PHONY : fluidsynth_enumsettings.cxx.o
 
 fluidsynth_enumsettings.i: fluidsynth_enumsettings.cxx.i
@@ -364,7 +364,7 @@ fluidsynth_enumsettings.i: fluidsynth_enumsettings.cxx.i
 
 # target to preprocess a source file
 fluidsynth_enumsettings.cxx.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.i
 .PHONY : fluidsynth_enumsettings.cxx.i
 
 fluidsynth_enumsettings.s: fluidsynth_enumsettings.cxx.s
@@ -372,7 +372,7 @@ fluidsynth_enumsettings.s: fluidsynth_enumsettings.cxx.s
 
 # target to generate assembly for a file
 fluidsynth_enumsettings.cxx.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/build.make doc/examples/CMakeFiles/fluidsynth_enumsettings.dir/fluidsynth_enumsettings.cxx.s
 .PHONY : fluidsynth_enumsettings.cxx.s
 
 fluidsynth_fx.o: fluidsynth_fx.c.o
@@ -380,7 +380,7 @@ fluidsynth_fx.o: fluidsynth_fx.c.o
 
 # target to build an object file
 fluidsynth_fx.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.o
 .PHONY : fluidsynth_fx.c.o
 
 fluidsynth_fx.i: fluidsynth_fx.c.i
@@ -388,7 +388,7 @@ fluidsynth_fx.i: fluidsynth_fx.c.i
 
 # target to preprocess a source file
 fluidsynth_fx.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.i
 .PHONY : fluidsynth_fx.c.i
 
 fluidsynth_fx.s: fluidsynth_fx.c.s
@@ -396,7 +396,7 @@ fluidsynth_fx.s: fluidsynth_fx.c.s
 
 # target to generate assembly for a file
 fluidsynth_fx.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_fx.dir/build.make doc/examples/CMakeFiles/fluidsynth_fx.dir/fluidsynth_fx.c.s
 .PHONY : fluidsynth_fx.c.s
 
 fluidsynth_instruments.o: fluidsynth_instruments.c.o
@@ -404,7 +404,7 @@ fluidsynth_instruments.o: fluidsynth_instruments.c.o
 
 # target to build an object file
 fluidsynth_instruments.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.o
 .PHONY : fluidsynth_instruments.c.o
 
 fluidsynth_instruments.i: fluidsynth_instruments.c.i
@@ -412,7 +412,7 @@ fluidsynth_instruments.i: fluidsynth_instruments.c.i
 
 # target to preprocess a source file
 fluidsynth_instruments.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.i
 .PHONY : fluidsynth_instruments.c.i
 
 fluidsynth_instruments.s: fluidsynth_instruments.c.s
@@ -420,7 +420,7 @@ fluidsynth_instruments.s: fluidsynth_instruments.c.s
 
 # target to generate assembly for a file
 fluidsynth_instruments.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_instruments.dir/build.make doc/examples/CMakeFiles/fluidsynth_instruments.dir/fluidsynth_instruments.c.s
 .PHONY : fluidsynth_instruments.c.s
 
 fluidsynth_metronome.o: fluidsynth_metronome.c.o
@@ -428,7 +428,7 @@ fluidsynth_metronome.o: fluidsynth_metronome.c.o
 
 # target to build an object file
 fluidsynth_metronome.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o
 .PHONY : fluidsynth_metronome.c.o
 
 fluidsynth_metronome.i: fluidsynth_metronome.c.i
@@ -436,7 +436,7 @@ fluidsynth_metronome.i: fluidsynth_metronome.c.i
 
 # target to preprocess a source file
 fluidsynth_metronome.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i
 .PHONY : fluidsynth_metronome.c.i
 
 fluidsynth_metronome.s: fluidsynth_metronome.c.s
@@ -444,7 +444,7 @@ fluidsynth_metronome.s: fluidsynth_metronome.c.s
 
 # target to generate assembly for a file
 fluidsynth_metronome.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s
 .PHONY : fluidsynth_metronome.c.s
 
 fluidsynth_simple.o: fluidsynth_simple.c.o
@@ -452,7 +452,7 @@ fluidsynth_simple.o: fluidsynth_simple.c.o
 
 # target to build an object file
 fluidsynth_simple.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.o
 .PHONY : fluidsynth_simple.c.o
 
 fluidsynth_simple.i: fluidsynth_simple.c.i
@@ -460,7 +460,7 @@ fluidsynth_simple.i: fluidsynth_simple.c.i
 
 # target to preprocess a source file
 fluidsynth_simple.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.i
 .PHONY : fluidsynth_simple.c.i
 
 fluidsynth_simple.s: fluidsynth_simple.c.s
@@ -468,7 +468,7 @@ fluidsynth_simple.s: fluidsynth_simple.c.s
 
 # target to generate assembly for a file
 fluidsynth_simple.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f doc/examples/CMakeFiles/fluidsynth_simple.dir/build.make doc/examples/CMakeFiles/fluidsynth_simple.dir/fluidsynth_simple.c.s
 .PHONY : fluidsynth_simple.c.s
 
 # Help Target
@@ -526,6 +526,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

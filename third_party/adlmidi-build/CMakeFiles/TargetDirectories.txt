@@ -1,0 +1,8 @@
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/ADLMIDI_static.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/ADLMIDI_version_check.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/edit_cache.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/rebuild_cache.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/list_install_components.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/install.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/install/local.dir
+/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/CMakeFiles/install/strip.dir

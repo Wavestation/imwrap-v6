@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -88,7 +88,7 @@ package_source/fast: package_source
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -152,9 +152,9 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

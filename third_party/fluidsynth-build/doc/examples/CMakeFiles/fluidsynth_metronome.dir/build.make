@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Include any dependencies generated for this target.
 include doc/examples/CMakeFiles/fluidsynth_metronome.dir/depend.make
@@ -73,18 +73,18 @@ doc/examples/CMakeFiles/fluidsynth_metronome.dir/codegen:
 .PHONY : doc/examples/CMakeFiles/fluidsynth_metronome.dir/codegen
 
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o: doc/examples/CMakeFiles/fluidsynth_metronome.dir/flags.make
-doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c
+doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o: doc/examples/CMakeFiles/fluidsynth_metronome.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o -MF CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o.d -o CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o -c /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o -MF CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o.d -o CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c
 
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c > CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c > CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.i
 
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c -o CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples/fluidsynth_metronome.c -o CMakeFiles/fluidsynth_metronome.dir/fluidsynth_metronome.c.s
 
 # Object files for target fluidsynth_metronome
 fluidsynth_metronome_OBJECTS = \
@@ -97,18 +97,18 @@ doc/examples/fluidsynth_metronome: doc/examples/CMakeFiles/fluidsynth_metronome.
 doc/examples/fluidsynth_metronome: doc/examples/CMakeFiles/fluidsynth_metronome.dir/build.make
 doc/examples/fluidsynth_metronome: src/libfluidsynth.a
 doc/examples/fluidsynth_metronome: doc/examples/CMakeFiles/fluidsynth_metronome.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable fluidsynth_metronome"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fluidsynth_metronome.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable fluidsynth_metronome"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fluidsynth_metronome.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/build: doc/examples/fluidsynth_metronome
 .PHONY : doc/examples/CMakeFiles/fluidsynth_metronome.dir/build
 
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -P CMakeFiles/fluidsynth_metronome.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples && $(CMAKE_COMMAND) -P CMakeFiles/fluidsynth_metronome.dir/cmake_clean.cmake
 .PHONY : doc/examples/CMakeFiles/fluidsynth_metronome.dir/clean
 
 doc/examples/CMakeFiles/fluidsynth_metronome.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/doc/examples /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/doc/examples/CMakeFiles/fluidsynth_metronome.dir/DependInfo.cmake "--color=$(COLOR)" fluidsynth_metronome
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/doc/examples /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/doc/examples/CMakeFiles/fluidsynth_metronome.dir/DependInfo.cmake "--color=$(COLOR)" fluidsynth_metronome
 .PHONY : doc/examples/CMakeFiles/fluidsynth_metronome.dir/depend
 

@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for renderChrisNRPN.
 
@@ -67,8 +67,8 @@ include test/CMakeFiles/renderChrisNRPN.dir/compiler_depend.make
 include test/CMakeFiles/renderChrisNRPN.dir/progress.make
 
 test/CMakeFiles/renderChrisNRPN: src/fluidsynth
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering Chris' AWE32 NRPN filter test file"
-	cd "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/manual/SoundFont-Spec-Test/NRPN test - filter" && /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 1.8 -F /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn/filter_NRPN_test.raw filter_NRPN_test.mid filter_NRPN_test.sf2
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Rendering Chris' AWE32 NRPN filter test file"
+	cd "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/manual/SoundFont-Spec-Test/NRPN test - filter" && /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/fluidsynth -R 0 -C 0 -g 1.8 -F /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn/filter_NRPN_test.raw filter_NRPN_test.mid filter_NRPN_test.sf2
 
 test/CMakeFiles/renderChrisNRPN.dir/codegen:
 .PHONY : test/CMakeFiles/renderChrisNRPN.dir/codegen
@@ -82,10 +82,10 @@ test/CMakeFiles/renderChrisNRPN.dir/build: renderChrisNRPN
 .PHONY : test/CMakeFiles/renderChrisNRPN.dir/build
 
 test/CMakeFiles/renderChrisNRPN.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderChrisNRPN.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/renderChrisNRPN.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/renderChrisNRPN.dir/clean
 
 test/CMakeFiles/renderChrisNRPN.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/renderChrisNRPN.dir/DependInfo.cmake "--color=$(COLOR)" renderChrisNRPN
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/renderChrisNRPN.dir/DependInfo.cmake "--color=$(COLOR)" renderChrisNRPN
 .PHONY : test/CMakeFiles/renderChrisNRPN.dir/depend
 

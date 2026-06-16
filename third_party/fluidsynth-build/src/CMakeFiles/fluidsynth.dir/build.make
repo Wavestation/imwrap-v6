@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Include any dependencies generated for this target.
 include src/CMakeFiles/fluidsynth.dir/depend.make
@@ -73,32 +73,32 @@ src/CMakeFiles/fluidsynth.dir/codegen:
 .PHONY : src/CMakeFiles/fluidsynth.dir/codegen
 
 src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o: src/CMakeFiles/fluidsynth.dir/flags.make
-src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/fluidsynth.c
+src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/fluidsynth.c
 src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o: src/CMakeFiles/fluidsynth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o -MF CMakeFiles/fluidsynth.dir/fluidsynth.c.o.d -o CMakeFiles/fluidsynth.dir/fluidsynth.c.o -c /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/fluidsynth.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o -MF CMakeFiles/fluidsynth.dir/fluidsynth.c.o.d -o CMakeFiles/fluidsynth.dir/fluidsynth.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/fluidsynth.c
 
 src/CMakeFiles/fluidsynth.dir/fluidsynth.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/fluidsynth.dir/fluidsynth.c.i"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/fluidsynth.c > CMakeFiles/fluidsynth.dir/fluidsynth.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/fluidsynth.c > CMakeFiles/fluidsynth.dir/fluidsynth.c.i
 
 src/CMakeFiles/fluidsynth.dir/fluidsynth.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/fluidsynth.dir/fluidsynth.c.s"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/fluidsynth.c -o CMakeFiles/fluidsynth.dir/fluidsynth.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/fluidsynth.c -o CMakeFiles/fluidsynth.dir/fluidsynth.c.s
 
 src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o: src/CMakeFiles/fluidsynth.dir/flags.make
-src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp
+src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp
 src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o: src/CMakeFiles/fluidsynth.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o -MF CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o.d -o CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o -c /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o -MF CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o.d -o CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp
 
 src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp > CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp > CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i
 
 src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp -o CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src/utils/fluid_file.cpp -o CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s
 
 # Object files for target fluidsynth
 fluidsynth_OBJECTS = \
@@ -113,18 +113,18 @@ src/fluidsynth: src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o
 src/fluidsynth: src/CMakeFiles/fluidsynth.dir/build.make
 src/fluidsynth: src/libfluidsynth.a
 src/fluidsynth: src/CMakeFiles/fluidsynth.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable fluidsynth"
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fluidsynth.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable fluidsynth"
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fluidsynth.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/CMakeFiles/fluidsynth.dir/build: src/fluidsynth
 .PHONY : src/CMakeFiles/fluidsynth.dir/build
 
 src/CMakeFiles/fluidsynth.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src && $(CMAKE_COMMAND) -P CMakeFiles/fluidsynth.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src && $(CMAKE_COMMAND) -P CMakeFiles/fluidsynth.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/fluidsynth.dir/clean
 
 src/CMakeFiles/fluidsynth.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/src /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src/CMakeFiles/fluidsynth.dir/DependInfo.cmake "--color=$(COLOR)" fluidsynth
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/src /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/fluidsynth.dir/DependInfo.cmake "--color=$(COLOR)" fluidsynth
 .PHONY : src/CMakeFiles/fluidsynth.dir/depend
 

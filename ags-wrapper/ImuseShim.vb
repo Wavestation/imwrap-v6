@@ -29,6 +29,7 @@ Namespace AgsImuse
     Public Enum ImuseAuthoringProfile As Integer
         GeneralMidi = 0
         Mt32 = 1
+        Adlib = 2
     End Enum
 
     Public NotInheritable Class ImuseShim

@@ -1,4 +1,4 @@
-# Install script for directory: /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu
+# Install script for directory: /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,34 +34,34 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/Library/Developer/CommandLineTools/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/libmt32emu.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/libmt32emu.a")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libmt32emu.a" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libmt32emu.a")
-    execute_process(COMMAND "/Library/Developer/CommandLineTools/usr/bin/ranlib" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libmt32emu.a")
+    execute_process(COMMAND "/usr/bin/ranlib" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libmt32emu.a")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/include/mt32emu")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/include/mt32emu")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/include/mt32emu.h")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/include/mt32emu.h")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/mt32emu.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/mt32emu.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu/MT32EmuTargets.cmake")
     file(DIFFERENT _cmake_export_file_changed FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu/MT32EmuTargets.cmake"
-         "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets.cmake")
+         "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets.cmake")
     if(_cmake_export_file_changed)
       file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu/MT32EmuTargets-*.cmake")
       if(_cmake_old_config_files)
@@ -74,34 +74,34 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
     endif()
     unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets.cmake")
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^()$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets-noconfig.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu" TYPE FILE FILES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/CMakeFiles/Export/e0b64b0db13410be25f9f48f15d8db90/MT32EmuTargets-noconfig.cmake")
   endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Devel" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MT32Emu" TYPE FILE FILES
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/cmake/MT32EmuConfig.cmake"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/cmake/MT32EmuConfigVersion.cmake"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/cmake/MT32EmuConfig.cmake"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/cmake/MT32EmuConfigVersion.cmake"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Runtime" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/doc/munt/libmt32emu" TYPE FILE FILES
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/AUTHORS.txt"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/COPYING.txt"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/COPYING.LESSER.txt"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/NEWS.txt"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/README.md"
-    "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/munt/mt32emu/TODO.txt"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/AUTHORS.txt"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/COPYING.txt"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/COPYING.LESSER.txt"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/NEWS.txt"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/README.md"
+    "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/munt/mt32emu/TODO.txt"
     )
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/install_local_manifest.txt"
+  file(WRITE "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -117,6 +117,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/mt32emu-build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/mt32emu-build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

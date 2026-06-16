@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 # Utility rule file for create_out_dir.
 
@@ -67,7 +67,7 @@ include test/CMakeFiles/create_out_dir.dir/compiler_depend.make
 include test/CMakeFiles/create_out_dir.dir/progress.make
 
 test/CMakeFiles/create_out_dir:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && /opt/homebrew/bin/cmake -E make_directory /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/iir_filter /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/SoundFont-Spec-Test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/portamento /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/reverb /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/exclusive_class /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/dsp_interp /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/dynamic-sample-loading /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/stacked_sf2 /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/sf2/GeneralUser-GS /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/midi-bank-select /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/sfe /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/sysex/gs_dt1 /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/rpn /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/manual/limiter
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && /opt/homebrew/bin/cmake -E make_directory /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/iir_filter /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/awe32_nrpn /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/SoundFont-Spec-Test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/portamento /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/reverb /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/exclusive_class /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/dsp_interp /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/dynamic-sample-loading /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/stacked_sf2 /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/sf2/GeneralUser-GS /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/midi-bank-select /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/sfe /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/sysex/gs_dt1 /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/rpn /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/manual/limiter
 
 test/CMakeFiles/create_out_dir.dir/codegen:
 .PHONY : test/CMakeFiles/create_out_dir.dir/codegen
@@ -81,10 +81,10 @@ test/CMakeFiles/create_out_dir.dir/build: create_out_dir
 .PHONY : test/CMakeFiles/create_out_dir.dir/build
 
 test/CMakeFiles/create_out_dir.dir/clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/create_out_dir.dir/cmake_clean.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test && $(CMAKE_COMMAND) -P CMakeFiles/create_out_dir.dir/cmake_clean.cmake
 .PHONY : test/CMakeFiles/create_out_dir.dir/clean
 
 test/CMakeFiles/create_out_dir.dir/depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/test/CMakeFiles/create_out_dir.dir/DependInfo.cmake "--color=$(COLOR)" create_out_dir
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/CMakeFiles/create_out_dir.dir/DependInfo.cmake "--color=$(COLOR)" create_out_dir
 .PHONY : test/CMakeFiles/create_out_dir.dir/depend
 

@@ -139,7 +139,7 @@ public class ImsSerializer {
             
             var variants: [SwiftVariant] = []
             for sub in subChunks {
-                if sub.id == "GMD " || sub.id == "ROL " {
+                if sub.id == "GMD " || sub.id == "ROL " || sub.id == "ADL " {
                     var varOffset = 0
                     var mdhd = SwiftMdhd()
                     if sub.body.count >= 8 && Array(sub.body[0..<4]) == [0x4D, 0x44, 0x68, 0x64] { // 'MDhd'
@@ -208,6 +208,9 @@ public class ImsSerializer {
                 } else if variant.kind == "ROL " {
                     mask |= 2
                     body.append(contentsOf: makeChunk(id: "ROL ", body: varBody))
+                } else if variant.kind == "ADL " {
+                    mask |= 4
+                    body.append(contentsOf: makeChunk(id: "ADL ", body: varBody))
                 }
             }
             

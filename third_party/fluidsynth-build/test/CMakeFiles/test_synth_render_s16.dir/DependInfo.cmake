@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master/test/test_synth_render_s16.c" "test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o" "gcc" "test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o.d"
+  "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/test_synth_render_s16.c" "test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o" "gcc" "test/CMakeFiles/test_synth_render_s16.dir/test_synth_render_s16.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

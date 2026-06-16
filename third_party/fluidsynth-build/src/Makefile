@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-master
+CMAKE_SOURCE_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build
+CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsyn
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -98,7 +98,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -162,14 +162,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/src//CMakeFiles/progress.marks
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/src//CMakeFiles/progress.marks
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -178,22 +178,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/CMakeFiles/libfluidsynth-OBJ.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/libfluidsynth-OBJ.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/libfluidsynth-OBJ.dir/rule
 .PHONY : src/CMakeFiles/libfluidsynth-OBJ.dir/rule
 
 # Convenience name for target.
@@ -202,12 +202,12 @@ libfluidsynth-OBJ: src/CMakeFiles/libfluidsynth-OBJ.dir/rule
 
 # fast build rule for target.
 libfluidsynth-OBJ/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/build
 .PHONY : libfluidsynth-OBJ/fast
 
 # Convenience name for target.
 src/CMakeFiles/libfluidsynth.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/libfluidsynth.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/libfluidsynth.dir/rule
 .PHONY : src/CMakeFiles/libfluidsynth.dir/rule
 
 # Convenience name for target.
@@ -216,12 +216,12 @@ libfluidsynth: src/CMakeFiles/libfluidsynth.dir/rule
 
 # fast build rule for target.
 libfluidsynth/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth.dir/build.make src/CMakeFiles/libfluidsynth.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth.dir/build.make src/CMakeFiles/libfluidsynth.dir/build
 .PHONY : libfluidsynth/fast
 
 # Convenience name for target.
 src/CMakeFiles/fluidsynth.dir/rule:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/fluidsynth.dir/rule
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/fluidsynth.dir/rule
 .PHONY : src/CMakeFiles/fluidsynth.dir/rule
 
 # Convenience name for target.
@@ -230,7 +230,7 @@ fluidsynth: src/CMakeFiles/fluidsynth.dir/rule
 
 # fast build rule for target.
 fluidsynth/fast:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/build
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/build
 .PHONY : fluidsynth/fast
 
 bindings/fluid_cmd.o: bindings/fluid_cmd.c.o
@@ -238,7 +238,7 @@ bindings/fluid_cmd.o: bindings/fluid_cmd.c.o
 
 # target to build an object file
 bindings/fluid_cmd.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.o
 .PHONY : bindings/fluid_cmd.c.o
 
 bindings/fluid_cmd.i: bindings/fluid_cmd.c.i
@@ -246,7 +246,7 @@ bindings/fluid_cmd.i: bindings/fluid_cmd.c.i
 
 # target to preprocess a source file
 bindings/fluid_cmd.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.i
 .PHONY : bindings/fluid_cmd.c.i
 
 bindings/fluid_cmd.s: bindings/fluid_cmd.c.s
@@ -254,7 +254,7 @@ bindings/fluid_cmd.s: bindings/fluid_cmd.c.s
 
 # target to generate assembly for a file
 bindings/fluid_cmd.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_cmd.c.s
 .PHONY : bindings/fluid_cmd.c.s
 
 bindings/fluid_filerenderer.o: bindings/fluid_filerenderer.c.o
@@ -262,7 +262,7 @@ bindings/fluid_filerenderer.o: bindings/fluid_filerenderer.c.o
 
 # target to build an object file
 bindings/fluid_filerenderer.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.o
 .PHONY : bindings/fluid_filerenderer.c.o
 
 bindings/fluid_filerenderer.i: bindings/fluid_filerenderer.c.i
@@ -270,7 +270,7 @@ bindings/fluid_filerenderer.i: bindings/fluid_filerenderer.c.i
 
 # target to preprocess a source file
 bindings/fluid_filerenderer.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.i
 .PHONY : bindings/fluid_filerenderer.c.i
 
 bindings/fluid_filerenderer.s: bindings/fluid_filerenderer.c.s
@@ -278,7 +278,7 @@ bindings/fluid_filerenderer.s: bindings/fluid_filerenderer.c.s
 
 # target to generate assembly for a file
 bindings/fluid_filerenderer.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_filerenderer.c.s
 .PHONY : bindings/fluid_filerenderer.c.s
 
 bindings/fluid_ladspa.o: bindings/fluid_ladspa.c.o
@@ -286,7 +286,7 @@ bindings/fluid_ladspa.o: bindings/fluid_ladspa.c.o
 
 # target to build an object file
 bindings/fluid_ladspa.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.o
 .PHONY : bindings/fluid_ladspa.c.o
 
 bindings/fluid_ladspa.i: bindings/fluid_ladspa.c.i
@@ -294,7 +294,7 @@ bindings/fluid_ladspa.i: bindings/fluid_ladspa.c.i
 
 # target to preprocess a source file
 bindings/fluid_ladspa.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.i
 .PHONY : bindings/fluid_ladspa.c.i
 
 bindings/fluid_ladspa.s: bindings/fluid_ladspa.c.s
@@ -302,7 +302,7 @@ bindings/fluid_ladspa.s: bindings/fluid_ladspa.c.s
 
 # target to generate assembly for a file
 bindings/fluid_ladspa.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/bindings/fluid_ladspa.c.s
 .PHONY : bindings/fluid_ladspa.c.s
 
 drivers/fluid_adriver.o: drivers/fluid_adriver.c.o
@@ -310,7 +310,7 @@ drivers/fluid_adriver.o: drivers/fluid_adriver.c.o
 
 # target to build an object file
 drivers/fluid_adriver.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.o
 .PHONY : drivers/fluid_adriver.c.o
 
 drivers/fluid_adriver.i: drivers/fluid_adriver.c.i
@@ -318,7 +318,7 @@ drivers/fluid_adriver.i: drivers/fluid_adriver.c.i
 
 # target to preprocess a source file
 drivers/fluid_adriver.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.i
 .PHONY : drivers/fluid_adriver.c.i
 
 drivers/fluid_adriver.s: drivers/fluid_adriver.c.s
@@ -326,7 +326,7 @@ drivers/fluid_adriver.s: drivers/fluid_adriver.c.s
 
 # target to generate assembly for a file
 drivers/fluid_adriver.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_adriver.c.s
 .PHONY : drivers/fluid_adriver.c.s
 
 drivers/fluid_audio_convert.o: drivers/fluid_audio_convert.cpp.o
@@ -334,7 +334,7 @@ drivers/fluid_audio_convert.o: drivers/fluid_audio_convert.cpp.o
 
 # target to build an object file
 drivers/fluid_audio_convert.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.o
 .PHONY : drivers/fluid_audio_convert.cpp.o
 
 drivers/fluid_audio_convert.i: drivers/fluid_audio_convert.cpp.i
@@ -342,7 +342,7 @@ drivers/fluid_audio_convert.i: drivers/fluid_audio_convert.cpp.i
 
 # target to preprocess a source file
 drivers/fluid_audio_convert.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.i
 .PHONY : drivers/fluid_audio_convert.cpp.i
 
 drivers/fluid_audio_convert.s: drivers/fluid_audio_convert.cpp.s
@@ -350,7 +350,7 @@ drivers/fluid_audio_convert.s: drivers/fluid_audio_convert.cpp.s
 
 # target to generate assembly for a file
 drivers/fluid_audio_convert.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_audio_convert.cpp.s
 .PHONY : drivers/fluid_audio_convert.cpp.s
 
 drivers/fluid_coreaudio.o: drivers/fluid_coreaudio.c.o
@@ -358,7 +358,7 @@ drivers/fluid_coreaudio.o: drivers/fluid_coreaudio.c.o
 
 # target to build an object file
 drivers/fluid_coreaudio.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.o
 .PHONY : drivers/fluid_coreaudio.c.o
 
 drivers/fluid_coreaudio.i: drivers/fluid_coreaudio.c.i
@@ -366,7 +366,7 @@ drivers/fluid_coreaudio.i: drivers/fluid_coreaudio.c.i
 
 # target to preprocess a source file
 drivers/fluid_coreaudio.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.i
 .PHONY : drivers/fluid_coreaudio.c.i
 
 drivers/fluid_coreaudio.s: drivers/fluid_coreaudio.c.s
@@ -374,7 +374,7 @@ drivers/fluid_coreaudio.s: drivers/fluid_coreaudio.c.s
 
 # target to generate assembly for a file
 drivers/fluid_coreaudio.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_coreaudio.c.s
 .PHONY : drivers/fluid_coreaudio.c.s
 
 drivers/fluid_mdriver.o: drivers/fluid_mdriver.c.o
@@ -382,7 +382,7 @@ drivers/fluid_mdriver.o: drivers/fluid_mdriver.c.o
 
 # target to build an object file
 drivers/fluid_mdriver.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.o
 .PHONY : drivers/fluid_mdriver.c.o
 
 drivers/fluid_mdriver.i: drivers/fluid_mdriver.c.i
@@ -390,7 +390,7 @@ drivers/fluid_mdriver.i: drivers/fluid_mdriver.c.i
 
 # target to preprocess a source file
 drivers/fluid_mdriver.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.i
 .PHONY : drivers/fluid_mdriver.c.i
 
 drivers/fluid_mdriver.s: drivers/fluid_mdriver.c.s
@@ -398,7 +398,7 @@ drivers/fluid_mdriver.s: drivers/fluid_mdriver.c.s
 
 # target to generate assembly for a file
 drivers/fluid_mdriver.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/drivers/fluid_mdriver.c.s
 .PHONY : drivers/fluid_mdriver.c.s
 
 fluidsynth.o: fluidsynth.c.o
@@ -406,7 +406,7 @@ fluidsynth.o: fluidsynth.c.o
 
 # target to build an object file
 fluidsynth.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.o
 .PHONY : fluidsynth.c.o
 
 fluidsynth.i: fluidsynth.c.i
@@ -414,7 +414,7 @@ fluidsynth.i: fluidsynth.c.i
 
 # target to preprocess a source file
 fluidsynth.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.i
 .PHONY : fluidsynth.c.i
 
 fluidsynth.s: fluidsynth.c.s
@@ -422,7 +422,7 @@ fluidsynth.s: fluidsynth.c.s
 
 # target to generate assembly for a file
 fluidsynth.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/fluidsynth.c.s
 .PHONY : fluidsynth.c.s
 
 gentables/fluid_cb2amp.o: gentables/fluid_cb2amp.cpp.o
@@ -430,7 +430,7 @@ gentables/fluid_cb2amp.o: gentables/fluid_cb2amp.cpp.o
 
 # target to build an object file
 gentables/fluid_cb2amp.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.o
 .PHONY : gentables/fluid_cb2amp.cpp.o
 
 gentables/fluid_cb2amp.i: gentables/fluid_cb2amp.cpp.i
@@ -438,7 +438,7 @@ gentables/fluid_cb2amp.i: gentables/fluid_cb2amp.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_cb2amp.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.i
 .PHONY : gentables/fluid_cb2amp.cpp.i
 
 gentables/fluid_cb2amp.s: gentables/fluid_cb2amp.cpp.s
@@ -446,7 +446,7 @@ gentables/fluid_cb2amp.s: gentables/fluid_cb2amp.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_cb2amp.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_cb2amp.cpp.s
 .PHONY : gentables/fluid_cb2amp.cpp.s
 
 gentables/fluid_concave.o: gentables/fluid_concave.cpp.o
@@ -454,7 +454,7 @@ gentables/fluid_concave.o: gentables/fluid_concave.cpp.o
 
 # target to build an object file
 gentables/fluid_concave.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.o
 .PHONY : gentables/fluid_concave.cpp.o
 
 gentables/fluid_concave.i: gentables/fluid_concave.cpp.i
@@ -462,7 +462,7 @@ gentables/fluid_concave.i: gentables/fluid_concave.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_concave.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.i
 .PHONY : gentables/fluid_concave.cpp.i
 
 gentables/fluid_concave.s: gentables/fluid_concave.cpp.s
@@ -470,7 +470,7 @@ gentables/fluid_concave.s: gentables/fluid_concave.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_concave.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_concave.cpp.s
 .PHONY : gentables/fluid_concave.cpp.s
 
 gentables/fluid_convex.o: gentables/fluid_convex.cpp.o
@@ -478,7 +478,7 @@ gentables/fluid_convex.o: gentables/fluid_convex.cpp.o
 
 # target to build an object file
 gentables/fluid_convex.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.o
 .PHONY : gentables/fluid_convex.cpp.o
 
 gentables/fluid_convex.i: gentables/fluid_convex.cpp.i
@@ -486,7 +486,7 @@ gentables/fluid_convex.i: gentables/fluid_convex.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_convex.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.i
 .PHONY : gentables/fluid_convex.cpp.i
 
 gentables/fluid_convex.s: gentables/fluid_convex.cpp.s
@@ -494,7 +494,7 @@ gentables/fluid_convex.s: gentables/fluid_convex.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_convex.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_convex.cpp.s
 .PHONY : gentables/fluid_convex.cpp.s
 
 gentables/fluid_ct2hz.o: gentables/fluid_ct2hz.cpp.o
@@ -502,7 +502,7 @@ gentables/fluid_ct2hz.o: gentables/fluid_ct2hz.cpp.o
 
 # target to build an object file
 gentables/fluid_ct2hz.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.o
 .PHONY : gentables/fluid_ct2hz.cpp.o
 
 gentables/fluid_ct2hz.i: gentables/fluid_ct2hz.cpp.i
@@ -510,7 +510,7 @@ gentables/fluid_ct2hz.i: gentables/fluid_ct2hz.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_ct2hz.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.i
 .PHONY : gentables/fluid_ct2hz.cpp.i
 
 gentables/fluid_ct2hz.s: gentables/fluid_ct2hz.cpp.s
@@ -518,7 +518,7 @@ gentables/fluid_ct2hz.s: gentables/fluid_ct2hz.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_ct2hz.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_ct2hz.cpp.s
 .PHONY : gentables/fluid_ct2hz.cpp.s
 
 gentables/fluid_interp_coeff.o: gentables/fluid_interp_coeff.cpp.o
@@ -526,7 +526,7 @@ gentables/fluid_interp_coeff.o: gentables/fluid_interp_coeff.cpp.o
 
 # target to build an object file
 gentables/fluid_interp_coeff.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.o
 .PHONY : gentables/fluid_interp_coeff.cpp.o
 
 gentables/fluid_interp_coeff.i: gentables/fluid_interp_coeff.cpp.i
@@ -534,7 +534,7 @@ gentables/fluid_interp_coeff.i: gentables/fluid_interp_coeff.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_interp_coeff.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.i
 .PHONY : gentables/fluid_interp_coeff.cpp.i
 
 gentables/fluid_interp_coeff.s: gentables/fluid_interp_coeff.cpp.s
@@ -542,7 +542,7 @@ gentables/fluid_interp_coeff.s: gentables/fluid_interp_coeff.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_interp_coeff.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff.cpp.s
 .PHONY : gentables/fluid_interp_coeff.cpp.s
 
 gentables/fluid_interp_coeff_linear.o: gentables/fluid_interp_coeff_linear.cpp.o
@@ -550,7 +550,7 @@ gentables/fluid_interp_coeff_linear.o: gentables/fluid_interp_coeff_linear.cpp.o
 
 # target to build an object file
 gentables/fluid_interp_coeff_linear.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.o
 .PHONY : gentables/fluid_interp_coeff_linear.cpp.o
 
 gentables/fluid_interp_coeff_linear.i: gentables/fluid_interp_coeff_linear.cpp.i
@@ -558,7 +558,7 @@ gentables/fluid_interp_coeff_linear.i: gentables/fluid_interp_coeff_linear.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_interp_coeff_linear.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.i
 .PHONY : gentables/fluid_interp_coeff_linear.cpp.i
 
 gentables/fluid_interp_coeff_linear.s: gentables/fluid_interp_coeff_linear.cpp.s
@@ -566,7 +566,7 @@ gentables/fluid_interp_coeff_linear.s: gentables/fluid_interp_coeff_linear.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_interp_coeff_linear.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_linear.cpp.s
 .PHONY : gentables/fluid_interp_coeff_linear.cpp.s
 
 gentables/fluid_interp_coeff_sinc7.o: gentables/fluid_interp_coeff_sinc7.cpp.o
@@ -574,7 +574,7 @@ gentables/fluid_interp_coeff_sinc7.o: gentables/fluid_interp_coeff_sinc7.cpp.o
 
 # target to build an object file
 gentables/fluid_interp_coeff_sinc7.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.o
 .PHONY : gentables/fluid_interp_coeff_sinc7.cpp.o
 
 gentables/fluid_interp_coeff_sinc7.i: gentables/fluid_interp_coeff_sinc7.cpp.i
@@ -582,7 +582,7 @@ gentables/fluid_interp_coeff_sinc7.i: gentables/fluid_interp_coeff_sinc7.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_interp_coeff_sinc7.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.i
 .PHONY : gentables/fluid_interp_coeff_sinc7.cpp.i
 
 gentables/fluid_interp_coeff_sinc7.s: gentables/fluid_interp_coeff_sinc7.cpp.s
@@ -590,7 +590,7 @@ gentables/fluid_interp_coeff_sinc7.s: gentables/fluid_interp_coeff_sinc7.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_interp_coeff_sinc7.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_interp_coeff_sinc7.cpp.s
 .PHONY : gentables/fluid_interp_coeff_sinc7.cpp.s
 
 gentables/fluid_pan.o: gentables/fluid_pan.cpp.o
@@ -598,7 +598,7 @@ gentables/fluid_pan.o: gentables/fluid_pan.cpp.o
 
 # target to build an object file
 gentables/fluid_pan.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.o
 .PHONY : gentables/fluid_pan.cpp.o
 
 gentables/fluid_pan.i: gentables/fluid_pan.cpp.i
@@ -606,7 +606,7 @@ gentables/fluid_pan.i: gentables/fluid_pan.cpp.i
 
 # target to preprocess a source file
 gentables/fluid_pan.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.i
 .PHONY : gentables/fluid_pan.cpp.i
 
 gentables/fluid_pan.s: gentables/fluid_pan.cpp.s
@@ -614,7 +614,7 @@ gentables/fluid_pan.s: gentables/fluid_pan.cpp.s
 
 # target to generate assembly for a file
 gentables/fluid_pan.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/gentables/fluid_pan.cpp.s
 .PHONY : gentables/fluid_pan.cpp.s
 
 midi/fluid_midi.o: midi/fluid_midi.c.o
@@ -622,7 +622,7 @@ midi/fluid_midi.o: midi/fluid_midi.c.o
 
 # target to build an object file
 midi/fluid_midi.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.o
 .PHONY : midi/fluid_midi.c.o
 
 midi/fluid_midi.i: midi/fluid_midi.c.i
@@ -630,7 +630,7 @@ midi/fluid_midi.i: midi/fluid_midi.c.i
 
 # target to preprocess a source file
 midi/fluid_midi.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.i
 .PHONY : midi/fluid_midi.c.i
 
 midi/fluid_midi.s: midi/fluid_midi.c.s
@@ -638,7 +638,7 @@ midi/fluid_midi.s: midi/fluid_midi.c.s
 
 # target to generate assembly for a file
 midi/fluid_midi.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi.c.s
 .PHONY : midi/fluid_midi.c.s
 
 midi/fluid_midi_router.o: midi/fluid_midi_router.c.o
@@ -646,7 +646,7 @@ midi/fluid_midi_router.o: midi/fluid_midi_router.c.o
 
 # target to build an object file
 midi/fluid_midi_router.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.o
 .PHONY : midi/fluid_midi_router.c.o
 
 midi/fluid_midi_router.i: midi/fluid_midi_router.c.i
@@ -654,7 +654,7 @@ midi/fluid_midi_router.i: midi/fluid_midi_router.c.i
 
 # target to preprocess a source file
 midi/fluid_midi_router.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.i
 .PHONY : midi/fluid_midi_router.c.i
 
 midi/fluid_midi_router.s: midi/fluid_midi_router.c.s
@@ -662,7 +662,7 @@ midi/fluid_midi_router.s: midi/fluid_midi_router.c.s
 
 # target to generate assembly for a file
 midi/fluid_midi_router.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_midi_router.c.s
 .PHONY : midi/fluid_midi_router.c.s
 
 midi/fluid_seq.o: midi/fluid_seq.c.o
@@ -670,7 +670,7 @@ midi/fluid_seq.o: midi/fluid_seq.c.o
 
 # target to build an object file
 midi/fluid_seq.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.o
 .PHONY : midi/fluid_seq.c.o
 
 midi/fluid_seq.i: midi/fluid_seq.c.i
@@ -678,7 +678,7 @@ midi/fluid_seq.i: midi/fluid_seq.c.i
 
 # target to preprocess a source file
 midi/fluid_seq.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.i
 .PHONY : midi/fluid_seq.c.i
 
 midi/fluid_seq.s: midi/fluid_seq.c.s
@@ -686,7 +686,7 @@ midi/fluid_seq.s: midi/fluid_seq.c.s
 
 # target to generate assembly for a file
 midi/fluid_seq.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq.c.s
 .PHONY : midi/fluid_seq.c.s
 
 midi/fluid_seq_queue.o: midi/fluid_seq_queue.cpp.o
@@ -694,7 +694,7 @@ midi/fluid_seq_queue.o: midi/fluid_seq_queue.cpp.o
 
 # target to build an object file
 midi/fluid_seq_queue.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.o
 .PHONY : midi/fluid_seq_queue.cpp.o
 
 midi/fluid_seq_queue.i: midi/fluid_seq_queue.cpp.i
@@ -702,7 +702,7 @@ midi/fluid_seq_queue.i: midi/fluid_seq_queue.cpp.i
 
 # target to preprocess a source file
 midi/fluid_seq_queue.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.i
 .PHONY : midi/fluid_seq_queue.cpp.i
 
 midi/fluid_seq_queue.s: midi/fluid_seq_queue.cpp.s
@@ -710,7 +710,7 @@ midi/fluid_seq_queue.s: midi/fluid_seq_queue.cpp.s
 
 # target to generate assembly for a file
 midi/fluid_seq_queue.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seq_queue.cpp.s
 .PHONY : midi/fluid_seq_queue.cpp.s
 
 midi/fluid_seqbind.o: midi/fluid_seqbind.c.o
@@ -718,7 +718,7 @@ midi/fluid_seqbind.o: midi/fluid_seqbind.c.o
 
 # target to build an object file
 midi/fluid_seqbind.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.o
 .PHONY : midi/fluid_seqbind.c.o
 
 midi/fluid_seqbind.i: midi/fluid_seqbind.c.i
@@ -726,7 +726,7 @@ midi/fluid_seqbind.i: midi/fluid_seqbind.c.i
 
 # target to preprocess a source file
 midi/fluid_seqbind.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.i
 .PHONY : midi/fluid_seqbind.c.i
 
 midi/fluid_seqbind.s: midi/fluid_seqbind.c.s
@@ -734,7 +734,7 @@ midi/fluid_seqbind.s: midi/fluid_seqbind.c.s
 
 # target to generate assembly for a file
 midi/fluid_seqbind.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind.c.s
 .PHONY : midi/fluid_seqbind.c.s
 
 midi/fluid_seqbind_notes.o: midi/fluid_seqbind_notes.cpp.o
@@ -742,7 +742,7 @@ midi/fluid_seqbind_notes.o: midi/fluid_seqbind_notes.cpp.o
 
 # target to build an object file
 midi/fluid_seqbind_notes.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.o
 .PHONY : midi/fluid_seqbind_notes.cpp.o
 
 midi/fluid_seqbind_notes.i: midi/fluid_seqbind_notes.cpp.i
@@ -750,7 +750,7 @@ midi/fluid_seqbind_notes.i: midi/fluid_seqbind_notes.cpp.i
 
 # target to preprocess a source file
 midi/fluid_seqbind_notes.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.i
 .PHONY : midi/fluid_seqbind_notes.cpp.i
 
 midi/fluid_seqbind_notes.s: midi/fluid_seqbind_notes.cpp.s
@@ -758,7 +758,7 @@ midi/fluid_seqbind_notes.s: midi/fluid_seqbind_notes.cpp.s
 
 # target to generate assembly for a file
 midi/fluid_seqbind_notes.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/midi/fluid_seqbind_notes.cpp.s
 .PHONY : midi/fluid_seqbind_notes.cpp.s
 
 rvoice/fluid_adsr_env.o: rvoice/fluid_adsr_env.c.o
@@ -766,7 +766,7 @@ rvoice/fluid_adsr_env.o: rvoice/fluid_adsr_env.c.o
 
 # target to build an object file
 rvoice/fluid_adsr_env.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.o
 .PHONY : rvoice/fluid_adsr_env.c.o
 
 rvoice/fluid_adsr_env.i: rvoice/fluid_adsr_env.c.i
@@ -774,7 +774,7 @@ rvoice/fluid_adsr_env.i: rvoice/fluid_adsr_env.c.i
 
 # target to preprocess a source file
 rvoice/fluid_adsr_env.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.i
 .PHONY : rvoice/fluid_adsr_env.c.i
 
 rvoice/fluid_adsr_env.s: rvoice/fluid_adsr_env.c.s
@@ -782,7 +782,7 @@ rvoice/fluid_adsr_env.s: rvoice/fluid_adsr_env.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_adsr_env.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_adsr_env.c.s
 .PHONY : rvoice/fluid_adsr_env.c.s
 
 rvoice/fluid_chorus.o: rvoice/fluid_chorus.c.o
@@ -790,7 +790,7 @@ rvoice/fluid_chorus.o: rvoice/fluid_chorus.c.o
 
 # target to build an object file
 rvoice/fluid_chorus.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.o
 .PHONY : rvoice/fluid_chorus.c.o
 
 rvoice/fluid_chorus.i: rvoice/fluid_chorus.c.i
@@ -798,7 +798,7 @@ rvoice/fluid_chorus.i: rvoice/fluid_chorus.c.i
 
 # target to preprocess a source file
 rvoice/fluid_chorus.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.i
 .PHONY : rvoice/fluid_chorus.c.i
 
 rvoice/fluid_chorus.s: rvoice/fluid_chorus.c.s
@@ -806,7 +806,7 @@ rvoice/fluid_chorus.s: rvoice/fluid_chorus.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_chorus.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_chorus.c.s
 .PHONY : rvoice/fluid_chorus.c.s
 
 rvoice/fluid_iir_filter.o: rvoice/fluid_iir_filter.c.o
@@ -814,7 +814,7 @@ rvoice/fluid_iir_filter.o: rvoice/fluid_iir_filter.c.o
 
 # target to build an object file
 rvoice/fluid_iir_filter.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.o
 .PHONY : rvoice/fluid_iir_filter.c.o
 
 rvoice/fluid_iir_filter.i: rvoice/fluid_iir_filter.c.i
@@ -822,7 +822,7 @@ rvoice/fluid_iir_filter.i: rvoice/fluid_iir_filter.c.i
 
 # target to preprocess a source file
 rvoice/fluid_iir_filter.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.i
 .PHONY : rvoice/fluid_iir_filter.c.i
 
 rvoice/fluid_iir_filter.s: rvoice/fluid_iir_filter.c.s
@@ -830,7 +830,7 @@ rvoice/fluid_iir_filter.s: rvoice/fluid_iir_filter.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_iir_filter.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter.c.s
 .PHONY : rvoice/fluid_iir_filter.c.s
 
 rvoice/fluid_iir_filter_impl.o: rvoice/fluid_iir_filter_impl.cpp.o
@@ -838,7 +838,7 @@ rvoice/fluid_iir_filter_impl.o: rvoice/fluid_iir_filter_impl.cpp.o
 
 # target to build an object file
 rvoice/fluid_iir_filter_impl.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.o
 .PHONY : rvoice/fluid_iir_filter_impl.cpp.o
 
 rvoice/fluid_iir_filter_impl.i: rvoice/fluid_iir_filter_impl.cpp.i
@@ -846,7 +846,7 @@ rvoice/fluid_iir_filter_impl.i: rvoice/fluid_iir_filter_impl.cpp.i
 
 # target to preprocess a source file
 rvoice/fluid_iir_filter_impl.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.i
 .PHONY : rvoice/fluid_iir_filter_impl.cpp.i
 
 rvoice/fluid_iir_filter_impl.s: rvoice/fluid_iir_filter_impl.cpp.s
@@ -854,7 +854,7 @@ rvoice/fluid_iir_filter_impl.s: rvoice/fluid_iir_filter_impl.cpp.s
 
 # target to generate assembly for a file
 rvoice/fluid_iir_filter_impl.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_iir_filter_impl.cpp.s
 .PHONY : rvoice/fluid_iir_filter_impl.cpp.s
 
 rvoice/fluid_lfo.o: rvoice/fluid_lfo.c.o
@@ -862,7 +862,7 @@ rvoice/fluid_lfo.o: rvoice/fluid_lfo.c.o
 
 # target to build an object file
 rvoice/fluid_lfo.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.o
 .PHONY : rvoice/fluid_lfo.c.o
 
 rvoice/fluid_lfo.i: rvoice/fluid_lfo.c.i
@@ -870,7 +870,7 @@ rvoice/fluid_lfo.i: rvoice/fluid_lfo.c.i
 
 # target to preprocess a source file
 rvoice/fluid_lfo.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.i
 .PHONY : rvoice/fluid_lfo.c.i
 
 rvoice/fluid_lfo.s: rvoice/fluid_lfo.c.s
@@ -878,7 +878,7 @@ rvoice/fluid_lfo.s: rvoice/fluid_lfo.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_lfo.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_lfo.c.s
 .PHONY : rvoice/fluid_lfo.c.s
 
 rvoice/fluid_rev.o: rvoice/fluid_rev.c.o
@@ -886,7 +886,7 @@ rvoice/fluid_rev.o: rvoice/fluid_rev.c.o
 
 # target to build an object file
 rvoice/fluid_rev.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.o
 .PHONY : rvoice/fluid_rev.c.o
 
 rvoice/fluid_rev.i: rvoice/fluid_rev.c.i
@@ -894,7 +894,7 @@ rvoice/fluid_rev.i: rvoice/fluid_rev.c.i
 
 # target to preprocess a source file
 rvoice/fluid_rev.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.i
 .PHONY : rvoice/fluid_rev.c.i
 
 rvoice/fluid_rev.s: rvoice/fluid_rev.c.s
@@ -902,7 +902,7 @@ rvoice/fluid_rev.s: rvoice/fluid_rev.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_rev.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rev.c.s
 .PHONY : rvoice/fluid_rev.c.s
 
 rvoice/fluid_rvoice.o: rvoice/fluid_rvoice.c.o
@@ -910,7 +910,7 @@ rvoice/fluid_rvoice.o: rvoice/fluid_rvoice.c.o
 
 # target to build an object file
 rvoice/fluid_rvoice.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.o
 .PHONY : rvoice/fluid_rvoice.c.o
 
 rvoice/fluid_rvoice.i: rvoice/fluid_rvoice.c.i
@@ -918,7 +918,7 @@ rvoice/fluid_rvoice.i: rvoice/fluid_rvoice.c.i
 
 # target to preprocess a source file
 rvoice/fluid_rvoice.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.i
 .PHONY : rvoice/fluid_rvoice.c.i
 
 rvoice/fluid_rvoice.s: rvoice/fluid_rvoice.c.s
@@ -926,7 +926,7 @@ rvoice/fluid_rvoice.s: rvoice/fluid_rvoice.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_rvoice.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice.c.s
 .PHONY : rvoice/fluid_rvoice.c.s
 
 rvoice/fluid_rvoice_dsp.o: rvoice/fluid_rvoice_dsp.cpp.o
@@ -934,7 +934,7 @@ rvoice/fluid_rvoice_dsp.o: rvoice/fluid_rvoice_dsp.cpp.o
 
 # target to build an object file
 rvoice/fluid_rvoice_dsp.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.o
 .PHONY : rvoice/fluid_rvoice_dsp.cpp.o
 
 rvoice/fluid_rvoice_dsp.i: rvoice/fluid_rvoice_dsp.cpp.i
@@ -942,7 +942,7 @@ rvoice/fluid_rvoice_dsp.i: rvoice/fluid_rvoice_dsp.cpp.i
 
 # target to preprocess a source file
 rvoice/fluid_rvoice_dsp.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.i
 .PHONY : rvoice/fluid_rvoice_dsp.cpp.i
 
 rvoice/fluid_rvoice_dsp.s: rvoice/fluid_rvoice_dsp.cpp.s
@@ -950,7 +950,7 @@ rvoice/fluid_rvoice_dsp.s: rvoice/fluid_rvoice_dsp.cpp.s
 
 # target to generate assembly for a file
 rvoice/fluid_rvoice_dsp.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_dsp.cpp.s
 .PHONY : rvoice/fluid_rvoice_dsp.cpp.s
 
 rvoice/fluid_rvoice_event.o: rvoice/fluid_rvoice_event.c.o
@@ -958,7 +958,7 @@ rvoice/fluid_rvoice_event.o: rvoice/fluid_rvoice_event.c.o
 
 # target to build an object file
 rvoice/fluid_rvoice_event.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.o
 .PHONY : rvoice/fluid_rvoice_event.c.o
 
 rvoice/fluid_rvoice_event.i: rvoice/fluid_rvoice_event.c.i
@@ -966,7 +966,7 @@ rvoice/fluid_rvoice_event.i: rvoice/fluid_rvoice_event.c.i
 
 # target to preprocess a source file
 rvoice/fluid_rvoice_event.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.i
 .PHONY : rvoice/fluid_rvoice_event.c.i
 
 rvoice/fluid_rvoice_event.s: rvoice/fluid_rvoice_event.c.s
@@ -974,7 +974,7 @@ rvoice/fluid_rvoice_event.s: rvoice/fluid_rvoice_event.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_rvoice_event.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_event.c.s
 .PHONY : rvoice/fluid_rvoice_event.c.s
 
 rvoice/fluid_rvoice_mixer.o: rvoice/fluid_rvoice_mixer.c.o
@@ -982,7 +982,7 @@ rvoice/fluid_rvoice_mixer.o: rvoice/fluid_rvoice_mixer.c.o
 
 # target to build an object file
 rvoice/fluid_rvoice_mixer.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.o
 .PHONY : rvoice/fluid_rvoice_mixer.c.o
 
 rvoice/fluid_rvoice_mixer.i: rvoice/fluid_rvoice_mixer.c.i
@@ -990,7 +990,7 @@ rvoice/fluid_rvoice_mixer.i: rvoice/fluid_rvoice_mixer.c.i
 
 # target to preprocess a source file
 rvoice/fluid_rvoice_mixer.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.i
 .PHONY : rvoice/fluid_rvoice_mixer.c.i
 
 rvoice/fluid_rvoice_mixer.s: rvoice/fluid_rvoice_mixer.c.s
@@ -998,7 +998,7 @@ rvoice/fluid_rvoice_mixer.s: rvoice/fluid_rvoice_mixer.c.s
 
 # target to generate assembly for a file
 rvoice/fluid_rvoice_mixer.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/rvoice/fluid_rvoice_mixer.c.s
 .PHONY : rvoice/fluid_rvoice_mixer.c.s
 
 sfloader/fluid_defsfont.o: sfloader/fluid_defsfont.c.o
@@ -1006,7 +1006,7 @@ sfloader/fluid_defsfont.o: sfloader/fluid_defsfont.c.o
 
 # target to build an object file
 sfloader/fluid_defsfont.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.o
 .PHONY : sfloader/fluid_defsfont.c.o
 
 sfloader/fluid_defsfont.i: sfloader/fluid_defsfont.c.i
@@ -1014,7 +1014,7 @@ sfloader/fluid_defsfont.i: sfloader/fluid_defsfont.c.i
 
 # target to preprocess a source file
 sfloader/fluid_defsfont.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.i
 .PHONY : sfloader/fluid_defsfont.c.i
 
 sfloader/fluid_defsfont.s: sfloader/fluid_defsfont.c.s
@@ -1022,7 +1022,7 @@ sfloader/fluid_defsfont.s: sfloader/fluid_defsfont.c.s
 
 # target to generate assembly for a file
 sfloader/fluid_defsfont.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_defsfont.c.s
 .PHONY : sfloader/fluid_defsfont.c.s
 
 sfloader/fluid_dls.o: sfloader/fluid_dls.cpp.o
@@ -1030,7 +1030,7 @@ sfloader/fluid_dls.o: sfloader/fluid_dls.cpp.o
 
 # target to build an object file
 sfloader/fluid_dls.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.o
 .PHONY : sfloader/fluid_dls.cpp.o
 
 sfloader/fluid_dls.i: sfloader/fluid_dls.cpp.i
@@ -1038,7 +1038,7 @@ sfloader/fluid_dls.i: sfloader/fluid_dls.cpp.i
 
 # target to preprocess a source file
 sfloader/fluid_dls.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.i
 .PHONY : sfloader/fluid_dls.cpp.i
 
 sfloader/fluid_dls.s: sfloader/fluid_dls.cpp.s
@@ -1046,7 +1046,7 @@ sfloader/fluid_dls.s: sfloader/fluid_dls.cpp.s
 
 # target to generate assembly for a file
 sfloader/fluid_dls.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_dls.cpp.s
 .PHONY : sfloader/fluid_dls.cpp.s
 
 sfloader/fluid_samplecache.o: sfloader/fluid_samplecache.c.o
@@ -1054,7 +1054,7 @@ sfloader/fluid_samplecache.o: sfloader/fluid_samplecache.c.o
 
 # target to build an object file
 sfloader/fluid_samplecache.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.o
 .PHONY : sfloader/fluid_samplecache.c.o
 
 sfloader/fluid_samplecache.i: sfloader/fluid_samplecache.c.i
@@ -1062,7 +1062,7 @@ sfloader/fluid_samplecache.i: sfloader/fluid_samplecache.c.i
 
 # target to preprocess a source file
 sfloader/fluid_samplecache.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.i
 .PHONY : sfloader/fluid_samplecache.c.i
 
 sfloader/fluid_samplecache.s: sfloader/fluid_samplecache.c.s
@@ -1070,7 +1070,7 @@ sfloader/fluid_samplecache.s: sfloader/fluid_samplecache.c.s
 
 # target to generate assembly for a file
 sfloader/fluid_samplecache.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_samplecache.c.s
 .PHONY : sfloader/fluid_samplecache.c.s
 
 sfloader/fluid_sffile.o: sfloader/fluid_sffile.c.o
@@ -1078,7 +1078,7 @@ sfloader/fluid_sffile.o: sfloader/fluid_sffile.c.o
 
 # target to build an object file
 sfloader/fluid_sffile.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.o
 .PHONY : sfloader/fluid_sffile.c.o
 
 sfloader/fluid_sffile.i: sfloader/fluid_sffile.c.i
@@ -1086,7 +1086,7 @@ sfloader/fluid_sffile.i: sfloader/fluid_sffile.c.i
 
 # target to preprocess a source file
 sfloader/fluid_sffile.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.i
 .PHONY : sfloader/fluid_sffile.c.i
 
 sfloader/fluid_sffile.s: sfloader/fluid_sffile.c.s
@@ -1094,7 +1094,7 @@ sfloader/fluid_sffile.s: sfloader/fluid_sffile.c.s
 
 # target to generate assembly for a file
 sfloader/fluid_sffile.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sffile.c.s
 .PHONY : sfloader/fluid_sffile.c.s
 
 sfloader/fluid_sfont.o: sfloader/fluid_sfont.c.o
@@ -1102,7 +1102,7 @@ sfloader/fluid_sfont.o: sfloader/fluid_sfont.c.o
 
 # target to build an object file
 sfloader/fluid_sfont.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.o
 .PHONY : sfloader/fluid_sfont.c.o
 
 sfloader/fluid_sfont.i: sfloader/fluid_sfont.c.i
@@ -1110,7 +1110,7 @@ sfloader/fluid_sfont.i: sfloader/fluid_sfont.c.i
 
 # target to preprocess a source file
 sfloader/fluid_sfont.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.i
 .PHONY : sfloader/fluid_sfont.c.i
 
 sfloader/fluid_sfont.s: sfloader/fluid_sfont.c.s
@@ -1118,7 +1118,7 @@ sfloader/fluid_sfont.s: sfloader/fluid_sfont.c.s
 
 # target to generate assembly for a file
 sfloader/fluid_sfont.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/sfloader/fluid_sfont.c.s
 .PHONY : sfloader/fluid_sfont.c.s
 
 synth/fluid_chan.o: synth/fluid_chan.c.o
@@ -1126,7 +1126,7 @@ synth/fluid_chan.o: synth/fluid_chan.c.o
 
 # target to build an object file
 synth/fluid_chan.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.o
 .PHONY : synth/fluid_chan.c.o
 
 synth/fluid_chan.i: synth/fluid_chan.c.i
@@ -1134,7 +1134,7 @@ synth/fluid_chan.i: synth/fluid_chan.c.i
 
 # target to preprocess a source file
 synth/fluid_chan.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.i
 .PHONY : synth/fluid_chan.c.i
 
 synth/fluid_chan.s: synth/fluid_chan.c.s
@@ -1142,7 +1142,7 @@ synth/fluid_chan.s: synth/fluid_chan.c.s
 
 # target to generate assembly for a file
 synth/fluid_chan.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_chan.c.s
 .PHONY : synth/fluid_chan.c.s
 
 synth/fluid_event.o: synth/fluid_event.c.o
@@ -1150,7 +1150,7 @@ synth/fluid_event.o: synth/fluid_event.c.o
 
 # target to build an object file
 synth/fluid_event.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.o
 .PHONY : synth/fluid_event.c.o
 
 synth/fluid_event.i: synth/fluid_event.c.i
@@ -1158,7 +1158,7 @@ synth/fluid_event.i: synth/fluid_event.c.i
 
 # target to preprocess a source file
 synth/fluid_event.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.i
 .PHONY : synth/fluid_event.c.i
 
 synth/fluid_event.s: synth/fluid_event.c.s
@@ -1166,7 +1166,7 @@ synth/fluid_event.s: synth/fluid_event.c.s
 
 # target to generate assembly for a file
 synth/fluid_event.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_event.c.s
 .PHONY : synth/fluid_event.c.s
 
 synth/fluid_gen.o: synth/fluid_gen.c.o
@@ -1174,7 +1174,7 @@ synth/fluid_gen.o: synth/fluid_gen.c.o
 
 # target to build an object file
 synth/fluid_gen.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.o
 .PHONY : synth/fluid_gen.c.o
 
 synth/fluid_gen.i: synth/fluid_gen.c.i
@@ -1182,7 +1182,7 @@ synth/fluid_gen.i: synth/fluid_gen.c.i
 
 # target to preprocess a source file
 synth/fluid_gen.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.i
 .PHONY : synth/fluid_gen.c.i
 
 synth/fluid_gen.s: synth/fluid_gen.c.s
@@ -1190,7 +1190,7 @@ synth/fluid_gen.s: synth/fluid_gen.c.s
 
 # target to generate assembly for a file
 synth/fluid_gen.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_gen.c.s
 .PHONY : synth/fluid_gen.c.s
 
 synth/fluid_mod.o: synth/fluid_mod.c.o
@@ -1198,7 +1198,7 @@ synth/fluid_mod.o: synth/fluid_mod.c.o
 
 # target to build an object file
 synth/fluid_mod.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.o
 .PHONY : synth/fluid_mod.c.o
 
 synth/fluid_mod.i: synth/fluid_mod.c.i
@@ -1206,7 +1206,7 @@ synth/fluid_mod.i: synth/fluid_mod.c.i
 
 # target to preprocess a source file
 synth/fluid_mod.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.i
 .PHONY : synth/fluid_mod.c.i
 
 synth/fluid_mod.s: synth/fluid_mod.c.s
@@ -1214,7 +1214,7 @@ synth/fluid_mod.s: synth/fluid_mod.c.s
 
 # target to generate assembly for a file
 synth/fluid_mod.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_mod.c.s
 .PHONY : synth/fluid_mod.c.s
 
 synth/fluid_synth.o: synth/fluid_synth.c.o
@@ -1222,7 +1222,7 @@ synth/fluid_synth.o: synth/fluid_synth.c.o
 
 # target to build an object file
 synth/fluid_synth.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.o
 .PHONY : synth/fluid_synth.c.o
 
 synth/fluid_synth.i: synth/fluid_synth.c.i
@@ -1230,7 +1230,7 @@ synth/fluid_synth.i: synth/fluid_synth.c.i
 
 # target to preprocess a source file
 synth/fluid_synth.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.i
 .PHONY : synth/fluid_synth.c.i
 
 synth/fluid_synth.s: synth/fluid_synth.c.s
@@ -1238,7 +1238,7 @@ synth/fluid_synth.s: synth/fluid_synth.c.s
 
 # target to generate assembly for a file
 synth/fluid_synth.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth.c.s
 .PHONY : synth/fluid_synth.c.s
 
 synth/fluid_synth_monopoly.o: synth/fluid_synth_monopoly.c.o
@@ -1246,7 +1246,7 @@ synth/fluid_synth_monopoly.o: synth/fluid_synth_monopoly.c.o
 
 # target to build an object file
 synth/fluid_synth_monopoly.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.o
 .PHONY : synth/fluid_synth_monopoly.c.o
 
 synth/fluid_synth_monopoly.i: synth/fluid_synth_monopoly.c.i
@@ -1254,7 +1254,7 @@ synth/fluid_synth_monopoly.i: synth/fluid_synth_monopoly.c.i
 
 # target to preprocess a source file
 synth/fluid_synth_monopoly.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.i
 .PHONY : synth/fluid_synth_monopoly.c.i
 
 synth/fluid_synth_monopoly.s: synth/fluid_synth_monopoly.c.s
@@ -1262,7 +1262,7 @@ synth/fluid_synth_monopoly.s: synth/fluid_synth_monopoly.c.s
 
 # target to generate assembly for a file
 synth/fluid_synth_monopoly.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_monopoly.c.s
 .PHONY : synth/fluid_synth_monopoly.c.s
 
 synth/fluid_synth_write_int.o: synth/fluid_synth_write_int.cpp.o
@@ -1270,7 +1270,7 @@ synth/fluid_synth_write_int.o: synth/fluid_synth_write_int.cpp.o
 
 # target to build an object file
 synth/fluid_synth_write_int.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.o
 .PHONY : synth/fluid_synth_write_int.cpp.o
 
 synth/fluid_synth_write_int.i: synth/fluid_synth_write_int.cpp.i
@@ -1278,7 +1278,7 @@ synth/fluid_synth_write_int.i: synth/fluid_synth_write_int.cpp.i
 
 # target to preprocess a source file
 synth/fluid_synth_write_int.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.i
 .PHONY : synth/fluid_synth_write_int.cpp.i
 
 synth/fluid_synth_write_int.s: synth/fluid_synth_write_int.cpp.s
@@ -1286,7 +1286,7 @@ synth/fluid_synth_write_int.s: synth/fluid_synth_write_int.cpp.s
 
 # target to generate assembly for a file
 synth/fluid_synth_write_int.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_synth_write_int.cpp.s
 .PHONY : synth/fluid_synth_write_int.cpp.s
 
 synth/fluid_tuning.o: synth/fluid_tuning.c.o
@@ -1294,7 +1294,7 @@ synth/fluid_tuning.o: synth/fluid_tuning.c.o
 
 # target to build an object file
 synth/fluid_tuning.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.o
 .PHONY : synth/fluid_tuning.c.o
 
 synth/fluid_tuning.i: synth/fluid_tuning.c.i
@@ -1302,7 +1302,7 @@ synth/fluid_tuning.i: synth/fluid_tuning.c.i
 
 # target to preprocess a source file
 synth/fluid_tuning.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.i
 .PHONY : synth/fluid_tuning.c.i
 
 synth/fluid_tuning.s: synth/fluid_tuning.c.s
@@ -1310,7 +1310,7 @@ synth/fluid_tuning.s: synth/fluid_tuning.c.s
 
 # target to generate assembly for a file
 synth/fluid_tuning.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_tuning.c.s
 .PHONY : synth/fluid_tuning.c.s
 
 synth/fluid_voice.o: synth/fluid_voice.c.o
@@ -1318,7 +1318,7 @@ synth/fluid_voice.o: synth/fluid_voice.c.o
 
 # target to build an object file
 synth/fluid_voice.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.o
 .PHONY : synth/fluid_voice.c.o
 
 synth/fluid_voice.i: synth/fluid_voice.c.i
@@ -1326,7 +1326,7 @@ synth/fluid_voice.i: synth/fluid_voice.c.i
 
 # target to preprocess a source file
 synth/fluid_voice.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.i
 .PHONY : synth/fluid_voice.c.i
 
 synth/fluid_voice.s: synth/fluid_voice.c.s
@@ -1334,7 +1334,7 @@ synth/fluid_voice.s: synth/fluid_voice.c.s
 
 # target to generate assembly for a file
 synth/fluid_voice.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/synth/fluid_voice.c.s
 .PHONY : synth/fluid_voice.c.s
 
 utils/fluid_conv.o: utils/fluid_conv.c.o
@@ -1342,7 +1342,7 @@ utils/fluid_conv.o: utils/fluid_conv.c.o
 
 # target to build an object file
 utils/fluid_conv.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.o
 .PHONY : utils/fluid_conv.c.o
 
 utils/fluid_conv.i: utils/fluid_conv.c.i
@@ -1350,7 +1350,7 @@ utils/fluid_conv.i: utils/fluid_conv.c.i
 
 # target to preprocess a source file
 utils/fluid_conv.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.i
 .PHONY : utils/fluid_conv.c.i
 
 utils/fluid_conv.s: utils/fluid_conv.c.s
@@ -1358,7 +1358,7 @@ utils/fluid_conv.s: utils/fluid_conv.c.s
 
 # target to generate assembly for a file
 utils/fluid_conv.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_conv.c.s
 .PHONY : utils/fluid_conv.c.s
 
 utils/fluid_file.o: utils/fluid_file.cpp.o
@@ -1366,8 +1366,8 @@ utils/fluid_file.o: utils/fluid_file.cpp.o
 
 # target to build an object file
 utils/fluid_file.cpp.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.o
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.o
 .PHONY : utils/fluid_file.cpp.o
 
 utils/fluid_file.i: utils/fluid_file.cpp.i
@@ -1375,8 +1375,8 @@ utils/fluid_file.i: utils/fluid_file.cpp.i
 
 # target to preprocess a source file
 utils/fluid_file.cpp.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.i
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.i
 .PHONY : utils/fluid_file.cpp.i
 
 utils/fluid_file.s: utils/fluid_file.cpp.s
@@ -1384,8 +1384,8 @@ utils/fluid_file.s: utils/fluid_file.cpp.s
 
 # target to generate assembly for a file
 utils/fluid_file.cpp.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.s
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_file.cpp.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/fluidsynth.dir/build.make src/CMakeFiles/fluidsynth.dir/utils/fluid_file.cpp.s
 .PHONY : utils/fluid_file.cpp.s
 
 utils/fluid_hash.o: utils/fluid_hash.c.o
@@ -1393,7 +1393,7 @@ utils/fluid_hash.o: utils/fluid_hash.c.o
 
 # target to build an object file
 utils/fluid_hash.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.o
 .PHONY : utils/fluid_hash.c.o
 
 utils/fluid_hash.i: utils/fluid_hash.c.i
@@ -1401,7 +1401,7 @@ utils/fluid_hash.i: utils/fluid_hash.c.i
 
 # target to preprocess a source file
 utils/fluid_hash.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.i
 .PHONY : utils/fluid_hash.c.i
 
 utils/fluid_hash.s: utils/fluid_hash.c.s
@@ -1409,7 +1409,7 @@ utils/fluid_hash.s: utils/fluid_hash.c.s
 
 # target to generate assembly for a file
 utils/fluid_hash.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_hash.c.s
 .PHONY : utils/fluid_hash.c.s
 
 utils/fluid_list.o: utils/fluid_list.c.o
@@ -1417,7 +1417,7 @@ utils/fluid_list.o: utils/fluid_list.c.o
 
 # target to build an object file
 utils/fluid_list.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.o
 .PHONY : utils/fluid_list.c.o
 
 utils/fluid_list.i: utils/fluid_list.c.i
@@ -1425,7 +1425,7 @@ utils/fluid_list.i: utils/fluid_list.c.i
 
 # target to preprocess a source file
 utils/fluid_list.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.i
 .PHONY : utils/fluid_list.c.i
 
 utils/fluid_list.s: utils/fluid_list.c.s
@@ -1433,7 +1433,7 @@ utils/fluid_list.s: utils/fluid_list.c.s
 
 # target to generate assembly for a file
 utils/fluid_list.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_list.c.s
 .PHONY : utils/fluid_list.c.s
 
 utils/fluid_ringbuffer.o: utils/fluid_ringbuffer.c.o
@@ -1441,7 +1441,7 @@ utils/fluid_ringbuffer.o: utils/fluid_ringbuffer.c.o
 
 # target to build an object file
 utils/fluid_ringbuffer.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.o
 .PHONY : utils/fluid_ringbuffer.c.o
 
 utils/fluid_ringbuffer.i: utils/fluid_ringbuffer.c.i
@@ -1449,7 +1449,7 @@ utils/fluid_ringbuffer.i: utils/fluid_ringbuffer.c.i
 
 # target to preprocess a source file
 utils/fluid_ringbuffer.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.i
 .PHONY : utils/fluid_ringbuffer.c.i
 
 utils/fluid_ringbuffer.s: utils/fluid_ringbuffer.c.s
@@ -1457,7 +1457,7 @@ utils/fluid_ringbuffer.s: utils/fluid_ringbuffer.c.s
 
 # target to generate assembly for a file
 utils/fluid_ringbuffer.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_ringbuffer.c.s
 .PHONY : utils/fluid_ringbuffer.c.s
 
 utils/fluid_settings.o: utils/fluid_settings.c.o
@@ -1465,7 +1465,7 @@ utils/fluid_settings.o: utils/fluid_settings.c.o
 
 # target to build an object file
 utils/fluid_settings.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.o
 .PHONY : utils/fluid_settings.c.o
 
 utils/fluid_settings.i: utils/fluid_settings.c.i
@@ -1473,7 +1473,7 @@ utils/fluid_settings.i: utils/fluid_settings.c.i
 
 # target to preprocess a source file
 utils/fluid_settings.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.i
 .PHONY : utils/fluid_settings.c.i
 
 utils/fluid_settings.s: utils/fluid_settings.c.s
@@ -1481,7 +1481,7 @@ utils/fluid_settings.s: utils/fluid_settings.c.s
 
 # target to generate assembly for a file
 utils/fluid_settings.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_settings.c.s
 .PHONY : utils/fluid_settings.c.s
 
 utils/fluid_sys.o: utils/fluid_sys.c.o
@@ -1489,7 +1489,7 @@ utils/fluid_sys.o: utils/fluid_sys.c.o
 
 # target to build an object file
 utils/fluid_sys.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.o
 .PHONY : utils/fluid_sys.c.o
 
 utils/fluid_sys.i: utils/fluid_sys.c.i
@@ -1497,7 +1497,7 @@ utils/fluid_sys.i: utils/fluid_sys.c.i
 
 # target to preprocess a source file
 utils/fluid_sys.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.i
 .PHONY : utils/fluid_sys.c.i
 
 utils/fluid_sys.s: utils/fluid_sys.c.s
@@ -1505,7 +1505,7 @@ utils/fluid_sys.s: utils/fluid_sys.c.s
 
 # target to generate assembly for a file
 utils/fluid_sys.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys.c.s
 .PHONY : utils/fluid_sys.c.s
 
 utils/fluid_sys_embedded.o: utils/fluid_sys_embedded.c.o
@@ -1513,7 +1513,7 @@ utils/fluid_sys_embedded.o: utils/fluid_sys_embedded.c.o
 
 # target to build an object file
 utils/fluid_sys_embedded.c.o:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.o
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.o
 .PHONY : utils/fluid_sys_embedded.c.o
 
 utils/fluid_sys_embedded.i: utils/fluid_sys_embedded.c.i
@@ -1521,7 +1521,7 @@ utils/fluid_sys_embedded.i: utils/fluid_sys_embedded.c.i
 
 # target to preprocess a source file
 utils/fluid_sys_embedded.c.i:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.i
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.i
 .PHONY : utils/fluid_sys_embedded.c.i
 
 utils/fluid_sys_embedded.s: utils/fluid_sys_embedded.c.s
@@ -1529,7 +1529,7 @@ utils/fluid_sys_embedded.s: utils/fluid_sys_embedded.c.s
 
 # target to generate assembly for a file
 utils/fluid_sys_embedded.c.s:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.s
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/libfluidsynth-OBJ.dir/build.make src/CMakeFiles/libfluidsynth-OBJ.dir/utils/fluid_sys_embedded.c.s
 .PHONY : utils/fluid_sys_embedded.c.s
 
 # Help Target
@@ -1723,6 +1723,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
