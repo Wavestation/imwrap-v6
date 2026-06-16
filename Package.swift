@@ -53,7 +53,8 @@ let package = Package(
                 .headerSearchPath("../third_party/fluidsynth-master/include"),
                 .headerSearchPath("../third_party/munt/mt32emu/src"),
                 .headerSearchPath("../third_party/mt32emu-build/include"),
-                .headerSearchPath("../third_party/mt32emu-build/include/mt32emu")
+                .headerSearchPath("../third_party/mt32emu-build/include/mt32emu"),
+                .headerSearchPath("../third_party/libadlmidi/include")
             ],
             linkerSettings: [
                 .unsafeFlags([
@@ -61,6 +62,8 @@ let package = Package(
                     "-lfluidsynth",
                     "-L", "third_party/mt32emu-build",
                     "-lmt32emu",
+                    "-L", "third_party/adlmidi-build",
+                    "-lADLMIDI",
                     "-framework", "CoreAudio",
                     "-framework", "AudioUnit",
                     "-lm"

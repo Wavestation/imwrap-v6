@@ -35,7 +35,8 @@ typedef struct ImuseEngineHandle ImuseEngineHandle;
 
 typedef enum ImuseAuthoringProfile {
     ImuseAuthoringProfileGeneralMidi = 0,
-    ImuseAuthoringProfileMt32 = 1
+    ImuseAuthoringProfileMt32 = 1,
+    ImuseAuthoringProfileAdlib = 2
 } ImuseAuthoringProfile;
 
 ImuseBankHandle *imuse_bank_create(void);
@@ -78,6 +79,10 @@ void imuse_engine_set_callbacks(ImuseEngineHandle *handle,
 int imuse_engine_enable_mt32(ImuseEngineHandle *handle, const char *romDir, char *errorBuffer, size_t errorBufferSize);
 void imuse_engine_render_mt32(ImuseEngineHandle *handle, uint32_t frameCount, float *left, float *right);
 void imuse_engine_disable_mt32(ImuseEngineHandle *handle);
+
+int imuse_engine_enable_adlib(ImuseEngineHandle *handle, char *errorBuffer, size_t errorBufferSize);
+void imuse_engine_render_adlib(ImuseEngineHandle *handle, uint32_t frameCount, float *left, float *right);
+void imuse_engine_disable_adlib(ImuseEngineHandle *handle);
 
 void imuse_register_roland_timbre_mapping(const char *name, uint8_t gmProgram);
 void imuse_clear_roland_timbre_mappings(void);

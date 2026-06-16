@@ -31,6 +31,7 @@
 #include <fluidsynth.h>
 #include <mt32emu.h>
 #include <c_interface/c_interface.h>
+#include <adlmidi.h>
 
 #include "imuse/ImuseEngine.h"
 #include "imuse/Instrument.h"
@@ -46,6 +47,7 @@ struct ImuseBankHandle {
 struct ShimMidiSink final : imuse::MidiSink {
     fluid_synth_t *fluidSynth = nullptr;
     mt32emu_context mt32Context = nullptr;
+    ADL_MIDIPlayer *adlPlayer = nullptr;
 
     imuse_midi_message_callback_t midiCallback = nullptr;
     imuse_sysex_callback_t sysexCallback = nullptr;
@@ -97,6 +99,37 @@ struct ShimMidiSink final : imuse::MidiSink {
             mt32emu_play_msg(mt32Context, msg);
         }
 
+        if (adlPlayer) {
+            const int ch = status & 0x0F;
+            switch (status & 0xF0) {
+            case 0x80:
+                adl_rt_noteOff(adlPlayer, ch, data1);
+                break;
+            case 0x90:
+                if (!hasData2 || data2 == 0) {
+                    adl_rt_noteOff(adlPlayer, ch, data1);
+                } else {
+                    adl_rt_noteOn(adlPlayer, ch, data1, data2);
+                }
+                break;
+            case 0xA0:
+                if (hasData2) { adl_rt_noteAfterTouch(adlPlayer, ch, data1, data2); }
+                break;
+            case 0xB0:
+                if (hasData2) { adl_rt_controllerChange(adlPlayer, ch, data1, data2); }
+                break;
+            case 0xC0:
+                adl_rt_patchChange(adlPlayer, ch, data1);
+                break;
+            case 0xD0:
+                adl_rt_channelAfterTouch(adlPlayer, ch, data1);
+                break;
+            case 0xE0:
+                if (hasData2) { adl_rt_pitchBendML(adlPlayer, ch, data2, data1); }
+                break;
+            }
+        }
+
         if (midiCallback) {
             midiCallback(userData, soundId, status, data1, finalData2);
         }
@@ -139,22 +172,47 @@ struct ShimMidiSink final : imuse::MidiSink {
                 }
             }
         } else if (type == 0x41444C20 || type == 'ADL ') { // 'ADL ' — OPL2 instrument (30 bytes)
-            // Forward OPL2 instrument data to callback using a framed envelope:
-            // [0xF0, 0x7D, 0x10, channel, data..., 0xF7]
-            // 0x7D = iMUSE manufacturer ID, 0x10 = AdlibPartInstrument code
-            if (!data.empty()) {
+            if (!data.empty() && adlPlayer) {
+                // Direct routing to libADLMIDI: map 30-byte iMUSE OPL2 data to ADL_Instrument
+                ADL_Instrument ins;
+                std::memset(&ins, 0, sizeof(ins));
+                ins.version        = ADLMIDI_InstrumentVersion;
+                ins.inst_flags     = ADLMIDI_Ins_2op;
+                if (data.size() >= 11) {
+                    ins.operators[0].avekf_20    = data.data()[0];
+                    ins.operators[0].ksl_l_40    = data.data()[1];
+                    ins.operators[0].atdec_60    = data.data()[2];
+                    ins.operators[0].susrel_80   = data.data()[3];
+                    ins.operators[0].waveform_E0 = data.data()[4];
+                    ins.operators[1].avekf_20    = data.data()[5];
+                    ins.operators[1].ksl_l_40    = data.data()[6];
+                    ins.operators[1].atdec_60    = data.data()[7];
+                    ins.operators[1].susrel_80   = data.data()[8];
+                    ins.operators[1].waveform_E0 = data.data()[9];
+                    ins.fb_conn1_C0              = data.data()[10];
+                }
+                ADL_BankId bankId;
+                bankId.msb = 0x7D;
+                bankId.lsb = channel;
+                bankId.percussive = 0;
+                ADL_Bank bank;
+                if (adl_getBank(adlPlayer, &bankId, ADLMIDI_Bank_Create, &bank) == 0) {
+                    adl_setInstrument(adlPlayer, &bank, 0, &ins);
+                }
+                adl_rt_bankChangeMSB(adlPlayer, static_cast<ADL_UInt8>(channel), 0x7D);
+                adl_rt_bankChangeLSB(adlPlayer, static_cast<ADL_UInt8>(channel), static_cast<ADL_UInt8>(channel));
+                adl_rt_patchChange(adlPlayer, static_cast<int>(channel), 0);
+            } else if (!data.empty() && sysexCallback) {
+                // No adlPlayer: forward as framed envelope for external handling
                 std::vector<uint8_t> envelope;
                 envelope.reserve(data.size() + 5);
                 envelope.push_back(0xF0);
-                envelope.push_back(0x7D);   // iMUSE manufacturer ID
-                envelope.push_back(0x10);   // AdlibPartInstrument type code
+                envelope.push_back(0x7D);
+                envelope.push_back(0x10);
                 envelope.push_back(channel);
                 envelope.insert(envelope.end(), data.data(), data.data() + data.size());
                 envelope.push_back(0xF7);
-
-                if (sysexCallback) {
-                    sysexCallback(userData, soundId, envelope.data(), envelope.size());
-                }
+                sysexCallback(userData, soundId, envelope.data(), envelope.size());
             }
         }
     }
@@ -176,6 +234,10 @@ struct ShimMidiSink final : imuse::MidiSink {
                 mt32emu_play_msg(mt32Context, msg2);
             }
         }
+
+        if (adlPlayer) {
+            adl_rt_resetState(adlPlayer);
+        }
     }
 };
 
@@ -186,6 +248,7 @@ struct ImuseEngineHandle {
     fluid_settings_t *fluidSettings = nullptr;
     fluid_synth_t *fluidSynth = nullptr;
     mt32emu_context mt32Context = nullptr;
+    ADL_MIDIPlayer *adlPlayer = nullptr;
 };
 
 namespace {
@@ -651,4 +714,75 @@ void imuse_register_roland_timbre_mapping(const char *name, uint8_t gmProgram) {
 
 void imuse_clear_roland_timbre_mappings(void) {
     imuse::ClearRolandTimbreMappings();
+}
+
+int imuse_engine_enable_adlib(ImuseEngineHandle *handle, char *errorBuffer, size_t errorBufferSize) {
+    if (!handle) {
+        CopyString("invalid engine handle", errorBuffer, errorBufferSize);
+        return 0;
+    }
+
+    imuse_engine_disable_adlib(handle);
+
+    ADL_MIDIPlayer *player = adl_init(44100);
+    if (!player) {
+        CopyString("adl_init() failed — libADLMIDI could not initialise the OPL emulator", errorBuffer, errorBufferSize);
+        return 0;
+    }
+
+    // Use the "DMX" volume model (classic LucasArts iMUSE/Doom-era behaviour)
+    adl_setVolumeRangeModel(player, ADLMIDI_VolumeModel_DMX);
+    // Embedded bank 0 (OPL2-GM) as a fallback for non-custom timbres
+    adl_setBank(player, 0);
+    adl_setNumChips(player, 1);
+
+    handle->adlPlayer = player;
+    handle->midiSink.adlPlayer = player;
+
+    CopyString("", errorBuffer, errorBufferSize);
+    return 1;
+}
+
+void imuse_engine_render_adlib(ImuseEngineHandle *handle, uint32_t frameCount, float *left, float *right) {
+    if (!left || !right || frameCount == 0) {
+        return;
+    }
+
+    if (!handle || !handle->adlPlayer) {
+        std::memset(left, 0, sizeof(float) * frameCount);
+        std::memset(right, 0, sizeof(float) * frameCount);
+        return;
+    }
+
+    // libADLMIDI generates interleaved stereo float32
+    ADLMIDI_AudioFormat fmt;
+    fmt.type          = ADLMIDI_SampleType_F32;
+    fmt.containerSize = sizeof(float);
+    fmt.sampleOffset  = sizeof(float) * 2;
+
+    // Allocate a temporary interleaved buffer then deinterleave
+    std::vector<float> interleaved(frameCount * 2, 0.0f);
+    adl_generateFormat(handle->adlPlayer,
+                       static_cast<int>(frameCount),
+                       reinterpret_cast<ADL_UInt8 *>(interleaved.data()),
+                       reinterpret_cast<ADL_UInt8 *>(interleaved.data() + 1),
+                       &fmt);
+
+    for (uint32_t i = 0; i < frameCount; ++i) {
+        left[i]  = interleaved[i * 2];
+        right[i] = interleaved[i * 2 + 1];
+    }
+}
+
+void imuse_engine_disable_adlib(ImuseEngineHandle *handle) {
+    if (!handle) {
+        return;
+    }
+
+    handle->midiSink.adlPlayer = nullptr;
+
+    if (handle->adlPlayer) {
+        adl_close(handle->adlPlayer);
+        handle->adlPlayer = nullptr;
+    }
 }

@@ -28,6 +28,7 @@ import CoreMIDI
 
 public enum OutputBackend: String, CaseIterable, Identifiable {
     case fluidSynth = "FluidSynth"
+    case adlib = "AdLib OPL2"
     case mt32emu = "MT-32 Emulation"
     case coreMidi = "CoreMIDI Out"
     
@@ -273,6 +274,8 @@ public final class AuthoringViewModel: ObservableObject {
         switch outputBackend {
         case .fluidSynth:
             previewEnabled = (audioEngine != nil)
+        case .adlib:
+            previewEnabled = (audioEngine != nil)
         case .mt32emu:
             previewEnabled = (audioEngine != nil)
         case .coreMidi:
@@ -290,6 +293,7 @@ public final class AuthoringViewModel: ObservableObject {
         }
         imuse_engine_disable_fluidsynth(engineHandle)
         imuse_engine_disable_mt32(engineHandle)
+        imuse_engine_disable_adlib(engineHandle)
         previewEnabled = false
     }
 
@@ -520,17 +524,23 @@ public final class AuthoringViewModel: ObservableObject {
                let rightData = buffers[1].mData {
                 let left = leftData.assumingMemoryBound(to: Float.self)
                 let right = rightData.assumingMemoryBound(to: Float.self)
-                if backend == .mt32emu {
+                switch backend {
+                case .mt32emu:
                     imuse_engine_render_mt32(previewEngineHandle, frameCount, left, right)
-                } else {
+                case .adlib:
+                    imuse_engine_render_adlib(previewEngineHandle, frameCount, left, right)
+                default:
                     imuse_engine_render_fluidsynth(previewEngineHandle, frameCount, left, right)
                 }
             } else if buffers.count == 1,
                       let monoData = buffers[0].mData {
                 let mono = monoData.assumingMemoryBound(to: Float.self)
-                if backend == .mt32emu {
+                switch backend {
+                case .mt32emu:
                     imuse_engine_render_mt32(previewEngineHandle, frameCount, mono, mono)
-                } else {
+                case .adlib:
+                    imuse_engine_render_adlib(previewEngineHandle, frameCount, mono, mono)
+                default:
                     imuse_engine_render_fluidsynth(previewEngineHandle, frameCount, mono, mono)
                 }
             }
@@ -762,6 +772,7 @@ public final class AuthoringViewModel: ObservableObject {
         // 1. Disable all first
         imuse_engine_disable_fluidsynth(engineHandle)
         imuse_engine_disable_mt32(engineHandle)
+        imuse_engine_disable_adlib(engineHandle)
         disableCoreMIDIOutput()
         
         let nativeMt32 = (outputBackend == .mt32emu || (outputBackend == .coreMidi && selectedProfile == ImuseAuthoringProfileMt32)) ? 1 : 0
@@ -784,6 +795,17 @@ public final class AuthoringViewModel: ObservableObject {
                 }
             } else {
                 errorMessage = "Veuillez choisir une SoundFont."
+                stopAudioOutput()
+            }
+
+        case .adlib:
+            var errorBuffer = [CChar](repeating: 0, count: 512)
+            let ok = imuse_engine_enable_adlib(engineHandle, &errorBuffer, errorBuffer.count)
+            if ok == 1 {
+                errorMessage = ""
+                startAudioOutput()
+            } else {
+                errorMessage = String(cString: errorBuffer)
                 stopAudioOutput()
             }
             
@@ -893,6 +915,15 @@ public struct ImusePlayerView: View {
                             }
                             .help("Parcourir SF2")
                         }
+                    } else if model.outputBackend == .adlib {
+                        HStack(spacing: 6) {
+                            Image(systemName: "waveform.circle")
+                                .foregroundStyle(.orange)
+                            Text("Émulation OPL2 (AdLib) — aucune configuration requise")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 2)
                     } else if model.outputBackend == .mt32emu {
                         Text("Dossier des ROMs MT-32")
                             .font(.caption)

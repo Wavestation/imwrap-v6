@@ -51,6 +51,24 @@ cmake -S "$MT32_SOURCE_DIR" -B "$MT32_BUILD_DIR" \
 
 cmake --build "$MT32_BUILD_DIR" -j4
 
+# Build libADLMIDI dependency (OPL2 emulator for AdLib backend)
+ADLMIDI_SOURCE_DIR="$ROOT_DIR/third_party/libadlmidi"
+ADLMIDI_BUILD_DIR="$ROOT_DIR/third_party/adlmidi-build"
+cmake -S "$ADLMIDI_SOURCE_DIR" -B "$ADLMIDI_BUILD_DIR" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DWITH_MIDIPLAY=OFF \
+  -DWITH_ADLMIDI2=OFF \
+  -DWITH_OLD_UTILS=OFF \
+  -DWITH_MUS2MID=OFF \
+  -DWITH_XMI2MID=OFF \
+  -DWITH_GENADLDATA=OFF \
+  -DEXAMPLE_SDL2_AUDIO=OFF
+
+cmake --build "$ADLMIDI_BUILD_DIR" --target ADLMIDI_static -j4
+# Create a plain libADLMIDI.a alias that the Swift linker can find with -lADLMIDI
+cp "$ADLMIDI_BUILD_DIR/libADLMIDI.a" "$ADLMIDI_BUILD_DIR/libADLMIDI.a" 2>/dev/null || true
+
 # Compile all Swift executable targets
 echo "Building Swift executables..."
 swift build
