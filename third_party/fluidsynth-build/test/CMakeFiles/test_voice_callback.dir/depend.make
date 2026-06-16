@@ -1,0 +1,2 @@
+# Empty dependencies file for test_voice_callback.
+# This may be replaced when dependencies are built.

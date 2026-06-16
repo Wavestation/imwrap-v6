@@ -1,0 +1,21 @@
+Determining if the DIR symbol is defined as in AC_HEADER_DIRENT passed with the following output:
+Change Dir: '/Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles/CMakeTmp'
+
+Run Build Command(s): /opt/ST/STM32CubeCLT_1.19.0/CMake/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_657bb/fast
+/Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_657bb.dir/build.make CMakeFiles/cmTC_657bb.dir/build
+Building C object CMakeFiles/cmTC_657bb.dir/CheckDIRSymbolExists.c.o
+/Library/Developer/CommandLineTools/usr/bin/cc   -std=gnu90 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.0 -MD -MT CMakeFiles/cmTC_657bb.dir/CheckDIRSymbolExists.c.o -MF CMakeFiles/cmTC_657bb.dir/CheckDIRSymbolExists.c.o.d -o CMakeFiles/cmTC_657bb.dir/CheckDIRSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles/CMakeTmp/CheckDIRSymbolExists.c
+Linking C executable cmTC_657bb
+/opt/ST/STM32CubeCLT_1.19.0/CMake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_657bb.dir/link.txt --verbose=1
+/Library/Developer/CommandLineTools/usr/bin/cc  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -mmacosx-version-min=14.0 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_657bb.dir/CheckDIRSymbolExists.c.o -o cmTC_657bb 
+
+
+File /Users/komasami/Dev/scumm-tools/imuse-v6/third_party/fluidsynth-build/CMakeFiles/CMakeTmp/CheckDIRSymbolExists.c:
+/* */
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
+
+int main()
+{if ((DIR *) 0) return 0;}
+
