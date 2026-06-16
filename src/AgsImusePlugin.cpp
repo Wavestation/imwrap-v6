@@ -191,6 +191,59 @@ struct AgsAdlibMidiSink final : imuse::MidiSink {
         adl_rt_systemExclusive(player, sysex.data(), sysex.size());
     }
 
+    void onCustomInstrument(uint16_t /*soundId*/, uint8_t channel, uint32_t type, imuse::ByteView data) override {
+        if (!player) {
+            return;
+        }
+
+        if ((type == 'ADL ') && data.size() >= 11) {
+            // Map iMUSE 30-byte OPL2 instrument to libADLMIDI ADL_Instrument.
+            //
+            // iMUSE ADL byte layout (from ScummVM imuse/drivers/adlib.cpp):
+            //  Bytes  0-4 : Modulator operator  (avekf, ksl_tl, ar_dr, sl_rr, waveform)
+            //  Bytes  5-9 : Carrier   operator  (avekf, ksl_tl, ar_dr, sl_rr, waveform)
+            //  Byte  10   : Feedback + connection register (C0)
+            //  Bytes 11+  : Flags / extra (ignored for basic 2-op melodic)
+            ADL_Instrument ins;
+            std::memset(&ins, 0, sizeof(ins));
+            ins.version        = ADLMIDI_InstrumentVersion;
+            ins.inst_flags     = ADLMIDI_Ins_2op;  // Standard OPL2 2-operator melodic
+            ins.fb_conn1_C0    = data.data()[10];
+
+            // Operator 0 = Modulator
+            ins.operators[0].avekf_20   = data.data()[0];
+            ins.operators[0].ksl_l_40   = data.data()[1];
+            ins.operators[0].atdec_60   = data.data()[2];
+            ins.operators[0].susrel_80  = data.data()[3];
+            ins.operators[0].waveform_E0 = data.data()[4];
+
+            // Operator 1 = Carrier
+            ins.operators[1].avekf_20   = data.data()[5];
+            ins.operators[1].ksl_l_40   = data.data()[6];
+            ins.operators[1].atdec_60   = data.data()[7];
+            ins.operators[1].susrel_80  = data.data()[8];
+            ins.operators[1].waveform_E0 = data.data()[9];
+
+            // Use a dedicated custom iMUSE ADL bank (MSB=0x7D, LSB=channel)
+            // This avoids clobbering the main GM bank.
+            ADL_BankId bankId;
+            bankId.msb       = 0x7D;  // iMUSE manufacturer ID as MSB
+            bankId.lsb       = channel;
+            bankId.percussive = 0;
+
+            ADL_Bank bank;
+            if (adl_getBank(player, &bankId, ADLMIDI_Bank_Create, &bank) == 0) {
+                // Slot 0 in this per-channel bank holds the custom timbre
+                adl_setInstrument(player, &bank, 0, &ins);
+            }
+
+            // Switch the channel to the custom bank and select slot 0
+            adl_rt_bankChangeMSB(player, static_cast<ADL_UInt8>(channel), 0x7D);
+            adl_rt_bankChangeLSB(player, static_cast<ADL_UInt8>(channel), static_cast<ADL_UInt8>(channel));
+            adl_rt_patchChange(player, static_cast<int>(channel), 0);
+        }
+    }
+
     void onAllNotesOff() override {
         if (player) {
             adl_rt_resetState(player);
@@ -564,9 +617,9 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
         break;
     }
     case DriverType::AdLib: {
-        // Emulated AdLib via libADLMIDI. Set target profile to Mt32 to select ROL variants.
+        // Emulated AdLib via libADLMIDI. Set target profile to Adlib to select ADL/ROL variants.
         g_Engine.setNativeMt32Output(false);
-        g_Engine.setTargetProfile(imuse::TargetProfile::Mt32);
+        g_Engine.setTargetProfile(imuse::TargetProfile::Adlib);
 
         g_AdlPlayer = adl_init(44100);
         if (g_AdlPlayer) {

@@ -138,6 +138,24 @@ struct ShimMidiSink final : imuse::MidiSink {
                     sysexCallback(userData, soundId, sysex.data(), sysex.size());
                 }
             }
+        } else if (type == 0x41444C20 || type == 'ADL ') { // 'ADL ' — OPL2 instrument (30 bytes)
+            // Forward OPL2 instrument data to callback using a framed envelope:
+            // [0xF0, 0x7D, 0x10, channel, data..., 0xF7]
+            // 0x7D = iMUSE manufacturer ID, 0x10 = AdlibPartInstrument code
+            if (!data.empty()) {
+                std::vector<uint8_t> envelope;
+                envelope.reserve(data.size() + 5);
+                envelope.push_back(0xF0);
+                envelope.push_back(0x7D);   // iMUSE manufacturer ID
+                envelope.push_back(0x10);   // AdlibPartInstrument type code
+                envelope.push_back(channel);
+                envelope.insert(envelope.end(), data.data(), data.data() + data.size());
+                envelope.push_back(0xF7);
+
+                if (sysexCallback) {
+                    sysexCallback(userData, soundId, envelope.data(), envelope.size());
+                }
+            }
         }
     }
 
@@ -173,7 +191,13 @@ struct ImuseEngineHandle {
 namespace {
 
 imuse::TargetProfile ToProfile(ImuseAuthoringProfile profile) {
-    return profile == ImuseAuthoringProfileMt32 ? imuse::TargetProfile::Mt32 : imuse::TargetProfile::GeneralMidi;
+    if (profile == ImuseAuthoringProfileMt32) {
+        return imuse::TargetProfile::Mt32;
+    }
+    if (profile == ImuseAuthoringProfileAdlib) {
+        return imuse::TargetProfile::Adlib;
+    }
+    return imuse::TargetProfile::GeneralMidi;
 }
 
 void CopyString(const std::string &value, char *buffer, size_t bufferSize) {

@@ -1952,10 +1952,35 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
         return true;
     case ImuseSysexType::AdlibPartInstrument:
         if (event.hasPart && event.part < sound->parts.size()) {
-            sound->parts[event.part].present = true;
+            PartState *part = getPart(sound, event.part);
+            if (part) {
+                part->present = true;
+                part->initialized = true;
+                if (event.decodedBytes.size() >= 11) {
+                    // Full OPL2 instrument data: load into part and send to sink
+                    part->instrument.adlib(event.decodedBytes.data());
+                    applyPartProgram(sound, part);
+                } else if (!event.decodedBytes.empty() && _midiSink) {
+                    // Fallback: only a program number, send as program change
+                    SinkMidiChannel ch(_midiSink, sound->soundId,
+                                       static_cast<uint8_t>(part->outputChannel));
+                    ch.programChange(event.decodedBytes[0]);
+                }
+            }
         }
         return true;
     case ImuseSysexType::AdlibGlobalInstrument:
+        if (event.decodedBytes.size() >= 11 && _midiSink) {
+            // Broadcast OPL2 instrument data to every active part of this sound
+            for (std::size_t i = 0; i < sound->parts.size(); ++i) {
+                PartState *part = getActivePart(sound, static_cast<uint8_t>(i));
+                if (part && part->outputChannel >= 0) {
+                    part->instrument.adlib(event.decodedBytes.data());
+                    applyPartProgram(sound, part);
+                }
+            }
+        }
+        return true;
     case ImuseSysexType::ParameterAdjust:
         return true;
     case ImuseSysexType::HookJump:
