@@ -1,56 +1,68 @@
-# imuse-v6
+# iMWRAP V6
 
-Prototype de bibliotheque iMUSE classique orientee compatibilite `SCUMM v6`, avec :
+**iMWRAP V6** est une implémentation moderne, modulaire et multiplateforme en C++ du célèbre moteur interactif de musique **LucasArts iMUSE (version 6)**. Ce projet inclut un plugin d'exécution pour Adventure Game Studio (AGS), des applications graphiques macOS (SwiftUI) de lecture et de création, ainsi que des wrappers .NET (C# et VB.NET) pour s'intégrer directement dans l'éditeur de jeu d'AGS ou d'autres outils Windows.
 
-- un conteneur `.ims` chunked pour AGS ;
-- un loader de banque et de ressources `SOUN` ;
-- un `imusepack` minimal pour empaqueter des MIDIs type 2 ;
-- un runtime `ImuseEngine` qui sait deja :
-  - charger une sequence iMUSE depuis une banque `.ims` ;
-  - dispatcher des `doCommand()` compatibles SCUMM v6 ;
-  - avancer dans le temps en ticks ;
-  - sortir les vrais evenements MIDI musicaux au fil du transport ;
-  - executer les principaux evenements SysEx iMUSE ;
-  - gerer la queue de markers classique et la surcouche de triggers explicites facon Sam & Max ;
-- un bridge `CImuseShim` pour l'app Swift d'authoring ;
-- une app SwiftUI `ImuseAuthoringApp` avec :
-  - chargement d'une banque `.ims` ;
-  - inspection des evenements iMUSE par son ;
-  - preview temps reel avec FluidSynth + soundfont `.sf2` ;
-  - transport simple pour tester les hooks, jumps et markers.
+---
 
-Le format et l'outil sont documentes ici :
+## 🚀 Fonctionnalités Clés
 
-- [docs/ims-v1.md](/Users/komasami/Dev/scumm-tools/imuse-v6/docs/ims-v1.md)
-- [docs/imusepack.md](/Users/komasami/Dev/scumm-tools/imuse-v6/docs/imusepack.md)
+- **Moteur C++ iMUSE V6 complet** : Gestion des évènements musicaux dynamiques, transpositions, coupures de pistes, boucles intelligentes, fades et exécution inconditionnelle ou conditionnelle des déclencheurs (**Hooks**).
+- **Backends Audio & Émulation supportés** :
+  - **FluidSynth** (Rendu via SoundFonts `.sf2`).
+  - **Roland MT-32 Emulation** (Via la bibliothèque Munt / `mt32emu` intégrée).
+  - **AdLib / OPL3** (Via l'émulateur `libADLMIDI` intégré).
+  - **MIDI Matériel / Virtuel** (Via CoreMIDI sur macOS et les APIs multimédias Windows natifs `winmm.dll`).
+- **Compatibilité AGS intégrée** :
+  - Plugin runtime AGS (`agsimuse`) compilable sous macOS (`.dylib`) et Windows (`.dll`).
+  - API script d'AGS complète pour contrôler la musique, interroger le tempo, les statuts de lecture et les profils de compatibilité (Standard vs Sam & Max).
+  - Registre dynamique de correspondances de timbres Roland MT-32 personnalisés vers General MIDI.
+- **Intégration .NET (Éditeur AGS)** :
+  - Wrappers C# et VB.NET prêts à l'emploi avec appels Cdecl (P/Invoke) compatibles avec **Visual Studio 2012** (et versions supérieures) sous Windows 11 pour développer des extensions d'éditeur de banque de sons `.ims`.
 
-## Build rapide
+---
 
-Bibliotheque C++ et outils :
+## 📂 Structure du Dépôt
 
-```sh
-cmake -S . -B build
-cmake --build build
+- **`src/` & `include/`** : Code source C++ du moteur iMUSE core.
+- **`ags-wrapper/`** : Wrappers d'intégration pour les technologies .NET :
+  - [ImuseShim.cs](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/ImuseShim.cs) (C#)
+  - [ImuseShim.vb](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/ImuseShim.vb) (VB.NET)
+- **`swift-shim/`** : Couche de transition de type C (`CImuseShim`) facilitant l'intégration avec Swift ou P/Invoke.
+- **`swift-app/`** : Suite d'applications graphiques macOS en SwiftUI (Player, Packer, SysEx utility).
+- **`tools/`** : Utilitaires en ligne de commande C++ (`imusepack` et `imsprobe`).
+- **`third_party/`** : Dépendances intégrées (`libadlmidi`, `mt32emu`, `miniaudio`).
+
+---
+
+## 🛠️ Instructions de Compilation
+
+### 1. Sous Windows (Windows 11 avec Visual Studio 2012 ou supérieur)
+
+CMake gère la génération des fichiers de solution Visual Studio.
+
+1. Installez [CMake](https://cmake.org/download/).
+2. Ouvrez **CMake (gui)**.
+3. Configurez les chemins :
+   - *Source* : Répertoire racine du projet (`imwrap-v6`).
+   - *Build* : Un répertoire de votre choix (ex: `imwrap-v6/build_vs2012`).
+4. Cliquez sur **Configure** :
+   - Choisissez le générateur **Visual Studio 11 2012** (ou votre version actuelle).
+   - Choisissez l'architecture cible (ex: `Win32` pour l'éditeur AGS standard).
+5. Cliquez sur **Generate** puis **Open Project** pour ouvrir la solution `.sln` directement dans Visual Studio.
+6. Compilez en mode *Release* pour générer la DLL du plugin AGS (`libagsimuse.dll`) et du shim (`imuse_shim.dll`).
+
+### 2. Sous macOS
+
+Le script shell automatisé compile le moteur C++, le shim et produit les bundles d'applications macOS autonomes :
+
+```bash
+./scripts/make-app.sh
 ```
+Les fichiers packagés se retrouveront dans le dossier `dist/`.
 
-App Swift d'authoring :
+---
 
-```sh
-cmake -S third_party/fluidsynth-master -B third_party/fluidsynth-build -DCMAKE_PREFIX_PATH=/opt/homebrew -DCMAKE_CXX_STANDARD=17 -DBUILD_SHARED_LIBS=OFF -Denable-libinstpatch=OFF -Denable-libsndfile=OFF -Denable-readline=OFF -Denable-dbus=OFF -Denable-jack=OFF -Denable-pipewire=OFF -Denable-pulseaudio=OFF -Denable-portaudio=OFF -Denable-sdl3=OFF -Denable-oss=OFF -Denable-coremidi=OFF -Denable-ladspa=OFF -Denable-systemd=OFF -Denable-aufile=OFF -Denable-ipv6=OFF -Denable-network=OFF -Denable-floats=ON -Denable-limiter=OFF -Denable-openmp=OFF -Denable-framework=OFF -Dosal=embedded -Denable-coreaudio=ON
-cmake --build third_party/fluidsynth-build -j4
-swift build
-```
+## 📄 Licence et Copyright
 
-Bundle macOS autonome :
-
-```sh
-zsh scripts/make-app.sh
-```
-
-Le bundle est genere dans `dist/ImuseAuthoringApp.app` avec :
-
-- `openquest-lite.ims`
-- `openquest-demo.ims`
-- `arachno.sf2`
-
-La source FluidSynth vendoree est dans `third_party/fluidsynth-master`, avec un shim local `gcem.hpp` pour eviter la dependance reseau pendant la configuration.
+Ce programme est la propriété légale de **Masami Komuro** et de ses contributeurs.
+Il est distribué sous les termes de la licence **GNU General Public License v3** (ou ultérieure). Veuillez consulter le fichier `COPYRIGHT` pour plus de détails.
