@@ -2057,3 +2057,73 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "CMakeLists.txt:30 (try_compile)"
+      - "CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_14833/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_14833.dir/build.make CMakeFiles/cmTC_14833.dir/build
+        Building CXX object CMakeFiles/cmTC_14833.dir/cpp14.cpp.o
+        /usr/bin/c++   -std=gnu++14 -arch arm64 -MD -MT CMakeFiles/cmTC_14833.dir/cpp14.cpp.o -MF CMakeFiles/cmTC_14833.dir/cpp14.cpp.o.d -o CMakeFiles/cmTC_14833.dir/cpp14.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/libadlmidi/cmake/checks/cpp14.cpp
+        Linking CXX executable cmTC_14833
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_14833.dir/link.txt --verbose=1
+        /usr/bin/c++  -arch arm64 CMakeFiles/cmTC_14833.dir/cpp14.cpp.o -o cmTC_14833
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "CMakeLists.txt:30 (try_compile)"
+      - "CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/adlmidi-build/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_9bbd8/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_9bbd8.dir/build.make CMakeFiles/cmTC_9bbd8.dir/build
+        Building CXX object CMakeFiles/cmTC_9bbd8.dir/cpp14.cpp.o
+        /usr/bin/c++   -std=gnu++14 -arch arm64 -MD -MT CMakeFiles/cmTC_9bbd8.dir/cpp14.cpp.o -MF CMakeFiles/cmTC_9bbd8.dir/cpp14.cpp.o.d -o CMakeFiles/cmTC_9bbd8.dir/cpp14.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/libadlmidi/cmake/checks/cpp14.cpp
+        Linking CXX executable cmTC_9bbd8
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9bbd8.dir/link.txt --verbose=1
+        /usr/bin/c++  -arch arm64 CMakeFiles/cmTC_9bbd8.dir/cpp14.cpp.o -o cmTC_9bbd8
+        
+      exitCode: 0
+...

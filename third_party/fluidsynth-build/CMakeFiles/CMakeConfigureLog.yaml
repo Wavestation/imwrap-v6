@@ -21980,3 +21980,739 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:333 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:640 (_OPENMP_GET_FLAGS)"
+      - "CMakeLists.txt:779 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-LXeij7"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-LXeij7"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-LXeij7'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_d1fdb/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_d1fdb.dir/build.make CMakeFiles/cmTC_d1fdb.dir/build
+        Building C object CMakeFiles/cmTC_d1fdb.dir/OpenMPTryFlag.c.o
+        /usr/bin/cc   -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align -Xclang -fopenmp -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_d1fdb.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_d1fdb.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_d1fdb.dir/OpenMPTryFlag.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-LXeij7/OpenMPTryFlag.c
+        /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-LXeij7/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_d1fdb.dir/OpenMPTryFlag.c.o] Error 1
+        make: *** [cmTC_d1fdb/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:333 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:640 (_OPENMP_GET_FLAGS)"
+      - "CMakeLists.txt:779 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-ruLGin"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-ruLGin"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wno-unused-parameter -Wcast-align"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-ruLGin'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_356de/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_356de.dir/build.make CMakeFiles/cmTC_356de.dir/build
+        Building CXX object CMakeFiles/cmTC_356de.dir/OpenMPTryFlag.cpp.o
+        /usr/bin/c++   -Wall -W -Wpointer-arith -Wcast-qual -Wno-unused-parameter -Wcast-align -Xclang -fopenmp -std=c++11 -arch arm64 -MD -MT CMakeFiles/cmTC_356de.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_356de.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_356de.dir/OpenMPTryFlag.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-ruLGin/OpenMPTryFlag.cpp
+        /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-ruLGin/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_356de.dir/OpenMPTryFlag.cpp.o] Error 1
+        make: *** [cmTC_356de/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:844 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for sinf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-6f6lVk"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-6f6lVk"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SINF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-6f6lVk'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_eecfa/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_eecfa.dir/build.make CMakeFiles/cmTC_eecfa.dir/build
+        Building C object CMakeFiles/cmTC_eecfa.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_eecfa.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_eecfa.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_eecfa.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-6f6lVk/CheckSymbolExists.c
+        Linking C executable cmTC_eecfa
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_eecfa.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_eecfa.dir/CheckSymbolExists.c.o -o cmTC_eecfa  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:850 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for cosf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-FmPQnN"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-FmPQnN"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_COSF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-FmPQnN'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_b9fb8/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_b9fb8.dir/build.make CMakeFiles/cmTC_b9fb8.dir/build
+        Building C object CMakeFiles/cmTC_b9fb8.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_b9fb8.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_b9fb8.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_b9fb8.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-FmPQnN/CheckSymbolExists.c
+        Linking C executable cmTC_b9fb8
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9fb8.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_b9fb8.dir/CheckSymbolExists.c.o -o cmTC_b9fb8  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:856 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for fabsf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-aQuYP4"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-aQuYP4"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_FABSF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-aQuYP4'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_ce352/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_ce352.dir/build.make CMakeFiles/cmTC_ce352.dir/build
+        Building C object CMakeFiles/cmTC_ce352.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_ce352.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_ce352.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_ce352.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-aQuYP4/CheckSymbolExists.c
+        Linking C executable cmTC_ce352
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ce352.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_ce352.dir/CheckSymbolExists.c.o -o cmTC_ce352  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:862 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for powf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-iSmMhu"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-iSmMhu"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_POWF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-iSmMhu'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_6fa25/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_6fa25.dir/build.make CMakeFiles/cmTC_6fa25.dir/build
+        Building C object CMakeFiles/cmTC_6fa25.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_6fa25.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_6fa25.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_6fa25.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-iSmMhu/CheckSymbolExists.c
+        Linking C executable cmTC_6fa25
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6fa25.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_6fa25.dir/CheckSymbolExists.c.o -o cmTC_6fa25  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:868 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for sqrtf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-urvoNF"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-urvoNF"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SQRTF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-urvoNF'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_af200/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_af200.dir/build.make CMakeFiles/cmTC_af200.dir/build
+        Building C object CMakeFiles/cmTC_af200.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_af200.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_af200.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_af200.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-urvoNF/CheckSymbolExists.c
+        Linking C executable cmTC_af200
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_af200.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_af200.dir/CheckSymbolExists.c.o -o cmTC_af200  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:874 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for logf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-rblnVv"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-rblnVv"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_LOGF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-rblnVv'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_bdaf9/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_bdaf9.dir/build.make CMakeFiles/cmTC_bdaf9.dir/build
+        Building C object CMakeFiles/cmTC_bdaf9.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_bdaf9.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_bdaf9.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_bdaf9.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-rblnVv/CheckSymbolExists.c
+        Linking C executable cmTC_bdaf9
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bdaf9.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_bdaf9.dir/CheckSymbolExists.c.o -o cmTC_bdaf9  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:884 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for inet_ntop"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-93rWuh"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-93rWuh"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_INETNTOP"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-93rWuh'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_d70fb/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_d70fb.dir/build.make CMakeFiles/cmTC_d70fb.dir/build
+        Building C object CMakeFiles/cmTC_d70fb.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_d70fb.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_d70fb.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_d70fb.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-93rWuh/CheckSymbolExists.c
+        Linking C executable cmTC_d70fb
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d70fb.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_d70fb.dir/CheckSymbolExists.c.o -o cmTC_d70fb  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:348 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:481 (__check_type_size_impl)"
+      - "CMakeLists.txt:899 (check_type_size)"
+    checks:
+      - "Check size of socklen_t"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-1O1Co9"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-1O1Co9"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SOCKLEN_T"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-1O1Co9'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_95eaf/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_95eaf.dir/build.make CMakeFiles/cmTC_95eaf.dir/build
+        Building C object CMakeFiles/cmTC_95eaf.dir/SOCKLEN_T.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_95eaf.dir/SOCKLEN_T.c.o -MF CMakeFiles/cmTC_95eaf.dir/SOCKLEN_T.c.o.d -o CMakeFiles/cmTC_95eaf.dir/SOCKLEN_T.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-1O1Co9/SOCKLEN_T.c
+        Linking C executable cmTC_95eaf
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_95eaf.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_95eaf.dir/SOCKLEN_T.c.o -o cmTC_95eaf  -lm
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:333 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:640 (_OPENMP_GET_FLAGS)"
+      - "CMakeLists.txt:779 (find_package)"
+    description: "Detecting C OpenMP compiler info"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CROx2i"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CROx2i"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_C_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CROx2i'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_e0987/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_e0987.dir/build.make CMakeFiles/cmTC_e0987.dir/build
+        Building C object CMakeFiles/cmTC_e0987.dir/OpenMPTryFlag.c.o
+        /usr/bin/cc   -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align -Xclang -fopenmp -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_e0987.dir/OpenMPTryFlag.c.o -MF CMakeFiles/cmTC_e0987.dir/OpenMPTryFlag.c.o.d -o CMakeFiles/cmTC_e0987.dir/OpenMPTryFlag.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CROx2i/OpenMPTryFlag.c
+        /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CROx2i/OpenMPTryFlag.c:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_e0987.dir/OpenMPTryFlag.c.o] Error 1
+        make: *** [cmTC_e0987/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:333 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/FindOpenMP.cmake:640 (_OPENMP_GET_FLAGS)"
+      - "CMakeLists.txt:779 (find_package)"
+    description: "Detecting CXX OpenMP compiler info"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-dKnMtD"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-dKnMtD"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wno-unused-parameter -Wcast-align"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "OpenMP_COMPILE_RESULT_CXX_Xclang fopenmp"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-dKnMtD'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_1d1dd/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_1d1dd.dir/build.make CMakeFiles/cmTC_1d1dd.dir/build
+        Building CXX object CMakeFiles/cmTC_1d1dd.dir/OpenMPTryFlag.cpp.o
+        /usr/bin/c++   -Wall -W -Wpointer-arith -Wcast-qual -Wno-unused-parameter -Wcast-align -Xclang -fopenmp -std=c++11 -arch arm64 -MD -MT CMakeFiles/cmTC_1d1dd.dir/OpenMPTryFlag.cpp.o -MF CMakeFiles/cmTC_1d1dd.dir/OpenMPTryFlag.cpp.o.d -o CMakeFiles/cmTC_1d1dd.dir/OpenMPTryFlag.cpp.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-dKnMtD/OpenMPTryFlag.cpp
+        /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-dKnMtD/OpenMPTryFlag.cpp:2:10: fatal error: 'omp.h' file not found
+        #include <omp.h>
+                 ^~~~~~~
+        1 error generated.
+        make[1]: *** [CMakeFiles/cmTC_1d1dd.dir/OpenMPTryFlag.cpp.o] Error 1
+        make: *** [cmTC_1d1dd/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:844 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for sinf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-EMQaqp"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-EMQaqp"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SINF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-EMQaqp'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_40889/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_40889.dir/build.make CMakeFiles/cmTC_40889.dir/build
+        Building C object CMakeFiles/cmTC_40889.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_40889.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_40889.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_40889.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-EMQaqp/CheckSymbolExists.c
+        Linking C executable cmTC_40889
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_40889.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_40889.dir/CheckSymbolExists.c.o -o cmTC_40889  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:850 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for cosf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-NrQZYq"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-NrQZYq"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_COSF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-NrQZYq'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_fb735/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_fb735.dir/build.make CMakeFiles/cmTC_fb735.dir/build
+        Building C object CMakeFiles/cmTC_fb735.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_fb735.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_fb735.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_fb735.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-NrQZYq/CheckSymbolExists.c
+        Linking C executable cmTC_fb735
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fb735.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_fb735.dir/CheckSymbolExists.c.o -o cmTC_fb735  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:856 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for fabsf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-3WmidX"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-3WmidX"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_FABSF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-3WmidX'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_8eb61/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_8eb61.dir/build.make CMakeFiles/cmTC_8eb61.dir/build
+        Building C object CMakeFiles/cmTC_8eb61.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_8eb61.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_8eb61.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_8eb61.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-3WmidX/CheckSymbolExists.c
+        Linking C executable cmTC_8eb61
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8eb61.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_8eb61.dir/CheckSymbolExists.c.o -o cmTC_8eb61  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:862 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for powf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-y7EFHe"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-y7EFHe"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_POWF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-y7EFHe'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_95cf6/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_95cf6.dir/build.make CMakeFiles/cmTC_95cf6.dir/build
+        Building C object CMakeFiles/cmTC_95cf6.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_95cf6.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_95cf6.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_95cf6.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-y7EFHe/CheckSymbolExists.c
+        Linking C executable cmTC_95cf6
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_95cf6.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_95cf6.dir/CheckSymbolExists.c.o -o cmTC_95cf6  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:868 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for sqrtf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-kiPawL"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-kiPawL"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SQRTF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-kiPawL'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_7c22d/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_7c22d.dir/build.make CMakeFiles/cmTC_7c22d.dir/build
+        Building C object CMakeFiles/cmTC_7c22d.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_7c22d.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_7c22d.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_7c22d.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-kiPawL/CheckSymbolExists.c
+        Linking C executable cmTC_7c22d
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c22d.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_7c22d.dir/CheckSymbolExists.c.o -o cmTC_7c22d  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:874 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for logf"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CEu7LS"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CEu7LS"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_LOGF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CEu7LS'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_1b13f/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_1b13f.dir/build.make CMakeFiles/cmTC_1b13f.dir/build
+        Building C object CMakeFiles/cmTC_1b13f.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_1b13f.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_1b13f.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_1b13f.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-CEu7LS/CheckSymbolExists.c
+        Linking C executable cmTC_1b13f
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1b13f.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_1b13f.dir/CheckSymbolExists.c.o -o cmTC_1b13f  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:193 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:98 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:884 (CHECK_SYMBOL_EXISTS)"
+    checks:
+      - "Looking for inet_ntop"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-hgRZN5"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-hgRZN5"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_INETNTOP"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-hgRZN5'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_c8b5c/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_c8b5c.dir/build.make CMakeFiles/cmTC_c8b5c.dir/build
+        Building C object CMakeFiles/cmTC_c8b5c.dir/CheckSymbolExists.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_c8b5c.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_c8b5c.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_c8b5c.dir/CheckSymbolExists.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-hgRZN5/CheckSymbolExists.c
+        Linking C executable cmTC_c8b5c
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c8b5c.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement  -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_c8b5c.dir/CheckSymbolExists.c.o -o cmTC_c8b5c  -lm
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:348 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:481 (__check_type_size_impl)"
+      - "CMakeLists.txt:899 (check_type_size)"
+    checks:
+      - "Check size of socklen_t"
+    directories:
+      source: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-75Nqr8"
+      binary: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-75Nqr8"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align"
+      CMAKE_C_FLAGS_DEBUG: "-g -g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/cmake_admin"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "OFF"
+    buildResult:
+      variable: "HAVE_SOCKLEN_T"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-75Nqr8'
+        
+        Run Build Command(s): /opt/homebrew/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_4fd14/fast
+        /Library/Developer/CommandLineTools/usr/bin/make  -f CMakeFiles/cmTC_4fd14.dir/build.make CMakeFiles/cmTC_4fd14.dir/build
+        Building C object CMakeFiles/cmTC_4fd14.dir/SOCKLEN_T.c.o
+        /usr/bin/cc -DTESTKEYWORD=inline  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align  -std=gnu90 -arch arm64 -MD -MT CMakeFiles/cmTC_4fd14.dir/SOCKLEN_T.c.o -MF CMakeFiles/cmTC_4fd14.dir/SOCKLEN_T.c.o.d -o CMakeFiles/cmTC_4fd14.dir/SOCKLEN_T.c.o -c /Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/CMakeFiles/CMakeScratch/TryCompile-75Nqr8/SOCKLEN_T.c
+        Linking C executable cmTC_4fd14
+        /opt/homebrew/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4fd14.dir/link.txt --verbose=1
+        /usr/bin/cc  -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Wbad-function-cast -Wcast-align  -arch arm64 CMakeFiles/cmTC_4fd14.dir/SOCKLEN_T.c.o -o cmTC_4fd14  -lm
+        
+      exitCode: 0
+...
