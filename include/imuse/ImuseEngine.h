@@ -70,6 +70,9 @@ public:
     int32_t doCommand(const CommandPacket &packet);
     int32_t doCommand(uint16_t argc, const int16_t *args);
 
+    int checkScriptTrigger(uint16_t soundId, int marker) const;
+    int fireAllScriptTriggers(uint16_t soundId);
+
 private:
     struct HookState {
         std::array<uint8_t, 2> jump = {{0, 0}};
@@ -314,8 +317,6 @@ private:
     int queryQueue(uint16_t param) const;
     int setScriptTrigger(uint16_t soundId, uint8_t marker, const CommandPacket &command);
     int clearScriptTrigger(int soundId, int marker);
-    int checkScriptTrigger(uint16_t soundId, int marker) const;
-    int fireAllScriptTriggers(uint16_t soundId);
     void addDeferredCommand(uint32_t ticksLeft, const CommandPacket &command);
     void processDeferredCommands(uint32_t deltaTicks);
     int dispatchGlobalCommand(uint8_t cmd, uint16_t argc, const int16_t *args);

@@ -452,6 +452,19 @@ const char *g_iMuseScriptHeader =
     "import void iMuse_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);\r\n"
     "import void iMuse_SetMasterVolume(int volume);\r\n"
     "import void iMuse_SetNativeMt32(int enabled);\r\n"
+    "import void iMuse_SetSoundVolume(int soundId, int volume);\r\n"
+    "import void iMuse_SetSoundPan(int soundId, int pan);\r\n"
+    "import void iMuse_SetSoundTranspose(int soundId, int relative, int transpose);\r\n"
+    "import void iMuse_SetSoundSpeed(int soundId, int speed);\r\n"
+    "import void iMuse_SetSoundPriority(int soundId, int priority);\r\n"
+    "import void iMuse_SetPartVolume(int soundId, int channel, int volume);\r\n"
+    "import void iMuse_SetPartOnOff(int soundId, int channel, int onOff);\r\n"
+    "import void iMuse_Jump(int soundId, int track, int beat, int tick);\r\n"
+    "import void iMuse_Scan(int soundId, int track, int beat, int tick);\r\n"
+    "import void iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick);\r\n"
+    "import void iMuse_ClearLoop(int soundId);\r\n"
+    "import void iMuse_Fade(int soundId, int targetVolume, int timeInTicks);\r\n"
+    "import void iMuse_SetNativeMt32(int enabled);\r\n"
     "import int  iMuse_GetPlaybackTrack(int soundId);\r\n"
     "import int  iMuse_GetPlaybackBeat(int soundId);\r\n"
     "import int  iMuse_GetPlaybackTick(int soundId);\r\n"
@@ -714,11 +727,80 @@ void __stdcall Ags_iMuse_SetHook(int soundId, int hookClass, int hookValue, int 
 
 void __stdcall Ags_iMuse_SetMasterVolume(int volume) {
     std::lock_guard<std::mutex> lock(g_Mutex);
-    const int16_t command[] = {
-        static_cast<int16_t>(0x0006),
-        static_cast<int16_t>(volume)
-    };
-    g_Engine.doCommand(2, command);
+    int16_t args[2] = {0x0006, static_cast<int16_t>(volume)};
+    g_Engine.doCommand(2, args);
+}
+
+void __stdcall Ags_iMuse_SetSoundVolume(int soundId, int volume) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[3] = {0x0102, static_cast<int16_t>(soundId), static_cast<int16_t>(volume)};
+    g_Engine.doCommand(3, args);
+}
+
+void __stdcall Ags_iMuse_SetSoundPan(int soundId, int pan) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[3] = {0x0103, static_cast<int16_t>(soundId), static_cast<int16_t>(pan)};
+    g_Engine.doCommand(3, args);
+}
+
+void __stdcall Ags_iMuse_SetSoundTranspose(int soundId, int relative, int transpose) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[4] = {0x0104, static_cast<int16_t>(soundId), static_cast<int16_t>(relative), static_cast<int16_t>(transpose)};
+    g_Engine.doCommand(4, args);
+}
+
+void __stdcall Ags_iMuse_SetSoundSpeed(int soundId, int speed) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[3] = {0x0106, static_cast<int16_t>(soundId), static_cast<int16_t>(speed)};
+    g_Engine.doCommand(3, args);
+}
+
+void __stdcall Ags_iMuse_SetSoundPriority(int soundId, int priority) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[3] = {0x0101, static_cast<int16_t>(soundId), static_cast<int16_t>(priority)};
+    g_Engine.doCommand(3, args);
+}
+
+void __stdcall Ags_iMuse_SetPartVolume(int soundId, int channel, int volume) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[4] = {0x0116, static_cast<int16_t>(soundId), static_cast<int16_t>(channel), static_cast<int16_t>(volume)};
+    g_Engine.doCommand(4, args);
+}
+
+void __stdcall Ags_iMuse_SetPartOnOff(int soundId, int channel, int onOff) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[4] = {0x010B, static_cast<int16_t>(soundId), static_cast<int16_t>(channel), static_cast<int16_t>(onOff)};
+    g_Engine.doCommand(4, args);
+}
+
+void __stdcall Ags_iMuse_Jump(int soundId, int track, int beat, int tick) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[5] = {0x0107, static_cast<int16_t>(soundId), static_cast<int16_t>(track), static_cast<int16_t>(beat), static_cast<int16_t>(tick)};
+    g_Engine.doCommand(5, args);
+}
+
+void __stdcall Ags_iMuse_Scan(int soundId, int track, int beat, int tick) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[5] = {0x0108, static_cast<int16_t>(soundId), static_cast<int16_t>(track), static_cast<int16_t>(beat), static_cast<int16_t>(tick)};
+    g_Engine.doCommand(5, args);
+}
+
+void __stdcall Ags_iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[7] = {0x0109, static_cast<int16_t>(soundId), static_cast<int16_t>(count), static_cast<int16_t>(toBeat), static_cast<int16_t>(toTick), static_cast<int16_t>(fromBeat), static_cast<int16_t>(fromTick)};
+    g_Engine.doCommand(7, args);
+}
+
+void __stdcall Ags_iMuse_ClearLoop(int soundId) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[2] = {0x010A, static_cast<int16_t>(soundId)};
+    g_Engine.doCommand(2, args);
+}
+
+void __stdcall Ags_iMuse_Fade(int soundId, int targetVolume, int timeInTicks) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[4] = {0x010D, static_cast<int16_t>(soundId), static_cast<int16_t>(targetVolume), static_cast<int16_t>(timeInTicks)};
+    g_Engine.doCommand(4, args);
 }
 
 void __stdcall Ags_iMuse_SetNativeMt32(int enabled) {
@@ -858,6 +940,20 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMuse_GetCompatibilityProfile", (void*)Ags_iMuse_GetCompatibilityProfile);
     g_AgsEngine->RegisterScriptFunction("iMuse_RegisterRolandTimbreMapping", (void*)Ags_iMuse_RegisterRolandTimbreMapping);
     g_AgsEngine->RegisterScriptFunction("iMuse_ClearRolandTimbreMappings", (void*)Ags_iMuse_ClearRolandTimbreMappings);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundVolume", (void*)Ags_iMuse_SetSoundVolume);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundPan", (void*)Ags_iMuse_SetSoundPan);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundTranspose", (void*)Ags_iMuse_SetSoundTranspose);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundSpeed", (void*)Ags_iMuse_SetSoundSpeed);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundPriority", (void*)Ags_iMuse_SetSoundPriority);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetPartVolume", (void*)Ags_iMuse_SetPartVolume);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetPartOnOff", (void*)Ags_iMuse_SetPartOnOff);
+    g_AgsEngine->RegisterScriptFunction("iMuse_Jump", (void*)Ags_iMuse_Jump);
+    g_AgsEngine->RegisterScriptFunction("iMuse_Scan", (void*)Ags_iMuse_Scan);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetLoop", (void*)Ags_iMuse_SetLoop);
+    g_AgsEngine->RegisterScriptFunction("iMuse_ClearLoop", (void*)Ags_iMuse_ClearLoop);
+    g_AgsEngine->RegisterScriptFunction("iMuse_Fade", (void*)Ags_iMuse_Fade);
+
+    g_AgsEngine->RequestEventHook(AGSE_PRESCREENDRAW);
 
     // Initialize miniaudio
     ma_device_config config = ma_device_config_init(ma_device_type_playback);
@@ -887,7 +983,21 @@ DLLEXPORT void AGS_EngineShutdown(void) {
     g_AgsEngine = nullptr;
 }
 
-DLLEXPORT intptr_t AGS_EngineOnEvent(int, intptr_t) {
+DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t) {
+    if (event == AGSE_PRESCREENDRAW && g_AgsEngine) {
+        std::lock_guard<std::mutex> lock(g_Mutex);
+        
+        // Process script triggers fired by the iMUSE engine
+        for (uint16_t soundId : g_Engine.activeSoundIds()) {
+            // fireAllScriptTriggers returns the last marker ID fired, or 0 if none.
+            // This is a simplified way to poll triggers. A better way would be 
+            // for fireAllScriptTriggers to return a list of fired triggers.
+            int marker = g_Engine.fireAllScriptTriggers(soundId);
+            if (marker > 0) {
+                g_AgsEngine->QueueGameScriptFunction("iMuse_OnTrigger", 1, 2, soundId, marker);
+            }
+        }
+    }
     return 0;
 }
 
