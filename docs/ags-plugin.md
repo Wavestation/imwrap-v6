@@ -61,8 +61,52 @@ import int  iMuse_IsSoundActive(int soundId);
 // - hookChannel : Canal MIDI cible
 import void iMuse_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);
 
+// --- CONTRÔLE GLOBAL DU LECTEUR ---
+
 // Modifie le volume maître de la bibliothèque (0 à 127)
 import void iMuse_SetMasterVolume(int volume);
+
+// Modifie le volume général du son (0 à 127)
+import void iMuse_SetSoundVolume(int soundId, int volume);
+
+// Modifie le panoramique du son (-128 à 127)
+import void iMuse_SetSoundPan(int soundId, int pan);
+
+// Transpose l'ensemble du son (relative: 1 ou 0, transpose: demi-tons)
+import void iMuse_SetSoundTranspose(int soundId, int relative, int transpose);
+
+// Modifie la vitesse de lecture globale du son (0 à 255)
+import void iMuse_SetSoundSpeed(int soundId, int speed);
+
+// Définit la priorité globale du son
+import void iMuse_SetSoundPriority(int soundId, int priority);
+
+// --- CONTRÔLE DES PISTES (CANAUX) ---
+
+// Modifie le volume d'un canal spécifique (0 à 127)
+import void iMuse_SetPartVolume(int soundId, int channel, int volume);
+
+// Active ou désactive un canal spécifique (1 ou 0)
+import void iMuse_SetPartOnOff(int soundId, int channel, int onOff);
+
+// --- FLOW CONTROL (SAUTS & BOUCLES) ---
+
+// Effectue un saut interactif direct vers une mesure/tick donnée
+import void iMuse_Jump(int soundId, int track, int beat, int tick);
+
+// Scanne le fichier MIDI pour avancer vers une mesure/tick sans jouer les notes
+import void iMuse_Scan(int soundId, int track, int beat, int tick);
+
+// Définit une boucle temporelle dynamique
+import void iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick);
+
+// Efface la boucle active
+import void iMuse_ClearLoop(int soundId);
+
+// Effectue un fade fluide du volume vers une cible sur une durée donnée (en ticks)
+import void iMuse_Fade(int soundId, int targetVolume, int timeInTicks);
+
+// --- CONFIGURATION DIVERS ---
 
 // Active (1) ou désactive (0) le mode natif Roland MT-32
 import void iMuse_SetNativeMt32(int enabled);
@@ -100,6 +144,22 @@ import int  iMuse_GetPlaybackTick(int soundId);
 
    // Lancer la musique
    iMuse_StartSound(80);
+
+   // Optionnel : Configurer une boucle infinie de la mesure 10 à la mesure 20
+   iMuse_SetLoop(80, 0, 10, 0, 20, 0);
+   ```
+
+3. **Recevoir les déclencheurs (Triggers) de synchronisation musicale** :
+   Le plugin C++ surveille la lecture et intercepte les marqueurs MIDI. Si un marqueur est atteint, il appelle une fonction dans votre Global Script AGS.
+   
+   ```c
+   // Dans votre Global Script :
+   function iMuse_OnTrigger(int soundId, int markerId) {
+       if (soundId == 80 && markerId == 12) {
+           // Synchronisation d'une animation avec la musique !
+           Display("Marqueur 12 déclenché !");
+       }
+   }
    ```
 
 ## Gestion des ressources dans le paquet AGS (.vox)
