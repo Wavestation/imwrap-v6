@@ -143,17 +143,27 @@ if(IMUSE_BUILD_GUI_TOOLS)
     if(MSVC OR MINGW)
         find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
         if(WINDEPLOYQT_EXECUTABLE)
+            set(MINIMAL_WINDEPLOYQT_ARGS
+                --no-network
+                --no-svg
+                --no-opengl-sw
+                --no-system-d3d-compiler
+                --no-system-dxc-compiler
+                --no-translations
+                --skip-plugin-types imageformats,iconengines,networkinformation,tls
+            )
+
             add_custom_command(TARGET imuse_sysex_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_sysex_gui>\"
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_sysex_gui>\"
             )
             add_custom_command(TARGET imuse_player_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_player_gui>\"
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_player_gui>\"
             )
             add_custom_command(TARGET imuse_packer_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_packer_gui>\"
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_packer_gui>\"
             )
             add_custom_command(TARGET imuse_setmidi POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_setmidi>\"
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_setmidi>\"
             )
         endif()
     endif()
