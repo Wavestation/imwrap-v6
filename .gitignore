@@ -8,6 +8,7 @@ build/
 build_msvc_x64/
 dist/
 bin/
+obj/
 final-release/
 third_party/fluidsynth-build-win32/
 

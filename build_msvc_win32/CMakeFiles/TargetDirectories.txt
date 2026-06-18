@@ -1,6 +1,8 @@
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/imuse_v6.dir
+D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/imuse_v6_shared.dir
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/imusepack.dir
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/imsprobe.dir
+D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/imuse_shim.dir
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/agsimuse.dir
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/INSTALL.dir
 D:/Prog/imwrap-v6/build_msvc_win32/CMakeFiles/ALL_BUILD.dir

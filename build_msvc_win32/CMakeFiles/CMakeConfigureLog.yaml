@@ -923,3 +923,45 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "third_party/libadlmidi/CMakeLists.txt:30 (try_compile)"
+      - "third_party/libadlmidi/CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "D:/Prog/imwrap-v6/build_msvc_win32/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "D:/Prog/imwrap-v6/build_msvc_win32/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:X86"
+      CMAKE_MSVC_RUNTIME_LIBRARY: "MultiThreaded"
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Prog/imwrap-v6/build_msvc_win32/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_346f5.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:VisualStudioVersion=17.0 /v:n
+        Version MSBuild 17.14.40+3e7442088 pour .NET Framework
+        La g├®n├®ration a d├®marr├® 18/06/2026 23:03:48.
+        
+        Projet "D:\\Prog\\imwrap-v6\\build_msvc_win32\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_346f5.vcxproj" sur le n┼ôud 1 (cibles par d├®faut).
+        C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Microsoft\\VC\\v170\\Microsoft.Cpp.WindowsSDK.props(122,5): error MSB4184: impossible d'├®valuer l'expression "[Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion(Windows, 10.0)". L'acc├¿s au chemin d'acc├¿s 'C:\\Users\\Administrateur\\AppData\\Local\\Microsoft SDKs' est refus├®. [D:\\Prog\\imwrap-v6\\build_msvc_win32\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_346f5.vcxproj]
+        G├®n├®ration du projet "D:\\Prog\\imwrap-v6\\build_msvc_win32\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_346f5.vcxproj" termin├®e (cibles par d├®faut) -- ├ëCHEC.
+        
+        ├ëCHEC de la build.
+        
+        "D:\\Prog\\imwrap-v6\\build_msvc_win32\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_346f5.vcxproj" (cible par d├®faut) (1) ->
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Microsoft\\VC\\v170\\Microsoft.Cpp.WindowsSDK.props(122,5): error MSB4184: impossible d'├®valuer l'expression "[Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion(Windows, 10.0)". L'acc├¿s au chemin d'acc├¿s 'C:\\Users\\Administrateur\\AppData\\Local\\Microsoft SDKs' est refus├®. [D:\\Prog\\imwrap-v6\\build_msvc_win32\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_346f5.vcxproj]
+        
+            0 Avertissement(s)
+            1 Erreur(s)
+        
+        Temps ├®coul├® 00:00:00.51
+        
+      exitCode: 1
+...

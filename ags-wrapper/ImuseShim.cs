@@ -139,6 +139,15 @@ namespace AgsImuse
         [DllImport(DLL_NAME, EntryPoint = "imuse_engine_disable_mt32", CallingConvention = CallingConvention.Cdecl)]
         public static extern void EngineDisableMt32(IntPtr handle);
 
+        [DllImport(DLL_NAME, EntryPoint = "imuse_engine_enable_adlib", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int EngineEnableAdlib(IntPtr handle, StringBuilder errorBuffer, UIntPtr errorBufferSize);
+
+        [DllImport(DLL_NAME, EntryPoint = "imuse_engine_render_adlib", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EngineRenderAdlib(IntPtr handle, uint frameCount, [In, Out] float[] left, [In, Out] float[] right);
+
+        [DllImport(DLL_NAME, EntryPoint = "imuse_engine_disable_adlib", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void EngineDisableAdlib(IntPtr handle);
+
         [DllImport(DLL_NAME, EntryPoint = "imuse_register_roland_timbre_mapping", CallingConvention = CallingConvention.Cdecl)]
         public static extern void RegisterRolandTimbreMapping([MarshalAs(UnmanagedType.LPStr)] string name, byte gmProgram);
 

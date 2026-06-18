@@ -28,10 +28,16 @@
 #include <vector>
 #include <filesystem>
 
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
 #include <fluidsynth.h>
+#endif
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
 #include <mt32emu.h>
 #include <c_interface/c_interface.h>
+#endif
+#if defined(IMUSE_SHIM_WITH_ADLIB)
 #include <adlmidi.h>
+#endif
 
 #include "imuse/ImuseEngine.h"
 #include "imuse/Instrument.h"
@@ -45,9 +51,15 @@ struct ImuseBankHandle {
 };
 
 struct ShimMidiSink final : imuse::MidiSink {
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
     fluid_synth_t *fluidSynth = nullptr;
+#endif
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
     mt32emu_context mt32Context = nullptr;
+#endif
+#if defined(IMUSE_SHIM_WITH_ADLIB)
     ADL_MIDIPlayer *adlPlayer = nullptr;
+#endif
 
     imuse_midi_message_callback_t midiCallback = nullptr;
     imuse_sysex_callback_t sysexCallback = nullptr;
@@ -56,6 +68,7 @@ struct ShimMidiSink final : imuse::MidiSink {
     void onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) override {
         uint8_t finalData2 = hasData2 ? data2 : 0;
 
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
         if (fluidSynth) {
             const int channel = status & 0x0F;
             switch (status & 0xF0) {
@@ -93,12 +106,16 @@ struct ShimMidiSink final : imuse::MidiSink {
                 break;
             }
         }
+#endif
 
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
         if (mt32Context) {
             uint32_t msg = status | (data1 << 8) | (finalData2 << 16);
             mt32emu_play_msg(mt32Context, msg);
         }
+#endif
 
+#if defined(IMUSE_SHIM_WITH_ADLIB)
         if (adlPlayer) {
             const int ch = status & 0x0F;
             switch (status & 0xF0) {
@@ -129,6 +146,7 @@ struct ShimMidiSink final : imuse::MidiSink {
                 break;
             }
         }
+#endif
 
         if (midiCallback) {
             midiCallback(userData, soundId, status, data1, finalData2);
@@ -142,9 +160,11 @@ struct ShimMidiSink final : imuse::MidiSink {
         fullMessage.push_back(0xF0);
         fullMessage.insert(fullMessage.end(), message.data(), message.data() + message.size());
 
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
         if (mt32Context) {
             mt32emu_play_sysex(mt32Context, fullMessage.data(), fullMessage.size());
         }
+#endif
 
         if (sysexCallback) {
             sysexCallback(userData, soundId, fullMessage.data(), fullMessage.size());
@@ -163,15 +183,18 @@ struct ShimMidiSink final : imuse::MidiSink {
                     sysex.push_back(0xF7);
                 }
 
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
                 if (mt32Context) {
                     mt32emu_play_sysex(mt32Context, sysex.data(), sysex.size());
                 }
+#endif
 
                 if (sysexCallback) {
                     sysexCallback(userData, soundId, sysex.data(), sysex.size());
                 }
             }
         } else if (type == 0x41444C20 || type == 'ADL ') { // 'ADL ' — OPL2 instrument (30 bytes)
+#if defined(IMUSE_SHIM_WITH_ADLIB)
             if (!data.empty() && adlPlayer) {
                 // Direct routing to libADLMIDI: map 30-byte iMUSE OPL2 data to ADL_Instrument
                 ADL_Instrument ins;
@@ -202,7 +225,10 @@ struct ShimMidiSink final : imuse::MidiSink {
                 adl_rt_bankChangeMSB(adlPlayer, static_cast<ADL_UInt8>(channel), 0x7D);
                 adl_rt_bankChangeLSB(adlPlayer, static_cast<ADL_UInt8>(channel), static_cast<ADL_UInt8>(channel));
                 adl_rt_patchChange(adlPlayer, static_cast<int>(channel), 0);
-            } else if (!data.empty() && sysexCallback) {
+                return;
+            }
+#endif
+            if (!data.empty() && sysexCallback) {
                 // No adlPlayer: forward as framed envelope for external handling
                 std::vector<uint8_t> envelope;
                 envelope.reserve(data.size() + 5);
@@ -218,6 +244,7 @@ struct ShimMidiSink final : imuse::MidiSink {
     }
 
     void onAllNotesOff() override {
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
         if (fluidSynth) {
             for (int channel = 0; channel < 16; ++channel) {
                 fluid_synth_cc(fluidSynth, channel, 64, 0);
@@ -225,7 +252,9 @@ struct ShimMidiSink final : imuse::MidiSink {
                 fluid_synth_cc(fluidSynth, channel, 120, 0);
             }
         }
+#endif
 
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
         if (mt32Context) {
             for (uint8_t chan = 0; chan < 16; ++chan) {
                 uint32_t msg1 = (0xB0 | chan) | (123 << 8) | (0 << 16);
@@ -234,10 +263,13 @@ struct ShimMidiSink final : imuse::MidiSink {
                 mt32emu_play_msg(mt32Context, msg2);
             }
         }
+#endif
 
+#if defined(IMUSE_SHIM_WITH_ADLIB)
         if (adlPlayer) {
             adl_rt_resetState(adlPlayer);
         }
+#endif
     }
 };
 
@@ -245,10 +277,16 @@ struct ImuseEngineHandle {
     const ImuseBankHandle *bankHandle = nullptr;
     imuse::ImuseEngine engine;
     ShimMidiSink midiSink;
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
     fluid_settings_t *fluidSettings = nullptr;
     fluid_synth_t *fluidSynth = nullptr;
+#endif
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
     mt32emu_context mt32Context = nullptr;
+#endif
+#if defined(IMUSE_SHIM_WITH_ADLIB)
     ADL_MIDIPlayer *adlPlayer = nullptr;
+#endif
 };
 
 namespace {
@@ -292,6 +330,7 @@ bool LoadSequenceForSound(const ImuseBankHandle *handle, uint16_t soundId, Imuse
 }
 
 void DestroyFluidSynth(ImuseEngineHandle *handle) {
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
     if (!handle) {
         return;
     }
@@ -306,9 +345,13 @@ void DestroyFluidSynth(ImuseEngineHandle *handle) {
         delete_fluid_settings(handle->fluidSettings);
         handle->fluidSettings = nullptr;
     }
+#else
+    (void)handle;
+#endif
 }
 
 bool CreateFluidSynth(ImuseEngineHandle *handle, const char *soundFontPath, std::string *error) {
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
     if (!handle || !soundFontPath || !soundFontPath[0]) {
         if (error) {
             *error = "invalid FluidSynth handle or soundfont path";
@@ -349,6 +392,14 @@ bool CreateFluidSynth(ImuseEngineHandle *handle, const char *soundFontPath, std:
     handle->midiSink.fluidSynth = handle->fluidSynth;
     handle->midiSink.onAllNotesOff();
     return true;
+#else
+    (void)handle;
+    (void)soundFontPath;
+    if (error) {
+        *error = "this build of imuse_shim was compiled without FluidSynth support";
+    }
+    return false;
+#endif
 }
 
 } // namespace
@@ -460,7 +511,7 @@ int imuse_bank_track_summary(const ImuseBankHandle *handle, uint16_t soundId, Im
 
     if (trackName.empty()) {
         char defaultName[64];
-        std::snprintf(defaultName, sizeof(defaultName), "Piste %d", (int)trackIndex);
+        std::snprintf(defaultName, sizeof(defaultName), "Track %d", (int)trackIndex);
         trackName = defaultName;
     }
 
@@ -487,6 +538,7 @@ void imuse_engine_destroy(ImuseEngineHandle *handle) {
 
     DestroyFluidSynth(handle);
     imuse_engine_disable_mt32(handle);
+    imuse_engine_disable_adlib(handle);
     delete handle;
 }
 
@@ -584,6 +636,7 @@ void imuse_engine_render_fluidsynth(ImuseEngineHandle *handle, uint32_t frameCou
         return;
     }
 
+#if defined(IMUSE_SHIM_WITH_FLUIDSYNTH)
     if (!handle || !handle->fluidSynth) {
         std::memset(left, 0, sizeof(float) * frameCount);
         std::memset(right, 0, sizeof(float) * frameCount);
@@ -598,6 +651,11 @@ void imuse_engine_render_fluidsynth(ImuseEngineHandle *handle, uint32_t frameCou
                             right,
                             0,
                             1);
+#else
+    (void)handle;
+    std::memset(left, 0, sizeof(float) * frameCount);
+    std::memset(right, 0, sizeof(float) * frameCount);
+#endif
 }
 
 void imuse_engine_disable_fluidsynth(ImuseEngineHandle *handle) {
@@ -617,6 +675,7 @@ void imuse_engine_set_callbacks(ImuseEngineHandle *handle,
 }
 
 int imuse_engine_enable_mt32(ImuseEngineHandle *handle, const char *romDir, char *errorBuffer, size_t errorBufferSize) {
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
     if (!handle || !romDir || !romDir[0]) {
         CopyString("invalid MT-32 handle or ROM directory", errorBuffer, errorBufferSize);
         return 0;
@@ -672,6 +731,12 @@ int imuse_engine_enable_mt32(ImuseEngineHandle *handle, const char *romDir, char
 
     CopyString("", errorBuffer, errorBufferSize);
     return 1;
+#else
+    (void)handle;
+    (void)romDir;
+    CopyString("this build of imuse_shim was compiled without MT-32 support", errorBuffer, errorBufferSize);
+    return 0;
+#endif
 }
 
 void imuse_engine_render_mt32(ImuseEngineHandle *handle, uint32_t frameCount, float *left, float *right) {
@@ -679,6 +744,7 @@ void imuse_engine_render_mt32(ImuseEngineHandle *handle, uint32_t frameCount, fl
         return;
     }
 
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
     if (!handle || !handle->mt32Context) {
         std::memset(left, 0, sizeof(float) * frameCount);
         std::memset(right, 0, sizeof(float) * frameCount);
@@ -692,9 +758,15 @@ void imuse_engine_render_mt32(ImuseEngineHandle *handle, uint32_t frameCount, fl
         left[i] = interleavedBuffer[i * 2];
         right[i] = interleavedBuffer[i * 2 + 1];
     }
+#else
+    (void)handle;
+    std::memset(left, 0, sizeof(float) * frameCount);
+    std::memset(right, 0, sizeof(float) * frameCount);
+#endif
 }
 
 void imuse_engine_disable_mt32(ImuseEngineHandle *handle) {
+#if defined(IMUSE_SHIM_WITH_MT32EMU)
     if (!handle) {
         return;
     }
@@ -706,6 +778,9 @@ void imuse_engine_disable_mt32(ImuseEngineHandle *handle) {
         mt32emu_free_context(handle->mt32Context);
         handle->mt32Context = nullptr;
     }
+#else
+    (void)handle;
+#endif
 }
 
 void imuse_register_roland_timbre_mapping(const char *name, uint8_t gmProgram) {
@@ -717,6 +792,7 @@ void imuse_clear_roland_timbre_mappings(void) {
 }
 
 int imuse_engine_enable_adlib(ImuseEngineHandle *handle, char *errorBuffer, size_t errorBufferSize) {
+#if defined(IMUSE_SHIM_WITH_ADLIB)
     if (!handle) {
         CopyString("invalid engine handle", errorBuffer, errorBufferSize);
         return 0;
@@ -741,6 +817,11 @@ int imuse_engine_enable_adlib(ImuseEngineHandle *handle, char *errorBuffer, size
 
     CopyString("", errorBuffer, errorBufferSize);
     return 1;
+#else
+    (void)handle;
+    CopyString("this build of imuse_shim was compiled without AdLib support", errorBuffer, errorBufferSize);
+    return 0;
+#endif
 }
 
 void imuse_engine_render_adlib(ImuseEngineHandle *handle, uint32_t frameCount, float *left, float *right) {
@@ -748,6 +829,7 @@ void imuse_engine_render_adlib(ImuseEngineHandle *handle, uint32_t frameCount, f
         return;
     }
 
+#if defined(IMUSE_SHIM_WITH_ADLIB)
     if (!handle || !handle->adlPlayer) {
         std::memset(left, 0, sizeof(float) * frameCount);
         std::memset(right, 0, sizeof(float) * frameCount);
@@ -772,9 +854,15 @@ void imuse_engine_render_adlib(ImuseEngineHandle *handle, uint32_t frameCount, f
         left[i]  = interleaved[i * 2];
         right[i] = interleaved[i * 2 + 1];
     }
+#else
+    (void)handle;
+    std::memset(left, 0, sizeof(float) * frameCount);
+    std::memset(right, 0, sizeof(float) * frameCount);
+#endif
 }
 
 void imuse_engine_disable_adlib(ImuseEngineHandle *handle) {
+#if defined(IMUSE_SHIM_WITH_ADLIB)
     if (!handle) {
         return;
     }
@@ -785,4 +873,7 @@ void imuse_engine_disable_adlib(ImuseEngineHandle *handle) {
         adl_close(handle->adlPlayer);
         handle->adlPlayer = nullptr;
     }
+#else
+    (void)handle;
+#endif
 }

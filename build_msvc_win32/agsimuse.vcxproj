@@ -115,7 +115,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Debug\imuse_v6.lib;Debug\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Release\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>Debug\imuse_v6_static.lib;Debug\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Debug\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -158,7 +158,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>Release\imuse_v6.lib;Release\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Release\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>Release\imuse_v6_static.lib;Release\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Release\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -201,7 +201,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>MinSizeRel\imuse_v6.lib;MinSizeRel\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Release\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>MinSizeRel\imuse_v6_static.lib;MinSizeRel\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\MinSizeRel\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -243,7 +243,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>RelWithDebInfo\imuse_v6.lib;RelWithDebInfo\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\Release\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>RelWithDebInfo\imuse_v6_static.lib;RelWithDebInfo\ADLMIDI.lib;D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\RelWithDebInfo\libfluidsynth-3.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;winmm.lib;dsound.lib;ole32.lib;ksuser.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>

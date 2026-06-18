@@ -171,6 +171,18 @@ Namespace AgsImuse
         Public Shared Sub EngineDisableMt32(ByVal handle As IntPtr)
         End Sub
 
+        <DllImport(DLL_NAME, EntryPoint:="imuse_engine_enable_adlib", CallingConvention:=CallingConvention.Cdecl)>
+        Public Shared Function EngineEnableAdlib(ByVal handle As IntPtr, ByVal errorBuffer As StringBuilder, ByVal errorBufferSize As UIntPtr) As Integer
+        End Function
+
+        <DllImport(DLL_NAME, EntryPoint:="imuse_engine_render_adlib", CallingConvention:=CallingConvention.Cdecl)>
+        Public Shared Sub EngineRenderAdlib(ByVal handle As IntPtr, ByVal frameCount As UInteger, <In, Out> ByVal left() As Single, <In, Out> ByVal right() As Single)
+        End Sub
+
+        <DllImport(DLL_NAME, EntryPoint:="imuse_engine_disable_adlib", CallingConvention:=CallingConvention.Cdecl)>
+        Public Shared Sub EngineDisableAdlib(ByVal handle As IntPtr)
+        End Sub
+
         <DllImport(DLL_NAME, EntryPoint:="imuse_register_roland_timbre_mapping", CallingConvention:=CallingConvention.Cdecl)>
         Public Shared Sub RegisterRolandTimbreMapping(<MarshalAs(UnmanagedType.LPStr)> ByVal name As String, ByVal gmProgram As Byte)
         End Sub

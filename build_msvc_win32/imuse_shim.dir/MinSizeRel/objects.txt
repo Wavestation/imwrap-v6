@@ -1,0 +1,1 @@
+D:/Prog/imwrap-v6/build_msvc_win32/imuse_shim.dir/MinSizeRel/CImuseShim.obj

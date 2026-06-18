@@ -6,6 +6,8 @@ option(IMUSE_BUILD_TOOLS "Build imuse command-line tools" ON)
 option(IMUSE_BUILD_GUI_TOOLS "Build imuse Qt6 GUI tools" ON)
 option(IMUSE_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
 option(IMUSE_BUILD_SHARED_LIB "Build the shared imuse_v6 library" ON)
+option(IMUSE_BUILD_SHIM "Build the native imuse_shim DLL used by wrappers and editor tooling" ON)
+option(IMUSE_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in imuse_shim" OFF)
 
 set(IMUSE_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
 set(IMUSE_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimuse")
@@ -86,6 +88,74 @@ set(EXAMPLE_SDL2_AUDIO OFF CACHE BOOL "" FORCE)
 set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
 
 add_subdirectory(third_party/libadlmidi)
+
+if(IMUSE_BUILD_SHIM)
+    add_library(imuse_shim SHARED
+        swift-shim/CImuseShim.cpp
+    )
+
+    target_include_directories(imuse_shim PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/swift-shim/include
+    )
+
+    target_link_libraries(imuse_shim PRIVATE
+        imuse_v6
+    )
+
+    set_target_properties(imuse_shim PROPERTIES
+        WINDOWS_EXPORT_ALL_SYMBOLS ON
+    )
+
+    if(IMUSE_SHIM_ENABLE_EXTERNAL_BACKENDS)
+        target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_ADLIB=1)
+        target_include_directories(imuse_shim PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
+        )
+        target_link_libraries(imuse_shim PRIVATE ADLMIDI)
+
+        if(EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h" AND EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/Release/libfluidsynth-3.lib")
+            target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_FLUIDSYNTH=1)
+            target_include_directories(imuse_shim PRIVATE
+                ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include
+            )
+            target_link_libraries(imuse_shim PRIVATE
+                "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+                winmm
+                dsound
+                ole32
+                ksuser
+            )
+        endif()
+
+        find_path(IMUSE_MT32EMU_INCLUDE_DIR
+            NAMES mt32emu.h
+            PATHS
+                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/include
+            NO_DEFAULT_PATH
+        )
+        find_library(IMUSE_MT32EMU_LIBRARY
+            NAMES mt32emu libmt32emu
+            PATHS
+                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build
+                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/Release
+                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/lib
+                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/lib/Release
+            NO_DEFAULT_PATH
+        )
+
+        if(IMUSE_MT32EMU_INCLUDE_DIR AND IMUSE_MT32EMU_LIBRARY)
+            target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_MT32EMU=1)
+            target_include_directories(imuse_shim PRIVATE
+                ${IMUSE_MT32EMU_INCLUDE_DIR}
+            )
+            target_link_libraries(imuse_shim PRIVATE
+                ${IMUSE_MT32EMU_LIBRARY}
+            )
+        endif()
+    endif()
+
+    imuse_apply_common_target_settings(imuse_shim)
+endif()
 
 if(IMUSE_BUILD_AGS_PLUGIN)
     if(NOT EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
