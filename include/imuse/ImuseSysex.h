@@ -72,11 +72,11 @@ struct ImuseControlEvent {
 
     uint8_t priority = 0;
     uint8_t volume = 0;
-    uint8_t pan = 0;
     uint8_t pitchbendFactor = 0;
     uint8_t program = 0;
     uint8_t value = 0;
 
+    int8_t pan = 0;
     int8_t transpose = 0;
     int8_t detune = 0;
     int8_t signedValue = 0;

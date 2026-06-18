@@ -2094,7 +2094,7 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
                 part->volume = event.volume;
                 part->transpose = event.transpose;
                 part->transposeEffective = computeEffectivePartTranspose(*sound, *part);
-                part->pan = static_cast<int8_t>(ClampInt(static_cast<int>(event.pan) - 0x40, -64, 63));
+                part->pan = static_cast<int8_t>(ClampInt(static_cast<int>(event.pan), -64, 63));
                 part->panEffective = computeEffectivePartPan(*sound, *part);
                 part->priority = static_cast<int8_t>(ClampInt(static_cast<int>(event.priority) - 0x40, -128, 127));
                 part->priorityEffective = static_cast<uint8_t>(ClampInt(part->priority + sound->priority, 0, 255));

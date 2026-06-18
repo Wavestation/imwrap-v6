@@ -126,7 +126,7 @@ bool DecodeImuseSysex(ByteView message, ImuseControlEvent *out, std::string *err
         event.reverb = event.decodedBytes.size() > 0 ? (event.decodedBytes[0] & 0x02) != 0 : false;
         event.priority = event.decodedBytes.size() > 1 ? event.decodedBytes[1] : 90;
         event.volume = event.decodedBytes.size() > 2 ? event.decodedBytes[2] : 127;
-        event.pan = event.decodedBytes.size() > 3 ? event.decodedBytes[3] : 64;
+        event.pan = event.decodedBytes.size() > 3 ? static_cast<int8_t>(event.decodedBytes[3]) : 0;
         event.percussion = event.decodedBytes.size() > 4 ? (event.decodedBytes[4] & 0x80) != 0 : false;
         
         uint8_t transpose7 = event.decodedBytes.size() > 4 ? (event.decodedBytes[4] & 0x7F) : 0;
