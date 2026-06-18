@@ -35,6 +35,7 @@ private:
     void setupUi();
     QWidget* createGeneratorTab();
     QWidget* createDecoderTab();
+    QWidget* createGuideTab();
 
     // Generator UI Elements
     QComboBox *typeCombo;
