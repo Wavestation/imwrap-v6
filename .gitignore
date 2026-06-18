@@ -5,9 +5,11 @@
 
 # CMake and build directories
 build/
+build_msvc_x64/
 dist/
 bin/
 final-release/
+third_party/fluidsynth-build-win32/
 
 # macOS system files
 .DS_Store

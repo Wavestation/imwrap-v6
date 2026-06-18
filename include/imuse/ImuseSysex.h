@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "imuse/Export.h"
 #include "imuse/ByteView.h"
 
 namespace imuse {
@@ -98,8 +99,8 @@ struct ImuseControlEvent {
     std::vector<uint8_t> decodedBytes;
 };
 
-bool DecodeImuseSysex(ByteView message, ImuseControlEvent *out, std::string *error = nullptr);
-std::string DescribeImuseSysex(const ImuseControlEvent &event);
+IMUSE_API bool DecodeImuseSysex(ByteView message, ImuseControlEvent *out, std::string *error = nullptr);
+IMUSE_API std::string DescribeImuseSysex(const ImuseControlEvent &event);
 
 } // namespace imuse
 

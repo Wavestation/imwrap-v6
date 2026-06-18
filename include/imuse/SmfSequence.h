@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "imuse/Export.h"
 #include "imuse/ByteView.h"
 
 namespace imuse {
@@ -65,12 +66,12 @@ struct SmfSequence {
     uint16_t ppqn() const { return division; }
 };
 
-class SmfParser {
+class IMUSE_API SmfParser {
 public:
     static bool Parse(ByteView data, SmfSequence *out, std::string *error = nullptr);
 };
 
-class SmfSerializer {
+class IMUSE_API SmfSerializer {
 public:
     static bool Serialize(const SmfSequence &seq, std::vector<uint8_t> *outBytes, std::string *error = nullptr);
 };

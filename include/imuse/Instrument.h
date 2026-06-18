@@ -26,6 +26,7 @@
 #include <cstdint>
 #include <memory>
 
+#include "imuse/Export.h"
 #include "imuse/MidiChannel.h"
 
 namespace imuse {
@@ -40,7 +41,7 @@ public:
     virtual bool isValid() const = 0;
 };
 
-class Instrument {
+class IMUSE_API Instrument {
 public:
     enum Type : uint8_t {
         None = 0,
@@ -87,8 +88,8 @@ private:
     bool _nativeMT32Device = false;
 };
 
-void RegisterRolandTimbreMapping(const char *name, uint8_t gmProgram);
-void ClearRolandTimbreMappings();
+IMUSE_API void RegisterRolandTimbreMapping(const char *name, uint8_t gmProgram);
+IMUSE_API void ClearRolandTimbreMappings();
 
 } // namespace imuse
 

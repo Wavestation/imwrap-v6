@@ -1,0 +1,79 @@
+name: release-v1
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-release:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Qt 6.8.0
+        id: qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.0"
+          arch: "win64_msvc2022_64"
+          cache: "true"
+
+      - name: Build Windows release bundle
+        shell: pwsh
+        env:
+          QT_PREFIX_PATH: ${{ steps.qt.outputs.dir }}
+        run: |
+          ./scripts/build-windows-release.ps1 -QtPrefixPath $env:QT_PREFIX_PATH
+
+      - name: Create release archive
+        id: archive
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $tag = $env:RELEASE_TAG
+          $zipName = "imwrap-$tag-windows"
+          $distDir = Join-Path $PWD "dist"
+          $stagingDir = Join-Path $distDir $zipName
+          $zipPath = Join-Path $distDir "$zipName.zip"
+
+          New-Item -ItemType Directory -Path $distDir -Force | Out-Null
+          if (Test-Path -LiteralPath $stagingDir) {
+              Remove-Item -LiteralPath $stagingDir -Recurse -Force
+          }
+          if (Test-Path -LiteralPath $zipPath) {
+              Remove-Item -LiteralPath $zipPath -Force
+          }
+
+          Copy-Item -LiteralPath "final-release/windows" -Destination $stagingDir -Recurse -Force
+          Compress-Archive -Path $stagingDir -DestinationPath $zipPath -Force
+
+          $sha256 = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash
+          "zip_path=$zipPath" >> $env:GITHUB_OUTPUT
+          "sha256=$sha256" >> $env:GITHUB_OUTPUT
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-${{ github.ref_name }}
+          path: ${{ steps.archive.outputs.zip_path }}
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.archive.outputs.zip_path }}
+          generate_release_notes: true
+          body: |
+            Windows bundle for `${{ github.ref_name }}`.
+
+            SHA-256: `${{ steps.archive.outputs.sha256 }}`

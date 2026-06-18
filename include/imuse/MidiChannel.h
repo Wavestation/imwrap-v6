@@ -25,11 +25,12 @@
 
 #include <cstdint>
 
+#include "imuse/Export.h"
 #include "imuse/ByteView.h"
 
 namespace imuse {
 
-class MidiChannel {
+class IMUSE_API MidiChannel {
 public:
     virtual ~MidiChannel() = default;
 

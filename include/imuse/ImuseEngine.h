@@ -31,6 +31,7 @@
 #include <functional>
 #include <string>
 
+#include "imuse/Export.h"
 #include "imuse/ImuseCommand.h"
 #include "imuse/ImuseSequence.h"
 #include "imuse/Instrument.h"
@@ -39,7 +40,7 @@
 
 namespace imuse {
 
-class ImuseEngine {
+class IMUSE_API ImuseEngine {
 public:
     enum class CompatibilityProfile {
         GenericV6,

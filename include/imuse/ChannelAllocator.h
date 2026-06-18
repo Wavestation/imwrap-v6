@@ -26,6 +26,7 @@
 #include <array>
 #include <cstdint>
 
+#include "imuse/Export.h"
 #include "imuse/ImsFormat.h"
 
 namespace imuse {
@@ -37,7 +38,7 @@ struct ChannelAssignment {
     bool percussion = false;
 };
 
-class ChannelAllocator {
+class IMUSE_API ChannelAllocator {
 public:
     void setProfile(TargetProfile profile);
     TargetProfile profile() const { return _profile; }

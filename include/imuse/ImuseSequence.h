@@ -26,6 +26,7 @@
 #include <string>
 #include <vector>
 
+#include "imuse/Export.h"
 #include "imuse/ImuseSysex.h"
 #include "imuse/ResourceBank.h"
 #include "imuse/SmfSequence.h"
@@ -38,7 +39,7 @@ struct ImuseSequence {
     std::vector<ImuseControlEvent> controlEvents;
 };
 
-bool LoadImuseSequence(const SoundVariantView &variant, ImuseSequence *out, std::string *error = nullptr);
+IMUSE_API bool LoadImuseSequence(const SoundVariantView &variant, ImuseSequence *out, std::string *error = nullptr);
 
 } // namespace imuse
 

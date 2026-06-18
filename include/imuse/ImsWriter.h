@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include "imuse/Export.h"
 #include "imuse/ImsFormat.h"
 
 namespace imuse {
@@ -45,7 +46,7 @@ struct SoundBankInput {
     std::vector<VariantSource> variants;
 };
 
-class ImsWriter {
+class IMUSE_API ImsWriter {
 public:
     bool build(const std::vector<SoundBankInput> &sounds, std::vector<uint8_t> *outBytes, std::string *error = nullptr) const;
     bool writeFile(const std::string &outputPath, const std::vector<SoundBankInput> &sounds, std::string *error = nullptr) const;

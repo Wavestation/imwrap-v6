@@ -52,6 +52,14 @@ CMake gère la génération des fichiers de solution Visual Studio.
 5. Cliquez sur **Generate** puis **Open Project** pour ouvrir la solution `.sln` directement dans Visual Studio.
 6. Compilez en mode *Release* pour générer la DLL du plugin AGS (`libagsimuse.dll`) et du shim (`imuse_shim.dll`).
 
+Pour reconstruire le bundle Windows de diffusion depuis zero :
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-windows-release.ps1 -QtPrefixPath "C:\Qt\6.8.0\msvc2022_64"
+```
+
+Le dossier final prêt à distribuer est ensuite généré dans `final-release/windows`.
+
 ### 2. Sous macOS
 
 Le script shell automatisé compile le moteur C++, le shim et produit les bundles d'applications macOS autonomes :

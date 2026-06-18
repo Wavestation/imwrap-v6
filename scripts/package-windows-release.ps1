@@ -83,6 +83,22 @@ function Copy-FileAs {
     Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Force
 }
 
+function Copy-FirstExistingFileAs {
+    param(
+        [Parameter(Mandatory = $true)][string[]]$Sources,
+        [Parameter(Mandatory = $true)][string]$Destination
+    )
+
+    foreach ($source in $Sources) {
+        if (Test-Path -LiteralPath $source -PathType Leaf) {
+            Copy-FileAs -Source $source -Destination $Destination
+            return
+        }
+    }
+
+    throw "Missing required file. Tried: $($Sources -join ', ')"
+}
+
 function Copy-DirectoryTree {
     param(
         [Parameter(Mandatory = $true)][string]$Source,
@@ -100,36 +116,61 @@ function Copy-DirectoryTree {
     Copy-Item -LiteralPath $Source -Destination $destinationPath -Recurse -Force
 }
 
+function Copy-DirectoryTreeIfExists {
+    param(
+        [Parameter(Mandatory = $true)][string]$Source,
+        [Parameter(Mandatory = $true)][string]$Destination
+    )
+
+    if (Test-Path -LiteralPath $Source -PathType Container) {
+        Copy-DirectoryTree -Source $Source -Destination $Destination
+    }
+}
+
 Ensure-CleanDirectory -Path $OutputDir
 
 $docsDir = Join-Path $OutputDir "docs"
 $examplesDir = Join-Path $OutputDir "examples"
 $wrappersDir = Join-Path $OutputDir "wrappers"
 $licensesDir = Join-Path $OutputDir "licenses"
+$toolsDir = Join-Path $OutputDir "tools"
 
-foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir)) {
+foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir)) {
     Ensure-Directory -Path $dir
 }
 
 $projectBinaries = @(
-    @{ Source = Join-Path $PluginBuildDir "Release\agsimuse.dll"; Name = "agsimuse-x32.dll" },
-    @{ Source = Join-Path $PluginBuildDir "Release\agsimuse.lib"; Name = "agsimuse-x32.lib" },
-    @{ Source = Join-Path $PluginBuildDir "Release\imusepack.exe"; Name = "imusepack-x32.exe" },
-    @{ Source = Join-Path $PluginBuildDir "Release\imsprobe.exe"; Name = "imsprobe-x32.exe" },
-    @{ Source = Join-Path $PluginBuildDir "Release\imuse_v6.lib"; Name = "imuse_v6-x32.lib" },
-    @{ Source = Join-Path $PluginBuildDir "Release\ADLMIDI.lib"; Name = "ADLMIDI-x32.lib" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imusepack.exe"; Name = "imusepack-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imsprobe.exe"; Name = "imsprobe-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imuse_packer_gui.exe"; Name = "imuse_packer_gui-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imuse_player_gui.exe"; Name = "imuse_player_gui-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imuse_sysex_gui.exe"; Name = "imuse_sysex_gui-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\SetMIDI.exe"; Name = "SetMIDI-x64.exe" },
-    @{ Source = Join-Path $GuiBuildDir "Release\imuse_v6.lib"; Name = "imuse_v6-x64.lib" },
-    @{ Source = Join-Path $GuiBuildDir "Release\ADLMIDI.lib"; Name = "ADLMIDI-x64.lib" }
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.dll")); Name = "agsimuse-x32.dll" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.lib")); Name = "agsimuse-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imusepack.exe")); Name = "imusepack-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6.dll")); Name = "imuse_v6-x32.dll" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_dll.lib")); Name = "imuse_v6-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_static.lib"), (Join-Path $PluginBuildDir "Release\imuse_v6.lib")); Name = "imuse_v6-static-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\ADLMIDI.lib")); Name = "ADLMIDI-x32.lib" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6.dll")); Name = "imuse_v6-x64.dll" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6_dll.lib")); Name = "imuse_v6-x64.lib" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6_static.lib"), (Join-Path $GuiBuildDir "Release\imuse_v6.lib")); Name = "imuse_v6-static-x64.lib" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\ADLMIDI.lib")); Name = "ADLMIDI-x64.lib" }
 )
 
 foreach ($binary in $projectBinaries) {
-    Copy-FileAs -Source $binary.Source -Destination (Join-Path $OutputDir $binary.Name)
+    Copy-FirstExistingFileAs -Sources $binary.Sources -Destination (Join-Path $OutputDir $binary.Name)
+}
+
+$toolBinaries = @(
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imusepack.exe")); Name = "imusepack-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imusepack.exe")); Name = "imusepack-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_packer_gui.exe")); Name = "imuse_packer_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_player_gui.exe")); Name = "imuse_player_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_sysex_gui.exe")); Name = "imuse_sysex_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x64.exe" }
+)
+
+foreach ($binary in $toolBinaries) {
+    Copy-FirstExistingFileAs -Sources $binary.Sources -Destination (Join-Path $toolsDir $binary.Name)
 }
 
 $qtRuntimeFiles = @(
@@ -139,7 +180,7 @@ $qtRuntimeFiles = @(
 )
 
 foreach ($qtFile in $qtRuntimeFiles) {
-    Copy-FileAs -Source (Join-Path $GuiBuildDir "Release\$qtFile") -Destination (Join-Path $OutputDir $qtFile)
+    Copy-FileAs -Source (Join-Path $GuiBuildDir "Release\$qtFile") -Destination (Join-Path $toolsDir $qtFile)
 }
 
 $qtPluginDirs = @(
@@ -150,7 +191,7 @@ $qtPluginDirs = @(
 )
 
 foreach ($qtDir in $qtPluginDirs) {
-    Copy-DirectoryTree -Source (Join-Path $GuiBuildDir "Release\$qtDir") -Destination (Join-Path $OutputDir $qtDir)
+    Copy-DirectoryTreeIfExists -Source (Join-Path $GuiBuildDir "Release\$qtDir") -Destination (Join-Path $toolsDir $qtDir)
 }
 
 $documentationFiles = @(

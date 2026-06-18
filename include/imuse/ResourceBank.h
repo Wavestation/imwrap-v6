@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 
+#include "imuse/Export.h"
 #include "imuse/ByteView.h"
 #include "imuse/ImsFormat.h"
 
@@ -42,7 +43,7 @@ struct SoundVariantView {
     bool valid() const { return !smfData.empty(); }
 };
 
-class SoundResource {
+class IMUSE_API SoundResource {
 public:
     bool valid() const { return _valid; }
     uint16_t soundId() const { return _soundId; }
@@ -65,7 +66,7 @@ private:
     SoundVariantView _adl;
 };
 
-class ResourceBank {
+class IMUSE_API ResourceBank {
 public:
     bool openFromFile(const std::string &path, std::string *error = nullptr);
     bool openFromMemory(std::vector<uint8_t> data, std::string *error = nullptr);

@@ -25,12 +25,13 @@
 
 #include <cstdint>
 
+#include "imuse/Export.h"
 #include "imuse/MidiChannel.h"
 #include "imuse/MidiSink.h"
 
 namespace imuse {
 
-class SinkMidiChannel final : public MidiChannel {
+class IMUSE_API SinkMidiChannel final : public MidiChannel {
 public:
     SinkMidiChannel(MidiSink *sink, uint16_t soundId, uint8_t channel);
 

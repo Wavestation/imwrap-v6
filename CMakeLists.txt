@@ -4,16 +4,13 @@ project(imuse_v6 LANGUAGES CXX)
 
 option(IMUSE_BUILD_TOOLS "Build imuse command-line tools" ON)
 option(IMUSE_BUILD_GUI_TOOLS "Build imuse Qt6 GUI tools" ON)
+option(IMUSE_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
+option(IMUSE_BUILD_SHARED_LIB "Build the shared imuse_v6 library" ON)
 
-if(IMUSE_BUILD_GUI_TOOLS)
-    list(APPEND CMAKE_PREFIX_PATH "D:/Outils/Qt/6.8.0/msvc2022_64")
-    find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTOUIC ON)
-    set(CMAKE_AUTORCC ON)
-endif()
+set(IMUSE_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
+set(IMUSE_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimuse")
 
-add_library(imuse_v6 STATIC
+set(IMUSE_CORE_SOURCES
     src/Instrument.cpp
     src/ImuseSequence.cpp
     src/ImuseSysex.cpp
@@ -24,37 +21,57 @@ add_library(imuse_v6 STATIC
     src/SmfSequence.cpp
 )
 
-target_include_directories(imuse_v6
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+function(imuse_apply_common_target_settings target_name)
+    target_include_directories(${target_name}
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
 
-target_compile_features(imuse_v6 PUBLIC cxx_std_17)
+    target_compile_features(${target_name} PUBLIC cxx_std_17)
 
-if(MSVC)
-    target_compile_options(imuse_v6 PRIVATE /W4)
-else()
-    target_compile_options(imuse_v6 PRIVATE -Wall -Wextra -Wpedantic)
+    if(MSVC)
+        target_compile_options(${target_name} PRIVATE /W4)
+    else()
+        target_compile_options(${target_name} PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endfunction()
+
+if(IMUSE_BUILD_GUI_TOOLS)
+    if(IMUSE_QT6_PREFIX_PATH)
+        list(APPEND CMAKE_PREFIX_PATH "${IMUSE_QT6_PREFIX_PATH}")
+    elseif(EXISTS "D:/Outils/Qt/6.8.0/msvc2022_64")
+        list(APPEND CMAKE_PREFIX_PATH "D:/Outils/Qt/6.8.0/msvc2022_64")
+    endif()
+
+    find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+endif()
+
+add_library(imuse_v6 STATIC ${IMUSE_CORE_SOURCES})
+set_target_properties(imuse_v6 PROPERTIES OUTPUT_NAME "imuse_v6_static")
+imuse_apply_common_target_settings(imuse_v6)
+
+if(IMUSE_BUILD_SHARED_LIB)
+    add_library(imuse_v6_shared SHARED ${IMUSE_CORE_SOURCES})
+    target_compile_definitions(imuse_v6_shared PRIVATE IMUSE_DLL IMUSE_BUILD_DLL)
+    target_compile_definitions(imuse_v6_shared INTERFACE IMUSE_DLL)
+    set_target_properties(imuse_v6_shared PROPERTIES
+        OUTPUT_NAME "imuse_v6"
+        ARCHIVE_OUTPUT_NAME "imuse_v6_dll"
+    )
+    imuse_apply_common_target_settings(imuse_v6_shared)
 endif()
 
 if(IMUSE_BUILD_TOOLS)
     add_executable(imusepack tools/imusepack.cpp)
     target_link_libraries(imusepack PRIVATE imuse_v6)
-    target_compile_features(imusepack PRIVATE cxx_std_17)
-    if(MSVC)
-        target_compile_options(imusepack PRIVATE /W4)
-    else()
-        target_compile_options(imusepack PRIVATE -Wall -Wextra -Wpedantic)
-    endif()
+    imuse_apply_common_target_settings(imusepack)
 
     add_executable(imsprobe tools/imsprobe.cpp)
     target_link_libraries(imsprobe PRIVATE imuse_v6)
-    target_compile_features(imsprobe PRIVATE cxx_std_17)
-    if(MSVC)
-        target_compile_options(imsprobe PRIVATE /W4)
-    else()
-        target_compile_options(imsprobe PRIVATE -Wall -Wextra -Wpedantic)
-    endif()
+    imuse_apply_common_target_settings(imsprobe)
 endif()
 
 # Configure libADLMIDI build options
@@ -70,51 +87,55 @@ set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
 
 add_subdirectory(third_party/libadlmidi)
 
-add_library(agsimuse SHARED
-    src/AgsImusePlugin.cpp
-)
-
-target_compile_definitions(agsimuse PRIVATE THIS_IS_THE_PLUGIN)
-
-target_include_directories(agsimuse PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ags
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/miniaudio
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-master/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build/include
-)
-
-target_link_libraries(agsimuse PRIVATE
-    imuse_v6
-    ADLMIDI
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build/src/Release/libfluidsynth-3.lib
-    winmm
-    dsound
-    ole32
-    ksuser
-)
-
-target_compile_features(agsimuse PRIVATE cxx_std_17)
-
-if(MSVC)
-    target_compile_options(agsimuse PRIVATE /W4)
-    target_link_libraries(agsimuse PRIVATE winmm)
-else()
-    target_compile_options(agsimuse PRIVATE -Wall -Wextra -Wpedantic)
-    if(NOT APPLE)
-        target_link_libraries(agsimuse PRIVATE winmm)
+if(IMUSE_BUILD_AGS_PLUGIN)
+    if(NOT EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
+        message(FATAL_ERROR "IMUSE_BUILD_AGS_PLUGIN=ON requires a prebuilt FluidSynth tree with headers under ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include")
     endif()
-endif()
 
-if(APPLE)
-    target_link_libraries(agsimuse PRIVATE
-        "-framework CoreAudio"
-        "-framework AudioUnit"
-        "-framework AudioToolbox"
-        "-framework CoreMIDI"
-        "-framework CoreFoundation"
-        m
+    add_library(agsimuse SHARED
+        src/AgsImusePlugin.cpp
     )
+
+    target_compile_definitions(agsimuse PRIVATE THIS_IS_THE_PLUGIN)
+
+    target_include_directories(agsimuse PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ags
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/miniaudio
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-master/include
+        ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include
+    )
+
+    target_link_libraries(agsimuse PRIVATE
+        imuse_v6
+        ADLMIDI
+        "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+        winmm
+        dsound
+        ole32
+        ksuser
+    )
+
+    imuse_apply_common_target_settings(agsimuse)
+
+    if(MSVC)
+        target_link_libraries(agsimuse PRIVATE winmm)
+    else()
+        if(NOT APPLE)
+            target_link_libraries(agsimuse PRIVATE winmm)
+        endif()
+    endif()
+
+    if(APPLE)
+        target_link_libraries(agsimuse PRIVATE
+            "-framework CoreAudio"
+            "-framework AudioUnit"
+            "-framework AudioToolbox"
+            "-framework CoreMIDI"
+            "-framework CoreFoundation"
+            m
+        )
+    endif()
 endif()
 
 if(IMUSE_BUILD_GUI_TOOLS)
