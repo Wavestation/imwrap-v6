@@ -1989,9 +1989,9 @@ bool ImuseEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
                     uint8_t addr_mid = event.payload[5];
                     uint8_t addr_low = event.payload[6];
                     if (addr_high == 0x03 || addr_high == 0x05) {
-                        logicalPart = (addr_low / 8) + 1;
+                        logicalPart = (addr_low / 8);
                     } else if (addr_high == 0x04 || addr_high == 0x08) {
-                        logicalPart = (addr_mid / 2) + 1;
+                        logicalPart = (addr_mid / 2);
                     }
                 }
                 
