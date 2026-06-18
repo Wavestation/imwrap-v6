@@ -89,6 +89,7 @@ Invoke-CMakeBuild -BuildDir $Win32BuildDir -Targets @(
     "imuse_v6_shared",
     "imusepack",
     "imsprobe",
+    "imuse_setmidi",
     "agsimuse"
 )
 

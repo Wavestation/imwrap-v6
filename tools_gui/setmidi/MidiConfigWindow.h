@@ -1,56 +1,58 @@
 #ifndef MIDICONFIGWINDOW_H
 #define MIDICONFIGWINDOW_H
 
-#include <QWidget>
+#include <windows.h>
 
-class QComboBox;
-class QLabel;
-class QPushButton;
+#include <string>
 
 struct AppStrings {
-    QString windowTitle;
-    QString driverLabel;
-    QString deviceLabel;
-    QString saveBtn;
-    QString cancelBtn;
-    QString driverFluid;
-    QString driverAdLib;
-    QString driverHwGM;
-    QString driverHwMT32;
-    QString statusSaved;
-    QString noDevice;
-    QString targetLabelText;
+    std::wstring windowTitle;
+    std::wstring driverLabel;
+    std::wstring deviceLabel;
+    std::wstring saveButton;
+    std::wstring cancelButton;
+    std::wstring driverFluid;
+    std::wstring driverAdLib;
+    std::wstring driverHardwareGm;
+    std::wstring driverHardwareMt32;
+    std::wstring noDevice;
+    std::wstring targetLabel;
+    std::wstring saveError;
 };
 
-class MidiConfigWindow : public QWidget {
-    Q_OBJECT
+class MidiConfigWindow {
 public:
-    explicit MidiConfigWindow(QWidget *parent = nullptr);
-    ~MidiConfigWindow();
+    explicit MidiConfigWindow(HINSTANCE instance);
 
-private slots:
-    void onDriverChanged(int index);
-    void onSave();
-    void onCancel();
+    int Run(int showCommand);
 
 private:
-    void populateMidiDevices();
-    void loadConfig();
-    QString getTargetConfigPath();
-    AppStrings getStrings();
-    void setupUI();
+    static LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    QComboBox *driverCombo = nullptr;
-    QComboBox *deviceCombo = nullptr;
-    QLabel *driverLabel = nullptr;
-    QLabel *deviceLabel = nullptr;
-    QLabel *targetLabel = nullptr;
-    QLabel *statusLabel = nullptr;
-    QPushButton *saveBtn = nullptr;
-    QPushButton *cancelBtn = nullptr;
+    bool RegisterWindowClass();
+    bool CreateMainWindow(int showCommand);
+    void CreateControls();
+    void PopulateMidiDevices();
+    void LoadConfig();
+    void SaveConfig();
+    void UpdateDeviceControls();
 
-    AppStrings strings;
-    QString configFilePath;
+    std::wstring GetTargetConfigPath() const;
+    AppStrings GetStrings() const;
+    LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam);
+
+    HINSTANCE instance_ = nullptr;
+    HWND hwnd_ = nullptr;
+    HWND driverLabel_ = nullptr;
+    HWND driverCombo_ = nullptr;
+    HWND deviceLabel_ = nullptr;
+    HWND deviceCombo_ = nullptr;
+    HWND targetLabel_ = nullptr;
+    HWND saveButton_ = nullptr;
+    HWND cancelButton_ = nullptr;
+
+    AppStrings strings_;
+    std::wstring configFilePath_;
 };
 
 #endif // MIDICONFIGWINDOW_H

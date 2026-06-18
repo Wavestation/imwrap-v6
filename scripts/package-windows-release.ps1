@@ -159,6 +159,7 @@ foreach ($binary in $projectBinaries) {
 $toolBinaries = @(
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imusepack.exe")); Name = "imusepack-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x32.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imusepack.exe")); Name = "imusepack-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_packer_gui.exe")); Name = "imuse_packer_gui-x64.exe" },

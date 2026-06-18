@@ -37,7 +37,6 @@ namespace AgsImuse.Editor
         private const string CommandRenameBank = "RenameBank";
         private const string CommandDeleteBank = "DeleteBank";
         private const string CommandRefreshBanks = "RefreshBanks";
-        private const int DefaultMainSplitterDistance = 240;
 
         private static readonly string[] IgnoredDirectories = new[]
         {
@@ -71,7 +70,9 @@ namespace AgsImuse.Editor
             _knownBankPaths = new List<string>();
             _openDocuments = new Dictionary<string, OpenBankDocument>(StringComparer.OrdinalIgnoreCase);
             _contextDirectoryRelativePath = string.Empty;
-            _mainSplitterDistance = LoadPersistedMainSplitterDistance();
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // _mainSplitterDistance = LoadPersistedMainSplitterDistance();
+            _mainSplitterDistance = 0;
 
             _gui.RegisterIcon(RootIconKey, EmbeddedIconLoader.LoadPngIcon("AgsImuse.Editor.Icons.imuse.png", SystemIcons.Application));
             _gui.RegisterIcon(FolderIconKey, EmbeddedIconLoader.LoadPngIcon("AgsImuse.Editor.Icons.bank_folder.png", SystemIcons.Shield));
@@ -233,7 +234,8 @@ namespace AgsImuse.Editor
                     return;
                 }
 
-                TryLoadLegacyXmlSplitterDistance(configNode);
+                // Disabled for now: persistence proved unreliable inside AGS.
+                // TryLoadLegacyXmlSplitterDistance(configNode);
 
                 string selectedBank = ReadAttribute(configNode, XmlSelectedBankAttribute);
                 if (!string.IsNullOrEmpty(selectedBank))
@@ -374,6 +376,10 @@ namespace AgsImuse.Editor
             if (_openDocuments.TryGetValue(relativePath, out existingDocument))
             {
                 _gui.AddOrShowPane(existingDocument.Document);
+                if (existingDocument.Pane != null)
+                {
+                    existingDocument.Pane.RefreshSplitterLayout();
+                }
                 _gui.ProjectTree.SelectNode(this, FileNodePrefix + relativePath);
                 return;
             }
@@ -393,12 +399,17 @@ namespace AgsImuse.Editor
             OpenBankDocument documentContext = new OpenBankDocument();
             documentContext.RelativePath = relativePath;
             documentContext.Pane = new ImuseEditorPane();
-            documentContext.Pane.MainSplitterDistance = _mainSplitterDistance;
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // if (_mainSplitterDistance > 0)
+            // {
+            //     documentContext.Pane.MainSplitterDistance = _mainSplitterDistance;
+            // }
             documentContext.Pane.LoadBank(model);
             documentContext.Pane.RefreshRequested += delegate(object sender, EventArgs e) { RefreshDocument(documentContext); };
             documentContext.Pane.SaveRequested += delegate(object sender, EventArgs e) { SaveDocument(documentContext, true); };
             documentContext.Pane.DirtyStateChanged += delegate(object sender, EventArgs e) { UpdateDocumentCaption(documentContext); };
-            documentContext.Pane.LayoutStateChanged += delegate(object sender, EventArgs e) { RememberPaneLayout(documentContext); };
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // documentContext.Pane.LayoutStateChanged += delegate(object sender, EventArgs e) { RememberPaneLayout(documentContext); };
 
             documentContext.Document = new ContentDocument(documentContext.Pane, Path.GetFileName(relativePath), this, EditorIconKey);
             documentContext.Document.TreeNodeID = FileNodePrefix + relativePath;
@@ -408,6 +419,7 @@ namespace AgsImuse.Editor
             _openDocuments[relativePath] = documentContext;
             UpdateDocumentCaption(documentContext);
             _gui.AddOrShowPane(documentContext.Document);
+            documentContext.Pane.RefreshSplitterLayout();
             _gui.ProjectTree.SelectNode(this, FileNodePrefix + relativePath);
         }
 
@@ -445,6 +457,9 @@ namespace AgsImuse.Editor
             {
                 return;
             }
+
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // RememberPaneLayout(documentContext);
 
             if (documentContext.Pane.Bank == null)
             {
@@ -644,7 +659,8 @@ namespace AgsImuse.Editor
                 return;
             }
 
-            RememberPaneLayout(documentContext);
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // RememberPaneLayout(documentContext);
 
             OpenBankDocument existingContext;
             if (_openDocuments.TryGetValue(documentContext.RelativePath, out existingContext) &&
@@ -664,7 +680,8 @@ namespace AgsImuse.Editor
                 return;
             }
 
-            RememberPaneLayout(documentContext);
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // RememberPaneLayout(documentContext);
 
             ContentDocument document = documentContext.Document;
             documentContext.Document = null;
@@ -865,7 +882,7 @@ namespace AgsImuse.Editor
             {
             }
 
-            return DefaultMainSplitterDistance;
+            return 0;
         }
 
         private static void SavePersistedMainSplitterDistance(int splitterDistance)

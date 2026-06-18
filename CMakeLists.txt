@@ -4,6 +4,7 @@ project(imuse_v6 LANGUAGES CXX)
 
 option(IMUSE_BUILD_TOOLS "Build imuse command-line tools" ON)
 option(IMUSE_BUILD_GUI_TOOLS "Build imuse Qt6 GUI tools" ON)
+option(IMUSE_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
 option(IMUSE_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
 option(IMUSE_BUILD_SHARED_LIB "Build the shared imuse_v6 library" ON)
 option(IMUSE_BUILD_SHIM "Build the native imuse_shim DLL used by wrappers and editor tooling" ON)
@@ -224,12 +225,6 @@ if(IMUSE_BUILD_GUI_TOOLS)
     target_link_libraries(imuse_packer_gui PRIVATE Qt6::Widgets imuse_v6)
     target_include_directories(imuse_packer_gui PRIVATE tools_gui/packer)
 
-    # SetMIDI Tool
-    add_executable(imuse_setmidi WIN32 tools_gui/setmidi/main.cpp tools_gui/setmidi/MidiConfigWindow.cpp)
-    target_link_libraries(imuse_setmidi PRIVATE Qt6::Widgets winmm)
-    target_include_directories(imuse_setmidi PRIVATE tools_gui/setmidi)
-    set_target_properties(imuse_setmidi PROPERTIES OUTPUT_NAME "SetMIDI")
-
     # Windeployqt to copy required DLLs and plugins
     if(MSVC OR MINGW)
         find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
@@ -253,9 +248,25 @@ if(IMUSE_BUILD_GUI_TOOLS)
             add_custom_command(TARGET imuse_packer_gui POST_BUILD
                 COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_packer_gui>\"
             )
-            add_custom_command(TARGET imuse_setmidi POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_setmidi>\"
-            )
         endif()
+    endif()
+endif()
+
+if(WIN32 AND IMUSE_BUILD_SETMIDI)
+    add_executable(imuse_setmidi WIN32 tools_gui/setmidi/main.cpp tools_gui/setmidi/MidiConfigWindow.cpp)
+    target_link_libraries(imuse_setmidi PRIVATE winmm comctl32)
+    target_include_directories(imuse_setmidi PRIVATE tools_gui/setmidi)
+    set_target_properties(imuse_setmidi PROPERTIES
+        OUTPUT_NAME "SetMIDI"
+        AUTOMOC OFF
+        AUTOUIC OFF
+        AUTORCC OFF
+    )
+    imuse_apply_common_target_settings(imuse_setmidi)
+
+    if(MSVC)
+        set_target_properties(imuse_setmidi PROPERTIES
+            MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+        )
     endif()
 endif()

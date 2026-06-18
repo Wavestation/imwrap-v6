@@ -19,6 +19,7 @@ Ce bundle rassemble les sorties Windows du projet dans un seul dossier de diffus
   - `tools/styles/`
   - `tools/generic/`
 - `tools/imageformats/` est copie seulement si `windeployqt` l'a effectivement genere.
+- `SetMIDI` est maintenant un utilitaire Win32 natif. Il est livre en `x32` et `x64` et ne depend plus de Qt.
 - La documentation, les wrappers, les licences et les exemples sont ranges dans :
   - `docs/`
   - `wrappers/`
@@ -62,7 +63,8 @@ Le workflow [release-v1.yml](/D:/Prog/imwrap-v6/.github/workflows/release-v1.yml
 
 ## Notes utiles
 
-- `SetMIDI-x64.exe` ignore maintenant les autres utilitaires livres dans le bundle, y compris les variantes suffixees `-x32` et `-x64`.
-- `SetMIDI-x64.exe` est livre dans `tools/`. Pour configurer un vrai jeu AGS, il faut le copier a cote de l'executable du jeu.
+- `SetMIDI-x32.exe` et `SetMIDI-x64.exe` ignorent les autres utilitaires livres dans le bundle, y compris les variantes suffixees `-x32` et `-x64`.
+- `SetMIDI-x32.exe` est le meilleur choix pour accompagner un jeu AGS Win32. Il suffit de le copier a cote de l'executable du jeu.
+- `SetMIDI-x64.exe` est egalement fourni pour les environnements Windows x64.
 - `agsimuse-x32.dll` correspond au plugin AGS pret a etre copie dans un projet AGS Win32.
 - Le bundle inclut aussi l'exemple `monkey-island.ims` pour avoir un fichier de reference directement sous la main.

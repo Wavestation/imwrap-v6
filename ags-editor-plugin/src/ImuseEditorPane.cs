@@ -3,12 +3,14 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using AGS.Types;
+using Microsoft.Win32;
 
 namespace AgsImuse.Editor
 {
     internal sealed class ImuseEditorPane : EditorContentPanel
     {
-        private const int DefaultMainSplitterDistance = 240;
+        private const string RegistryKeyPath = @"Software\iGaST MegaZik Engine\AGS.Plugin.Imuse.Editor";
+        private const string RegistryMainSplitterDistanceValue = "MainSplitterDistance";
 
         private readonly Label _bankPathValue;
         private readonly Label _summaryLabel;
@@ -31,16 +33,29 @@ namespace AgsImuse.Editor
         private readonly Button _importButton;
         private readonly Button _refreshButton;
         private readonly Button _saveButton;
+        // Disabled for now: persistence proved unreliable inside AGS.
+        // private readonly Timer _splitterPersistTimer;
 
         private ImuseBankProjectModel _bank;
         private bool _isDirty;
+        private bool _layoutRestorePending;
         private int _preferredMainSplitterDistance;
         private bool _suppressUiEvents;
 
         public ImuseEditorPane()
         {
             Dock = DockStyle.Fill;
-            _preferredMainSplitterDistance = DefaultMainSplitterDistance;
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // _preferredMainSplitterDistance = LoadPersistedMainSplitterDistance();
+            _preferredMainSplitterDistance = 0;
+            HandleCreated += ImuseEditorPane_HandleCreated;
+            Layout += ImuseEditorPane_Layout;
+            VisibleChanged += ImuseEditorPane_VisibleChanged;
+            ParentChanged += ImuseEditorPane_ParentChanged;
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // _splitterPersistTimer = new Timer();
+            // _splitterPersistTimer.Interval = 200;
+            // _splitterPersistTimer.Tick += SplitterPersistTimer_Tick;
 
             TableLayoutPanel root = new TableLayoutPanel();
             root.ColumnCount = 1;
@@ -91,8 +106,9 @@ namespace AgsImuse.Editor
             _mainSplit = new SplitContainer();
             _mainSplit.Dock = DockStyle.Fill;
             _mainSplit.Orientation = Orientation.Vertical;
-            _mainSplit.SplitterDistance = DefaultMainSplitterDistance;
+            _mainSplit.SplitterDistance = 0;
             _mainSplit.SplitterMoved += MainSplit_SplitterMoved;
+            _mainSplit.MouseUp += MainSplit_MouseUp;
             _mainSplit.SizeChanged += MainSplit_SizeChanged;
             root.Controls.Add(_mainSplit, 0, 1);
 
@@ -339,7 +355,7 @@ namespace AgsImuse.Editor
             get { return _mainSplit != null ? _mainSplit.SplitterDistance : _preferredMainSplitterDistance; }
             set
             {
-                _preferredMainSplitterDistance = value > 0 ? value : DefaultMainSplitterDistance;
+                _preferredMainSplitterDistance = value > 0 ? value : 0;
                 ApplyMainSplitterDistance();
             }
         }
@@ -348,6 +364,7 @@ namespace AgsImuse.Editor
         {
             _bank = bank;
             _bankPathValue.Text = bank != null ? bank.RelativePath : "(none)";
+            RefreshSplitterLayout();
             _suppressUiEvents = true;
             try
             {
@@ -366,6 +383,7 @@ namespace AgsImuse.Editor
                 _suppressUiEvents = false;
             }
 
+            SelectPreferredVariantForSelectedSound();
             UpdateSoundDetailsFromSelection();
             _isDirty = false;
             UpdateSummary();
@@ -434,13 +452,47 @@ namespace AgsImuse.Editor
 
         private void MainSplit_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            _preferredMainSplitterDistance = _mainSplit.SplitterDistance;
             RaiseLayoutStateChanged();
+        }
+
+        private void MainSplit_MouseUp(object sender, MouseEventArgs e)
+        {
+            CaptureCurrentSplitterDistance();
         }
 
         private void MainSplit_SizeChanged(object sender, EventArgs e)
         {
-            ApplyMainSplitterDistance();
+            RefreshSplitterLayout();
+        }
+
+        private void ImuseEditorPane_HandleCreated(object sender, EventArgs e)
+        {
+            RefreshSplitterLayout();
+        }
+
+        private void ImuseEditorPane_Layout(object sender, LayoutEventArgs e)
+        {
+            RefreshSplitterLayout();
+        }
+
+        private void ImuseEditorPane_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+            {
+                RefreshSplitterLayout();
+            }
+        }
+
+        private void ImuseEditorPane_ParentChanged(object sender, EventArgs e)
+        {
+            RefreshSplitterLayout();
+        }
+
+        private void SplitterPersistTimer_Tick(object sender, EventArgs e)
+        {
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // _splitterPersistTimer.Stop();
+            // SaveCurrentSplitterDistance();
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -558,6 +610,7 @@ namespace AgsImuse.Editor
                 return;
             }
 
+            SelectPreferredVariantForSelectedSound();
             UpdateSoundDetailsFromSelection();
             UpdateVariantUi();
         }
@@ -699,6 +752,56 @@ namespace AgsImuse.Editor
 
             _soundNameTextBox.Text = sound.Name;
             _soundIdSpin.Value = sound.SoundId;
+        }
+
+        private void SelectPreferredVariantForSelectedSound()
+        {
+            ImuseSoundModel sound = GetSelectedSound();
+            int selectedIndex = GetPreferredVariantComboIndex(sound);
+
+            _suppressUiEvents = true;
+            try
+            {
+                if (_variantKindCombo.SelectedIndex != selectedIndex)
+                {
+                    _variantKindCombo.SelectedIndex = selectedIndex;
+                }
+            }
+            finally
+            {
+                _suppressUiEvents = false;
+            }
+        }
+
+        private static int GetPreferredVariantComboIndex(ImuseSoundModel sound)
+        {
+            if (sound == null)
+            {
+                return 0;
+            }
+
+            if (IsVariantFilled(sound.FindVariant(ImuseVariantKind.GeneralMidi)))
+            {
+                return 0;
+            }
+
+            if (IsVariantFilled(sound.FindVariant(ImuseVariantKind.RolandMt32)))
+            {
+                return 1;
+            }
+
+            if (IsVariantFilled(sound.FindVariant(ImuseVariantKind.Adlib)))
+            {
+                return 2;
+            }
+
+            return 0;
+        }
+
+        private static bool IsVariantFilled(ImuseVariantModel variant)
+        {
+            return variant != null &&
+                (variant.IncludeVariant || variant.IncludeMdhd || variant.Tracks.Count > 0);
         }
 
         private void UpdateVariantUi()
@@ -855,6 +958,12 @@ namespace AgsImuse.Editor
             return owner;
         }
 
+        public void RefreshSplitterLayout()
+        {
+            ApplyMainSplitterDistance();
+            ScheduleDeferredSplitterLayout();
+        }
+
         private void ApplyMainSplitterDistance()
         {
             if (_mainSplit == null || _mainSplit.IsDisposed)
@@ -877,10 +986,114 @@ namespace AgsImuse.Editor
                 return;
             }
 
-            int clampedDistance = Math.Max(minimumDistance, Math.Min(maximumDistance, _preferredMainSplitterDistance));
+            int requestedDistance = _preferredMainSplitterDistance > 0
+                ? _preferredMainSplitterDistance
+                : availableSize / 4;
+
+            int clampedDistance = Math.Max(minimumDistance, Math.Min(maximumDistance, requestedDistance));
             if (_mainSplit.SplitterDistance != clampedDistance)
             {
                 _mainSplit.SplitterDistance = clampedDistance;
+            }
+        }
+
+        private void ScheduleDeferredSplitterLayout()
+        {
+            if (_layoutRestorePending || !IsHandleCreated || IsDisposed)
+            {
+                return;
+            }
+
+            _layoutRestorePending = true;
+            BeginInvoke((MethodInvoker)delegate
+            {
+                _layoutRestorePending = false;
+                ApplyMainSplitterDistance();
+                if (IsHandleCreated && !IsDisposed)
+                {
+                    BeginInvoke((MethodInvoker)ApplyMainSplitterDistance);
+                }
+            });
+        }
+
+        private void CaptureCurrentSplitterDistance()
+        {
+            if (_mainSplit == null || _mainSplit.IsDisposed)
+            {
+                return;
+            }
+
+            if (_mainSplit.SplitterDistance > 0)
+            {
+                _preferredMainSplitterDistance = _mainSplit.SplitterDistance;
+            }
+        }
+
+        private void ScheduleSplitterPersistence()
+        {
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // if (_splitterPersistTimer == null)
+            // {
+            //     return;
+            // }
+            //
+            // _splitterPersistTimer.Stop();
+            // _splitterPersistTimer.Start();
+        }
+
+        private void SaveCurrentSplitterDistance()
+        {
+            CaptureCurrentSplitterDistance();
+            // Disabled for now: persistence proved unreliable inside AGS.
+            // if (_preferredMainSplitterDistance > 0)
+            // {
+            //     SavePersistedMainSplitterDistance(_preferredMainSplitterDistance);
+            // }
+        }
+
+        private static int LoadPersistedMainSplitterDistance()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
+                {
+                    if (key != null)
+                    {
+                        object value = key.GetValue(RegistryMainSplitterDistanceValue);
+                        int splitterDistance;
+                        if (value != null && int.TryParse(value.ToString(), out splitterDistance) && splitterDistance > 0)
+                        {
+                            return splitterDistance;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return 0;
+        }
+
+        private static void SavePersistedMainSplitterDistance(int splitterDistance)
+        {
+            if (splitterDistance <= 0)
+            {
+                return;
+            }
+
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryKeyPath))
+                {
+                    if (key != null)
+                    {
+                        key.SetValue(RegistryMainSplitterDistanceValue, splitterDistance, RegistryValueKind.DWord);
+                    }
+                }
+            }
+            catch
+            {
             }
         }
     }

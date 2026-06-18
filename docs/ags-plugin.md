@@ -285,7 +285,7 @@ iMuse_StartSound(80);
 Si le joueur n'a défini aucune configuration et que le développeur ne configure aucun pilote via `iMuse_SetDriver`, le plugin reste silencieux (fallback par défaut sans musique ni plantage).
 
 ### 3. Utilitaire `SetMIDI`
-L'utilitaire `SetMIDI.exe` (fourni avec le plugin) est un outil de configuration graphique simple écrit en Qt.
+L'utilitaire `SetMIDI.exe` (fourni avec le plugin) est un outil de configuration graphique simple écrit en Win32 natif.
 - **Placement** : Il doit être copié à côté de l'exécutable de votre jeu.
 - **Détection automatique** : Au lancement, il recherche l'exécutable du jeu présent dans son dossier afin d'éditer automatiquement le fichier `.imc` correspondant.
 - **Localisation** : L'interface s'adapte automatiquement à la langue du système en français, espagnol ou anglais (langue par défaut).
