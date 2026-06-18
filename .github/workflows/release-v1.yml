@@ -15,9 +15,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          persist-credentials: false
 
       - name: Install Qt 6.8.0
         id: qt
@@ -45,6 +46,7 @@ jobs:
           $distDir = Join-Path $PWD "dist"
           $stagingDir = Join-Path $distDir $zipName
           $zipPath = Join-Path $distDir "$zipName.zip"
+          $bundleDir = Join-Path $PWD "final-release/windows"
 
           New-Item -ItemType Directory -Path $distDir -Force | Out-Null
           if (Test-Path -LiteralPath $stagingDir) {
@@ -54,7 +56,11 @@ jobs:
               Remove-Item -LiteralPath $zipPath -Force
           }
 
-          Copy-Item -LiteralPath "final-release/windows" -Destination $stagingDir -Recurse -Force
+          if (-not (Test-Path -LiteralPath $bundleDir -PathType Container)) {
+              throw "Expected bundle directory was not generated: $bundleDir"
+          }
+
+          Copy-Item -LiteralPath $bundleDir -Destination $stagingDir -Recurse -Force
           Compress-Archive -Path $stagingDir -DestinationPath $zipPath -Force
 
           $sha256 = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash
@@ -66,6 +72,7 @@ jobs:
         with:
           name: windows-release-${{ github.ref_name }}
           path: ${{ steps.archive.outputs.zip_path }}
+          if-no-files-found: error
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
