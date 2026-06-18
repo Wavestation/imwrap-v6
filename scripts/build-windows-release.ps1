@@ -13,10 +13,10 @@ $ErrorActionPreference = "Stop"
 $RootDir = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 
 if ([string]::IsNullOrWhiteSpace($Win32BuildDir)) {
-    $Win32BuildDir = Join-Path $RootDir "build_msvc_win32"
+    $Win32BuildDir = Join-Path $RootDir ".build\\windows-release\\win32"
 }
 if ([string]::IsNullOrWhiteSpace($X64BuildDir)) {
-    $X64BuildDir = Join-Path $RootDir "build_msvc_x64"
+    $X64BuildDir = Join-Path $RootDir ".build\\windows-release\\x64"
 }
 if ([string]::IsNullOrWhiteSpace($FluidSynthBuildDir)) {
     $FluidSynthBuildDir = Join-Path $RootDir "third_party\\fluidsynth-build"

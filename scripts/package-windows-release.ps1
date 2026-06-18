@@ -11,10 +11,10 @@ $ErrorActionPreference = "Stop"
 $RootDir = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 
 if ([string]::IsNullOrWhiteSpace($PluginBuildDir)) {
-    $PluginBuildDir = Join-Path $RootDir "build_msvc_win32"
+    $PluginBuildDir = Join-Path $RootDir ".build\\windows-release\\win32"
 }
 if ([string]::IsNullOrWhiteSpace($GuiBuildDir)) {
-    $GuiBuildDir = Join-Path $RootDir "build_gui"
+    $GuiBuildDir = Join-Path $RootDir ".build\\windows-release\\x64"
 }
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
     $OutputDir = Join-Path $RootDir "final-release\windows"
@@ -142,8 +142,6 @@ foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir
 $projectBinaries = @(
     @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.dll")); Name = "agsimuse-x32.dll" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.lib")); Name = "agsimuse-x32.lib" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imusepack.exe")); Name = "imusepack-x32.exe" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6.dll")); Name = "imuse_v6-x32.dll" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_dll.lib")); Name = "imuse_v6-x32.lib" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_static.lib"), (Join-Path $PluginBuildDir "Release\imuse_v6.lib")); Name = "imuse_v6-static-x32.lib" },

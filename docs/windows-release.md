@@ -41,13 +41,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-windows-release.ps1 -Qt
 
 Par defaut, le script assemble :
 
-- `build_msvc_win32\Release` pour le plugin AGS et les outils Win32
-- `build_gui\Release` pour les outils Qt x64 et les bibliotheques x64
+- `.build\windows-release\win32\Release` pour le plugin AGS et les outils Win32
+- `.build\windows-release\x64\Release` pour les outils Qt x64 et les bibliotheques x64
 
 Le script de build complet utilise plutot :
 
-- `build_msvc_win32` pour Win32
-- `build_msvc_x64` pour x64
+- `.build\windows-release\win32` pour Win32
+- `.build\windows-release\x64` pour x64
 - `third_party\fluidsynth-build` pour la dependance FluidSynth Win32 vendoree du plugin AGS
 
 ## Release GitHub v1
