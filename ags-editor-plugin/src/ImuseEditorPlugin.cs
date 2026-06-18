@@ -21,7 +21,13 @@ namespace AgsImuse.Editor
 
         public void Dispose()
         {
-            _component.EditorShutdown();
+            try
+            {
+                _component.EditorShutdown();
+            }
+            catch
+            {
+            }
         }
     }
 }

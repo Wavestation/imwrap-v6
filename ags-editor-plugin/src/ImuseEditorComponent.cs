@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using AGS.Types;
+using Microsoft.Win32;
 
 namespace AgsImuse.Editor
 {
@@ -26,6 +26,8 @@ namespace AgsImuse.Editor
         private const string FileIconKey = "Imuse.FileIcon";
         private const string EditorIconKey = "Imuse.EditorIcon";
         private const string FileNodePrefix = "Imuse.File:";
+        private const string RegistryKeyPath = @"Software\iGaST MegaZik Engine\AGS.Plugin.Imuse.Editor";
+        private const string RegistryMainSplitterDistanceValue = "MainSplitterDistance";
         private const string XmlNodeName = "ImuseEditor";
         private const string XmlMainSplitterDistanceAttribute = "MainSplitterDistance";
         private const string XmlSelectedBankAttribute = "SelectedBank";
@@ -69,7 +71,7 @@ namespace AgsImuse.Editor
             _knownBankPaths = new List<string>();
             _openDocuments = new Dictionary<string, OpenBankDocument>(StringComparer.OrdinalIgnoreCase);
             _contextDirectoryRelativePath = string.Empty;
-            _mainSplitterDistance = DefaultMainSplitterDistance;
+            _mainSplitterDistance = LoadPersistedMainSplitterDistance();
 
             _gui.RegisterIcon(RootIconKey, EmbeddedIconLoader.LoadPngIcon("AgsImuse.Editor.Icons.imuse.png", SystemIcons.Application));
             _gui.RegisterIcon(FolderIconKey, EmbeddedIconLoader.LoadPngIcon("AgsImuse.Editor.Icons.bank_folder.png", SystemIcons.Shield));
@@ -200,44 +202,51 @@ namespace AgsImuse.Editor
 
         public void ToXml(XmlTextWriter writer)
         {
-            writer.WriteStartElement(XmlNodeName);
-            writer.WriteAttributeString(XmlMainSplitterDistanceAttribute, _mainSplitterDistance.ToString(CultureInfo.InvariantCulture));
-            if (!string.IsNullOrEmpty(_selectedBankRelativePath))
+            try
             {
-                writer.WriteAttributeString(XmlSelectedBankAttribute, _selectedBankRelativePath);
+                writer.WriteStartElement(XmlNodeName);
+                if (!string.IsNullOrEmpty(_selectedBankRelativePath))
+                {
+                    writer.WriteAttributeString(XmlSelectedBankAttribute, _selectedBankRelativePath);
+                }
+                writer.WriteEndElement();
             }
-            writer.WriteEndElement();
+            catch
+            {
+            }
         }
 
         public void FromXml(XmlNode node)
         {
             _selectedBankRelativePath = null;
 
-            if (node == null)
+            try
             {
-                return;
-            }
+                if (node == null)
+                {
+                    return;
+                }
 
-            XmlNode configNode = node.SelectSingleNode(XmlNodeName);
-            if (configNode == null)
+                XmlNode configNode = node.SelectSingleNode(XmlNodeName);
+                if (configNode == null)
+                {
+                    return;
+                }
+
+                TryLoadLegacyXmlSplitterDistance(configNode);
+
+                string selectedBank = ReadAttribute(configNode, XmlSelectedBankAttribute);
+                if (!string.IsNullOrEmpty(selectedBank))
+                {
+                    _selectedBankRelativePath = NormalizeRelativePath(selectedBank);
+                }
+
+                RefreshTree();
+            }
+            catch
             {
-                return;
+                RefreshTree();
             }
-
-            int splitterDistance;
-            if (int.TryParse(ReadAttribute(configNode, XmlMainSplitterDistanceAttribute), NumberStyles.Integer, CultureInfo.InvariantCulture, out splitterDistance) &&
-                splitterDistance > 0)
-            {
-                _mainSplitterDistance = splitterDistance;
-            }
-
-            string selectedBank = ReadAttribute(configNode, XmlSelectedBankAttribute);
-            if (!string.IsNullOrEmpty(selectedBank))
-            {
-                _selectedBankRelativePath = NormalizeRelativePath(selectedBank);
-            }
-
-            RefreshTree();
         }
 
         public void EditorShutdown()
@@ -249,15 +258,27 @@ namespace AgsImuse.Editor
 
             _isShutdown = true;
 
-            if (_mainMenuCommands != null)
+            try
             {
-                _gui.RemoveMenuItems(_mainMenuCommands);
+                if (_mainMenuCommands != null)
+                {
+                    _gui.RemoveMenuItems(_mainMenuCommands);
+                }
+            }
+            catch
+            {
             }
 
             List<OpenBankDocument> openDocuments = new List<OpenBankDocument>(_openDocuments.Values);
             for (int i = 0; i < openDocuments.Count; ++i)
             {
-                CloseDocument(openDocuments[i]);
+                try
+                {
+                    CloseDocument(openDocuments[i]);
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -645,13 +666,29 @@ namespace AgsImuse.Editor
 
             RememberPaneLayout(documentContext);
 
-            if (documentContext.Document != null)
-            {
-                _gui.RemovePaneIfExists(documentContext.Document);
-                documentContext.Document.Dispose();
-            }
-
+            ContentDocument document = documentContext.Document;
+            documentContext.Document = null;
+            documentContext.Pane = null;
             _openDocuments.Remove(documentContext.RelativePath);
+
+            if (document != null)
+            {
+                try
+                {
+                    _gui.RemovePaneIfExists(document);
+                }
+                catch
+                {
+                }
+
+                try
+                {
+                    document.Dispose();
+                }
+                catch
+                {
+                }
+            }
         }
 
         private bool ContainsKnownBank(string relativePath)
@@ -803,6 +840,69 @@ namespace AgsImuse.Editor
             if (documentContext.Pane.MainSplitterDistance > 0)
             {
                 _mainSplitterDistance = documentContext.Pane.MainSplitterDistance;
+                SavePersistedMainSplitterDistance(_mainSplitterDistance);
+            }
+        }
+
+        private static int LoadPersistedMainSplitterDistance()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
+                {
+                    if (key != null)
+                    {
+                        object value = key.GetValue(RegistryMainSplitterDistanceValue);
+                        int splitterDistance;
+                        if (value != null && int.TryParse(value.ToString(), out splitterDistance) && splitterDistance > 0)
+                        {
+                            return splitterDistance;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return DefaultMainSplitterDistance;
+        }
+
+        private static void SavePersistedMainSplitterDistance(int splitterDistance)
+        {
+            if (splitterDistance <= 0)
+            {
+                return;
+            }
+
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryKeyPath))
+                {
+                    if (key != null)
+                    {
+                        key.SetValue(RegistryMainSplitterDistanceValue, splitterDistance, RegistryValueKind.DWord);
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void TryLoadLegacyXmlSplitterDistance(XmlNode configNode)
+        {
+            if (configNode == null)
+            {
+                return;
+            }
+
+            int splitterDistance;
+            if (int.TryParse(ReadAttribute(configNode, XmlMainSplitterDistanceAttribute), out splitterDistance) &&
+                splitterDistance > 0)
+            {
+                _mainSplitterDistance = splitterDistance;
+                SavePersistedMainSplitterDistance(splitterDistance);
             }
         }
 
