@@ -429,8 +429,10 @@ fluid_settings_t *g_FluidSettings = nullptr;
 fluid_synth_t *g_FluidSynth = nullptr;
 struct ADL_MIDIPlayer *g_AdlPlayer = nullptr;
 ImuseDriverType g_ImuseDriverType = ImuseDriverType::FluidSynth;
+bool g_LoggingEnabled = false;
 
 void ImuseLog(const char* msg) {
+    if (!g_LoggingEnabled) return;
     if (g_AgsEngine) {
         g_AgsEngine->PrintDebugConsole(msg);
     }
@@ -499,7 +501,8 @@ const char *g_iMuseScriptHeader =
     "import void iMuse_ClearRolandTimbreMappings();\r\n"
     "import void iMuse_SetWelcomeMessage(const string message);\r\n"
     "import int  iMuse_HasExternalConfig();\r\n"
-    "import int  iMuse_ApplyExternalConfig(const string fallbackSoundFont);\r\n";
+    "import int  iMuse_ApplyExternalConfig(const string fallbackSoundFont);\r\n"
+    "import void iMuse_EnableLog(int enabled);\r\n";
 
 void CleanupCurrentDriver() {
     g_Engine.setMidiSink(nullptr);
@@ -1168,6 +1171,10 @@ int Ags_iMuse_ApplyExternalConfig(const char *fallbackSoundFont) {
     return 0;
 }
 
+void Ags_iMuse_EnableLog(int enabled) {
+    g_LoggingEnabled = (enabled != 0);
+}
+
 // AGS plugin lifecycle exports
 DLLEXPORT const char * AGS_GetPluginName(void) {
     return "iMUSE Classic v6 AGS Plugin";
@@ -1246,6 +1253,7 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMuse_Fade", (void*)Ags_iMuse_Fade);
     g_AgsEngine->RegisterScriptFunction("iMuse_HasExternalConfig", (void*)Ags_iMuse_HasExternalConfig);
     g_AgsEngine->RegisterScriptFunction("iMuse_ApplyExternalConfig", (void*)Ags_iMuse_ApplyExternalConfig);
+    g_AgsEngine->RegisterScriptFunction("iMuse_EnableLog", (void*)Ags_iMuse_EnableLog);
 
     g_AgsEngine->RequestEventHook(AGSE_PRESCREENDRAW);
 

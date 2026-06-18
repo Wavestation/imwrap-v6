@@ -160,6 +160,9 @@ import int  iMuse_HasExternalConfig();
 // Si FluidSynth est configuré, utilise le paramètre fallbackSoundFont.
 // Retourne 1 en cas de succès, 0 en cas d'échec ou d'absence de configuration.
 import int  iMuse_ApplyExternalConfig(const string fallbackSoundFont);
+
+// Active (1) ou désactive (0) l'écriture des logs dans imuse_debug.log et la console (désactivé par défaut)
+import void iMuse_EnableLog(int enabled);
 ```
 
 ## Intégration dans AGS
