@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>d:\Prog\imwrap-v6\build_gui\x64\Release\ZERO_CHECK</FullPath>
+      <FullPath>D:\Prog\imwrap-v6\build_gui\x64\Release\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\Prog\imwrap-v6\build_gui\Release\imsprobe.exe</FullPath>
