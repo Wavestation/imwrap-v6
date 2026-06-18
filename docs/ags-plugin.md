@@ -150,6 +150,16 @@ import void iMuse_ClearRolandTimbreMappings();
 
 // Définit le message d'accueil personnalisé envoyé à l'écran de l'émulateur/synthétiseur MT-32 (20 caractères max)
 import void iMuse_SetWelcomeMessage(const string message);
+
+// --- CONFIGURATION EXTERNE ---
+
+// Retourne 1 si un fichier de configuration externe valide (<nom_jeu>.imc) existe, sinon 0
+import int  iMuse_HasExternalConfig();
+
+// Applique la configuration du fichier externe (<nom_jeu>.imc).
+// Si FluidSynth est configuré, utilise le paramètre fallbackSoundFont.
+// Retourne 1 en cas de succès, 0 en cas d'échec ou d'absence de configuration.
+import int  iMuse_ApplyExternalConfig(const string fallbackSoundFont);
 ```
 
 ## Intégration dans AGS
@@ -225,4 +235,57 @@ La méthode la plus simple consiste à placer vos fichiers dans le dossier de co
 - **Fichiers SoundFont `.sf2` :**
   Étant donné que FluidSynth nécessite un chemin de fichier brut pour son chargement et n'utilise pas l'API de streaming d'AGS, le plugin fait appel à `IAGSEngine::ResolveFilePath` (disponible depuis l'interface 27). Cette fonction résout les chemins spéciaux comme `$DATA$/...` en chemins d'accès système absolus valides sur la machine de l'utilisateur, permettant à FluidSynth de charger la SoundFont directement depuis le disque.
   *Note : Pour un chargement optimal, assurez-vous que les SoundFonts sont déployées en tant que fichiers physiques accessibles, ou gérées par le mécanisme de répertoires personnalisés d'AGS.*
+
+## Configuration MIDI Externe (`.imc` et outil `SetMIDI`)
+
+Le plugin permet aux joueurs de choisir leur propre pilote MIDI (FluidSynth, AdLib, General MIDI matériel, Roland MT-32 matériel) via un fichier de configuration externe.
+
+### 1. Format du fichier de configuration (`.imc`)
+Le fichier de configuration utilise le format INI standard. Il doit porter le nom de l'exécutable du jeu avec l'extension `.imc` (ex: `MonJeu.imc`) et être placé dans le même dossier que le jeu.
+
+Exemple de contenu pour un périphérique matériel :
+```ini
+[MIDI]
+Driver=2
+Device=loopMIDI Port
+```
+
+- **Driver** : Le type de pilote à utiliser.
+  - `0` : FluidSynth (Synthétiseur logiciel, requiert une SoundFont)
+  - `1` : AdLib (Émulation FM OPL3)
+  - `2` : Hardware General MIDI
+  - `3` : Hardware Roland MT-32
+- **Device** : Nom du port MIDI de sortie (par exemple `loopMIDI Port` ou l'index du périphérique comme `0`). Ce paramètre est ignoré pour FluidSynth et AdLib.
+
+### 2. Intégration dans le script de jeu AGS
+Vous pouvez vérifier s'il existe une configuration définie par le joueur et l'appliquer. Si elle n'existe pas, vous pouvez définir un pilote par défaut (par exemple, FluidSynth avec votre Soundfont intégrée).
+
+```c
+// Dans game_start() :
+
+if (iMuse_HasExternalConfig()) {
+    // Tente d'appliquer le choix du joueur.
+    // Si le joueur a choisi FluidSynth, le plugin chargera la SoundFont passée en paramètre.
+    if (!iMuse_ApplyExternalConfig("music/arachno.sf2")) {
+        // Fallback en cas d'échec d'ouverture du périphérique du joueur (ex: pas de musique)
+    }
+} else {
+    // Le joueur n'a pas configuré de pilote.
+    // Configurez le comportement par défaut (ex: FluidSynth avec la SoundFont du jeu)
+    iMuse_SetDriver(IMUSE_DRIVER_FLUIDSYNTH, "music/arachno.sf2");
+}
+
+iMuse_LoadBank("music/game.ims");
+iMuse_StartSound(80);
+```
+
+Si le joueur n'a défini aucune configuration et que le développeur ne configure aucun pilote via `iMuse_SetDriver`, le plugin reste silencieux (fallback par défaut sans musique ni plantage).
+
+### 3. Utilitaire `SetMIDI`
+L'utilitaire `SetMIDI.exe` (fourni avec le plugin) est un outil de configuration graphique simple écrit en Qt.
+- **Placement** : Il doit être copié à côté de l'exécutable de votre jeu.
+- **Détection automatique** : Au lancement, il recherche l'exécutable du jeu présent dans son dossier afin d'éditer automatiquement le fichier `.imc` correspondant.
+- **Localisation** : L'interface s'adapte automatiquement à la langue du système en français, espagnol ou anglais (langue par défaut).
+- **Sélection des ports** : Si l'utilisateur choisit un pilote matériel (GM ou MT-32), la liste des ports MIDI OUT disponibles s'active pour lui permettre de choisir son périphérique.
+
 	

@@ -497,7 +497,9 @@ const char *g_iMuseScriptHeader =
     "import int  iMuse_GetCompatibilityProfile();\r\n"
     "import void iMuse_RegisterRolandTimbreMapping(const string name, int gmProgram);\r\n"
     "import void iMuse_ClearRolandTimbreMappings();\r\n"
-    "import void iMuse_SetWelcomeMessage(const string message);\r\n";
+    "import void iMuse_SetWelcomeMessage(const string message);\r\n"
+    "import int  iMuse_HasExternalConfig();\r\n"
+    "import int  iMuse_ApplyExternalConfig(const string fallbackSoundFont);\r\n";
 
 void CleanupCurrentDriver() {
     g_Engine.setMidiSink(nullptr);
@@ -976,6 +978,196 @@ void Ags_iMuse_SetWelcomeMessage(const char *message) {
     }
 }
 
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <cctype>
+
+#if defined(_WIN32)
+#include <windows.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#include <limits.h>
+#endif
+
+namespace {
+
+std::string GetConfigFilePath() {
+#if defined(_WIN32)
+    char path[MAX_PATH];
+    GetModuleFileNameA(NULL, path, MAX_PATH);
+    std::string s(path);
+    size_t dot = s.find_last_of('.');
+    if (dot != std::string::npos) {
+        return s.substr(0, dot) + ".imc";
+    }
+    return s + ".imc";
+#elif defined(__APPLE__)
+    char path[PATH_MAX];
+    uint32_t size = sizeof(path);
+    if (_NSGetExecutablePath(path, &size) == 0) {
+        std::string s(path);
+        size_t dot = s.find_last_of('.');
+        if (dot != std::string::npos) {
+            return s.substr(0, dot) + ".imc";
+        }
+        return s + ".imc";
+    }
+    return "imuse.imc";
+#else
+    return "imuse.imc";
+#endif
+}
+
+struct ImuseConfig {
+    int driverType = -1; // -1 means not configured
+    std::string deviceName;
+};
+
+inline std::string trim(std::string s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+    return s;
+}
+
+ImuseConfig LoadImuseConfig(const std::string &path) {
+    ImuseConfig cfg;
+    std::ifstream f(path);
+    if (!f.is_open()) return cfg;
+
+    std::string line;
+    std::string currentSection;
+    while (std::getline(f, line)) {
+        // Strip comments
+        size_t comment = line.find(';');
+        if (comment != std::string::npos) line = line.substr(0, comment);
+        comment = line.find('#');
+        if (comment != std::string::npos) line = line.substr(0, comment);
+
+        line = trim(line);
+        if (line.empty()) continue;
+
+        if (line.front() == '[' && line.back() == ']') {
+            currentSection = trim(line.substr(1, line.size() - 2));
+            std::transform(currentSection.begin(), currentSection.end(), currentSection.begin(),
+                           [](unsigned char c){ return std::tolower(c); });
+            continue;
+        }
+
+        if (currentSection == "midi") {
+            size_t eq = line.find('=');
+            if (eq == std::string::npos) continue;
+
+            std::string key = trim(line.substr(0, eq));
+            std::string val = trim(line.substr(eq + 1));
+
+            std::transform(key.begin(), key.end(), key.begin(),
+                           [](unsigned char c){ return std::tolower(c); });
+
+            if (key == "driver") {
+                try {
+                    cfg.driverType = std::stoi(val);
+                } catch (...) {
+                    cfg.driverType = -1;
+                }
+            } else if (key == "device") {
+                cfg.deviceName = val;
+            }
+        }
+    }
+    return cfg;
+}
+
+bool OpenHardwareMidi(const std::string &deviceOrPath) {
+    int count = GetMidiOutDeviceCount();
+    // Try opening by name first
+    for (int i = 0; i < count; ++i) {
+        if (GetMidiOutDeviceName(i) == deviceOrPath) {
+            return g_HardwareMidiSink.open(i);
+        }
+    }
+    // Try opening by index
+    try {
+        if (!deviceOrPath.empty() && std::all_of(deviceOrPath.begin(), deviceOrPath.end(), ::isdigit)) {
+            int index = std::stoi(deviceOrPath);
+            if (index >= 0 && index < count) {
+                return g_HardwareMidiSink.open(index);
+            }
+        }
+    } catch (...) {
+    }
+    return false;
+}
+
+} // namespace
+
+int Ags_iMuse_HasExternalConfig() {
+    std::string configPath = GetConfigFilePath();
+    ImuseConfig cfg = LoadImuseConfig(configPath);
+    return (cfg.driverType >= 0 && cfg.driverType <= 3) ? 1 : 0;
+}
+
+int Ags_iMuse_ApplyExternalConfig(const char *fallbackSoundFont) {
+    std::string configPath = GetConfigFilePath();
+    ImuseConfig cfg = LoadImuseConfig(configPath);
+    if (cfg.driverType < 0 || cfg.driverType > 3) {
+        return 0;
+    }
+
+    std::string sfPath = fallbackSoundFont ? fallbackSoundFont : "";
+    if (cfg.driverType == static_cast<int>(ImuseDriverType::FluidSynth)) {
+        Ags_iMuse_SetDriver(cfg.driverType, sfPath.c_str());
+        return 1;
+    } else if (cfg.driverType == static_cast<int>(ImuseDriverType::AdLib)) {
+        Ags_iMuse_SetDriver(cfg.driverType, "");
+        return 1;
+    } else if (cfg.driverType == static_cast<int>(ImuseDriverType::HardwareGM) ||
+               cfg.driverType == static_cast<int>(ImuseDriverType::HardwareMT32)) {
+        
+        std::lock_guard<std::mutex> lock(g_Mutex);
+        CleanupCurrentDriver();
+
+        g_ImuseDriverType = static_cast<ImuseDriverType>(cfg.driverType);
+
+        if (g_ImuseDriverType == ImuseDriverType::HardwareGM) {
+            g_Engine.setNativeMt32Output(false);
+            g_Engine.setTargetProfile(imuse::TargetProfile::GeneralMidi);
+        } else {
+            g_Engine.setNativeMt32Output(true);
+            g_Engine.setTargetProfile(imuse::TargetProfile::Mt32);
+        }
+
+        // Try opening the specific hardware device name, fallback to 0 if fails/empty
+        bool opened = false;
+        if (!cfg.deviceName.empty()) {
+            opened = OpenHardwareMidi(cfg.deviceName);
+        }
+        if (!opened) {
+            opened = g_HardwareMidiSink.open(0);
+        }
+
+        if (opened) {
+            g_Engine.setMidiSink(&g_HardwareMidiSink);
+            g_HardwareMidiSink.onAllNotesOff();
+            if (g_AgsEngine) {
+                std::string msg = "iMUSE: Hardware driver initialized from external config with device: " + cfg.deviceName;
+                ImuseLog(msg.c_str());
+            }
+            return 1;
+        } else {
+            if (g_AgsEngine) {
+                ImuseLog("iMUSE Error: Failed to open hardware MIDI port from external config.");
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+
 // AGS plugin lifecycle exports
 DLLEXPORT const char * AGS_GetPluginName(void) {
     return "iMUSE Classic v6 AGS Plugin";
@@ -1052,6 +1244,8 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMuse_SetLoop", (void*)Ags_iMuse_SetLoop);
     g_AgsEngine->RegisterScriptFunction("iMuse_ClearLoop", (void*)Ags_iMuse_ClearLoop);
     g_AgsEngine->RegisterScriptFunction("iMuse_Fade", (void*)Ags_iMuse_Fade);
+    g_AgsEngine->RegisterScriptFunction("iMuse_HasExternalConfig", (void*)Ags_iMuse_HasExternalConfig);
+    g_AgsEngine->RegisterScriptFunction("iMuse_ApplyExternalConfig", (void*)Ags_iMuse_ApplyExternalConfig);
 
     g_AgsEngine->RequestEventHook(AGSE_PRESCREENDRAW);
 

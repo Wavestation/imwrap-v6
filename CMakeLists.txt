@@ -133,6 +133,12 @@ if(IMUSE_BUILD_GUI_TOOLS)
     target_link_libraries(imuse_packer_gui PRIVATE Qt6::Widgets imuse_v6)
     target_include_directories(imuse_packer_gui PRIVATE tools_gui/packer)
 
+    # SetMIDI Tool
+    add_executable(imuse_setmidi WIN32 tools_gui/setmidi/main.cpp tools_gui/setmidi/MidiConfigWindow.cpp)
+    target_link_libraries(imuse_setmidi PRIVATE Qt6::Widgets winmm)
+    target_include_directories(imuse_setmidi PRIVATE tools_gui/setmidi)
+    set_target_properties(imuse_setmidi PROPERTIES OUTPUT_NAME "SetMIDI")
+
     # Windeployqt to copy required DLLs and plugins
     if(MSVC OR MINGW)
         find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
@@ -145,6 +151,9 @@ if(IMUSE_BUILD_GUI_TOOLS)
             )
             add_custom_command(TARGET imuse_packer_gui POST_BUILD
                 COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_packer_gui>\"
+            )
+            add_custom_command(TARGET imuse_setmidi POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_setmidi>\"
             )
         endif()
     endif()
