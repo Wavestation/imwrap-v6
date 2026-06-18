@@ -5,10 +5,26 @@
 #include <iomanip>
 #include "imuse/ImuseSysex.h"
 
+#ifdef Q_OS_WIN
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <mmsystem.h>
+#endif
+
 SysExWindow::SysExWindow(QWidget *parent) : QMainWindow(parent) {
     setupUi();
+    populateMidiDevices();
     updateFieldVisibility();
     updateGeneratedHex();
+}
+
+SysExWindow::~SysExWindow() {
+#ifdef Q_OS_WIN
+    if (hMidiOut) {
+        midiOutClose(static_cast<HMIDIOUT>(hMidiOut));
+        hMidiOut = nullptr;
+    }
+#endif
 }
 
 void SysExWindow::setupUi() {
@@ -146,6 +162,20 @@ QWidget* SysExWindow::createGeneratorTab() {
     auto *copyBtn = new QPushButton("Copier dans le presse-papiers");
     connect(copyBtn, &QPushButton::clicked, this, &SysExWindow::copyToClipboard);
     rightLayout->addWidget(copyBtn);
+
+    // Direct MIDI Out GroupBox
+    auto *midiBox = new QGroupBox("Envoi MIDI Direct");
+    auto *midiLayout = new QFormLayout(midiBox);
+    
+    midiCombo = new QComboBox();
+    midiLayout->addRow("Périphérique :", midiCombo);
+    connect(midiCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SysExWindow::onMidiDeviceChanged);
+    
+    sendMidiBtn = new QPushButton("Envoyer le SysEx");
+    connect(sendMidiBtn, &QPushButton::clicked, this, &SysExWindow::sendMidiSysEx);
+    midiLayout->addRow("", sendMidiBtn);
+    
+    rightLayout->addWidget(midiBox);
 
     layout->addWidget(rightBox, 1);
     return widget;
@@ -387,4 +417,72 @@ void SysExWindow::parseHex() {
 
 void SysExWindow::copyToClipboard() {
     QApplication::clipboard()->setText(generatedHexDisplay->toPlainText());
+}
+
+void SysExWindow::populateMidiDevices() {
+    if (!midiCombo) return;
+    midiCombo->clear();
+    midiCombo->addItem("Aucun (Désactivé)");
+
+#ifdef Q_OS_WIN
+    UINT numDevs = midiOutGetNumDevs();
+    for (UINT i = 0; i < numDevs; ++i) {
+        MIDIOUTCAPS caps;
+        if (midiOutGetDevCaps(i, &caps, sizeof(caps)) == MMSYSERR_NOERROR) {
+            midiCombo->addItem(QString::fromWCharArray(caps.szPname), i);
+        }
+    }
+#endif
+    sendMidiBtn->setEnabled(false);
+}
+
+void SysExWindow::onMidiDeviceChanged(int index) {
+#ifdef Q_OS_WIN
+    if (hMidiOut) {
+        midiOutClose(static_cast<HMIDIOUT>(hMidiOut));
+        hMidiOut = nullptr;
+    }
+
+    if (index > 0) {
+        UINT devId = midiCombo->itemData(index).toUInt();
+        HMIDIOUT hOut = nullptr;
+        MMRESULT res = midiOutOpen(&hOut, devId, 0, 0, CALLBACK_NULL);
+        if (res == MMSYSERR_NOERROR) {
+            hMidiOut = hOut;
+            sendMidiBtn->setEnabled(true);
+        } else {
+            sendMidiBtn->setEnabled(false);
+        }
+    } else {
+        sendMidiBtn->setEnabled(false);
+    }
+#else
+    (void)index;
+#endif
+}
+
+void SysExWindow::sendMidiSysEx() {
+#ifdef Q_OS_WIN
+    if (!hMidiOut) return;
+
+    QString hexStr = generatedHexDisplay->toPlainText();
+    auto bytes = parseHexBytes(hexStr);
+    if (bytes.empty()) return;
+
+    MIDIHDR hdr;
+    memset(&hdr, 0, sizeof(hdr));
+    hdr.lpData = reinterpret_cast<LPSTR>(bytes.data());
+    hdr.dwBufferLength = bytes.size();
+    hdr.dwBytesRecorded = bytes.size();
+
+    HMIDIOUT hOut = static_cast<HMIDIOUT>(hMidiOut);
+
+    if (midiOutPrepareHeader(hOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
+        midiOutLongMsg(hOut, &hdr, sizeof(hdr));
+        while (!(hdr.dwFlags & MHDR_DONE)) {
+            Sleep(1);
+        }
+        midiOutUnprepareHeader(hOut, &hdr, sizeof(hdr));
+    }
+#endif
 }

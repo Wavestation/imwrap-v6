@@ -20,14 +20,18 @@ class SysExWindow : public QMainWindow {
 
 public:
     SysExWindow(QWidget *parent = nullptr);
+    ~SysExWindow() override;
 
 private slots:
     void updateGeneratedHex();
     void parseHex();
     void copyToClipboard();
     void updateFieldVisibility();
+    void onMidiDeviceChanged(int index);
+    void sendMidiSysEx();
 
 private:
+    void populateMidiDevices();
     void setupUi();
     QWidget* createGeneratorTab();
     QWidget* createDecoderTab();
@@ -91,6 +95,11 @@ private:
     QTextEdit *hexInput;
     QLabel *decoderOutput;
     
+    // MIDI Direct Send Elements
+    QComboBox *midiCombo = nullptr;
+    QPushButton *sendMidiBtn = nullptr;
+    void *hMidiOut = nullptr;
+
     // Helpers
     std::vector<uint8_t> generateAllocatePart();
     std::vector<uint8_t> encodeNibbles(const std::vector<uint8_t>& bytes);

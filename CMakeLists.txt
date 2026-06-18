@@ -120,7 +120,7 @@ endif()
 if(IMUSE_BUILD_GUI_TOOLS)
     # SysEx Tool
     add_executable(imuse_sysex_gui WIN32 tools_gui/sysex/main.cpp tools_gui/sysex/SysExWindow.cpp)
-    target_link_libraries(imuse_sysex_gui PRIVATE Qt6::Widgets imuse_v6)
+    target_link_libraries(imuse_sysex_gui PRIVATE Qt6::Widgets imuse_v6 winmm)
     target_include_directories(imuse_sysex_gui PRIVATE tools_gui/sysex)
 
     # Player Tool
