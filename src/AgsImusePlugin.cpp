@@ -496,7 +496,8 @@ const char *g_iMuseScriptHeader =
     "import void iMuse_SetCompatibilityProfile(int profile);\r\n"
     "import int  iMuse_GetCompatibilityProfile();\r\n"
     "import void iMuse_RegisterRolandTimbreMapping(const string name, int gmProgram);\r\n"
-    "import void iMuse_ClearRolandTimbreMappings();\r\n";
+    "import void iMuse_ClearRolandTimbreMappings();\r\n"
+    "import void iMuse_SetWelcomeMessage(const string message);\r\n";
 
 void CleanupCurrentDriver() {
     g_Engine.setMidiSink(nullptr);
@@ -969,6 +970,12 @@ void Ags_iMuse_ClearRolandTimbreMappings() {
     imuse::ClearRolandTimbreMappings();
 }
 
+void Ags_iMuse_SetWelcomeMessage(const char *message) {
+    if (message) {
+        g_Engine.setWelcomeMessage(message);
+    }
+}
+
 // AGS plugin lifecycle exports
 DLLEXPORT const char * AGS_GetPluginName(void) {
     return "iMUSE Classic v6 AGS Plugin";
@@ -1032,6 +1039,7 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMuse_GetCompatibilityProfile", (void*)Ags_iMuse_GetCompatibilityProfile);
     g_AgsEngine->RegisterScriptFunction("iMuse_RegisterRolandTimbreMapping", (void*)Ags_iMuse_RegisterRolandTimbreMapping);
     g_AgsEngine->RegisterScriptFunction("iMuse_ClearRolandTimbreMappings", (void*)Ags_iMuse_ClearRolandTimbreMappings);
+    g_AgsEngine->RegisterScriptFunction("iMuse_SetWelcomeMessage", (void*)Ags_iMuse_SetWelcomeMessage);
     g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundVolume", (void*)Ags_iMuse_SetSoundVolume);
     g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundPan", (void*)Ags_iMuse_SetSoundPan);
     g_AgsEngine->RegisterScriptFunction("iMuse_SetSoundTranspose", (void*)Ags_iMuse_SetSoundTranspose);

@@ -73,12 +73,8 @@ private:
     class WinMMSink : public imuse::MidiSink {
     public:
         HMIDIOUT hMidiOut = nullptr;
-        std::thread sysexThread;
-        std::mutex sysexMutex;
-        std::queue<std::vector<char>*> sysexQueue;
-        std::atomic<bool> running;
         
-        WinMMSink();
+        WinMMSink() = default;
         ~WinMMSink();
         bool openDevice(UINT deviceId);
         void closeDevice();

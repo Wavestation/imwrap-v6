@@ -49,9 +49,10 @@ public:
     explicit ImuseEngine(const ResourceBank *bank = nullptr) : _bank(bank) {}
 
     void setResourceBank(const ResourceBank *bank) { _bank = bank; }
-    void setTargetProfile(TargetProfile profile) { _profile = profile; }
+    void setTargetProfile(TargetProfile profile);
     TargetProfile targetProfile() const { return _profile; }
-    void setMidiSink(MidiSink *sink) { _midiSink = sink; }
+    void setMidiSink(MidiSink *sink);
+    void initMt32();
     void setCompatibilityProfile(CompatibilityProfile profile) { _compatibility = profile; }
     CompatibilityProfile compatibilityProfile() const { return _compatibility; }
 
@@ -60,6 +61,7 @@ public:
 
     void setNativeMt32Output(bool enabled) { _nativeMt32Output = enabled; }
     bool nativeMt32Output() const { return _nativeMt32Output; }
+    void setWelcomeMessage(const std::string &msg) { _welcomeMessage = msg; }
 
     bool startSound(uint16_t soundId);
     void stopSound(uint16_t soundId);
@@ -348,6 +350,7 @@ private:
     CompatibilityProfile _compatibility = CompatibilityProfile::GenericV6;
     bool _nativeMt32Output = false;
     LogCallback _logCallback;
+    std::string _welcomeMessage = "iMUSE MT-32 Init  ";
     RhythmState _rhyState;
     std::vector<PartState *> _waitingPartsQueue;
     std::array<PartState *, 16> _physicalChannelOwners = {{}};

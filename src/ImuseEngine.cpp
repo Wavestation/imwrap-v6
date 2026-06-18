@@ -26,6 +26,8 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <cstdio>
+#include <thread>
+#include <chrono>
 
 #include "imuse/SinkMidiChannel.h"
 
@@ -675,7 +677,8 @@ int ImuseEngine::allocateOutputChannel(uint8_t priority) {
     // For MT-32: ScummVM uses channels 1-9 (PROP_CHANNEL_MASK=0x03FE), never channel 0.
     // MT-32 Parts 1-8 → channels 1-8, Rhythm → channel 9.
     const uint8_t firstChannel = (_profile == TargetProfile::Mt32) ? 1 : 0;
-    for (uint8_t channel = firstChannel; channel < _physicalChannelOwners.size(); ++channel) {
+    const uint8_t lastChannel = (_profile == TargetProfile::Mt32) ? 8 : 15;
+    for (uint8_t channel = firstChannel; channel <= lastChannel; ++channel) {
         if (channel == 9) {
             continue;
         }
@@ -687,7 +690,7 @@ int ImuseEngine::allocateOutputChannel(uint8_t priority) {
     PartState *best = nullptr;
     uint8_t bestChannel = 0xFF;
     uint8_t bestPriority = priority;
-    for (uint8_t channel = firstChannel; channel < _physicalChannelOwners.size(); ++channel) {
+    for (uint8_t channel = firstChannel; channel <= lastChannel; ++channel) {
         if (channel == 9) {
             continue;
         }
@@ -1058,9 +1061,10 @@ void ImuseEngine::sendPartCustomSysex(uint16_t soundId, PartState* part) {
     }
     
     if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
-        if (part->customRolandSysex.size() > 9) {
+        if (part->customRolandSysex.size() >= 254) {
+            size_t offset = (part->customRolandSysex.back() == 0xF7) ? 1 : 0;
             const uint8_t* timbreData = part->customRolandSysex.data() + 7;
-            size_t timbreSize = part->customRolandSysex.size() - 9;
+            size_t timbreSize = part->customRolandSysex.size() - 8 - offset;
             
             if (timbreSize == 246) {
                 // 1. Write the Timbre Data to the Memory Timbre slot corresponding to this physical channel
@@ -1072,6 +1076,10 @@ void ImuseEngine::sendPartCustomSysex(uint16_t soundId, PartState* part) {
                 uint32_t sysexPatchAddrBase = 0x14000 + (part->outputChannel << 3);
                 uint8_t patchData[2] = { 0x02, static_cast<uint8_t>(part->outputChannel) };
                 sendMt32Sysex(soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
+                
+                // Update instrument program to match output channel!
+                part->instrumentValue = static_cast<uint8_t>(part->outputChannel);
+                part->instrument.program(part->outputChannel, 0, true);
                 
                 // 3. Send a standard Program Change to refresh the MT-32 state
                 // Use channel-1 as dummy PC to force MT-32 to reload Patch Temp from the modified slot.
@@ -1124,6 +1132,7 @@ void ImuseEngine::applyPartAllState(ActiveSound *sound, PartState *part) {
                 uint8_t patchData[2] = { static_cast<uint8_t>(part->program >> 6), static_cast<uint8_t>(part->program & 0x3F) };
                 sendMt32Sysex(sound->soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
                 part->instrumentValue = static_cast<uint8_t>(part->outputChannel);
+                part->instrument.program(part->outputChannel, 0, sound->isMt32);
                 // Dummy PC: for ch 1 use 2, for ch 2-8 use ch-1, to safely force MT-32 Patch Temp reload.
                 const uint8_t dummyPc = (part->outputChannel == 1) ? 2 : static_cast<uint8_t>(part->outputChannel - 1);
                 channel.programChange(dummyPc);
@@ -1663,15 +1672,24 @@ void ImuseEngine::flushActiveMidiState(uint16_t soundId) {
         return;
     }
 
+    // 1. Remove all parts of this sound from the waiting queue first
     for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
-        if (PartState *part = getActivePart(sound, static_cast<uint8_t>(channelIndex))) {
-            removeSuspendedPart(part);
-            partOff(sound, part);
-            part->pedal = false;
-            part->transmitted = false;
-            part->present = false;
-            part->initialized = false;
-            clearPartActiveNotes(part);
+        PartState &part = sound->parts[channelIndex];
+        if (part.initialized) {
+            removeSuspendedPart(&part);
+        }
+    }
+
+    // 2. Now stop all active parts
+    for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
+        PartState &part = sound->parts[channelIndex];
+        if (part.initialized && part.present) {
+            partOff(sound, &part);
+            part.pedal = false;
+            part.transmitted = false;
+            part.present = false;
+            part.initialized = false;
+            clearPartActiveNotes(&part);
         }
     }
 
@@ -1965,14 +1983,28 @@ bool ImuseEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
             return executeControlEvent(soundId, controlEvent);
         } else if (_midiSink) {
             if (event.payload.size() > 6 && event.payload[0] == 0x41) {
-                uint8_t logicalPart = event.payload[1] & 0x0F;
-                PartState *matchedPart = nullptr;
-                for (auto &p : sound->parts) {
-                    if (p.present && p.channel == logicalPart) {
-                        matchedPart = &p;
-                        break;
+                int logicalPart = -1;
+                if (event.payload[3] == 0x12) { // DT1
+                    uint8_t addr_high = event.payload[4];
+                    uint8_t addr_mid = event.payload[5];
+                    uint8_t addr_low = event.payload[6];
+                    if (addr_high == 0x03 || addr_high == 0x05) {
+                        logicalPart = (addr_low / 8) + 1;
+                    } else if (addr_high == 0x04 || addr_high == 0x08) {
+                        logicalPart = (addr_mid / 2) + 1;
                     }
                 }
+                
+                PartState *matchedPart = nullptr;
+                if (logicalPart >= 0) {
+                    for (auto &p : sound->parts) {
+                        if (p.present && p.channel == logicalPart) {
+                            matchedPart = &p;
+                            break;
+                        }
+                    }
+                }
+                
                 if (matchedPart) {
                     matchedPart->customRolandSysex.assign(event.payload.begin(), event.payload.end());
                     
@@ -1980,6 +2012,8 @@ bool ImuseEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
                     if (matchedPart->outputChannel >= 1 && matchedPart->outputChannel <= 8) {
                         sendPartCustomSysex(soundId, matchedPart);
                     }
+                } else {
+                    _midiSink->onSysEx(soundId, ByteView(event.payload.data(), event.payload.size()));
                 }
             } else {
                 _midiSink->onSysEx(soundId, ByteView(event.payload.data(), event.payload.size()));
@@ -2068,10 +2102,6 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
                 part->on = event.partOn;
                 part->effectLevel = event.reverb ? 127 : 0;
                 part->volume = event.volume;
-                if (part->outputChannel < 0) {
-                    reallocateMidiChannels();
-                }
-                partSetProgram(sound, event.part, event.program);
                 part->transpose = event.transpose;
                 part->transposeEffective = computeEffectivePartTranspose(*sound, *part);
                 part->pan = static_cast<int8_t>(ClampInt(static_cast<int>(event.pan) - 0x40, -64, 63));
@@ -2082,6 +2112,11 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
                 part->detune = event.detune;
                 part->detuneEffective = static_cast<int16_t>(ClampInt(part->detune + sound->detune, -128, 127));
                 part->pitchBendFactor = event.pitchbendFactor;
+                
+                partSetProgram(sound, event.part, event.program);
+                if (part->outputChannel < 0) {
+                    reallocateMidiChannels();
+                }
             }
         }
         return true;
@@ -2388,6 +2423,9 @@ int ImuseEngine::handleMarker(uint16_t soundId, uint8_t marker) {
 bool ImuseEngine::startSound(uint16_t soundId) {
     if (_logCallback) {
         _logCallback("ImuseEngine::startSound(" + std::to_string(soundId) + ")");
+    }
+    if (isSoundActive(soundId)) {
+        stopSound(soundId);
     }
     if (!_bank || !_bank->hasSound(soundId)) {
         return false;
@@ -2900,6 +2938,73 @@ int32_t ImuseEngine::doCommand(uint16_t argc, const int16_t *args) {
         return dispatchPlayerCommand(cmd, argc, args);
     }
     return -1;
+}
+
+void ImuseEngine::setTargetProfile(TargetProfile profile) {
+    if (_profile != profile) {
+        _profile = profile;
+        if (_profile == TargetProfile::Mt32 && _midiSink) {
+            initMt32();
+        }
+    }
+}
+
+void ImuseEngine::setMidiSink(MidiSink *sink) {
+    _midiSink = sink;
+    if (_profile == TargetProfile::Mt32 && _midiSink) {
+        initMt32();
+    }
+}
+
+void ImuseEngine::initMt32() {
+    if (!_midiSink) return;
+    
+    // 1. Reset MT-32
+    sendMt32Sysex(0, 0x1FC000, nullptr, 0);
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    
+    // 2. System Area init (initSysex1)
+    static const uint8_t initSysex1[] = {
+        0x40, 0x00, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x64
+    };
+    sendMt32Sysex(0, 0x40000, initSysex1, sizeof(initSysex1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(40));
+    
+    // 3. Percussion mapping (initSysex2)
+    static const uint8_t initSysex2[] = {
+        0x40, 0x64, 0x07, 0x00, 0x4a, 0x64, 0x06, 0x00, 0x41, 0x64, 0x07, 0x00,
+        0x4b, 0x64, 0x08, 0x00, 0x45, 0x64, 0x06, 0x00, 0x44, 0x64, 0x0b, 0x00,
+        0x51, 0x64, 0x05, 0x00, 0x43, 0x64, 0x08, 0x00, 0x50, 0x64, 0x07, 0x00,
+        0x42, 0x64, 0x03, 0x00, 0x4c, 0x64, 0x07, 0x00
+    };
+    sendMt32Sysex(0, 0xC090, initSysex2, sizeof(initSysex2));
+    std::this_thread::sleep_for(std::chrono::milliseconds(40));
+    
+    // 4. Pitch bend range (2 semitones = 0x10) for all 128 patches
+    const uint8_t pbRange = 0x10;
+    for (int i = 0; i < 128; ++i) {
+        sendMt32Sysex(0, 0x014004 + (i << 3), &pbRange, 1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+    
+    // 5. Reset all 16 MIDI channels
+    for (uint8_t i = 0; i < 16; ++i) {
+        emitMidiMessage(0, 0xC0 | i, 0, false, 0);       // PC 0
+        emitMidiMessage(0, 0xB0 | i, 64, true, 0);      // Sustain off
+        emitMidiMessage(0, 0xB0 | i, 123, true, 0);     // All Notes Off
+        emitMidiMessage(0, 0xB0 | i, 10, true, 0x3F);    // Pan center
+        emitMidiMessage(0, 0xE0 | i, 0, true, 0x40);     // Pitch bend center
+    }
+
+    // 6. Display welcome message (padded/truncated to 20 chars)
+    std::string msg = _welcomeMessage;
+    if (msg.size() < 20) {
+        msg.append(20 - msg.size(), ' ');
+    } else if (msg.size() > 20) {
+        msg = msg.substr(0, 20);
+    }
+    sendMt32Sysex(0, 0x80000, reinterpret_cast<const uint8_t*>(msg.c_str()), 20);
 }
 
 } // namespace imuse

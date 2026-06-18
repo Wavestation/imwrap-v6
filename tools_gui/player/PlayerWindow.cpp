@@ -17,38 +17,7 @@
 #include <iomanip>
 #include "imuse/ImuseSysex.h"
 
-PlayerWindow::WinMMSink::WinMMSink() : running(true) {
-    sysexThread = std::thread([this]() {
-        while (running) {
-            std::vector<char> *buffer = nullptr;
-            {
-                std::lock_guard<std::mutex> lock(sysexMutex);
-                if (!sysexQueue.empty()) {
-                    buffer = sysexQueue.front();
-                    sysexQueue.pop();
-                }
-            }
-            if (buffer) {
-                if (hMidiOut) {
-                    MIDIHDR *hdr = new MIDIHDR{0};
-                    hdr->lpData = buffer->data();
-                    hdr->dwBufferLength = static_cast<DWORD>(buffer->size());
-                    midiOutPrepareHeader(hMidiOut, hdr, sizeof(MIDIHDR));
-                    midiOutLongMsg(hMidiOut, hdr, sizeof(MIDIHDR));
-                }
-                Sleep(20);
-            } else {
-                Sleep(5);
-            }
-        }
-    });
-}
-
 PlayerWindow::WinMMSink::~WinMMSink() {
-    running = false;
-    if (sysexThread.joinable()) {
-        sysexThread.join();
-    }
     closeDevice();
 }
 
@@ -80,17 +49,29 @@ void PlayerWindow::WinMMSink::onMidiMessage(uint16_t soundId, uint8_t status, ui
 void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imuse::ByteView message) {
     if (!hMidiOut || message.empty()) return;
     
-    std::vector<char> *buffer = new std::vector<char>();
+    std::vector<char> buffer;
     if (static_cast<uint8_t>(message.data()[0]) != 0xF0) {
-        buffer->push_back(static_cast<char>(0xF0));
+        buffer.push_back(static_cast<char>(0xF0));
     }
-    buffer->insert(buffer->end(), message.data(), message.data() + message.size());
-    if (static_cast<uint8_t>(buffer->back()) != 0xF7) {
-        buffer->push_back(static_cast<char>(0xF7));
+    buffer.insert(buffer.end(), message.data(), message.data() + message.size());
+    if (static_cast<uint8_t>(buffer.back()) != 0xF7) {
+        buffer.push_back(static_cast<char>(0xF7));
     }
-
-    std::lock_guard<std::mutex> lock(sysexMutex);
-    sysexQueue.push(buffer);
+    
+    MIDIHDR hdr;
+    std::memset(&hdr, 0, sizeof(hdr));
+    hdr.lpData = buffer.data();
+    hdr.dwBufferLength = static_cast<DWORD>(buffer.size());
+    hdr.dwFlags = 0;
+    
+    if (midiOutPrepareHeader(hMidiOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
+        midiOutLongMsg(hMidiOut, &hdr, sizeof(hdr));
+        while (!(hdr.dwFlags & MHDR_DONE)) {
+            Sleep(1);
+        }
+        midiOutUnprepareHeader(hMidiOut, &hdr, sizeof(hdr));
+    }
+    Sleep(20);
 }
 
 PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnabled(false), tickAccumulator(0) {
@@ -316,6 +297,9 @@ void PlayerWindow::togglePreview() {
                 previewEnabled = true;
                 previewBtn->setText("Désactiver la Préécoute");
                 statusLabel->setText("Préécoute activée.");
+                if (engine.targetProfile() == imuse::TargetProfile::Mt32) {
+                    engine.initMt32();
+                }
             } else {
                 QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le périphérique MIDI.");
             }
@@ -326,6 +310,7 @@ void PlayerWindow::togglePreview() {
 void PlayerWindow::playSound() {
     if (soundTree->selectedItems().isEmpty()) return;
     uint16_t id = soundTree->selectedItems().first()->data(0, Qt::UserRole).toUInt();
+    engine.stopAllSounds();
     engine.startSound(id);
     
     if (previewEnabled && !transportTimer->isActive()) {
