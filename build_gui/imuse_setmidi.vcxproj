@@ -32,22 +32,22 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -86,66 +86,35 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Debug;D:\Prog\imwrap-v6\tools_gui\setmidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtCore" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;QT_WIDGETS_LIB;QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;QT_WIDGETS_LIB;QT_CORE_LIB;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Debug;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Debug;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <PreBuildEvent>
-      <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message>Automatic MOC and UIC for target imuse_setmidi</Message>
-      <Command>setlocal
-cd D:\Prog\imwrap-v6\build_gui
-if %errorlevel% neq 0 goto :cmEnd
-D:
-if %errorlevel% neq 0 goto :cmEnd
-D:\Outils\CMake\bin\cmake.exe -E cmake_autogen D:/Prog/imwrap-v6/build_gui/CMakeFiles/imuse_setmidi_autogen.dir/AutogenInfo.json Debug
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Message></Message>
-      <Command>setlocal
-D:\Outils\Qt\6.8.0\msvc2022_64\bin\windeployqt.exe --no-network --no-svg --no-opengl-sw --no-system-d3d-compiler --no-system-dxc-compiler --no-translations --skip-plugin-types imageformats,iconengines,networkinformation,tls "D:/Prog/imwrap-v6/build_gui/Debug/SetMIDI.exe"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Widgetsd.lib;winmm.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Guid.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Cored.lib;mpr.lib;userenv.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6EntryPointd.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -160,66 +129,35 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Release;D:\Prog\imwrap-v6\tools_gui\setmidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtCore" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Release;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_Release;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <PreBuildEvent>
-      <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message>Automatic MOC and UIC for target imuse_setmidi</Message>
-      <Command>setlocal
-cd D:\Prog\imwrap-v6\build_gui
-if %errorlevel% neq 0 goto :cmEnd
-D:
-if %errorlevel% neq 0 goto :cmEnd
-D:\Outils\CMake\bin\cmake.exe -E cmake_autogen D:/Prog/imwrap-v6/build_gui/CMakeFiles/imuse_setmidi_autogen.dir/AutogenInfo.json Release
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Message></Message>
-      <Command>setlocal
-D:\Outils\Qt\6.8.0\msvc2022_64\bin\windeployqt.exe --no-network --no-svg --no-opengl-sw --no-system-d3d-compiler --no-system-dxc-compiler --no-translations --skip-plugin-types imageformats,iconengines,networkinformation,tls "D:/Prog/imwrap-v6/build_gui/Release/SetMIDI.exe"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Widgets.lib;winmm.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Gui.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -234,66 +172,35 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_MinSizeRel;D:\Prog\imwrap-v6\tools_gui\setmidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtCore" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_MinSizeRel;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_MinSizeRel;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <PreBuildEvent>
-      <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message>Automatic MOC and UIC for target imuse_setmidi</Message>
-      <Command>setlocal
-cd D:\Prog\imwrap-v6\build_gui
-if %errorlevel% neq 0 goto :cmEnd
-D:
-if %errorlevel% neq 0 goto :cmEnd
-D:\Outils\CMake\bin\cmake.exe -E cmake_autogen D:/Prog/imwrap-v6/build_gui/CMakeFiles/imuse_setmidi_autogen.dir/AutogenInfo.json MinSizeRel
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Message></Message>
-      <Command>setlocal
-D:\Outils\Qt\6.8.0\msvc2022_64\bin\windeployqt.exe --no-network --no-svg --no-opengl-sw --no-system-d3d-compiler --no-system-dxc-compiler --no-translations --skip-plugin-types imageformats,iconengines,networkinformation,tls "D:/Prog/imwrap-v6/build_gui/MinSizeRel/SetMIDI.exe"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Widgets.lib;winmm.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Gui.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -308,65 +215,34 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_RelWithDebInfo;D:\Prog\imwrap-v6\tools_gui\setmidi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtCore" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/mkspecs/win32-msvc" /external:I "D:/Outils/Qt/6.8.0/msvc2022_64/include/QtGui" -Zc:__cplusplus -utf-8</AdditionalOptions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ConformanceMode>true</ConformanceMode>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_CORE_LIB;QT_NO_DEBUG;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;_WIN64;UNICODE;_UNICODE;QT_GUI_LIB;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_RelWithDebInfo;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\include_RelWithDebInfo;D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtWidgets;D:\Outils\Qt\6.8.0\msvc2022_64\include;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtCore;D:\Outils\Qt\6.8.0\msvc2022_64\mkspecs\win32-msvc;D:\Outils\Qt\6.8.0\msvc2022_64\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\tools_gui\setmidi;D:\Prog\imwrap-v6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
-    <PreBuildEvent>
-      <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message>Automatic MOC and UIC for target imuse_setmidi</Message>
-      <Command>setlocal
-cd D:\Prog\imwrap-v6\build_gui
-if %errorlevel% neq 0 goto :cmEnd
-D:
-if %errorlevel% neq 0 goto :cmEnd
-D:\Outils\CMake\bin\cmake.exe -E cmake_autogen D:/Prog/imwrap-v6/build_gui/CMakeFiles/imuse_setmidi_autogen.dir/AutogenInfo.json RelWithDebInfo
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Message></Message>
-      <Command>setlocal
-D:\Outils\Qt\6.8.0\msvc2022_64\bin\windeployqt.exe --no-network --no-svg --no-opengl-sw --no-system-d3d-compiler --no-system-dxc-compiler --no-translations --skip-plugin-types imageformats,iconengines,networkinformation,tls "D:/Prog/imwrap-v6/build_gui/RelWithDebInfo/SetMIDI.exe"
-if %errorlevel% neq 0 goto :cmEnd
-:cmEnd
-endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
-:cmErrorLevel
-exit /b %1
-:cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
-    </PostBuildEvent>
     <Link>
-      <AdditionalDependencies>D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Widgets.lib;winmm.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Gui.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6Core.lib;mpr.lib;userenv.lib;D:\Outils\Qt\6.8.0\msvc2022_64\lib\Qt6EntryPoint.lib;shell32.lib;d3d11.lib;dxgi.lib;dxguid.lib;d3d12.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -437,28 +313,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\mocs_compilation_Debug.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="D:\Prog\imwrap-v6\tools_gui\setmidi\main.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\tools_gui\setmidi\MidiConfigWindow.cpp" />
-    <ClCompile Include="D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\mocs_compilation_Release.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\mocs_compilation_MinSizeRel.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="D:\Prog\imwrap-v6\build_gui\imuse_setmidi_autogen\mocs_compilation_RelWithDebInfo.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\ZERO_CHECK.vcxproj">

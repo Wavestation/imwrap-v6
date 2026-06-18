@@ -277,7 +277,11 @@
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Debug.cpp",
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_MinSizeRel.cpp",
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_RelWithDebInfo.cpp",
-		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Release.cpp"
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Release.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_Debug.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_Release.cpp"
 	],
 	"MULTI_CONFIG" : true,
 	"PARALLEL" : 8,
@@ -306,7 +310,11 @@
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Debug.cpp",
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_MinSizeRel.cpp",
 		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_RelWithDebInfo.cpp",
-		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Release.cpp"
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_autogen/mocs_compilation_Release.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_Debug.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_MinSizeRel.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_RelWithDebInfo.cpp",
+		"D:/Prog/imwrap-v6/build_gui/imuse_v6_shared_autogen/mocs_compilation_Release.cpp"
 	],
 	"UIC_UI_FILES" : [],
 	"VERBOSITY" : 0

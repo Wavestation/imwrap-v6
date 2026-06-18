@@ -60,6 +60,10 @@ private slots:
     void addSound();
     void deleteSound();
     void importMidi();
+    void deleteTrack();
+    void moveTrackUp();
+    void moveTrackDown();
+    void onTrackSelectionChanged();
 
 private:
     void setupUi();
@@ -81,6 +85,9 @@ private:
 
     QPushButton *applyBtn;
     QPushButton *importBtn;
+    QPushButton *deleteTrackBtn;
+    QPushButton *moveUpBtn;
+    QPushButton *moveDownBtn;
     QGroupBox *variantBox;
     QWidget *soundPropsWidget;
 

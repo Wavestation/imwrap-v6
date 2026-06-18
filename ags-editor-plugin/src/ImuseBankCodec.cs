@@ -170,34 +170,51 @@ namespace AgsImuse.Editor
             return BuildChunk("IMSB", rootBody.ToArray());
         }
 
-        public static List<ImuseTrackModel> ImportMidiTracks(string fullPath, out ushort division)
+        public static List<ImuseTrackModel> ImportMidiTracks(string[] filePaths, out ushort division)
         {
-            byte[] bytes = File.ReadAllBytes(fullPath);
-            ParsedSmfSequence sequence = ParseSmf(bytes);
-            division = sequence.Division;
-
-            string fileName = Path.GetFileName(fullPath);
-            string baseName = Path.GetFileNameWithoutExtension(fullPath);
-            List<ImuseTrackModel> tracks = new List<ImuseTrackModel>();
-
-            if (sequence.Format == 1)
+            if (filePaths == null || filePaths.Length == 0)
             {
-                ImuseTrackModel mergedTrack = MergeTracksToFormat0(sequence.Tracks);
-                mergedTrack.Name = baseName + " (Merged)";
-                mergedTrack.SourceFileName = fileName;
-                tracks.Add(mergedTrack);
-                return tracks;
+                division = 480;
+                return new List<ImuseTrackModel>();
             }
 
-            for (int i = 0; i < sequence.Tracks.Count; ++i)
+            List<ImuseTrackModel> allTracks = new List<ImuseTrackModel>();
+            ushort firstDivision = 0;
+
+            for (int pathIdx = 0; pathIdx < filePaths.Length; pathIdx++)
             {
-                ImuseTrackModel track = CloneTrack(sequence.Tracks[i]);
-                track.Name = baseName + " (T" + i + ")";
-                track.SourceFileName = fileName;
-                tracks.Add(track);
+                string fullPath = filePaths[pathIdx];
+                byte[] bytes = File.ReadAllBytes(fullPath);
+                ParsedSmfSequence sequence = ParseSmf(bytes);
+                if (pathIdx == 0)
+                {
+                    firstDivision = sequence.Division;
+                }
+
+                string fileName = Path.GetFileName(fullPath);
+                string baseName = Path.GetFileNameWithoutExtension(fullPath);
+
+                if (sequence.Format == 1)
+                {
+                    ImuseTrackModel mergedTrack = MergeTracksToFormat0(sequence.Tracks);
+                    mergedTrack.Name = filePaths.Length == 1 ? baseName + " (Merged)" : baseName;
+                    mergedTrack.SourceFileName = fileName;
+                    allTracks.Add(mergedTrack);
+                }
+                else
+                {
+                    for (int i = 0; i < sequence.Tracks.Count; ++i)
+                    {
+                        ImuseTrackModel track = CloneTrack(sequence.Tracks[i]);
+                        track.Name = sequence.Tracks.Count == 1 ? baseName : baseName + " (T" + i + ")";
+                        track.SourceFileName = fileName;
+                        allTracks.Add(track);
+                    }
+                }
             }
 
-            return tracks;
+            division = firstDivision;
+            return allTracks;
         }
 
         private static ImuseSoundModel ParseSound(byte[] bytes, DirectoryEntry directoryEntry)
@@ -505,6 +522,10 @@ namespace AgsImuse.Editor
                 for (int eventIndex = 0; eventIndex < events.Count; ++eventIndex)
                 {
                     absoluteTick += events[eventIndex].Delta;
+                    if (events[eventIndex].Type == ImuseMidiEventType.Meta && events[eventIndex].MetaType == 0x2F)
+                    {
+                        continue;
+                    }
                     MergedEvent mergedEvent = new MergedEvent();
                     mergedEvent.AbsoluteTick = absoluteTick;
                     mergedEvent.Order = order++;
@@ -537,6 +558,15 @@ namespace AgsImuse.Editor
                 lastTick = mergedEvents[i].AbsoluteTick;
                 mergedTrack.Events.Add(midiEvent);
             }
+
+            // Append a single clean End of Track event
+            ImuseMidiEventModel endOfTrack = new ImuseMidiEventModel();
+            endOfTrack.Type = ImuseMidiEventType.Meta;
+            endOfTrack.Status = 0xFF;
+            endOfTrack.MetaType = 0x2F;
+            endOfTrack.Tick = lastTick;
+            endOfTrack.Delta = 0;
+            mergedTrack.Events.Add(endOfTrack);
 
             return mergedTrack;
         }

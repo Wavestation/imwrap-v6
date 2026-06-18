@@ -98,7 +98,31 @@ namespace AgsImuse.Editor
 
         public string DisplayLabel
         {
-            get { return string.Format("{0}: {1}", SoundId, Name); }
+            get
+            {
+                List<string> present = new List<string>();
+                ImuseVariantModel gmd = FindVariant(ImuseVariantKind.GeneralMidi);
+                if (gmd != null && gmd.IncludeVariant)
+                {
+                    present.Add("GMD");
+                }
+                ImuseVariantModel rol = FindVariant(ImuseVariantKind.RolandMt32);
+                if (rol != null && rol.IncludeVariant)
+                {
+                    present.Add("ROL");
+                }
+                ImuseVariantModel adl = FindVariant(ImuseVariantKind.Adlib);
+                if (adl != null && adl.IncludeVariant)
+                {
+                    present.Add("ADL");
+                }
+
+                if (present.Count > 0)
+                {
+                    return string.Format("{0}: {1} [{2}]", SoundId, Name, string.Join(", ", present));
+                }
+                return string.Format("{0}: {1}", SoundId, Name);
+            }
         }
 
         public ImuseVariantModel FindVariant(ImuseVariantKind kind)

@@ -203,6 +203,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{973092CA-6986-3159-8084-B93EA3448D89}</Project>
       <Name>imuse_setmidi</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\imuse_shim.vcxproj">
+      <Project>{19664B8F-281C-310A-8218-48996B9FE953}</Project>
+      <Name>imuse_shim</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\imuse_sysex_gui.vcxproj">
       <Project>{0D03B3F0-7F21-3688-ABC5-86C647559F0F}</Project>
       <Name>imuse_sysex_gui</Name>
@@ -210,6 +214,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\imuse_v6.vcxproj">
       <Project>{643E7D42-F2EA-38B4-9A8A-58A6457D1F77}</Project>
       <Name>imuse_v6</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\imuse_v6_shared.vcxproj">
+      <Project>{43A9BC58-FBF0-323A-AA67-5A28BC6406E3}</Project>
+      <Name>imuse_v6_shared</Name>
     </ProjectReference>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_gui\imusepack.vcxproj">
       <Project>{36662B6B-6A5C-36F1-9A80-EC068A2A4B92}</Project>

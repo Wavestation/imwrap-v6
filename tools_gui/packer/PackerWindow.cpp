@@ -11,19 +11,27 @@
 static imuse::SmfTrack mergeTracksToFormat0(const imuse::SmfSequence &seq) {
     struct AbsEvent {
         uint32_t absTick;
+        uint32_t order;
         imuse::MidiEvent event;
     };
     std::vector<AbsEvent> allEvents;
+    uint32_t order = 0;
     for (const auto &trk : seq.tracks) {
         uint32_t currentTick = 0;
         for (const auto &evt : trk.events) {
             currentTick += evt.delta;
-            allEvents.push_back({currentTick, evt});
+            if (evt.type == imuse::MidiEventType::Meta && evt.metaType == 0x2F) {
+                continue;
+            }
+            allEvents.push_back({currentTick, order++, evt});
         }
     }
     
     std::stable_sort(allEvents.begin(), allEvents.end(), [](const AbsEvent &a, const AbsEvent &b) {
-        return a.absTick < b.absTick;
+        if (a.absTick != b.absTick) {
+            return a.absTick < b.absTick;
+        }
+        return a.order < b.order;
     });
     
     imuse::SmfTrack outTrack;
@@ -34,7 +42,38 @@ static imuse::SmfTrack mergeTracksToFormat0(const imuse::SmfSequence &seq) {
         lastTick = absEvt.absTick;
         outTrack.events.push_back(evt);
     }
+    
+    // Append a single clean End of Track event
+    imuse::MidiEvent endEvt;
+    endEvt.type = imuse::MidiEventType::Meta;
+    endEvt.status = 0xFF;
+    endEvt.metaType = 0x2F;
+    endEvt.tick = lastTick;
+    endEvt.delta = 0;
+    outTrack.events.push_back(endEvt);
+    
     return outTrack;
+}
+
+static QString formatSoundLabel(const ProjectSound &ps) {
+    QStringList present;
+    for (const auto &pv : ps.variants) {
+        if (pv.includeVariant) {
+            if (pv.kind == imuse::VariantKind::Gmd) present.append("GMD");
+            else if (pv.kind == imuse::VariantKind::Rol) present.append("ROL");
+            else if (pv.kind == imuse::VariantKind::Adl) present.append("ADL");
+        }
+    }
+    QStringList ordered;
+    if (present.contains("GMD")) ordered.append("GMD");
+    if (present.contains("ROL")) ordered.append("ROL");
+    if (present.contains("ADL")) ordered.append("ADL");
+
+    if (!ordered.isEmpty()) {
+        return QString("%1: %2 [%3]").arg(ps.id).arg(QString::fromStdString(ps.name)).arg(ordered.join(", "));
+    } else {
+        return QString("%1: %2").arg(ps.id).arg(QString::fromStdString(ps.name));
+    }
 }
 
 PackerWindow::PackerWindow(QWidget *parent) : QMainWindow(parent) {
@@ -126,11 +165,32 @@ void PackerWindow::setupUi() {
     tracksTable = new QTableWidget(0, 3);
     tracksTable->setHorizontalHeaderLabels({"Nom", "Source", "Evénements"});
     tracksTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tracksTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tracksTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(tracksTable, &QTableWidget::itemSelectionChanged, this, &PackerWindow::onTrackSelectionChanged);
+    connect(tracksTable, &QTableWidget::currentCellChanged, this, [this](int, int, int, int) {
+        onTrackSelectionChanged();
+    });
     vLayout->addWidget(tracksTable);
     
     importBtn = new QPushButton("Importer MIDI...");
     connect(importBtn, &QPushButton::clicked, this, &PackerWindow::importMidi);
     vLayout->addWidget(importBtn);
+
+    auto *trackBtnLayout = new QHBoxLayout();
+    deleteTrackBtn = new QPushButton("Supprimer la piste");
+    connect(deleteTrackBtn, &QPushButton::clicked, this, &PackerWindow::deleteTrack);
+    trackBtnLayout->addWidget(deleteTrackBtn);
+
+    moveUpBtn = new QPushButton("Monter");
+    connect(moveUpBtn, &QPushButton::clicked, this, &PackerWindow::moveTrackUp);
+    trackBtnLayout->addWidget(moveUpBtn);
+
+    moveDownBtn = new QPushButton("Descendre");
+    connect(moveDownBtn, &QPushButton::clicked, this, &PackerWindow::moveTrackDown);
+    trackBtnLayout->addWidget(moveDownBtn);
+
+    vLayout->addLayout(trackBtnLayout);
     
     rightLayout->addWidget(variantBox);
     
@@ -241,7 +301,7 @@ void PackerWindow::loadImsToModel(const std::string &path) {
 
     soundList->clear();
     for (const auto &ps : projectSounds) {
-        QListWidgetItem *item = new QListWidgetItem(QString("%1: %2").arg(ps.id).arg(QString::fromStdString(ps.name)));
+        QListWidgetItem *item = new QListWidgetItem(formatSoundLabel(ps));
         item->setData(Qt::UserRole, ps.id);
         soundList->addItem(item);
     }
@@ -301,7 +361,7 @@ void PackerWindow::addSound() {
     ps.name = "NouveauSon";
     projectSounds.push_back(ps);
     
-    QListWidgetItem *item = new QListWidgetItem(QString("%1: %2").arg(ps.id).arg(QString::fromStdString(ps.name)));
+    QListWidgetItem *item = new QListWidgetItem(formatSoundLabel(ps));
     item->setData(Qt::UserRole, ps.id);
     soundList->addItem(item);
     soundList->setCurrentItem(item);
@@ -360,7 +420,7 @@ void PackerWindow::applySoundChanges() {
                 ps.variants.push_back(pv);
             }
             
-            soundList->selectedItems().first()->setText(QString("%1: %2").arg(ps.id).arg(QString::fromStdString(ps.name)));
+            soundList->selectedItems().first()->setText(formatSoundLabel(ps));
             soundList->selectedItems().first()->setData(Qt::UserRole, ps.id);
             break;
         }
@@ -436,6 +496,8 @@ void PackerWindow::updateVariantUi() {
     detuneSpin->setEnabled(hasSelection);
     speedSpin->setEnabled(hasSelection);
     importBtn->setEnabled(hasSelection);
+    
+    onTrackSelectionChanged();
 }
 
 void PackerWindow::importMidi() {
@@ -443,19 +505,8 @@ void PackerWindow::importMidi() {
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
     imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
     
-    QString path = QFileDialog::getOpenFileName(this, "Importer MIDI", "", "Fichiers MIDI (*.mid *.midi)");
-    if (path.isEmpty()) return;
-    
-    std::ifstream in(path.toStdString(), std::ios::binary);
-    if (!in) return;
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-    
-    imuse::SmfSequence seq;
-    std::string err;
-    if (!imuse::SmfParser::Parse(imuse::ByteView(data.data(), data.size()), &seq, &err)) {
-        QMessageBox::warning(this, "Erreur", QString::fromStdString("Fichier MIDI invalide: " + err));
-        return;
-    }
+    QStringList paths = QFileDialog::getOpenFileNames(this, "Importer MIDI", "", "Fichiers MIDI (*.mid *.midi)");
+    if (paths.isEmpty()) return;
     
     for (auto &ps : projectSounds) {
         if (ps.id == id) {
@@ -474,31 +525,139 @@ void PackerWindow::importMidi() {
                 varPtr = &ps.variants.back();
             }
             
-            varPtr->division = seq.division;
-            varPtr->tracks.clear();
+            bool firstFile = true;
             
-            QFileInfo fi(path);
-            if (seq.format == 1) {
-                // Flatten format 1 into format 0
-                imuse::SmfTrack merged = mergeTracksToFormat0(seq);
-                ProjectTrack pt;
-                pt.name = fi.baseName().toStdString() + " (Merged)";
-                pt.sourceFileName = fi.fileName().toStdString();
-                pt.events = merged.events;
-                varPtr->tracks.push_back(pt);
-            } else {
-                int tIdx = 0;
-                for (const auto &trk : seq.tracks) {
+            for (const QString &path : paths) {
+                std::ifstream in(path.toStdString(), std::ios::binary);
+                if (!in) continue;
+                std::vector<uint8_t> data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+                
+                imuse::SmfSequence seq;
+                std::string err;
+                if (!imuse::SmfParser::Parse(imuse::ByteView(data.data(), data.size()), &seq, &err)) {
+                    QMessageBox::warning(this, "Erreur", QString::fromStdString("Fichier MIDI invalide (" + path.toStdString() + "): " + err));
+                    continue;
+                }
+                
+                if (firstFile && varPtr->tracks.empty()) {
+                    varPtr->division = seq.division;
+                    firstFile = false;
+                }
+                
+                QFileInfo fi(path);
+                if (seq.format == 1) {
+                    imuse::SmfTrack merged = mergeTracksToFormat0(seq);
                     ProjectTrack pt;
-                    pt.name = fi.baseName().toStdString() + " (T" + std::to_string(tIdx++) + ")";
+                    pt.name = paths.size() == 1 ? fi.baseName().toStdString() + " (Merged)" : fi.baseName().toStdString();
                     pt.sourceFileName = fi.fileName().toStdString();
-                    pt.events = trk.events;
+                    pt.events = merged.events;
                     varPtr->tracks.push_back(pt);
+                } else {
+                    int tIdx = 0;
+                    for (const auto &trk : seq.tracks) {
+                        ProjectTrack pt;
+                        pt.name = seq.tracks.size() == 1 ? fi.baseName().toStdString() : fi.baseName().toStdString() + " (T" + std::to_string(tIdx++) + ")";
+                        pt.sourceFileName = fi.fileName().toStdString();
+                        pt.events = trk.events;
+                        varPtr->tracks.push_back(pt);
+                    }
                 }
             }
             
             updateVariantUi();
+            soundList->selectedItems().first()->setText(formatSoundLabel(ps));
             break;
         }
     }
+}
+
+void PackerWindow::deleteTrack() {
+    if (soundList->selectedItems().isEmpty()) return;
+    uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
+    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    
+    int row = tracksTable->currentRow();
+    if (row < 0) return;
+    
+    for (auto &ps : projectSounds) {
+        if (ps.id == id) {
+            for (auto &pv : ps.variants) {
+                if (pv.kind == currentKind) {
+                    if (row < static_cast<int>(pv.tracks.size())) {
+                        pv.tracks.erase(pv.tracks.begin() + row);
+                        updateVariantUi();
+                        
+                        if (!pv.tracks.empty()) {
+                            int newRow = std::min(row, static_cast<int>(pv.tracks.size() - 1));
+                            tracksTable->selectRow(newRow);
+                            tracksTable->setCurrentCell(newRow, 0);
+                        }
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+void PackerWindow::moveTrackUp() {
+    if (soundList->selectedItems().isEmpty()) return;
+    uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
+    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    
+    int row = tracksTable->currentRow();
+    if (row <= 0) return;
+    
+    for (auto &ps : projectSounds) {
+        if (ps.id == id) {
+            for (auto &pv : ps.variants) {
+                if (pv.kind == currentKind) {
+                    if (row < static_cast<int>(pv.tracks.size())) {
+                        std::swap(pv.tracks[row], pv.tracks[row - 1]);
+                        updateVariantUi();
+                        tracksTable->selectRow(row - 1);
+                        tracksTable->setCurrentCell(row - 1, 0);
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+void PackerWindow::moveTrackDown() {
+    if (soundList->selectedItems().isEmpty()) return;
+    uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
+    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    
+    int row = tracksTable->currentRow();
+    if (row < 0) return;
+    
+    for (auto &ps : projectSounds) {
+        if (ps.id == id) {
+            for (auto &pv : ps.variants) {
+                if (pv.kind == currentKind) {
+                    if (row < static_cast<int>(pv.tracks.size() - 1)) {
+                        std::swap(pv.tracks[row], pv.tracks[row + 1]);
+                        updateVariantUi();
+                        tracksTable->selectRow(row + 1);
+                        tracksTable->setCurrentCell(row + 1, 0);
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+void PackerWindow::onTrackSelectionChanged() {
+    bool hasSelection = !soundList->selectedItems().isEmpty();
+    bool hasTrackSelected = hasSelection && !tracksTable->selectedItems().isEmpty();
+    int row = tracksTable->currentRow();
+    deleteTrackBtn->setEnabled(hasTrackSelected);
+    moveUpBtn->setEnabled(hasTrackSelected && row > 0);
+    moveDownBtn->setEnabled(hasTrackSelected && row < tracksTable->rowCount() - 1);
 }

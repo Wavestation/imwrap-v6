@@ -31,6 +31,9 @@ namespace AgsImuse.Editor
         private readonly ListView _tracksView;
         private readonly Button _applyButton;
         private readonly Button _importButton;
+        private readonly Button _deleteTrackButton;
+        private readonly Button _moveTrackUpButton;
+        private readonly Button _moveTrackDownButton;
         private readonly Button _refreshButton;
         private readonly Button _saveButton;
         // Disabled for now: persistence proved unreliable inside AGS.
@@ -293,15 +296,17 @@ namespace AgsImuse.Editor
             _tracksView.HideSelection = false;
             _tracksView.MultiSelect = false;
             _tracksView.View = System.Windows.Forms.View.Details;
+            _tracksView.Columns.Add("Track", 50);
             _tracksView.Columns.Add("Name", 200);
             _tracksView.Columns.Add("Source", 170);
             _tracksView.Columns.Add("Events", 70);
+            _tracksView.SelectedIndexChanged += TracksView_SelectedIndexChanged;
             tracksGroup.Controls.Add(_tracksView);
 
             FlowLayoutPanel importPanel = new FlowLayoutPanel();
             importPanel.Dock = DockStyle.Fill;
             importPanel.FlowDirection = FlowDirection.LeftToRight;
-            importPanel.WrapContents = false;
+            importPanel.WrapContents = true;
             importPanel.Padding = new Padding(8, 0, 8, 8);
             variantLayout.Controls.Add(importPanel, 0, 3);
 
@@ -310,6 +315,24 @@ namespace AgsImuse.Editor
             _importButton.Text = "Import MIDI...";
             _importButton.Click += ImportButton_Click;
             importPanel.Controls.Add(_importButton);
+
+            _deleteTrackButton = new Button();
+            _deleteTrackButton.AutoSize = true;
+            _deleteTrackButton.Text = "Delete Track";
+            _deleteTrackButton.Click += DeleteTrackButton_Click;
+            importPanel.Controls.Add(_deleteTrackButton);
+
+            _moveTrackUpButton = new Button();
+            _moveTrackUpButton.AutoSize = true;
+            _moveTrackUpButton.Text = "Move Up";
+            _moveTrackUpButton.Click += MoveTrackUpButton_Click;
+            importPanel.Controls.Add(_moveTrackUpButton);
+
+            _moveTrackDownButton = new Button();
+            _moveTrackDownButton.AutoSize = true;
+            _moveTrackDownButton.Text = "Move Down";
+            _moveTrackDownButton.Click += MoveTrackDownButton_Click;
+            importPanel.Controls.Add(_moveTrackDownButton);
 
             FlowLayoutPanel footer = new FlowLayoutPanel();
             footer.Dock = DockStyle.Fill;
@@ -574,6 +597,7 @@ namespace AgsImuse.Editor
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "MIDI files (*.mid;*.midi)|*.mid;*.midi|All files (*.*)|*.*";
             dialog.Title = "Import MIDI";
+            dialog.Multiselect = true;
             if (dialog.ShowDialog(GetDialogOwner()) != DialogResult.OK)
             {
                 return;
@@ -585,12 +609,16 @@ namespace AgsImuse.Editor
                 ImuseVariantModel variant = sound.EnsureVariant(GetSelectedVariantKind());
                 variant.IncludeVariant = true;
                 ApplyVariantSettings(variant);
-                variant.Tracks.Clear();
-                variant.Tracks.AddRange(ImuseBankCodec.ImportMidiTracks(dialog.FileName, out division));
+                // Do not clear. Append tracks.
+                variant.Tracks.AddRange(ImuseBankCodec.ImportMidiTracks(dialog.FileNames, out division));
                 variant.Division = division;
 
                 UpdateVariantUi();
-                MarkDirty("Imported MIDI file '" + Path.GetFileName(dialog.FileName) + "'.");
+                RefreshSelectedSoundListItem();
+                string filesDescription = dialog.FileNames.Length == 1 ?
+                    "'" + Path.GetFileName(dialog.FileName) + "'" :
+                    dialog.FileNames.Length + " MIDI files";
+                MarkDirty("Imported MIDI file " + filesDescription + ".");
             }
             catch (Exception ex)
             {
@@ -600,6 +628,80 @@ namespace AgsImuse.Editor
                     "Import MIDI",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+        }
+
+        private void TracksView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateEnabledState();
+        }
+
+        private void DeleteTrackButton_Click(object sender, EventArgs e)
+        {
+            ImuseSoundModel sound = GetSelectedSound();
+            if (sound == null) return;
+            ImuseVariantModel variant = sound.FindVariant(GetSelectedVariantKind());
+            if (variant == null) return;
+
+            if (_tracksView.SelectedIndices.Count > 0)
+            {
+                int selectedIndex = _tracksView.SelectedIndices[0];
+                variant.Tracks.RemoveAt(selectedIndex);
+                UpdateVariantUi();
+                
+                if (variant.Tracks.Count > 0)
+                {
+                    int newIndex = Math.Min(selectedIndex, variant.Tracks.Count - 1);
+                    _tracksView.Items[newIndex].Selected = true;
+                }
+                
+                MarkDirty("Deleted track.");
+            }
+        }
+
+        private void MoveTrackUpButton_Click(object sender, EventArgs e)
+        {
+            ImuseSoundModel sound = GetSelectedSound();
+            if (sound == null) return;
+            ImuseVariantModel variant = sound.FindVariant(GetSelectedVariantKind());
+            if (variant == null) return;
+
+            if (_tracksView.SelectedIndices.Count > 0)
+            {
+                int selectedIndex = _tracksView.SelectedIndices[0];
+                if (selectedIndex > 0)
+                {
+                    ImuseTrackModel track = variant.Tracks[selectedIndex];
+                    variant.Tracks.RemoveAt(selectedIndex);
+                    variant.Tracks.Insert(selectedIndex - 1, track);
+                    UpdateVariantUi();
+                    _tracksView.Items[selectedIndex - 1].Selected = true;
+                    _tracksView.Items[selectedIndex - 1].EnsureVisible();
+                    MarkDirty("Moved track up.");
+                }
+            }
+        }
+
+        private void MoveTrackDownButton_Click(object sender, EventArgs e)
+        {
+            ImuseSoundModel sound = GetSelectedSound();
+            if (sound == null) return;
+            ImuseVariantModel variant = sound.FindVariant(GetSelectedVariantKind());
+            if (variant == null) return;
+
+            if (_tracksView.SelectedIndices.Count > 0)
+            {
+                int selectedIndex = _tracksView.SelectedIndices[0];
+                if (selectedIndex < variant.Tracks.Count - 1)
+                {
+                    ImuseTrackModel track = variant.Tracks[selectedIndex];
+                    variant.Tracks.RemoveAt(selectedIndex);
+                    variant.Tracks.Insert(selectedIndex + 1, track);
+                    UpdateVariantUi();
+                    _tracksView.Items[selectedIndex + 1].Selected = true;
+                    _tracksView.Items[selectedIndex + 1].EnsureVisible();
+                    MarkDirty("Moved track down.");
+                }
             }
         }
 
@@ -754,6 +856,15 @@ namespace AgsImuse.Editor
             _soundIdSpin.Value = sound.SoundId;
         }
 
+        private void RefreshSelectedSoundListItem()
+        {
+            int index = _soundList.SelectedIndex;
+            if (index >= 0)
+            {
+                _soundList.Items[index] = _soundList.Items[index];
+            }
+        }
+
         private void SelectPreferredVariantForSelectedSound()
         {
             ImuseSoundModel sound = GetSelectedSound();
@@ -852,7 +963,8 @@ namespace AgsImuse.Editor
                     for (int i = 0; i < variant.Tracks.Count; ++i)
                     {
                         ImuseTrackModel track = variant.Tracks[i];
-                        ListViewItem item = new ListViewItem(track.Name);
+                        ListViewItem item = new ListViewItem(i.ToString());
+                        item.SubItems.Add(track.Name);
                         item.SubItems.Add(track.SourceFileName);
                         item.SubItems.Add(track.EventCount.ToString());
                         _tracksView.Items.Add(item);
@@ -887,6 +999,11 @@ namespace AgsImuse.Editor
             _applyButton.Enabled = hasSelection;
             _importButton.Enabled = hasSelection;
             _saveButton.Enabled = _bank != null;
+
+            bool hasSelectedTrack = hasSelection && _tracksView.SelectedIndices.Count > 0;
+            _deleteTrackButton.Enabled = hasSelectedTrack;
+            _moveTrackUpButton.Enabled = hasSelectedTrack && _tracksView.SelectedIndices[0] > 0;
+            _moveTrackDownButton.Enabled = hasSelectedTrack && _tracksView.SelectedIndices[0] < _tracksView.Items.Count - 1;
         }
 
         private void ClearEditorFields()

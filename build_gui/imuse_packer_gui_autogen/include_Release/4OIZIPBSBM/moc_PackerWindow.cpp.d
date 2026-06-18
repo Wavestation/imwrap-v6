@@ -206,6 +206,7 @@ D:/Prog/imwrap-v6/build_gui/imuse_packer_gui_autogen/include_Release/4OIZIPBSBM/
   D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets/qtwidgetsglobal.h \
   D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets/qwidget.h \
   D:/Prog/imwrap-v6/include/imuse/ByteView.h \
+  D:/Prog/imwrap-v6/include/imuse/Export.h \
   D:/Prog/imwrap-v6/include/imuse/ImsFormat.h \
   D:/Prog/imwrap-v6/include/imuse/ImsWriter.h \
   D:/Prog/imwrap-v6/include/imuse/ResourceBank.h \

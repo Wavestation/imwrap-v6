@@ -208,6 +208,7 @@ D:/Prog/imwrap-v6/tools_gui/packer/PackerWindow.h
  mdp:D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets/qtwidgetsglobal.h
  mdp:D:/Outils/Qt/6.8.0/msvc2022_64/include/QtWidgets/qwidget.h
  mdp:D:/Prog/imwrap-v6/include/imuse/ByteView.h
+ mdp:D:/Prog/imwrap-v6/include/imuse/Export.h
  mdp:D:/Prog/imwrap-v6/include/imuse/ImsFormat.h
  mdp:D:/Prog/imwrap-v6/include/imuse/ImsWriter.h
  mdp:D:/Prog/imwrap-v6/include/imuse/ResourceBank.h
