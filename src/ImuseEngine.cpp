@@ -2390,6 +2390,10 @@ void ImuseEngine::processDeferredCommands(uint32_t deltaTicks) {
 int ImuseEngine::handleMarker(uint16_t soundId, uint8_t marker) {
     std::vector<CommandPacket> commandsToRun;
 
+    if (_markerCallback) {
+        _markerCallback(soundId, marker);
+    }
+
     if (!_triggerQueue.empty()) {
         const QueuedTrigger &trigger = _triggerQueue.front();
         if (trigger.soundId == soundId && trigger.marker == marker) {

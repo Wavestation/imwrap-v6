@@ -59,6 +59,9 @@ public:
     using LogCallback = std::function<void(const std::string&)>;
     void setLogCallback(LogCallback cb) { _logCallback = cb; }
 
+    using MarkerCallback = std::function<void(uint16_t, uint8_t)>;
+    void setMarkerCallback(MarkerCallback cb) { _markerCallback = cb; }
+
     void setNativeMt32Output(bool enabled) { _nativeMt32Output = enabled; }
     bool nativeMt32Output() const { return _nativeMt32Output; }
     void setWelcomeMessage(const std::string &msg) { _welcomeMessage = msg; }
@@ -350,6 +353,7 @@ private:
     CompatibilityProfile _compatibility = CompatibilityProfile::GenericV6;
     bool _nativeMt32Output = false;
     LogCallback _logCallback;
+    MarkerCallback _markerCallback;
     std::string _welcomeMessage = "iMUSE MT-32 Init  ";
     RhythmState _rhyState;
     std::vector<PartState *> _waitingPartsQueue;

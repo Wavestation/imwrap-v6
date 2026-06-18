@@ -421,6 +421,13 @@ std::mutex g_Mutex;
 imuse::ResourceBank g_Bank;
 imuse::ImuseEngine g_Engine(&g_Bank);
 
+struct PendingMarker {
+    uint16_t soundId = 0;
+    uint8_t marker = 0;
+};
+
+std::vector<PendingMarker> g_PendingMarkers;
+
 AgsFluidSynthMidiSink g_FluidMidiSink;
 AgsAdlibMidiSink g_AdlMidiSink;
 HardwareMidiOutSink g_HardwareMidiSink;
@@ -1213,6 +1220,9 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_Engine.setLogCallback([](const std::string& str) {
         ImuseLog(str.c_str());
     });
+    g_Engine.setMarkerCallback([](uint16_t soundId, uint8_t marker) {
+        g_PendingMarkers.push_back({soundId, marker});
+    });
 
     // Register script functions
     g_AgsEngine->RegisterScriptFunction("iMuse_LoadBank", (void*)Ags_iMuse_LoadBank);
@@ -1280,6 +1290,8 @@ DLLEXPORT void AGS_EngineShutdown(void) {
     }
 
     std::lock_guard<std::mutex> lock(g_Mutex);
+    g_Engine.setMarkerCallback({});
+    g_PendingMarkers.clear();
     CleanupCurrentDriver();
 
     g_AgsEngine = nullptr;
@@ -1287,17 +1299,15 @@ DLLEXPORT void AGS_EngineShutdown(void) {
 
 DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t) {
     if (event == AGSE_PRESCREENDRAW && g_AgsEngine) {
-        std::lock_guard<std::mutex> lock(g_Mutex);
-        
-        // Process script triggers fired by the iMUSE engine
-        for (uint16_t soundId : g_Engine.activeSoundIds()) {
-            // fireAllScriptTriggers returns the last marker ID fired, or 0 if none.
-            // This is a simplified way to poll triggers. A better way would be 
-            // for fireAllScriptTriggers to return a list of fired triggers.
-            int marker = g_Engine.fireAllScriptTriggers(soundId);
-            if (marker > 0) {
-                g_AgsEngine->QueueGameScriptFunction("iMuse_OnTrigger", 1, 2, soundId, marker);
-            }
+        std::vector<PendingMarker> firedMarkers;
+        {
+            std::lock_guard<std::mutex> lock(g_Mutex);
+            firedMarkers.swap(g_PendingMarkers);
+        }
+
+        for (const auto &firedMarker : firedMarkers) {
+            g_AgsEngine->QueueGameScriptFunction("iMuse_OnTrigger", 1, 2,
+                                                 firedMarker.soundId, firedMarker.marker);
         }
     }
     return 0;

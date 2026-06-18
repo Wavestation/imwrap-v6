@@ -16,6 +16,26 @@
 #include <mmsystem.h>
 #endif
 
+namespace {
+bool isBundledUtilityExecutable(const QFileInfo &fileInfo) {
+    QString baseName = fileInfo.completeBaseName().toLower();
+    if (baseName.endsWith("-x32") || baseName.endsWith("-x64")) {
+        baseName.chop(4);
+    }
+
+    static const QStringList bundledBaseNames = {
+        "setmidi",
+        "imuse_sysex_gui",
+        "imuse_player_gui",
+        "imuse_packer_gui",
+        "imusepack",
+        "imsprobe"
+    };
+
+    return bundledBaseNames.contains(baseName);
+}
+}
+
 AppStrings MidiConfigWindow::getStrings() {
     QLocale locale = QLocale::system();
     if (locale.language() == QLocale::French) {
@@ -74,15 +94,14 @@ QString MidiConfigWindow::getTargetConfigPath() {
     QFileInfoList list = dir.entryInfoList(filters, QDir::Files);
     QString gameExe;
     for (const QFileInfo &fileInfo : list) {
-        QString name = fileInfo.fileName().toLower();
-        if (name != "setmidi.exe" && name != "imuse_sysex_gui.exe" && name != "imuse_player_gui.exe" && name != "imuse_packer_gui.exe") {
+        if (!isBundledUtilityExecutable(fileInfo)) {
             gameExe = fileInfo.absoluteFilePath();
             break;
         }
     }
     if (gameExe.isEmpty()) {
         for (const QFileInfo &fileInfo : list) {
-            if (fileInfo.fileName().toLower() != "setmidi.exe") {
+            if (!isBundledUtilityExecutable(fileInfo)) {
                 gameExe = fileInfo.absoluteFilePath();
                 break;
             }

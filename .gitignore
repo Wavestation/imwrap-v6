@@ -7,6 +7,7 @@
 build/
 dist/
 bin/
+final-release/
 
 # macOS system files
 .DS_Store
