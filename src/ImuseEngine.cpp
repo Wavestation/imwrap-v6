@@ -1983,17 +1983,7 @@ bool ImuseEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
             return executeControlEvent(soundId, controlEvent);
         } else if (_midiSink) {
             if (event.payload.size() > 6 && event.payload[0] == 0x41) {
-                int logicalPart = -1;
-                if (event.payload[3] == 0x12) { // DT1
-                    uint8_t addr_high = event.payload[4];
-                    uint8_t addr_mid = event.payload[5];
-                    uint8_t addr_low = event.payload[6];
-                    if (addr_high == 0x03 || addr_high == 0x05) {
-                        logicalPart = (addr_low / 8);
-                    } else if (addr_high == 0x04 || addr_high == 0x08) {
-                        logicalPart = (addr_mid / 2);
-                    }
-                }
+                int logicalPart = event.payload[1] & 0x0F;
                 
                 PartState *matchedPart = nullptr;
                 if (logicalPart >= 0) {
@@ -2116,6 +2106,8 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
                 partSetProgram(sound, event.part, event.program);
                 if (part->outputChannel < 0) {
                     reallocateMidiChannels();
+                } else {
+                    applyPartAllState(sound, part);
                 }
             }
         }
