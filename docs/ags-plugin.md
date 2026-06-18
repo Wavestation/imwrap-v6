@@ -119,6 +119,37 @@ import int  iMuse_GetPlaybackBeat(int soundId);
 
 // Retourne le tick actuel du son (dans le beat)
 import int  iMuse_GetPlaybackTick(int soundId);
+
+// --- REQUÊTES D'ÉTAT SUPPLÉMENTAIRES ---
+
+// Retourne le statut d'un son (0 = inactif, 1 = actif/en cours, 2 = en attente/planifié)
+import int  iMuse_GetSoundStatus(int soundId);
+
+// Retourne le nombre total de sons actuellement actifs
+import int  iMuse_GetActiveSoundCount();
+
+// Retourne l'ID du son actif à l'index donné
+import int  iMuse_GetActiveSoundId(int index);
+
+// Retourne le tempo actuel (en microsecondes par noire, ex: 500000 pour 120 BPM)
+import int  iMuse_GetTempo();
+
+// --- COMPATIBILITÉ & MAPPAGE ROLAND MT-32 ---
+
+// Définit le profil de compatibilité du moteur (0 = Generic v6 standard, 1 = Sam & Max Hit the Road)
+import void iMuse_SetCompatibilityProfile(int profile);
+
+// Retourne le profil de compatibilité actuel (0 = Generic v6 standard, 1 = Sam & Max)
+import int  iMuse_GetCompatibilityProfile();
+
+// Associe un nom de timbre Roland MT-32 à un programme General MIDI (GM)
+import void iMuse_RegisterRolandTimbreMapping(const string name, int gmProgram);
+
+// Efface tous les mappages de timbres Roland MT-32 enregistrés
+import void iMuse_ClearRolandTimbreMappings();
+
+// Définit le message d'accueil personnalisé envoyé à l'écran de l'émulateur/synthétiseur MT-32 (20 caractères max)
+import void iMuse_SetWelcomeMessage(const string message);
 ```
 
 ## Intégration dans AGS
