@@ -590,3 +590,174 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "third_party/libadlmidi/CMakeLists.txt:30 (try_compile)"
+      - "third_party/libadlmidi/CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/kwin"
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_6969a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Version MSBuild 17.14.40+3e7442088 pour .NET Framework
+        La g├®n├®ration a d├®marr├® 18/06/2026 16:47:36.
+        
+        Projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_6969a.vcxproj" sur le n┼ôud 1 (cibles par d├®faut).
+        PrepareForBuild:
+          Cr├®ation du r├®pertoire "cmTC_6969a.dir\\Debug\\".
+          La sortie structur├®e est activ├®e. La mise en forme du compilateur diagnostics refl├¿te la hi├®rarchie des erreurs. Pour plus dÔÇÖinformations, consultez https://aka.ms/cpp/structured-output.
+          Cr├®ation du r├®pertoire "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\".
+          Cr├®ation du r├®pertoire "cmTC_6969a.dir\\Debug\\cmTC_6969a.tlog\\".
+        InitializeBuildStatus:
+          Cr├®ation de "cmTC_6969a.dir\\Debug\\cmTC_6969a.tlog\\unsuccessfulbuild", car "AlwaysCreate" a ├®t├® sp├®cifi├®.
+          Mise ├á jour de l'horodatage "cmTC_6969a.dir\\Debug\\cmTC_6969a.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6969a.dir\\Debug\\\\" /Fd"cmTC_6969a.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          Compilateur d'optimisation Microsoft (R) C/C++ version┬á19.44.35228 pour x64
+          Copyright (C) Microsoft Corporation. Tous droits r├®serv├®s.
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6969a.dir\\Debug\\\\" /Fd"cmTC_6969a.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          cpp14.cpp
+        Link:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_6969a.exe" /INCREMENTAL /ILK:"cmTC_6969a.dir\\Debug\\cmTC_6969a.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_6969a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_6969a.lib" /MACHINE:X64  /machine:x64 cmTC_6969a.dir\\Debug\\cpp14.obj
+          cmTC_6969a.vcxproj -> D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_6969a.exe
+        FinalizeBuildStatus:
+          Suppression du fichier "cmTC_6969a.dir\\Debug\\cmTC_6969a.tlog\\unsuccessfulbuild".
+          Mise ├á jour de l'horodatage "cmTC_6969a.dir\\Debug\\cmTC_6969a.tlog\\cmTC_6969a.lastbuildstate".
+        G├®n├®ration du projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_6969a.vcxproj" termin├®e (cibles par d├®faut).
+        
+        La g├®n├®ration a r├®ussi.
+            0 Avertissement(s)
+            0 Erreur(s)
+        
+        Temps ├®coul├® 00:00:02.58
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "third_party/libadlmidi/CMakeLists.txt:30 (try_compile)"
+      - "third_party/libadlmidi/CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/kwin"
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_0a457.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Version MSBuild 17.14.40+3e7442088 pour .NET Framework
+        La g├®n├®ration a d├®marr├® 18/06/2026 17:15:49.
+        
+        Projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_0a457.vcxproj" sur le n┼ôud 1 (cibles par d├®faut).
+        PrepareForBuild:
+          Cr├®ation du r├®pertoire "cmTC_0a457.dir\\Debug\\".
+          La sortie structur├®e est activ├®e. La mise en forme du compilateur diagnostics refl├¿te la hi├®rarchie des erreurs. Pour plus dÔÇÖinformations, consultez https://aka.ms/cpp/structured-output.
+          Cr├®ation du r├®pertoire "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\".
+          Cr├®ation du r├®pertoire "cmTC_0a457.dir\\Debug\\cmTC_0a457.tlog\\".
+        InitializeBuildStatus:
+          Cr├®ation de "cmTC_0a457.dir\\Debug\\cmTC_0a457.tlog\\unsuccessfulbuild", car "AlwaysCreate" a ├®t├® sp├®cifi├®.
+          Mise ├á jour de l'horodatage "cmTC_0a457.dir\\Debug\\cmTC_0a457.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0a457.dir\\Debug\\\\" /Fd"cmTC_0a457.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          Compilateur d'optimisation Microsoft (R) C/C++ version┬á19.44.35228 pour x64
+          Copyright (C) Microsoft Corporation. Tous droits r├®serv├®s.
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_0a457.dir\\Debug\\\\" /Fd"cmTC_0a457.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          cpp14.cpp
+        Link:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_0a457.exe" /INCREMENTAL /ILK:"cmTC_0a457.dir\\Debug\\cmTC_0a457.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_0a457.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_0a457.lib" /MACHINE:X64  /machine:x64 cmTC_0a457.dir\\Debug\\cpp14.obj
+          cmTC_0a457.vcxproj -> D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_0a457.exe
+        FinalizeBuildStatus:
+          Suppression du fichier "cmTC_0a457.dir\\Debug\\cmTC_0a457.tlog\\unsuccessfulbuild".
+          Mise ├á jour de l'horodatage "cmTC_0a457.dir\\Debug\\cmTC_0a457.tlog\\cmTC_0a457.lastbuildstate".
+        G├®n├®ration du projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_0a457.vcxproj" termin├®e (cibles par d├®faut).
+        
+        La g├®n├®ration a r├®ussi.
+            0 Avertissement(s)
+            0 Erreur(s)
+        
+        Temps ├®coul├® 00:00:02.41
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "third_party/libadlmidi/CMakeLists.txt:30 (try_compile)"
+      - "third_party/libadlmidi/CMakeLists.txt:38 (CheckCPP14Build)"
+    directories:
+      source: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+      binary: "D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /EHsc"
+      CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
+      CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
+      CMAKE_MODULE_PATH: "D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/extra-cmake-modules/find-modules;D:/Outils/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6/3rdparty/kwin"
+    buildResult:
+      variable: "COMPILER_BUILDS_CXX14"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_90c22.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Version MSBuild 17.14.40+3e7442088 pour .NET Framework
+        La g├®n├®ration a d├®marr├® 18/06/2026 17:31:35.
+        
+        Projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_90c22.vcxproj" sur le n┼ôud 1 (cibles par d├®faut).
+        PrepareForBuild:
+          Cr├®ation du r├®pertoire "cmTC_90c22.dir\\Debug\\".
+          La sortie structur├®e est activ├®e. La mise en forme du compilateur diagnostics refl├¿te la hi├®rarchie des erreurs. Pour plus dÔÇÖinformations, consultez https://aka.ms/cpp/structured-output.
+          Cr├®ation du r├®pertoire "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\".
+          Cr├®ation du r├®pertoire "cmTC_90c22.dir\\Debug\\cmTC_90c22.tlog\\".
+        InitializeBuildStatus:
+          Cr├®ation de "cmTC_90c22.dir\\Debug\\cmTC_90c22.tlog\\unsuccessfulbuild", car "AlwaysCreate" a ├®t├® sp├®cifi├®.
+          Mise ├á jour de l'horodatage "cmTC_90c22.dir\\Debug\\cmTC_90c22.tlog\\unsuccessfulbuild".
+        ClCompile:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_90c22.dir\\Debug\\\\" /Fd"cmTC_90c22.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          Compilateur d'optimisation Microsoft (R) C/C++ version┬á19.44.35228 pour x64
+          Copyright (C) Microsoft Corporation. Tous droits r├®serv├®s.
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_90c22.dir\\Debug\\\\" /Fd"cmTC_90c22.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\\Prog\\imwrap-v6\\third_party\\libadlmidi\\cmake\\checks\\cpp14.cpp"
+          cpp14.cpp
+        Link:
+          C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_90c22.exe" /INCREMENTAL /ILK:"cmTC_90c22.dir\\Debug\\cmTC_90c22.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_90c22.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Prog/imwrap-v6/build_gui/third_party/libadlmidi/cmake-checks/CMakeFiles/CMakeTmp/Debug/cmTC_90c22.lib" /MACHINE:X64  /machine:x64 cmTC_90c22.dir\\Debug\\cpp14.obj
+          cmTC_90c22.vcxproj -> D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\Debug\\cmTC_90c22.exe
+        FinalizeBuildStatus:
+          Suppression du fichier "cmTC_90c22.dir\\Debug\\cmTC_90c22.tlog\\unsuccessfulbuild".
+          Mise ├á jour de l'horodatage "cmTC_90c22.dir\\Debug\\cmTC_90c22.tlog\\cmTC_90c22.lastbuildstate".
+        G├®n├®ration du projet "D:\\Prog\\imwrap-v6\\build_gui\\third_party\\libadlmidi\\cmake-checks\\CMakeFiles\\CMakeTmp\\cmTC_90c22.vcxproj" termin├®e (cibles par d├®faut).
+        
+        La g├®n├®ration a r├®ussi.
+            0 Avertissement(s)
+            0 Erreur(s)
+        
+        Temps ├®coul├® 00:00:02.36
+        
+      exitCode: 0
+...

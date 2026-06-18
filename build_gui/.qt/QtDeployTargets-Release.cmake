@@ -20,3 +20,6 @@ set(__QT_DEPLOY_TARGET_imuse_player_gui_RUNTIME_DLLS D:/Outils/Qt/6.8.0/msvc2022
 set(__QT_DEPLOY_TARGET_imuse_packer_gui_FILE D:/Prog/imwrap-v6/build_gui/Release/imuse_packer_gui.exe)
 set(__QT_DEPLOY_TARGET_imuse_packer_gui_TYPE EXECUTABLE)
 set(__QT_DEPLOY_TARGET_imuse_packer_gui_RUNTIME_DLLS D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Widgets.dll;D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Gui.dll;D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Core.dll)
+set(__QT_DEPLOY_TARGET_imuse_setmidi_FILE D:/Prog/imwrap-v6/build_gui/Release/SetMIDI.exe)
+set(__QT_DEPLOY_TARGET_imuse_setmidi_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_imuse_setmidi_RUNTIME_DLLS D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Widgets.dll;D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Gui.dll;D:/Outils/Qt/6.8.0/msvc2022_64/bin/Qt6Core.dll)
