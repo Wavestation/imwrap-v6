@@ -1,0 +1,3 @@
+D:\MSYS2\mingw32\bin\cmake.exe -E rm -f CMakeFiles\agsimuse.dir/objects.a
+D:\MSYS2\mingw32\bin\ar.exe qc CMakeFiles\agsimuse.dir/objects.a @CMakeFiles\agsimuse.dir\objects1.rsp
+D:\MSYS2\mingw32\bin\c++.exe -O3 -DNDEBUG -shared -o libagsimuse.dll -Wl,--out-implib,libagsimuse.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -Wl,--whole-archive CMakeFiles\agsimuse.dir/objects.a -Wl,--no-whole-archive @CMakeFiles\agsimuse.dir\linkLibs.rsp

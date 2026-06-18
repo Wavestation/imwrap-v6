@@ -1,0 +1,3 @@
+D:\MSYS2\mingw32\bin\cmake.exe -E rm -f CMakeFiles\imsprobe.dir/objects.a
+D:\MSYS2\mingw32\bin\ar.exe qc CMakeFiles\imsprobe.dir/objects.a @CMakeFiles\imsprobe.dir\objects1.rsp
+D:\MSYS2\mingw32\bin\c++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\imsprobe.dir/objects.a -Wl,--no-whole-archive -o imsprobe.exe -Wl,--out-implib,libimsprobe.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\imsprobe.dir\linkLibs.rsp

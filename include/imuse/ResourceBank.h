@@ -50,6 +50,7 @@ public:
     const std::string &name() const { return _name; }
 
     bool hasVariant(VariantKind kind) const;
+    SoundVariantView variant(VariantKind kind) const;
     SoundVariantView selectVariant(TargetProfile profile) const;
 
 private:

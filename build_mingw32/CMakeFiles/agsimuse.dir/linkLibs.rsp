@@ -1,0 +1,1 @@
+ libimuse_v6.a libADLMIDI.a -lfluidsynth-3 -lwinmm -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

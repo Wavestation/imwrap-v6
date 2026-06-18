@@ -294,4 +294,78 @@ bool SmfParser::Parse(ByteView data, SmfSequence *out, std::string *error) {
     return true;
 }
 
+void WriteU16BE(std::vector<uint8_t> *out, uint16_t value) {
+    out->push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
+    out->push_back(static_cast<uint8_t>(value & 0xFF));
+}
+
+void WriteU32BE(std::vector<uint8_t> *out, uint32_t value) {
+    out->push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
+    out->push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
+    out->push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
+    out->push_back(static_cast<uint8_t>(value & 0xFF));
+}
+
+void WriteVlq(std::vector<uint8_t> *out, uint32_t value) {
+    uint32_t buffer = value & 0x7F;
+    while ((value >>= 7) > 0) {
+        buffer <<= 8;
+        buffer |= 0x80;
+        buffer += (value & 0x7F);
+    }
+    while (true) {
+        out->push_back(static_cast<uint8_t>(buffer & 0xFF));
+        if (buffer & 0x80) {
+            buffer >>= 8;
+        } else {
+            break;
+        }
+    }
+}
+
+bool SmfSerializer::Serialize(const SmfSequence &seq, std::vector<uint8_t> *outBytes, std::string *error) {
+    if (!outBytes) return false;
+    outBytes->clear();
+
+    outBytes->insert(outBytes->end(), kMthd.begin(), kMthd.end());
+    WriteU32BE(outBytes, 6);
+    WriteU16BE(outBytes, seq.format);
+    WriteU16BE(outBytes, static_cast<uint16_t>(seq.tracks.size()));
+    WriteU16BE(outBytes, seq.division);
+
+    for (const auto &track : seq.tracks) {
+        outBytes->insert(outBytes->end(), kMtrk.begin(), kMtrk.end());
+        std::size_t lengthOffset = outBytes->size();
+        WriteU32BE(outBytes, 0); // placeholder for length
+        std::size_t trackStart = outBytes->size();
+
+        for (const auto &event : track.events) {
+            WriteVlq(outBytes, event.delta);
+            outBytes->push_back(event.status);
+
+            if (event.type == MidiEventType::Channel) {
+                if (event.hasData1) outBytes->push_back(event.data1);
+                if (event.hasData2) outBytes->push_back(event.data2);
+            } else if (event.type == MidiEventType::Meta) {
+                outBytes->push_back(event.metaType);
+                WriteVlq(outBytes, static_cast<uint32_t>(event.payload.size()));
+                outBytes->insert(outBytes->end(), event.payload.begin(), event.payload.end());
+            } else if (event.type == MidiEventType::SysEx || event.type == MidiEventType::System) {
+                if (event.type == MidiEventType::SysEx) {
+                    WriteVlq(outBytes, static_cast<uint32_t>(event.payload.size()));
+                }
+                outBytes->insert(outBytes->end(), event.payload.begin(), event.payload.end());
+            }
+        }
+
+        uint32_t trackLength = static_cast<uint32_t>(outBytes->size() - trackStart);
+        (*outBytes)[lengthOffset] = static_cast<uint8_t>((trackLength >> 24) & 0xFF);
+        (*outBytes)[lengthOffset + 1] = static_cast<uint8_t>((trackLength >> 16) & 0xFF);
+        (*outBytes)[lengthOffset + 2] = static_cast<uint8_t>((trackLength >> 8) & 0xFF);
+        (*outBytes)[lengthOffset + 3] = static_cast<uint8_t>(trackLength & 0xFF);
+    }
+
+    return true;
+}
+
 } // namespace imuse

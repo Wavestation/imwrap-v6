@@ -3,6 +3,15 @@ cmake_minimum_required(VERSION 3.20)
 project(imuse_v6 LANGUAGES CXX)
 
 option(IMUSE_BUILD_TOOLS "Build imuse command-line tools" ON)
+option(IMUSE_BUILD_GUI_TOOLS "Build imuse Qt6 GUI tools" ON)
+
+if(IMUSE_BUILD_GUI_TOOLS)
+    list(APPEND CMAKE_PREFIX_PATH "D:/Outils/Qt/6.8.0/msvc2022_64")
+    find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+endif()
 
 add_library(imuse_v6 STATIC
     src/Instrument.cpp
@@ -78,7 +87,11 @@ target_include_directories(agsimuse PRIVATE
 target_link_libraries(agsimuse PRIVATE
     imuse_v6
     ADLMIDI
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build/src/libfluidsynth.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build/src/Release/libfluidsynth-3.lib
+    winmm
+    dsound
+    ole32
+    ksuser
 )
 
 target_compile_features(agsimuse PRIVATE cxx_std_17)
@@ -102,4 +115,37 @@ if(APPLE)
         "-framework CoreFoundation"
         m
     )
+endif()
+
+if(IMUSE_BUILD_GUI_TOOLS)
+    # SysEx Tool
+    add_executable(imuse_sysex_gui WIN32 tools_gui/sysex/main.cpp tools_gui/sysex/SysExWindow.cpp)
+    target_link_libraries(imuse_sysex_gui PRIVATE Qt6::Widgets imuse_v6)
+    target_include_directories(imuse_sysex_gui PRIVATE tools_gui/sysex)
+
+    # Player Tool
+    add_executable(imuse_player_gui WIN32 tools_gui/player/main.cpp tools_gui/player/PlayerWindow.cpp)
+    target_link_libraries(imuse_player_gui PRIVATE Qt6::Widgets imuse_v6 winmm dsound ole32 ksuser)
+    target_include_directories(imuse_player_gui PRIVATE tools_gui/player)
+
+    # Packer Tool
+    add_executable(imuse_packer_gui WIN32 tools_gui/packer/main.cpp tools_gui/packer/PackerWindow.cpp)
+    target_link_libraries(imuse_packer_gui PRIVATE Qt6::Widgets imuse_v6)
+    target_include_directories(imuse_packer_gui PRIVATE tools_gui/packer)
+
+    # Windeployqt to copy required DLLs and plugins
+    if(MSVC OR MINGW)
+        find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
+        if(WINDEPLOYQT_EXECUTABLE)
+            add_custom_command(TARGET imuse_sysex_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_sysex_gui>\"
+            )
+            add_custom_command(TARGET imuse_player_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_player_gui>\"
+            )
+            add_custom_command(TARGET imuse_packer_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" \"$<TARGET_FILE:imuse_packer_gui>\"
+            )
+        endif()
+    endif()
 endif()

@@ -1,0 +1,89 @@
+#pragma once
+
+#include <QMainWindow>
+#include <QListWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QGroupBox>
+#include <QSplitter>
+#include <QTableWidget>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <vector>
+#include <string>
+
+#include "imuse/ImsWriter.h"
+#include "imuse/SmfSequence.h"
+#include "imuse/ResourceBank.h"
+
+struct ProjectTrack {
+    std::string name;
+    std::string sourceFileName;
+    std::vector<imuse::MidiEvent> events;
+};
+
+struct ProjectVariant {
+    imuse::VariantKind kind = imuse::VariantKind::Gmd;
+    bool includeVariant = false;
+    bool includeMdhd = false;
+    imuse::MdhdData mdhd = imuse::MdhdData::Defaults();
+    uint16_t division = 480;
+    std::vector<ProjectTrack> tracks;
+};
+
+struct ProjectSound {
+    uint16_t id = 0;
+    std::string name;
+    std::vector<ProjectVariant> variants;
+};
+
+class PackerWindow : public QMainWindow {
+    Q_OBJECT
+
+public:
+    PackerWindow(QWidget *parent = nullptr);
+    ~PackerWindow();
+
+private slots:
+    void newProject();
+    void openProject();
+    void saveProject();
+    void saveProjectAs();
+    
+    void onSoundSelected();
+    void onVariantKindChanged();
+    void applySoundChanges();
+    void addSound();
+    void deleteSound();
+    void importMidi();
+
+private:
+    void setupUi();
+    void loadImsToModel(const std::string &path);
+    void updateVariantUi();
+    void saveModelToIms(const std::string &path);
+
+    QListWidget *soundList;
+    QTableWidget *tracksTable;
+    QLabel *statusLabel;
+    
+    QLineEdit *soundNameEdit;
+    QSpinBox *soundIdSpin;
+    QComboBox *variantKindCombo;
+    QCheckBox *includeVariantCheck;
+    QCheckBox *includeMdhdCheck;
+    
+    QSpinBox *prioritySpin, *volumeSpin, *panSpin, *transposeSpin, *detuneSpin, *speedSpin;
+
+    QPushButton *applyBtn;
+    QPushButton *importBtn;
+    QGroupBox *variantBox;
+    QWidget *soundPropsWidget;
+
+    std::vector<ProjectSound> projectSounds;
+    QString currentFilePath;
+};

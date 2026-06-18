@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+D:/Prog/imwrap-v6/third_party/fluidsynth-master/cmake_admin/VersionResource.rc.in
+D:/Prog/imwrap-v6/third_party/fluidsynth-master/include/fluidsynth.cmake
+D:/Prog/imwrap-v6/third_party/fluidsynth-master/include/fluidsynth/version.h.in
+D:/Prog/imwrap-v6/third_party/fluidsynth-master/src/CMakeLists.txt

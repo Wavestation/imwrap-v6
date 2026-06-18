@@ -1,0 +1,16 @@
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/imuse_v6.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/imusepack.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/imsprobe.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/agsimuse.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/edit_cache.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/rebuild_cache.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/list_install_components.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/install.dir
+D:/Prog/imwrap-v6/build_nmake/CMakeFiles/install/local.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/ADLMIDI_static.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/ADLMIDI_version_check.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/edit_cache.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/rebuild_cache.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/list_install_components.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/install.dir
+D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/CMakeFiles/install/local.dir

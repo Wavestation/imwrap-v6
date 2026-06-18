@@ -28,6 +28,8 @@
 #include <deque>
 #include <map>
 #include <vector>
+#include <functional>
+#include <string>
 
 #include "imuse/ImuseCommand.h"
 #include "imuse/ImuseSequence.h"
@@ -52,6 +54,10 @@ public:
     void setMidiSink(MidiSink *sink) { _midiSink = sink; }
     void setCompatibilityProfile(CompatibilityProfile profile) { _compatibility = profile; }
     CompatibilityProfile compatibilityProfile() const { return _compatibility; }
+
+    using LogCallback = std::function<void(const std::string&)>;
+    void setLogCallback(LogCallback cb) { _logCallback = cb; }
+
     void setNativeMt32Output(bool enabled) { _nativeMt32Output = enabled; }
     bool nativeMt32Output() const { return _nativeMt32Output; }
 
@@ -122,6 +128,8 @@ private:
         std::array<uint8_t, 128> sourceNotes = {{}};
         std::array<uint8_t, 128> sourceOutputNotes = {{}};
         std::array<uint8_t, 128> sourceOutputChannels = {{}};
+        uint8_t currentTimbreIndex = 0xFF; // specific to MT-32 custom patch tracking
+        std::vector<uint8_t> customRolandSysex;
         std::array<uint8_t, 128> sourceVelocities = {{}};
     };
 
@@ -274,6 +282,8 @@ private:
     void applyPartChorus(ActiveSound *sound, PartState *part);
     void applyPartPolyphony(ActiveSound *sound, PartState *part);
     void applyPartProgram(ActiveSound *sound, PartState *part);
+    void sendMt32Sysex(uint16_t soundId, uint32_t addr, const uint8_t* data, size_t size);
+    void sendPartCustomSysex(uint16_t soundId, PartState *part);
     void applyPartAllState(ActiveSound *sound, PartState *part);
     void partAllNotesOff(ActiveSound *sound, PartState *part);
     void partOff(ActiveSound *sound, PartState *part);
@@ -319,6 +329,7 @@ private:
     int clearScriptTrigger(int soundId, int marker);
     void addDeferredCommand(uint32_t ticksLeft, const CommandPacket &command);
     void processDeferredCommands(uint32_t deltaTicks);
+    void processImuseGlobalCommand(int cmd, const std::vector<uint8_t>& payload);
     int dispatchGlobalCommand(uint8_t cmd, uint16_t argc, const int16_t *args);
     int dispatchPlayerCommand(uint8_t cmd, uint16_t argc, const int16_t *args);
 
@@ -336,6 +347,7 @@ private:
     ScanContext _scan;
     CompatibilityProfile _compatibility = CompatibilityProfile::GenericV6;
     bool _nativeMt32Output = false;
+    LogCallback _logCallback;
     RhythmState _rhyState;
     std::vector<PartState *> _waitingPartsQueue;
     std::array<PartState *, 16> _physicalChannelOwners = {{}};

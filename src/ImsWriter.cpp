@@ -92,13 +92,19 @@ std::vector<uint8_t> MakeMdhdChunk(const MdhdData &mdhd) {
 }
 
 std::vector<uint8_t> MakeVariantChunk(const VariantSource &variant, std::string *error) {
-    std::vector<uint8_t> midiBytes = ReadBinaryFile(variant.sourcePath, error);
+    std::vector<uint8_t> midiBytes;
+    if (!variant.smfData.empty()) {
+        midiBytes = variant.smfData;
+    } else {
+        midiBytes = ReadBinaryFile(variant.sourcePath, error);
+    }
+    
     if (midiBytes.empty()) {
         return {};
     }
     if (!BeginsWithMThd(midiBytes)) {
         if (error) {
-            *error = "input is not a MIDI file starting with MThd: " + variant.sourcePath;
+            *error = "input is not a MIDI file starting with MThd: " + (variant.sourcePath.empty() ? "memory buffer" : variant.sourcePath);
         }
         return {};
     }

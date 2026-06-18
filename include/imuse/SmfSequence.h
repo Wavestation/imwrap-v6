@@ -70,6 +70,11 @@ public:
     static bool Parse(ByteView data, SmfSequence *out, std::string *error = nullptr);
 };
 
+class SmfSerializer {
+public:
+    static bool Serialize(const SmfSequence &seq, std::vector<uint8_t> *outBytes, std::string *error = nullptr);
+};
+
 } // namespace imuse
 
 #endif

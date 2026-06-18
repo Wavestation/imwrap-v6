@@ -7,7 +7,7 @@ if(CMAKE_VERSION VERSION_LESS "3.0.0")
    message(FATAL_ERROR "CMake >= 3.0.0 required")
 endif()
 cmake_policy(PUSH)
-cmake_policy(VERSION 3.0.0...4.1)
+cmake_policy(VERSION 3.0.0...3.29)
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -59,7 +59,7 @@ endif()
 add_library(FluidSynth::libfluidsynth-OBJ INTERFACE IMPORTED)
 
 set_target_properties(FluidSynth::libfluidsynth-OBJ PROPERTIES
-  INTERFACE_LINK_LIBRARIES "-Wl,-framework,CoreAudio,-framework,AudioUnit;m"
+  INTERFACE_LINK_LIBRARIES "dsound;ksuser;winmm;winmm;ksuser;ole32;ksuser"
 )
 
 # Create imported target FluidSynth::fluidsynth

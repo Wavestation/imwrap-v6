@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_dsound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_wasapi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_waveout.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_winmidi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_dls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys_embedded.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_ct2hz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_cb2amp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_concave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_convex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_pan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff_linear.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff_sinc7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_conv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_hash.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_ringbuffer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_settings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_defsfont.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sfont.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sffile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_samplecache.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_adsr_env.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_chorus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter_impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_lfo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_dsp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_event.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_mixer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_chan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_event.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_gen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_mod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth_monopoly.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth_write_int.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_tuning.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_voice.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi_router.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seqbind.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seqbind_notes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seq_queue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_adriver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_mdriver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_audio_convert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_cmd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_filerenderer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_ladspa.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_dls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys_embedded.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\ConstExprArr.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_conv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_ringbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluidsynth_priv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_defsfont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sfont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sffile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_samplecache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_adsr_env.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_chorus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_lfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_mixer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_phase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_chan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_gen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_mod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_tuning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_voice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi_router.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_adriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_mdriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_cmd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_ladspa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\gen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\ladspa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\midi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\mod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\seq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\seqbind.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\sfont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\shell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\synth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\voice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\include\fluidsynth\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\include\fluidsynth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\VersionInfoLib.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{A9BA0AEB-B48F-3119-8F28-9249A6A20493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2CBD9CF1-3C8E-35EB-8918-41829E2DCB7C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

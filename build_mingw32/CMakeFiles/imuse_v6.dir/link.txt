@@ -1,0 +1,2 @@
+D:\MSYS2\mingw32\bin\ar.exe qc libimuse_v6.a CMakeFiles/imuse_v6.dir/src/Instrument.cpp.obj CMakeFiles/imuse_v6.dir/src/ImuseSequence.cpp.obj CMakeFiles/imuse_v6.dir/src/ImuseSysex.cpp.obj CMakeFiles/imuse_v6.dir/src/ImsWriter.cpp.obj CMakeFiles/imuse_v6.dir/src/ImuseEngine.cpp.obj CMakeFiles/imuse_v6.dir/src/ResourceBank.cpp.obj CMakeFiles/imuse_v6.dir/src/SinkMidiChannel.cpp.obj CMakeFiles/imuse_v6.dir/src/SmfSequence.cpp.obj
+D:\MSYS2\mingw32\bin\ranlib.exe libimuse_v6.a

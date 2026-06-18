@@ -1,0 +1,10 @@
+^D:\PROG\IMWRAP-V6\THIRD_PARTY\FLUIDSYNTH-BUILD\CMAKEFILES\37FC568FF9CAE0772AE5779881E31FFE\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Prog/imwrap-v6/third_party/fluidsynth-master -BD:/Prog/imwrap-v6/third_party/fluidsynth-build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Prog/imwrap-v6/third_party/fluidsynth-build/FluidSynth.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

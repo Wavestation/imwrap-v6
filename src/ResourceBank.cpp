@@ -157,7 +157,23 @@ std::string FourCCToString(const std::array<char, 4> &id) {
 }
 
 bool SoundResource::hasVariant(VariantKind kind) const {
-    return HasVariant(_variantMask, kind);
+    if (!_valid) return false;
+    switch (kind) {
+    case VariantKind::Gmd: return _gmd.valid();
+    case VariantKind::Rol: return _rol.valid();
+    case VariantKind::Adl: return _adl.valid();
+    default: return false;
+    }
+}
+
+SoundVariantView SoundResource::variant(VariantKind kind) const {
+    if (!_valid) return {};
+    switch (kind) {
+    case VariantKind::Gmd: return _gmd;
+    case VariantKind::Rol: return _rol;
+    case VariantKind::Adl: return _adl;
+    default: return {};
+    }
 }
 
 SoundVariantView SoundResource::selectVariant(TargetProfile profile) const {
@@ -165,29 +181,30 @@ SoundVariantView SoundResource::selectVariant(TargetProfile profile) const {
         return {};
     }
 
-    if (profile == TargetProfile::Adlib) {
-        if (_adl.valid()) {
-            return _adl;
-        }
-        if (_rol.valid()) {
-            return _rol;
-        }
-        return _gmd;
-    }
-
     if (profile == TargetProfile::Mt32) {
-        if (_rol.valid()) {
-            return _rol;
-        }
+        // "la conversion GM vers MT-32 ou bien ADL vers autre chose sont impossibles"
+        // Le MT-32 DOIT prendre le chunk ROL.
+        return _rol;
+    }
+
+    if (profile == TargetProfile::Adlib) {
+        // "Le device sélectionné dans le player doit recevoir la bonne séquence"
         if (_adl.valid()) {
             return _adl;
         }
-        return _gmd;
+        // Fallback to GMD or ROL for Adlib if we want libADLMIDI to synthesize them?
+        // Usually LucasArts games provide ADL. If not, libADLMIDI can play GMD/ROL.
+        if (_gmd.valid()) {
+            return _gmd;
+        }
+        return _rol;
     }
 
+    // Default: General Midi (or any other)
     if (_gmd.valid()) {
         return _gmd;
     }
+    // "S'il n'y a pas de GM, le player peut utiliser la séquence ROL pour générer le GM"
     return _rol;
 }
 

@@ -1,0 +1,53 @@
+third_party/libadlmidi/CMakeFiles/ADLMIDI_static.dir/src/inst_db.cpp.obj: \
+ D:\Prog\imwrap-v6\third_party\libadlmidi\src\inst_db.cpp \
+ D:\Prog\imwrap-v6\third_party\libadlmidi\src\adlmidi_db.h \
+ D:/MSYS2/mingw32/lib/gcc/i686-w64-mingw32/16.1.0/include/stdint.h \
+ D:/MSYS2/mingw32/include/stdint.h D:/MSYS2/mingw32/include/crtdefs.h \
+ D:/MSYS2/mingw32/include/corecrt.h D:/MSYS2/mingw32/include/_mingw.h \
+ D:/MSYS2/mingw32/include/_mingw_mac.h \
+ D:/MSYS2/mingw32/include/_mingw_secapi.h \
+ D:/MSYS2/mingw32/include/vadefs.h \
+ D:/MSYS2/mingw32/lib/gcc/i686-w64-mingw32/16.1.0/include/stddef.h \
+ D:/MSYS2/mingw32/include/stddef.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/vector \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/requires_hosted.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/i686-w64-mingw32/bits/c++config.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/i686-w64-mingw32/bits/os_defines.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/i686-w64-mingw32/bits/cpu_defines.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_algobase.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/cpp_type_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/version.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/ext/type_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/ext/numeric_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_pair.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_iterator_base_types.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_iterator_base_funcs.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/concept_check.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/debug/assertions.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_iterator.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/move.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/ptr_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/debug/debug.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/predefined_ops.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_function.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/backward/binders.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/allocator.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/i686-w64-mingw32/bits/c++allocator.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/new_allocator.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/new \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/exception.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/new_except.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/exception_defines.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/new_throw.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/memoryfwd.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_construct.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_uninitialized.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/ext/alloc_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/alloc_traits.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_vector.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stdexcept_throw.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stdexcept_throwfwd.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/stl_bvector.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/range_access.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/erase_if.h \
+ D:/MSYS2/mingw32/include/c++/16.1.0/bits/vector.tcc

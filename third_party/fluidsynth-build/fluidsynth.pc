@@ -1,4 +1,4 @@
-prefix=/usr/local
+prefix=C:/Program Files (x86)/FluidSynth
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
@@ -7,6 +7,6 @@ Name: FluidSynth
 Description: Software SoundFont synth
 Version: 2.5.5
 Requires.private: 
-Libs: -L${libdir} -lfluidsynth
-Libs.private: -lm -Wl,-framework,CoreAudio,-framework,AudioUnit
+Libs: -L${libdir} -lfluidsynth-3
+Libs.private: -ldsound -lksuser -lwinmm -lole32 
 Cflags: -I${includedir}

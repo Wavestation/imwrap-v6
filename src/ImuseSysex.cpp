@@ -28,13 +28,13 @@ namespace imuse {
 namespace {
 
 bool DecodeNibbles(ByteView data, std::vector<uint8_t> *out) {
-    if (!out || (data.size() % 2) != 0) {
+    if (!out) {
         return false;
     }
 
     out->clear();
     out->reserve(data.size() / 2);
-    for (std::size_t i = 0; i < data.size(); i += 2) {
+    for (std::size_t i = 0; i + 1 < data.size(); i += 2) {
         out->push_back(static_cast<uint8_t>(((data.data()[i] & 0x0F) << 4) | (data.data()[i + 1] & 0x0F)));
     }
     return true;
@@ -106,32 +106,35 @@ bool DecodeImuseSysex(ByteView message, ImuseControlEvent *out, std::string *err
 
     switch (event.code) {
     case 0x00: {
-        if (payload.size() < 2 || ((payload.size() - 2) % 2) != 0) {
+        if (payload.size() < 2) {
             if (error) {
-                *error = "allocate-part payload has an invalid size";
+                *error = "allocate-part payload is too small";
             }
             return false;
         }
+
         event.type = ImuseSysexType::AllocatePart;
         event.hasPart = true;
         event.part = payload.data()[0] & 0x0F;
-        event.unknown = payload.data()[1] & 0x7F;
-        if (!DecodeNibbles(payload.subview(2, payload.size() - 2), &event.decodedBytes) || event.decodedBytes.size() < 8) {
+        if (!DecodeNibbles(payload.subview(1, payload.size() - 1), &event.decodedBytes)) {
             if (error) {
                 *error = "allocate-part nibble payload is invalid";
             }
             return false;
         }
-        event.partOn = (event.decodedBytes[0] & 0x01) != 0;
-        event.reverb = (event.decodedBytes[0] & 0x02) != 0;
-        event.priority = event.decodedBytes[1];
-        event.volume = event.decodedBytes[2];
-        event.pan = event.decodedBytes[3];
-        event.percussion = (event.decodedBytes[4] & 0x80) != 0;
-        event.transpose = static_cast<int8_t>(event.decodedBytes[4] & 0x7F);
-        event.detune = static_cast<int8_t>(event.decodedBytes[5]);
-        event.pitchbendFactor = event.decodedBytes[6];
-        event.program = event.decodedBytes[7];
+        event.partOn = event.decodedBytes.size() > 0 ? (event.decodedBytes[0] & 0x01) != 0 : true;
+        event.reverb = event.decodedBytes.size() > 0 ? (event.decodedBytes[0] & 0x02) != 0 : false;
+        event.priority = event.decodedBytes.size() > 1 ? event.decodedBytes[1] : 90;
+        event.volume = event.decodedBytes.size() > 2 ? event.decodedBytes[2] : 127;
+        event.pan = event.decodedBytes.size() > 3 ? event.decodedBytes[3] : 64;
+        event.percussion = event.decodedBytes.size() > 4 ? (event.decodedBytes[4] & 0x80) != 0 : false;
+        
+        uint8_t transpose7 = event.decodedBytes.size() > 4 ? (event.decodedBytes[4] & 0x7F) : 0;
+        event.transpose = static_cast<int8_t>((transpose7 & 0x40) ? (transpose7 | 0x80) : transpose7);
+        
+        event.detune = event.decodedBytes.size() > 5 ? static_cast<int8_t>(event.decodedBytes[5]) : 0;
+        event.pitchbendFactor = event.decodedBytes.size() > 6 ? event.decodedBytes[6] : 2;
+        event.program = event.decodedBytes.size() > 7 ? event.decodedBytes[7] : 0;
         return (*out = std::move(event)), true;
     }
     case 0x01:

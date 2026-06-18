@@ -33,7 +33,8 @@ namespace imuse {
 
 struct VariantSource {
     VariantKind kind = VariantKind::None;
-    std::string sourcePath;
+    std::string sourcePath; // Used if smfData is empty
+    std::vector<uint8_t> smfData; // Priority over sourcePath if not empty
     bool includeMdhd = false;
     MdhdData mdhd = MdhdData::Defaults();
 };

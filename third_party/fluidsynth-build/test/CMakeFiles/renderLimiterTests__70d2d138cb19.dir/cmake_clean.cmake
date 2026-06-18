@@ -1,9 +1,0 @@
-file(REMOVE_RECURSE
-  "CMakeFiles/renderLimiterTests__70d2d138cb19"
-  "manual/limiter/Uplift-limiter_a1_r250.raw"
-)
-
-# Per-language clean rules from dependency scanning.
-foreach(lang )
-  include(CMakeFiles/renderLimiterTests__70d2d138cb19.dir/cmake_clean_${lang}.cmake OPTIONAL)
-endforeach()

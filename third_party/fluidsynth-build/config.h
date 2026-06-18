@@ -8,8 +8,8 @@
 /* #undef AUFILE_SUPPORT */
 
 /* whether or not we are supporting CoreAudio */
-#define COREAUDIO_SUPPORT 1
-#define COREAUDIO_SUPPORT_HAL 1
+/* #undef COREAUDIO_SUPPORT */
+/* #undef COREAUDIO_SUPPORT_HAL */
 
 /* whether or not we are supporting CoreMIDI */
 /* #undef COREMIDI_SUPPORT */
@@ -18,19 +18,19 @@
 /* #undef DART_SUPPORT */
 
 /* Define if building for Mac OS X Darwin */
-#define DARWIN 1
+/* #undef DARWIN */
 
 /* Define if D-Bus support is enabled */
 /* #undef DBUS_SUPPORT */
 
 /* Soundfont to load automatically in some use cases */
-#define DEFAULT_SOUNDFONT "/usr/local/share/soundfonts/default.sf2"
+#define DEFAULT_SOUNDFONT "C:\\ProgramData\\soundfonts\\default.sf2"
 
 /* Define to enable FPE checks */
 /* #undef FPE_CHECK */
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
-#define HAVE_ARPA_INET_H 1
+/* #undef HAVE_ARPA_INET_H */
 
 /* Define to 1 if you have the <errno.h> header file. */
 #define HAVE_ERRNO_H 1
@@ -39,10 +39,10 @@
 #define HAVE_FCNTL_H 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+/* #undef HAVE_INTTYPES_H */
 
 /* Define to 1 if you have the <io.h> header file. */
-/* #undef HAVE_IO_H */
+#define HAVE_IO_H 1
 
 /* Define if systemd support is enabled */
 /* #undef SYSTEMD_SUPPORT */
@@ -60,10 +60,10 @@
 #define HAVE_MATH_H 1
 
 /* Define to 1 if you have the <netinet/in.h> header file. */
-#define HAVE_NETINET_IN_H 1
+/* #undef HAVE_NETINET_IN_H */
 
 /* Define to 1 if you have the <netinet/tcp.h> header file. */
-#define HAVE_NETINET_TCP_H 1
+/* #undef HAVE_NETINET_TCP_H */
 
 /* Define if compiling the mixer with multi-thread support */
 #define ENABLE_MIXER_THREADS 1
@@ -72,7 +72,7 @@
 /* #undef HAVE_OPENMP */
 
 /* Define to 1 if you have the <pthread.h> header file. */
-#define HAVE_PTHREAD_H 1
+/* #undef HAVE_PTHREAD_H */
 
 /* Define to 1 if you have the <signal.h> header file. */
 #define HAVE_SIGNAL_H 1
@@ -90,16 +90,16 @@
 #define HAVE_STDLIB_H 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H 1
+/* #undef HAVE_STRINGS_H */
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
 
 /* Define to 1 if you have the <sys/mman.h> header file. */
-#define HAVE_SYS_MMAN_H 1
+/* #undef HAVE_SYS_MMAN_H */
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
-#define HAVE_SYS_SOCKET_H 1
+/* #undef HAVE_SYS_SOCKET_H */
 
 /* Define to 1 if you have the <sys/soundcard.h> header file. */
 /* #undef HAVE_SYS_SOUNDCARD_H */
@@ -108,22 +108,22 @@
 #define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/time.h> header file. */
-#define HAVE_SYS_TIME_H 1
+/* #undef HAVE_SYS_TIME_H */
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#define HAVE_UNISTD_H 1
+/* #undef HAVE_UNISTD_H */
 
 /* Define to 1 if you have the <windows.h> header file. */
-/* #undef HAVE_WINDOWS_H */
+#define HAVE_WINDOWS_H 1
 
 /* Define to 1 if you have the <getopt.h> header file. */
-#define HAVE_GETOPT_H 1
+/* #undef HAVE_GETOPT_H */
 
 /* Define to 1 if you have the inet_ntop() function. */
-#define HAVE_INETNTOP 1
+/* #undef HAVE_INETNTOP */
 
 /* Define to enable JACK driver */
 /* #undef JACK_SUPPORT */
@@ -198,40 +198,40 @@
 /* #undef PULSE_SUPPORT */
 
 /* Define to enable DirectSound driver */
-/* #undef DSOUND_SUPPORT */
+#define DSOUND_SUPPORT 1
 
 /* Define to enable Windows WASAPI driver */
-/* #undef WASAPI_SUPPORT */
+#define WASAPI_SUPPORT 1
 
 /* Define to enable Windows WaveOut driver */
-/* #undef WAVEOUT_SUPPORT */
+#define WAVEOUT_SUPPORT 1
 
 /* Define to enable Windows MIDI driver */
-/* #undef WINMIDI_SUPPORT */
+#define WINMIDI_SUPPORT 1
 
 /* Define to enable SDL3 audio driver */
 /* #undef SDL3_SUPPORT */
 
 /* Define to 1 if you have the ANSI C header files. */
-#define STDC_HEADERS 1
+/* #undef STDC_HEADERS */
 
 /* Soundfont to load for unit testing */
-#define TEST_SOUNDFONT "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf2"
+#define TEST_SOUNDFONT "D:/Prog/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf2"
 
 /* DLS to load for unit testing */
-#define TEST_DLS "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.dls"
+#define TEST_DLS "D:/Prog/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.dls"
 
 /* Soundfont to load for UTF-8 unit testing */
-#define TEST_SOUNDFONT_UTF8_1 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/\xE2\x96\xA0VintageDreamsWaves-v2\xE2\x96\xA0.sf2"
-#define TEST_SOUNDFONT_UTF8_2 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VìntàgèDrèàmsWàvès-v2.sf2"
-#define TEST_MIDI_UTF8 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/ⓉⒺⓈⓉ.mid"
-#define TEST_WAV_UTF8 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-build/test/ⓉⒺⓈⓉ.wav"
+#define TEST_SOUNDFONT_UTF8_1 "D:/Prog/imwrap-v6/third_party/fluidsynth-master/sf2/\xE2\x96\xA0VintageDreamsWaves-v2\xE2\x96\xA0.sf2"
+#define TEST_SOUNDFONT_UTF8_2 "D:/Prog/imwrap-v6/third_party/fluidsynth-master/sf2/VìntàgèDrèàmsWàvès-v2.sf2"
+#define TEST_MIDI_UTF8 "D:/Prog/imwrap-v6/third_party/fluidsynth-master/test/ⓉⒺⓈⓉ.mid"
+#define TEST_WAV_UTF8 "D:/Prog/imwrap-v6/third_party/fluidsynth-build/test/ⓉⒺⓈⓉ.wav"
 
 /* SF3 Soundfont to load for unit testing */
-#define TEST_SOUNDFONT_SF3 "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf3"
+#define TEST_SOUNDFONT_SF3 "D:/Prog/imwrap-v6/third_party/fluidsynth-master/sf2/VintageDreamsWaves-v2.sf3"
 
 /* Command lines to use for shell parse unit testing */
-#define TEST_COMMAND_LINES "/Users/komasami/Dev/scumm-tools/imwrap-v6/third_party/fluidsynth-master/test/command-lines.txt"
+#define TEST_COMMAND_LINES "D:/Prog/imwrap-v6/third_party/fluidsynth-master/test/command-lines.txt"
 
 /* Define to enable SIGFPE assertions */
 /* #undef TRAP_ON_FPE */
@@ -246,7 +246,7 @@
 /* #undef READLINE_SUPPORT */
 
 /* Define if the compiler supports VLA */
-#define SUPPORTS_VLA 1
+/* #undef SUPPORTS_VLA */
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */

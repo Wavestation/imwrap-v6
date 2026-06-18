@@ -672,7 +672,10 @@ void ImuseEngine::suspendPart(PartState *part) {
 }
 
 int ImuseEngine::allocateOutputChannel(uint8_t priority) {
-    for (uint8_t channel = 0; channel < _physicalChannelOwners.size(); ++channel) {
+    // For MT-32: ScummVM uses channels 1-9 (PROP_CHANNEL_MASK=0x03FE), never channel 0.
+    // MT-32 Parts 1-8 → channels 1-8, Rhythm → channel 9.
+    const uint8_t firstChannel = (_profile == TargetProfile::Mt32) ? 1 : 0;
+    for (uint8_t channel = firstChannel; channel < _physicalChannelOwners.size(); ++channel) {
         if (channel == 9) {
             continue;
         }
@@ -684,7 +687,7 @@ int ImuseEngine::allocateOutputChannel(uint8_t priority) {
     PartState *best = nullptr;
     uint8_t bestChannel = 0xFF;
     uint8_t bestPriority = priority;
-    for (uint8_t channel = 0; channel < _physicalChannelOwners.size(); ++channel) {
+    for (uint8_t channel = firstChannel; channel < _physicalChannelOwners.size(); ++channel) {
         if (channel == 9) {
             continue;
         }
@@ -1004,10 +1007,84 @@ void ImuseEngine::applyPartProgram(ActiveSound *sound, PartState *part) {
     DebugMidiPrintf("part program sound=%u ch=%u bank=%u prog=%u", sound->soundId, part->channel, part->bank, part->program);
     SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
     if (part->instrument.isValid()) {
-        part->instrument.send(&channel);
+        if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
+            if (!part->customRolandSysex.empty()) {
+                // Custom Roland instrument: sendPartCustomSysex handles everything.
+                sendPartCustomSysex(sound->soundId, part);
+            }
+            // Standard factory instruments: instrument.send() handles PC via the normal path.
+            // (SysEx patch update is done in partSetProgram.)
+            else {
+                part->instrument.send(&channel);
+            }
+        } else {
+            part->instrument.send(&channel);
+        }
     }
     part->transmitted = true;
 }
+
+void ImuseEngine::sendMt32Sysex(uint16_t soundId, uint32_t addr, const uint8_t* data, size_t size) {
+    if (!_midiSink) return;
+    
+    std::vector<uint8_t> sysex;
+    sysex.reserve(size + 10);
+    sysex.push_back(0x41);
+    sysex.push_back(0x10);
+    sysex.push_back(0x16);
+    sysex.push_back(0x12);
+    
+    sysex.push_back((addr >> 14) & 0x7F);
+    sysex.push_back((addr >> 7) & 0x7F);
+    sysex.push_back(addr & 0x7F);
+    
+    for (size_t i = 0; i < size; ++i) {
+        sysex.push_back(data[i]);
+    }
+    
+    uint8_t checkSum = 0;
+    for (size_t i = 4; i < sysex.size(); ++i) {
+        checkSum -= sysex[i];
+    }
+    sysex.push_back(checkSum & 0x7F);
+    sysex.push_back(0xF7);
+    
+    _midiSink->onSysEx(soundId, ByteView(sysex.data(), sysex.size()));
+}
+
+void ImuseEngine::sendPartCustomSysex(uint16_t soundId, PartState* part) {
+    if (!part || part->customRolandSysex.empty() || !_midiSink) {
+        return;
+    }
+    
+    if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
+        if (part->customRolandSysex.size() > 9) {
+            const uint8_t* timbreData = part->customRolandSysex.data() + 7;
+            size_t timbreSize = part->customRolandSysex.size() - 9;
+            
+            if (timbreSize == 246) {
+                // 1. Write the Timbre Data to the Memory Timbre slot corresponding to this physical channel
+                uint32_t sysexTimbreAddrBase = 0x20000 + (part->outputChannel << 8);
+                sendMt32Sysex(soundId, sysexTimbreAddrBase, timbreData, timbreSize);
+                
+                // 2. Set the Patch Memory for this channel to use the Memory Timbre
+                part->currentTimbreIndex = 0xFF;
+                uint32_t sysexPatchAddrBase = 0x14000 + (part->outputChannel << 3);
+                uint8_t patchData[2] = { 0x02, static_cast<uint8_t>(part->outputChannel) };
+                sendMt32Sysex(soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
+                
+                // 3. Send a standard Program Change to refresh the MT-32 state
+                // Use channel-1 as dummy PC to force MT-32 to reload Patch Temp from the modified slot.
+                // Clamp to [1..8]: for ch 1 use dummy=2, for ch 2-8 use dummy=ch-1.
+                SinkMidiChannel channel(_midiSink, soundId, static_cast<uint8_t>(part->outputChannel));
+                const uint8_t dummyPc = (part->outputChannel == 1) ? 2 : static_cast<uint8_t>(part->outputChannel - 1);
+                channel.programChange(dummyPc);
+                channel.programChange(static_cast<uint8_t>(part->outputChannel));
+            }
+        }
+    }
+}
+
 
 void ImuseEngine::applyPartAllState(ActiveSound *sound, PartState *part) {
     if (!sound || !part) {
@@ -1038,11 +1115,33 @@ void ImuseEngine::applyPartAllState(ActiveSound *sound, PartState *part) {
     sendPartPanPosition(sound, part, static_cast<uint8_t>(ClampInt(part->panEffective + 0x40, 0, 127)));
     sendPartPolyphony(sound, part);
     if (part->instrument.isValid()) {
-        part->instrument.send(&channel);
+        if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
+            if (part->customRolandSysex.empty()) {
+                // Standard factory instrument: configure patch memory to point to the correct factory timbre.
+                // sendPartCustomSysex is not called for these, so we handle it here.
+                part->currentTimbreIndex = part->program;
+                uint32_t sysexPatchAddrBase = 0x14000 + (part->outputChannel << 3);
+                uint8_t patchData[2] = { static_cast<uint8_t>(part->program >> 6), static_cast<uint8_t>(part->program & 0x3F) };
+                sendMt32Sysex(sound->soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
+                part->instrumentValue = static_cast<uint8_t>(part->outputChannel);
+                // Dummy PC: for ch 1 use 2, for ch 2-8 use ch-1, to safely force MT-32 Patch Temp reload.
+                const uint8_t dummyPc = (part->outputChannel == 1) ? 2 : static_cast<uint8_t>(part->outputChannel - 1);
+                channel.programChange(dummyPc);
+                channel.programChange(static_cast<uint8_t>(part->outputChannel));
+            }
+            // For custom Roland instruments: skip instrument.send() entirely.
+            // sendPartCustomSysex() (called below) handles timbre upload, patch memory, and program change.
+            // Calling instrument.send() here would emit a spurious program change (64+am) that
+            // overwrites the correct patch selection before sendPartCustomSysex has a chance to fix it.
+        } else {
+            // Non-MT-32 or non-melodic: use standard instrument send path.
+            part->instrument.send(&channel);
+        }
     }
     sendPartEffectLevel(sound, part, part->effectLevel);
     channel.chorusLevel(part->chorus);
     channel.priority(part->priorityEffective);
+    sendPartCustomSysex(sound->soundId, part);
     part->transmitted = true;
 }
 
@@ -1154,8 +1253,29 @@ void ImuseEngine::partSetProgram(ActiveSound *sound, uint8_t channel, uint8_t pr
 
     part->bank = 0;
     part->program = program;
-    part->instrumentValue = program;
-    part->instrument.program(program, 0, sound->isMt32);
+    
+    uint8_t instrumentProgram = program;
+    if (_profile == TargetProfile::Mt32) {
+        if (part->outputChannel >= 1 && part->outputChannel <= 8) {
+            if (part->currentTimbreIndex != program) {
+                part->currentTimbreIndex = program;
+                uint32_t sysexPatchAddrBase = 0x14000 + (part->outputChannel << 3);
+                uint8_t patchData[2] = { static_cast<uint8_t>(program >> 6), static_cast<uint8_t>(program & 0x3F) };
+                sendMt32Sysex(sound->soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
+                
+                // Force MT-32 to reload the patch if it's currently active on this channel
+                SinkMidiChannel midiCh(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+                // Dummy PC: for ch 1 use 2, for ch 2-8 use ch-1, to safely force MT-32 Patch Temp reload.
+                const uint8_t dummyPc = (part->outputChannel == 1) ? 2 : static_cast<uint8_t>(part->outputChannel - 1);
+                midiCh.programChange(dummyPc);
+                midiCh.programChange(static_cast<uint8_t>(part->outputChannel));
+            }
+            instrumentProgram = static_cast<uint8_t>(part->outputChannel);
+        }
+    }
+
+    part->instrumentValue = instrumentProgram;
+    part->instrument.program(instrumentProgram, 0, sound->isMt32);
     part->unassignedInstrument = false;
     applyPartProgram(sound, part);
 }
@@ -1844,7 +1964,26 @@ bool ImuseEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
             controlEvent.trackIndex = sound->trackIndex;
             return executeControlEvent(soundId, controlEvent);
         } else if (_midiSink) {
-            _midiSink->onSysEx(soundId, ByteView(event.payload.data(), event.payload.size()));
+            if (event.payload.size() > 6 && event.payload[0] == 0x41) {
+                uint8_t logicalPart = event.payload[1] & 0x0F;
+                PartState *matchedPart = nullptr;
+                for (auto &p : sound->parts) {
+                    if (p.present && p.channel == logicalPart) {
+                        matchedPart = &p;
+                        break;
+                    }
+                }
+                if (matchedPart) {
+                    matchedPart->customRolandSysex.assign(event.payload.begin(), event.payload.end());
+                    
+                    // If the part is already allocated to a physical channel, we can send it immediately
+                    if (matchedPart->outputChannel >= 1 && matchedPart->outputChannel <= 8) {
+                        sendPartCustomSysex(soundId, matchedPart);
+                    }
+                }
+            } else {
+                _midiSink->onSysEx(soundId, ByteView(event.payload.data(), event.payload.size()));
+            }
         }
         return true;
     }
@@ -1927,10 +2066,22 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
             if (part) {
                 part->present = true;
                 part->on = event.partOn;
+                part->effectLevel = event.reverb ? 127 : 0;
                 part->volume = event.volume;
-                part->program = event.program;
+                if (part->outputChannel < 0) {
+                    reallocateMidiChannels();
+                }
+                partSetProgram(sound, event.part, event.program);
                 part->transpose = event.transpose;
                 part->transposeEffective = computeEffectivePartTranspose(*sound, *part);
+                part->pan = static_cast<int8_t>(ClampInt(static_cast<int>(event.pan) - 0x40, -64, 63));
+                part->panEffective = computeEffectivePartPan(*sound, *part);
+                part->priority = static_cast<int8_t>(ClampInt(static_cast<int>(event.priority) - 0x40, -128, 127));
+                part->priorityEffective = static_cast<uint8_t>(ClampInt(part->priority + sound->priority, 0, 255));
+                part->percussion = event.percussion;
+                part->detune = event.detune;
+                part->detuneEffective = static_cast<int16_t>(ClampInt(part->detune + sound->detune, -128, 127));
+                part->pitchBendFactor = event.pitchbendFactor;
             }
         }
         return true;
@@ -2235,6 +2386,9 @@ int ImuseEngine::handleMarker(uint16_t soundId, uint8_t marker) {
 }
 
 bool ImuseEngine::startSound(uint16_t soundId) {
+    if (_logCallback) {
+        _logCallback("ImuseEngine::startSound(" + std::to_string(soundId) + ")");
+    }
     if (!_bank || !_bank->hasSound(soundId)) {
         return false;
     }
@@ -2274,6 +2428,9 @@ bool ImuseEngine::startSound(uint16_t soundId) {
 }
 
 void ImuseEngine::stopSound(uint16_t soundId) {
+    if (_logCallback) {
+        _logCallback("ImuseEngine::stopSound(" + std::to_string(soundId) + ")");
+    }
     flushActiveMidiState(soundId);
     _activeSounds.erase(soundId);
     if (_activeSounds.empty() && _midiSink) {

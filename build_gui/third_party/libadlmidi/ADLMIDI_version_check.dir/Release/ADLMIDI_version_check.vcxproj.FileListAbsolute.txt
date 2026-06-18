@@ -1,0 +1,1 @@
+D:\Prog\imwrap-v6\build_gui\third_party\libadlmidi\ADLMIDI_version_check.dir\Release\ADLMIDI_version_check.lib

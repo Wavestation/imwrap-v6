@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{02ED9A96-C4BD-3854-AAD2-D9CC5099A0DF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>Win32</Platform>
+    <ProjectName>libfluidsynth-OBJ</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">libfluidsynth-OBJ.dir\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">libfluidsynth-OBJ.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">libfluidsynth-OBJ</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">libfluidsynth-OBJ.dir\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">libfluidsynth-OBJ.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">libfluidsynth-OBJ</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">libfluidsynth-OBJ.dir\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">libfluidsynth-OBJ.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">libfluidsynth-OBJ</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">libfluidsynth-OBJ.dir\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">libfluidsynth-OBJ.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">libfluidsynth-OBJ</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /constexpr:steps100000000</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /constexpr:steps100000000</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /constexpr:steps100000000</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /constexpr:steps100000000</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <SupportJustMyCode></SupportJustMyCode>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;FLUIDSYNTH_DLL_EXPORTS;_UNICODE;UNICODE;_WIN32_WINNT=0x0A00;WINVER=0x0A00;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Prog\imwrap-v6\third_party\fluidsynth-build;D:\Prog\imwrap-v6\third_party\fluidsynth-build\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader;D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include;D:\Prog\imwrap-v6\third_party\fluidsynth-master\gcem\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/Prog/imwrap-v6/third_party/fluidsynth-master/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Prog/imwrap-v6/third_party/fluidsynth-master -BD:/Prog/imwrap-v6/third_party/fluidsynth-build --check-stamp-file D:/Prog/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-master\cmake_admin\VersionResource.rc.in;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth.cmake;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\version.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/Prog/imwrap-v6/third_party/fluidsynth-master/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Prog/imwrap-v6/third_party/fluidsynth-master -BD:/Prog/imwrap-v6/third_party/fluidsynth-build --check-stamp-file D:/Prog/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-master\cmake_admin\VersionResource.rc.in;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth.cmake;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\version.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/Prog/imwrap-v6/third_party/fluidsynth-master/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Prog/imwrap-v6/third_party/fluidsynth-master -BD:/Prog/imwrap-v6/third_party/fluidsynth-build --check-stamp-file D:/Prog/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-master\cmake_admin\VersionResource.rc.in;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth.cmake;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\version.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/Prog/imwrap-v6/third_party/fluidsynth-master/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SD:/Prog/imwrap-v6/third_party/fluidsynth-master -BD:/Prog/imwrap-v6/third_party/fluidsynth-build --check-stamp-file D:/Prog/imwrap-v6/third_party/fluidsynth-build/src/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-master\cmake_admin\VersionResource.rc.in;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth.cmake;D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\version.h.in;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\config.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_dsound.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_wasapi.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_waveout.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_winmidi.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_dls.cpp" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_dls.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys_embedded.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys_embedded.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_file.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_file.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_ct2hz.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_cb2amp.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_concave.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_convex.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_pan.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff_linear.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\fluid_interp_coeff_sinc7.cpp" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\gentables\ConstExprArr.hpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_conv.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_conv.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_hash.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_hash.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_list.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_list.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_ringbuffer.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_ringbuffer.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_settings.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_settings.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluidsynth_priv.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\utils\fluid_sys.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_defsfont.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_defsfont.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sfont.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sfont.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sffile.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_sffile.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_samplecache.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\sfloader\fluid_samplecache.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_adsr_env.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_adsr_env.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_chorus.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_chorus.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter_impl.cpp">
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Fast</FloatingPointModel>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Fast</FloatingPointModel>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Fast</FloatingPointModel>
+      <FloatingPointModel Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Fast</FloatingPointModel>
+    </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_iir_filter.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_lfo.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_lfo.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_dsp.cpp" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_event.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_event.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_mixer.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rvoice_mixer.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_phase.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rev.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\rvoice\fluid_rev.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_chan.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_chan.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_event.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_event.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_gen.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_gen.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_mod.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_mod.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth_monopoly.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_synth_write_int.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_tuning.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_tuning.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_voice.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\synth\fluid_voice.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi_router.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_midi_router.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seqbind.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seqbind_notes.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seq.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\midi\fluid_seq_queue.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_adriver.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_adriver.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_mdriver.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_mdriver.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\drivers\fluid_audio_convert.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_cmd.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_cmd.h" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_filerenderer.c" />
+    <ClCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_ladspa.c" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\src\bindings\fluid_ladspa.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\audio.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\event.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\gen.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\ladspa.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\log.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\midi.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\misc.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\mod.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\seq.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\seqbind.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\settings.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\sfont.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\shell.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\synth.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\types.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-master\include\fluidsynth\voice.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\include\fluidsynth\version.h" />
+    <ClInclude Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\include\fluidsynth.h" />
+    <ResourceCompile Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\src\VersionInfoLib.rc" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="D:\Prog\imwrap-v6\third_party\fluidsynth-build\ZERO_CHECK.vcxproj">
+      <Project>{FFCB0A28-E272-3BDF-A4E9-C97E815A7E5C}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

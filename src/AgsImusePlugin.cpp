@@ -38,6 +38,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <mmsystem.h>
+#elif defined(__APPLE__)
+#include <CoreMIDI/CoreMIDI.h>
+#endif
+
 #ifndef THIS_IS_THE_PLUGIN
 #define THIS_IS_THE_PLUGIN
 #endif
@@ -56,17 +64,11 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-
-#if defined(_WIN32)
-#include <windows.h>
-#include <mmsystem.h>
-#elif defined(__APPLE__)
-#include <CoreMIDI/CoreMIDI.h>
-#endif
+#include <ctime>
 
 namespace {
 
-enum class DriverType : int {
+enum class ImuseDriverType : int {
     FluidSynth = 0,
     AdLib = 1,
     HardwareGM = 2,
@@ -411,8 +413,10 @@ std::string GetMidiOutDeviceName(int index) {
 #endif
     return "Unknown MIDI Device";
 }
+} // namespace
 
 // Global variables for the plugin state
+IAGSEngine *g_AgsEngine = nullptr;
 std::mutex g_Mutex;
 imuse::ResourceBank g_Bank;
 imuse::ImuseEngine g_Engine(&g_Bank);
@@ -423,15 +427,33 @@ HardwareMidiOutSink g_HardwareMidiSink;
 
 fluid_settings_t *g_FluidSettings = nullptr;
 fluid_synth_t *g_FluidSynth = nullptr;
-ADL_MIDIPlayer *g_AdlPlayer = nullptr;
+struct ADL_MIDIPlayer *g_AdlPlayer = nullptr;
+ImuseDriverType g_ImuseDriverType = ImuseDriverType::FluidSynth;
 
-DriverType g_DriverType = DriverType::FluidSynth;
+void ImuseLog(const char* msg) {
+    if (g_AgsEngine) {
+        g_AgsEngine->PrintDebugConsole(msg);
+    }
+#if defined(_WIN32)
+    OutputDebugStringA(msg);
+    OutputDebugStringA("\n");
+#endif
+    FILE* f = fopen("imuse_debug.log", "a");
+    if (f) {
+        time_t now = time(nullptr);
+        struct tm* tm_info = localtime(&now);
+        char timeBuffer[26];
+        strftime(timeBuffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        fprintf(f, "[%s] %s\n", timeBuffer, msg);
+        fflush(f);
+        fclose(f);
+    }
+}
 
+namespace {
 ma_device g_AudioDevice;
 bool g_AudioDeviceInitialized = false;
 double g_TickAccumulator = 0.0;
-
-IAGSEngine *g_AgsEngine = nullptr;
 
 const char *g_iMuseScriptHeader =
     "#define IMUSE_PLUGIN_VERSION 101\r\n"
@@ -444,7 +466,7 @@ const char *g_iMuseScriptHeader =
     "import void iMuse_LoadSoundFont(const string filename);\r\n"
     "import void iMuse_SetDriver(int driverType, const string deviceOrPath);\r\n"
     "import int  iMuse_GetMIDIDeviceCount();\r\n"
-    "import const string iMuse_GetMIDIDeviceName(int index);\r\n"
+    "import String iMuse_GetMIDIDeviceName(int index);\r\n"
     "import void iMuse_StartSound(int soundId);\r\n"
     "import void iMuse_StopSound(int soundId);\r\n"
     "import void iMuse_StopAllSounds();\r\n"
@@ -464,7 +486,6 @@ const char *g_iMuseScriptHeader =
     "import void iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick);\r\n"
     "import void iMuse_ClearLoop(int soundId);\r\n"
     "import void iMuse_Fade(int soundId, int targetVolume, int timeInTicks);\r\n"
-    "import void iMuse_SetNativeMt32(int enabled);\r\n"
     "import int  iMuse_GetPlaybackTrack(int soundId);\r\n"
     "import int  iMuse_GetPlaybackBeat(int soundId);\r\n"
     "import int  iMuse_GetPlaybackTick(int soundId);\r\n"
@@ -516,7 +537,7 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
         g_Engine.advanceAll(wholeTicks);
     }
 
-    if (g_DriverType == DriverType::FluidSynth && g_FluidSynth) {
+    if (g_ImuseDriverType == ImuseDriverType::FluidSynth && g_FluidSynth) {
         fluid_synth_write_float(g_FluidSynth,
                                 static_cast<int>(frameCount),
                                 pOutputFloat,
@@ -525,7 +546,7 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
                                 pOutputFloat,
                                 1,
                                 2);
-    } else if (g_DriverType == DriverType::AdLib && g_AdlPlayer) {
+    } else if (g_ImuseDriverType == ImuseDriverType::AdLib && g_AdlPlayer) {
         ADLMIDI_AudioFormat format;
         format.type = ADLMIDI_SampleType_F32;
         format.containerSize = sizeof(float);
@@ -543,7 +564,7 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 } // namespace
 
 // AGS script exported functions
-void __stdcall Ags_iMuse_LoadBank(const char *filename) {
+void Ags_iMuse_LoadBank(const char *filename) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (!filename || filename[0] == '\0') {
         return;
@@ -563,6 +584,9 @@ void __stdcall Ags_iMuse_LoadBank(const char *filename) {
                     bytes.resize(readBytes);
                     if (g_Bank.openFromMemory(std::move(bytes), &error)) {
                         loaded = true;
+                        if (g_AgsEngine) {
+                            ImuseLog("iMUSE: Loaded bank from memory stream.");
+                        }
                     }
                 }
             }
@@ -580,18 +604,29 @@ void __stdcall Ags_iMuse_LoadBank(const char *filename) {
                 resolvedPath = buf.data();
             }
         }
-        g_Bank.openFromFile(resolvedPath, &error);
+        if (!g_Bank.openFromFile(resolvedPath, &error)) {
+            if (g_AgsEngine && !error.empty()) {
+                std::string msg = "iMUSE Error: " + error;
+                ImuseLog(msg.c_str());
+            }
+        } else if (g_AgsEngine) {
+            std::string msg = "iMUSE: Loaded bank from file '" + resolvedPath + "'";
+            ImuseLog(msg.c_str());
+        }
+    } else if (g_AgsEngine && !error.empty()) {
+        std::string msg = "iMUSE Error: " + error;
+        ImuseLog(msg.c_str());
     }
 }
 
-void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
+void Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     CleanupCurrentDriver();
 
-    g_DriverType = static_cast<DriverType>(driverType);
+    g_ImuseDriverType = static_cast<ImuseDriverType>(driverType);
 
-    switch (g_DriverType) {
-    case DriverType::FluidSynth: {
+    switch (g_ImuseDriverType) {
+    case ImuseDriverType::FluidSynth: {
         g_Engine.setNativeMt32Output(false);
         g_Engine.setTargetProfile(imuse::TargetProfile::GeneralMidi);
 
@@ -615,7 +650,15 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
                         g_FluidMidiSink.synth = g_FluidSynth;
                         g_Engine.setMidiSink(&g_FluidMidiSink);
                         g_FluidMidiSink.onAllNotesOff();
+                        if (g_AgsEngine) {
+                            std::string msg = "iMUSE: FluidSynth driver initialized with SoundFont '" + resolvedPath + "'";
+                            ImuseLog(msg.c_str());
+                        }
                     } else {
+                        if (g_AgsEngine) {
+                            std::string msg = "iMUSE Error: FluidSynth failed to load SoundFont '" + resolvedPath + "'";
+                            ImuseLog(msg.c_str());
+                        }
                         delete_fluid_synth(g_FluidSynth);
                         g_FluidSynth = nullptr;
                         delete_fluid_settings(g_FluidSettings);
@@ -629,7 +672,7 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
         }
         break;
     }
-    case DriverType::AdLib: {
+    case ImuseDriverType::AdLib: {
         // Emulated AdLib via libADLMIDI. Set target profile to Adlib to select ADL/ROL variants.
         g_Engine.setNativeMt32Output(false);
         g_Engine.setTargetProfile(imuse::TargetProfile::Adlib);
@@ -642,10 +685,15 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
             g_AdlMidiSink.player = g_AdlPlayer;
             g_Engine.setMidiSink(&g_AdlMidiSink);
             g_AdlMidiSink.onAllNotesOff();
+            if (g_AgsEngine) {
+                ImuseLog("iMUSE: AdLib driver initialized (OPL3, 4 chips).");
+            }
+        } else if (g_AgsEngine) {
+            ImuseLog("iMUSE Error: Failed to initialize AdLib player.");
         }
         break;
     }
-    case DriverType::HardwareGM: {
+    case ImuseDriverType::HardwareGM: {
         g_Engine.setNativeMt32Output(false);
         g_Engine.setTargetProfile(imuse::TargetProfile::GeneralMidi);
 
@@ -657,10 +705,17 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
         if (g_HardwareMidiSink.open(deviceIndex)) {
             g_Engine.setMidiSink(&g_HardwareMidiSink);
             g_HardwareMidiSink.onAllNotesOff();
+            if (g_AgsEngine) {
+                std::string msg = "iMUSE: Hardware GM driver initialized on port " + std::to_string(deviceIndex);
+                ImuseLog(msg.c_str());
+            }
+        } else if (g_AgsEngine) {
+            std::string msg = "iMUSE Error: Failed to open Hardware GM MIDI port " + std::to_string(deviceIndex);
+            ImuseLog(msg.c_str());
         }
         break;
     }
-    case DriverType::HardwareMT32: {
+    case ImuseDriverType::HardwareMT32: {
         g_Engine.setNativeMt32Output(true);
         g_Engine.setTargetProfile(imuse::TargetProfile::Mt32);
 
@@ -672,48 +727,78 @@ void __stdcall Ags_iMuse_SetDriver(int driverType, const char *deviceOrPath) {
         if (g_HardwareMidiSink.open(deviceIndex)) {
             g_Engine.setMidiSink(&g_HardwareMidiSink);
             g_HardwareMidiSink.onAllNotesOff();
+            if (g_AgsEngine) {
+                std::string msg = "iMUSE: Hardware MT-32 driver initialized on port " + std::to_string(deviceIndex);
+                ImuseLog(msg.c_str());
+            }
+        } else if (g_AgsEngine) {
+            std::string msg = "iMUSE Error: Failed to open Hardware MT-32 MIDI port " + std::to_string(deviceIndex);
+            ImuseLog(msg.c_str());
         }
         break;
     }
     }
 }
 
-void __stdcall Ags_iMuse_LoadSoundFont(const char *filename) {
-    Ags_iMuse_SetDriver(static_cast<int>(DriverType::FluidSynth), filename);
+void Ags_iMuse_LoadSoundFont(const char *filename) {
+    Ags_iMuse_SetDriver(static_cast<int>(ImuseDriverType::FluidSynth), filename);
 }
 
-int __stdcall Ags_iMuse_GetMIDIDeviceCount() {
+int Ags_iMuse_GetMIDIDeviceCount() {
     return GetMidiOutDeviceCount();
 }
 
-const char * __stdcall Ags_iMuse_GetMIDIDeviceName(int index) {
+const char * Ags_iMuse_GetMIDIDeviceName(int index) {
+    std::string deviceName;
+    {
+        std::lock_guard<std::mutex> lock(g_Mutex);
+        deviceName = GetMidiOutDeviceName(index);
+    }
+    if (g_AgsEngine) {
+        const char* scriptString = g_AgsEngine->CreateScriptString(deviceName.c_str());
+        if (scriptString) {
+            return scriptString;
+        } else {
+            return g_AgsEngine->CreateScriptString("");
+        }
+    }
     static std::string lastDeviceName;
-    std::lock_guard<std::mutex> lock(g_Mutex);
-    lastDeviceName = GetMidiOutDeviceName(index);
+    lastDeviceName = deviceName;
     return lastDeviceName.c_str();
 }
 
-void __stdcall Ags_iMuse_StartSound(int soundId) {
+void Ags_iMuse_StartSound(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Engine.startSound(static_cast<uint16_t>(soundId));
+    if (g_AgsEngine) {
+        std::string msg = "iMUSE: Playing sound ID " + std::to_string(soundId);
+        ImuseLog(msg.c_str());
+    }
 }
 
-void __stdcall Ags_iMuse_StopSound(int soundId) {
+void Ags_iMuse_StopSound(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Engine.stopSound(static_cast<uint16_t>(soundId));
+    if (g_AgsEngine) {
+        std::string msg = "iMUSE: Stopping sound ID " + std::to_string(soundId);
+        ImuseLog(msg.c_str());
+    }
 }
 
-void __stdcall Ags_iMuse_StopAllSounds() {
+void Ags_iMuse_StopAllSounds() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Engine.stopAllSounds();
+    if (g_AgsEngine) {
+        ImuseLog("iMUSE: Stopping all sounds.");
+    }
 }
 
-int __stdcall Ags_iMuse_IsSoundActive(int soundId) {
+int Ags_iMuse_IsSoundActive(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return g_Engine.isSoundActive(static_cast<uint16_t>(soundId)) ? 1 : 0;
 }
 
-void __stdcall Ags_iMuse_SetHook(int soundId, int hookClass, int hookValue, int hookChannel) {
+void Ags_iMuse_SetHook(int soundId, int hookClass, int hookValue, int hookChannel) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     const int16_t command[] = {
         static_cast<int16_t>(0x010C),
@@ -725,91 +810,91 @@ void __stdcall Ags_iMuse_SetHook(int soundId, int hookClass, int hookValue, int 
     g_Engine.doCommand(5, command);
 }
 
-void __stdcall Ags_iMuse_SetMasterVolume(int volume) {
+void Ags_iMuse_SetMasterVolume(int volume) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[2] = {0x0006, static_cast<int16_t>(volume)};
     g_Engine.doCommand(2, args);
 }
 
-void __stdcall Ags_iMuse_SetSoundVolume(int soundId, int volume) {
+void Ags_iMuse_SetSoundVolume(int soundId, int volume) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[3] = {0x0102, static_cast<int16_t>(soundId), static_cast<int16_t>(volume)};
     g_Engine.doCommand(3, args);
 }
 
-void __stdcall Ags_iMuse_SetSoundPan(int soundId, int pan) {
+void Ags_iMuse_SetSoundPan(int soundId, int pan) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[3] = {0x0103, static_cast<int16_t>(soundId), static_cast<int16_t>(pan)};
     g_Engine.doCommand(3, args);
 }
 
-void __stdcall Ags_iMuse_SetSoundTranspose(int soundId, int relative, int transpose) {
+void Ags_iMuse_SetSoundTranspose(int soundId, int relative, int transpose) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[4] = {0x0104, static_cast<int16_t>(soundId), static_cast<int16_t>(relative), static_cast<int16_t>(transpose)};
     g_Engine.doCommand(4, args);
 }
 
-void __stdcall Ags_iMuse_SetSoundSpeed(int soundId, int speed) {
+void Ags_iMuse_SetSoundSpeed(int soundId, int speed) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[3] = {0x0106, static_cast<int16_t>(soundId), static_cast<int16_t>(speed)};
     g_Engine.doCommand(3, args);
 }
 
-void __stdcall Ags_iMuse_SetSoundPriority(int soundId, int priority) {
+void Ags_iMuse_SetSoundPriority(int soundId, int priority) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[3] = {0x0101, static_cast<int16_t>(soundId), static_cast<int16_t>(priority)};
     g_Engine.doCommand(3, args);
 }
 
-void __stdcall Ags_iMuse_SetPartVolume(int soundId, int channel, int volume) {
+void Ags_iMuse_SetPartVolume(int soundId, int channel, int volume) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[4] = {0x0116, static_cast<int16_t>(soundId), static_cast<int16_t>(channel), static_cast<int16_t>(volume)};
     g_Engine.doCommand(4, args);
 }
 
-void __stdcall Ags_iMuse_SetPartOnOff(int soundId, int channel, int onOff) {
+void Ags_iMuse_SetPartOnOff(int soundId, int channel, int onOff) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[4] = {0x010B, static_cast<int16_t>(soundId), static_cast<int16_t>(channel), static_cast<int16_t>(onOff)};
     g_Engine.doCommand(4, args);
 }
 
-void __stdcall Ags_iMuse_Jump(int soundId, int track, int beat, int tick) {
+void Ags_iMuse_Jump(int soundId, int track, int beat, int tick) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[5] = {0x0107, static_cast<int16_t>(soundId), static_cast<int16_t>(track), static_cast<int16_t>(beat), static_cast<int16_t>(tick)};
     g_Engine.doCommand(5, args);
 }
 
-void __stdcall Ags_iMuse_Scan(int soundId, int track, int beat, int tick) {
+void Ags_iMuse_Scan(int soundId, int track, int beat, int tick) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[5] = {0x0108, static_cast<int16_t>(soundId), static_cast<int16_t>(track), static_cast<int16_t>(beat), static_cast<int16_t>(tick)};
     g_Engine.doCommand(5, args);
 }
 
-void __stdcall Ags_iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick) {
+void Ags_iMuse_SetLoop(int soundId, int count, int toBeat, int toTick, int fromBeat, int fromTick) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[7] = {0x0109, static_cast<int16_t>(soundId), static_cast<int16_t>(count), static_cast<int16_t>(toBeat), static_cast<int16_t>(toTick), static_cast<int16_t>(fromBeat), static_cast<int16_t>(fromTick)};
     g_Engine.doCommand(7, args);
 }
 
-void __stdcall Ags_iMuse_ClearLoop(int soundId) {
+void Ags_iMuse_ClearLoop(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[2] = {0x010A, static_cast<int16_t>(soundId)};
     g_Engine.doCommand(2, args);
 }
 
-void __stdcall Ags_iMuse_Fade(int soundId, int targetVolume, int timeInTicks) {
+void Ags_iMuse_Fade(int soundId, int targetVolume, int timeInTicks) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[4] = {0x010D, static_cast<int16_t>(soundId), static_cast<int16_t>(targetVolume), static_cast<int16_t>(timeInTicks)};
     g_Engine.doCommand(4, args);
 }
 
-void __stdcall Ags_iMuse_SetNativeMt32(int enabled) {
+void Ags_iMuse_SetNativeMt32(int enabled) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Engine.setNativeMt32Output(enabled != 0);
     g_Engine.setTargetProfile(enabled ? imuse::TargetProfile::Mt32 : imuse::TargetProfile::GeneralMidi);
 }
 
-int __stdcall Ags_iMuse_GetPlaybackTrack(int soundId) {
+int Ags_iMuse_GetPlaybackTrack(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     uint16_t track = 0, beat = 0, tick = 0;
     if (g_Engine.getPlaybackLocation(static_cast<uint16_t>(soundId), &track, &beat, &tick)) {
@@ -818,7 +903,7 @@ int __stdcall Ags_iMuse_GetPlaybackTrack(int soundId) {
     return -1;
 }
 
-int __stdcall Ags_iMuse_GetPlaybackBeat(int soundId) {
+int Ags_iMuse_GetPlaybackBeat(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     uint16_t track = 0, beat = 0, tick = 0;
     if (g_Engine.getPlaybackLocation(static_cast<uint16_t>(soundId), &track, &beat, &tick)) {
@@ -827,7 +912,7 @@ int __stdcall Ags_iMuse_GetPlaybackBeat(int soundId) {
     return -1;
 }
 
-int __stdcall Ags_iMuse_GetPlaybackTick(int soundId) {
+int Ags_iMuse_GetPlaybackTick(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     uint16_t track = 0, beat = 0, tick = 0;
     if (g_Engine.getPlaybackLocation(static_cast<uint16_t>(soundId), &track, &beat, &tick)) {
@@ -836,17 +921,17 @@ int __stdcall Ags_iMuse_GetPlaybackTick(int soundId) {
     return -1;
 }
 
-int __stdcall Ags_iMuse_GetSoundStatus(int soundId) {
+int Ags_iMuse_GetSoundStatus(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return g_Engine.getSoundStatus(static_cast<uint16_t>(soundId));
 }
 
-int __stdcall Ags_iMuse_GetActiveSoundCount() {
+int Ags_iMuse_GetActiveSoundCount() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return static_cast<int>(g_Engine.activeSoundIds().size());
 }
 
-int __stdcall Ags_iMuse_GetActiveSoundId(int index) {
+int Ags_iMuse_GetActiveSoundId(int index) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     std::vector<uint16_t> activeIds = g_Engine.activeSoundIds();
     if (index >= 0 && index < static_cast<int>(activeIds.size())) {
@@ -855,12 +940,12 @@ int __stdcall Ags_iMuse_GetActiveSoundId(int index) {
     return -1;
 }
 
-int __stdcall Ags_iMuse_GetTempo() {
+int Ags_iMuse_GetTempo() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return static_cast<int>(g_Engine.currentTempoMicrosPerQuarter());
 }
 
-void __stdcall Ags_iMuse_SetCompatibilityProfile(int profile) {
+void Ags_iMuse_SetCompatibilityProfile(int profile) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (profile == 1) {
         g_Engine.setCompatibilityProfile(imuse::ImuseEngine::CompatibilityProfile::SamAndMax);
@@ -869,18 +954,18 @@ void __stdcall Ags_iMuse_SetCompatibilityProfile(int profile) {
     }
 }
 
-int __stdcall Ags_iMuse_GetCompatibilityProfile() {
+int Ags_iMuse_GetCompatibilityProfile() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return g_Engine.compatibilityProfile() == imuse::ImuseEngine::CompatibilityProfile::SamAndMax ? 1 : 0;
 }
 
-void __stdcall Ags_iMuse_RegisterRolandTimbreMapping(const char *name, int gmProgram) {
+void Ags_iMuse_RegisterRolandTimbreMapping(const char *name, int gmProgram) {
     if (name) {
         imuse::RegisterRolandTimbreMapping(name, static_cast<uint8_t>(gmProgram));
     }
 }
 
-void __stdcall Ags_iMuse_ClearRolandTimbreMappings() {
+void Ags_iMuse_ClearRolandTimbreMappings() {
     imuse::ClearRolandTimbreMappings();
 }
 
@@ -915,6 +1000,13 @@ DLLEXPORT void AGS_EditorLoadGame(char *, int) {
 
 DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine = lpEngine;
+    if (g_AgsEngine) {
+        ImuseLog("iMUSE Plugin: Initialized.");
+    }
+
+    g_Engine.setLogCallback([](const std::string& str) {
+        ImuseLog(str.c_str());
+    });
 
     // Register script functions
     g_AgsEngine->RegisterScriptFunction("iMuse_LoadBank", (void*)Ags_iMuse_LoadBank);
