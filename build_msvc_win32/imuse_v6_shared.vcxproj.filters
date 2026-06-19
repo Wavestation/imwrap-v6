@@ -16,6 +16,9 @@
     <ClCompile Include="D:\Prog\imwrap-v6\src\ImuseEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Prog\imwrap-v6\src\ImuseEngineSerialize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Prog\imwrap-v6\src\ResourceBank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

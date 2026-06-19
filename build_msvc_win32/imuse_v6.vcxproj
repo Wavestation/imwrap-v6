@@ -270,6 +270,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\Prog\imwrap-v6\src\ImuseSysex.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\src\ImsWriter.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\src\ImuseEngine.cpp" />
+    <ClCompile Include="D:\Prog\imwrap-v6\src\ImuseEngineSerialize.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\src\ResourceBank.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\src\SinkMidiChannel.cpp" />
     <ClCompile Include="D:\Prog\imwrap-v6\src\SmfSequence.cpp" />

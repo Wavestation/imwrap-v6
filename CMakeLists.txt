@@ -19,6 +19,7 @@ set(IMUSE_CORE_SOURCES
     src/ImuseSysex.cpp
     src/ImsWriter.cpp
     src/ImuseEngine.cpp
+    src/ImuseEngineSerialize.cpp
     src/ResourceBank.cpp
     src/SinkMidiChannel.cpp
     src/SmfSequence.cpp
@@ -75,6 +76,10 @@ if(IMUSE_BUILD_TOOLS)
     add_executable(imsprobe tools/imsprobe.cpp)
     target_link_libraries(imsprobe PRIVATE imuse_v6)
     imuse_apply_common_target_settings(imsprobe)
+
+    add_executable(test_crash C:/Users/Administrateur/.gemini/antigravity/brain/4a753803-9da4-49fb-b137-1f8dfabbbd08/scratch/test_crash.cpp)
+    target_link_libraries(test_crash PRIVATE imuse_v6)
+    imuse_apply_common_target_settings(test_crash)
 endif()
 
 # Configure libADLMIDI build options

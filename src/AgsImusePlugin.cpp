@@ -66,6 +66,8 @@
 #include <cstdlib>
 #include <ctime>
 
+void ImuseLog(const char* msg);
+
 namespace {
 
 enum class ImuseDriverType : int {
@@ -252,10 +254,29 @@ struct AgsAdlibMidiSink final : imuse::MidiSink {
         }
     }
 };
-
 struct HardwareMidiOutSink final : imuse::MidiSink {
 #if defined(_WIN32)
     HMIDIOUT hMidiOut = nullptr;
+
+    struct PendingSysEx {
+        MIDIHDR hdr;
+        std::vector<char> buf;
+    };
+    std::vector<std::unique_ptr<PendingSysEx>> pendingSysExList;
+
+    void cleanPendingSysEx() {
+        if (!hMidiOut) return;
+        auto it = pendingSysExList.begin();
+        while (it != pendingSysExList.end()) {
+            if ((*it)->hdr.dwFlags & MHDR_DONE) {
+                midiOutUnprepareHeader(hMidiOut, &(*it)->hdr, sizeof(MIDIHDR));
+                it = pendingSysExList.erase(it);
+                ImuseLog("iMUSE WinMM: SysEx transmission completed and header unprepared.");
+            } else {
+                ++it;
+            }
+        }
+    }
 #elif defined(__APPLE__)
     MIDIClientRef client = 0;
     MIDIPortRef port = 0;
@@ -291,6 +312,10 @@ struct HardwareMidiOutSink final : imuse::MidiSink {
 #if defined(_WIN32)
         if (hMidiOut) {
             midiOutReset(hMidiOut);
+            for (auto &pending : pendingSysExList) {
+                midiOutUnprepareHeader(hMidiOut, &pending->hdr, sizeof(MIDIHDR));
+            }
+            pendingSysExList.clear();
             midiOutClose(hMidiOut);
             hMidiOut = nullptr;
         }
@@ -312,6 +337,7 @@ struct HardwareMidiOutSink final : imuse::MidiSink {
             return;
         }
 #if defined(_WIN32)
+        cleanPendingSysEx();
         DWORD msg = status | (data1 << 8) | (hasData2 ? (data2 << 16) : 0);
         midiOutShortMsg(hMidiOut, msg);
 #elif defined(__APPLE__)
@@ -334,22 +360,46 @@ struct HardwareMidiOutSink final : imuse::MidiSink {
             return;
         }
 #if defined(_WIN32)
-        MIDIHDR hdr;
-        std::vector<char> buf(message.size() + 2);
-        buf[0] = 0xF0;
-        std::memcpy(buf.data() + 1, message.data(), message.size());
-        buf[message.size() + 1] = 0xF7;
+        cleanPendingSysEx();
 
-        hdr.lpData = buf.data();
-        hdr.dwBufferLength = static_cast<DWORD>(buf.size());
-        hdr.dwFlags = 0;
-
-        midiOutPrepareHeader(hMidiOut, &hdr, sizeof(hdr));
-        midiOutLongMsg(hMidiOut, &hdr, sizeof(hdr));
-        while (!(hdr.dwFlags & MHDR_DONE)) {
-            Sleep(1);
+        auto pending = std::make_unique<PendingSysEx>();
+        
+        if (!message.empty() && static_cast<uint8_t>(message.data()[0]) == 0xF0) {
+            pending->buf.assign(message.data(), message.data() + message.size());
+        } else {
+            pending->buf.push_back(static_cast<char>(0xF0));
+            pending->buf.insert(pending->buf.end(), message.data(), message.data() + message.size());
         }
-        midiOutUnprepareHeader(hMidiOut, &hdr, sizeof(hdr));
+        
+        if (pending->buf.empty() || static_cast<uint8_t>(pending->buf.back()) != 0xF7) {
+            pending->buf.push_back(static_cast<char>(0xF7));
+        }
+
+        std::memset(&pending->hdr, 0, sizeof(MIDIHDR));
+        pending->hdr.lpData = pending->buf.data();
+        pending->hdr.dwBufferLength = static_cast<DWORD>(pending->buf.size());
+        pending->hdr.dwFlags = 0;
+
+        char infoBuf[256];
+        std::snprintf(infoBuf, sizeof(infoBuf), "iMUSE WinMM: Queueing SysEx, size=%zu bytes.", pending->buf.size());
+        ImuseLog(infoBuf);
+
+        MMRESULT prepRes = midiOutPrepareHeader(hMidiOut, &pending->hdr, sizeof(MIDIHDR));
+        if (prepRes == MMSYSERR_NOERROR) {
+            MMRESULT sendRes = midiOutLongMsg(hMidiOut, &pending->hdr, sizeof(MIDIHDR));
+            if (sendRes == MMSYSERR_NOERROR) {
+                pendingSysExList.push_back(std::move(pending));
+            } else {
+                char errBuf[256];
+                std::snprintf(errBuf, sizeof(errBuf), "iMUSE WinMM Error: midiOutLongMsg failed (error %u).", sendRes);
+                ImuseLog(errBuf);
+                midiOutUnprepareHeader(hMidiOut, &pending->hdr, sizeof(MIDIHDR));
+            }
+        } else {
+            char errBuf[256];
+            std::snprintf(errBuf, sizeof(errBuf), "iMUSE WinMM Error: midiOutPrepareHeader failed (error %u).", prepRes);
+            ImuseLog(errBuf);
+        }
 #elif defined(__APPLE__)
         if (!port || !destination) {
             return;
@@ -470,6 +520,13 @@ const char *g_iMuseScriptHeader =
     "#define IMUSE_DRIVER_ADLIB         1\r\n"
     "#define IMUSE_DRIVER_HARDWARE_GM   2\r\n"
     "#define IMUSE_DRIVER_HARDWARE_MT32 3\r\n"
+    "\r\n"
+    "#define IMUSE_HOOK_JUMP            0\r\n"
+    "#define IMUSE_HOOK_TRANSPOSE       1\r\n"
+    "#define IMUSE_HOOK_PART_ONOFF      2\r\n"
+    "#define IMUSE_HOOK_PART_VOLUME     3\r\n"
+    "#define IMUSE_HOOK_PART_PROGRAM    4\r\n"
+    "#define IMUSE_HOOK_PART_TRANSPOSE  5\r\n"
     "\r\n"
     "import void iMuse_LoadBank(const string filename);\r\n"
     "import void iMuse_LoadSoundFont(const string filename);\r\n"
@@ -1297,7 +1354,9 @@ DLLEXPORT void AGS_EngineShutdown(void) {
     g_AgsEngine = nullptr;
 }
 
-DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t) {
+#include <sstream>
+
+DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t data) {
     if (event == AGSE_PRESCREENDRAW && g_AgsEngine) {
         std::vector<PendingMarker> firedMarkers;
         {
@@ -1308,6 +1367,31 @@ DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t) {
         for (const auto &firedMarker : firedMarkers) {
             g_AgsEngine->QueueGameScriptFunction("iMuse_OnTrigger", 1, 2,
                                                  firedMarker.soundId, firedMarker.marker);
+        }
+    }
+    else if (event == AGSE_SAVEGAME && g_AgsEngine) {
+        std::stringstream ss(std::ios::binary | std::ios::out);
+        {
+            std::lock_guard<std::mutex> lock(g_Mutex);
+            g_Engine.Serialize(ss);
+        }
+        std::string dataStr = ss.str();
+        int32_t size = static_cast<int32_t>(dataStr.size());
+        g_AgsEngine->FWrite(&size, sizeof(size), static_cast<int32_t>(data));
+        if (size > 0) {
+            g_AgsEngine->FWrite(const_cast<char*>(dataStr.data()), size, static_cast<int32_t>(data));
+        }
+    }
+    else if (event == AGSE_RESTOREGAME && g_AgsEngine) {
+        int32_t size = 0;
+        g_AgsEngine->FRead(&size, sizeof(size), static_cast<int32_t>(data));
+        if (size > 0) {
+            std::vector<char> buf(size);
+            g_AgsEngine->FRead(buf.data(), size, static_cast<int32_t>(data));
+            std::string dataStr(buf.begin(), buf.end());
+            std::stringstream ss(dataStr, std::ios::binary | std::ios::in);
+            std::lock_guard<std::mutex> lock(g_Mutex);
+            g_Engine.Deserialize(ss);
         }
     }
     return 0;

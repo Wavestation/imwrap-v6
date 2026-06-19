@@ -495,9 +495,11 @@ void SysExWindow::sendMidiSysEx() {
     HMIDIOUT hOut = static_cast<HMIDIOUT>(hMidiOut);
 
     if (midiOutPrepareHeader(hOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
-        midiOutLongMsg(hOut, &hdr, sizeof(hdr));
-        while (!(hdr.dwFlags & MHDR_DONE)) {
-            Sleep(1);
+        if (midiOutLongMsg(hOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
+            int timeout = 500; // max 500ms
+            while (!(hdr.dwFlags & MHDR_DONE) && timeout-- > 0) {
+                Sleep(1);
+            }
         }
         midiOutUnprepareHeader(hOut, &hdr, sizeof(hdr));
     }

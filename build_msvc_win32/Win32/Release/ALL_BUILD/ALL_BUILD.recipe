@@ -11,7 +11,19 @@
       <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\imsprobe.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
+      <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\SetMIDI.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\imuse_shim.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\imuse_v6.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
       <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\imusepack.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\test_crash.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\Prog\imwrap-v6\build_msvc_win32\Release\ALL_BUILD</FullPath>

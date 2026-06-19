@@ -578,6 +578,9 @@ void ImuseEngine::initializePart(ActiveSound *sound, PartState *part, uint8_t ch
         return;
     }
 
+    removeSuspendedPart(part);
+    releaseOutputChannel(part);
+
     *part = {};
     part->initialized = true;
     part->present = true;
@@ -696,7 +699,7 @@ int ImuseEngine::allocateOutputChannel(uint8_t priority) {
         }
 
         PartState *candidate = _physicalChannelOwners[channel];
-        if (!candidate || candidate->percussion || candidate->priorityEffective > bestPriority) {
+        if (!candidate || candidate->percussion || candidate->priorityEffective >= bestPriority) {
             continue;
         }
 
@@ -707,6 +710,14 @@ int ImuseEngine::allocateOutputChannel(uint8_t priority) {
 
     if (!best) {
         return -1;
+    }
+
+    if (_logCallback) {
+        _logCallback("iMUSE: Channel dispute! Part (sound=" + std::to_string(best->ownerSoundId) + 
+                     ", channel=" + std::to_string(best->channel) + 
+                     ", priority=" + std::to_string(best->priorityEffective) + 
+                     ") is being stolen from physical channel " + std::to_string(bestChannel) + 
+                     " by part with priority " + std::to_string(priority));
     }
 
     if (ActiveSound *owner = findActiveSound(best->ownerSoundId)) {
@@ -777,7 +788,19 @@ void ImuseEngine::reallocateMidiChannels() {
 
         const int outputChannel = allocateOutputChannel(bestPriority);
         if (outputChannel < 0) {
+            if (_logCallback) {
+                _logCallback("iMUSE Warning: No physical channel available for Part (sound=" + std::to_string(bestSound->soundId) + 
+                             ", channel=" + std::to_string(best->channel) + 
+                             ", priority=" + std::to_string(best->priorityEffective) + ")");
+            }
             return;
+        }
+
+        if (_logCallback) {
+            _logCallback("iMUSE: Allocated physical channel " + std::to_string(outputChannel) + 
+                         " to Part (sound=" + std::to_string(bestSound->soundId) + 
+                         ", channel=" + std::to_string(best->channel) + 
+                         ", priority=" + std::to_string(best->priorityEffective) + ")");
         }
 
         best->outputChannel = static_cast<int8_t>(outputChannel);
@@ -1672,27 +1695,7 @@ void ImuseEngine::flushActiveMidiState(uint16_t soundId) {
         return;
     }
 
-    // 1. Remove all parts of this sound from the waiting queue first
-    for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
-        PartState &part = sound->parts[channelIndex];
-        if (part.initialized) {
-            removeSuspendedPart(&part);
-        }
-    }
-
-    // 2. Now stop all active parts
-    for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
-        PartState &part = sound->parts[channelIndex];
-        if (part.initialized && part.present) {
-            partOff(sound, &part);
-            part.pedal = false;
-            part.transmitted = false;
-            part.present = false;
-            part.initialized = false;
-            clearPartActiveNotes(&part);
-        }
-    }
-
+    // 1. First, send individual Note Offs and Sustain Offs to the active physical channels
     if (_midiSink) {
         for (std::size_t channelIndex = 0; channelIndex < sound->midiChannels.size(); ++channelIndex) {
             MidiChannelState &channel = sound->midiChannels[channelIndex];
@@ -1710,6 +1713,27 @@ void ImuseEngine::flushActiveMidiState(uint16_t soundId) {
                 }
             }
         }
+    }
+
+    // 2. Remove all parts of this sound from the waiting queue first
+    for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
+        PartState &part = sound->parts[channelIndex];
+        removeSuspendedPart(&part);
+    }
+
+    // 3. Now stop all active parts
+    for (std::size_t channelIndex = 0; channelIndex < sound->parts.size(); ++channelIndex) {
+        PartState &part = sound->parts[channelIndex];
+        if (part.initialized) {
+            partOff(sound, &part);
+            part.pedal = false;
+            part.transmitted = false;
+            part.present = false;
+            part.initialized = false;
+            clearPartActiveNotes(&part);
+        }
+        removeSuspendedPart(&part);
+        releaseOutputChannel(&part);
     }
 
     resetMidiState(sound);
@@ -2114,17 +2138,18 @@ bool ImuseEngine::executeControlEvent(uint16_t soundId, const ImuseControlEvent 
         return true;
     case ImuseSysexType::ShutdownPart:
         if (event.hasPart && event.part < sound->parts.size()) {
-            if (PartState *part = getActivePart(sound, event.part)) {
-                partOff(sound, part);
-            }
+            PartState &part = sound->parts[event.part];
+            partOff(sound, &part);
+            removeSuspendedPart(&part);
+            releaseOutputChannel(&part);
             sound->parts[event.part] = {};
         }
         return true;
     case ImuseSysexType::StartSong:
         for (PartState &part : sound->parts) {
-            if (part.initialized) {
-                partOff(sound, &part);
-            }
+            partOff(sound, &part);
+            removeSuspendedPart(&part);
+            releaseOutputChannel(&part);
             part = {};
         }
         return true;

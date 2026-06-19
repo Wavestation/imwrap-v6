@@ -191,6 +191,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{32E37017-ECF8-3A4B-B727-E2EF6DB58C74}</Project>
       <Name>imsprobe</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\Prog\imwrap-v6\build_msvc_win32\imuse_setmidi.vcxproj">
+      <Project>{E70F37E4-7DCD-388A-8A06-49DC3CAAF1E0}</Project>
+      <Name>imuse_setmidi</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_msvc_win32\imuse_shim.vcxproj">
       <Project>{7EBA645B-BF80-33C0-B1C7-71D59D0CB325}</Project>
       <Name>imuse_shim</Name>
@@ -206,6 +210,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="D:\Prog\imwrap-v6\build_msvc_win32\imusepack.vcxproj">
       <Project>{A4D55BA9-15B8-3620-B04B-719E1EDC29AF}</Project>
       <Name>imusepack</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Prog\imwrap-v6\build_msvc_win32\test_crash.vcxproj">
+      <Project>{69642BB7-BFC0-33CE-8026-AEC45980159A}</Project>
+      <Name>test_crash</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

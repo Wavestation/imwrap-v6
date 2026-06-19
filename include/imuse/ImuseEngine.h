@@ -76,6 +76,10 @@ public:
     bool getPlaybackLocation(uint16_t soundId, uint16_t *track, uint16_t *beat, uint16_t *tick) const;
     uint32_t currentTempoMicrosPerQuarter() const;
     double transportTicksPerSecond() const;
+
+    bool Serialize(std::ostream &os) const;
+    bool Deserialize(std::istream &is);
+
     void advanceAll(uint32_t deltaTicks);
     bool advanceSound(uint16_t soundId, uint32_t deltaTicks);
 

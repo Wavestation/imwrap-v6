@@ -65,9 +65,11 @@ void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imuse::ByteView message)
     hdr.dwFlags = 0;
     
     if (midiOutPrepareHeader(hMidiOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
-        midiOutLongMsg(hMidiOut, &hdr, sizeof(hdr));
-        while (!(hdr.dwFlags & MHDR_DONE)) {
-            Sleep(1);
+        if (midiOutLongMsg(hMidiOut, &hdr, sizeof(hdr)) == MMSYSERR_NOERROR) {
+            int timeout = 100; // max 100ms
+            while (!(hdr.dwFlags & MHDR_DONE) && timeout-- > 0) {
+                Sleep(1);
+            }
         }
         midiOutUnprepareHeader(hMidiOut, &hdr, sizeof(hdr));
     }
