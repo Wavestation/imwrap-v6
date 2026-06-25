@@ -63,6 +63,9 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <filesystem>
+#include <fstream>
+#include <system_error>
 #include <cstdlib>
 #include <ctime>
 
@@ -484,6 +487,7 @@ HardwareMidiOutSink g_HardwareMidiSink;
 
 fluid_settings_t *g_FluidSettings = nullptr;
 fluid_synth_t *g_FluidSynth = nullptr;
+std::string g_FluidTempSoundFontPath;
 struct ADL_MIDIPlayer *g_AdlPlayer = nullptr;
 IMWrapDriverType g_IMWrapDriverType = IMWrapDriverType::FluidSynth;
 bool g_LoggingEnabled = false;
@@ -568,6 +572,165 @@ const char *g_iMWrapScriptHeader =
     "import int  iMWrap_ApplyExternalConfig(const string fallbackSoundFont);\r\n"
     "import void iMWrap_EnableLog(int enabled);\r\n";
 
+bool ResolveAgsPath(const char *scriptPath, std::string *resolvedPath) {
+    if (!scriptPath || scriptPath[0] == '\0' || !resolvedPath) {
+        return false;
+    }
+
+    *resolvedPath = scriptPath;
+    if (g_AgsEngine && g_AgsEngine->version >= 27) {
+        size_t needed = g_AgsEngine->ResolveFilePath(scriptPath, nullptr, 0);
+        if (needed > 0) {
+            std::vector<char> buf(needed);
+            g_AgsEngine->ResolveFilePath(scriptPath, buf.data(), needed);
+            *resolvedPath = buf.data();
+        }
+    }
+
+    return true;
+}
+
+bool PathExists(const std::string &path) {
+    if (path.empty()) {
+        return false;
+    }
+
+    std::error_code ec;
+    return std::filesystem::exists(std::filesystem::path(path), ec);
+}
+
+void RemoveTempSoundFontFile() {
+    if (g_FluidTempSoundFontPath.empty()) {
+        return;
+    }
+
+    std::error_code ec;
+    std::filesystem::remove(std::filesystem::path(g_FluidTempSoundFontPath), ec);
+    g_FluidTempSoundFontPath.clear();
+}
+
+bool ExtractAgsFileToTemp(const char *scriptPath,
+                          const char *resolvedPath,
+                          std::string *tempPath,
+                          std::string *error) {
+    if (!tempPath) {
+        return false;
+    }
+    tempPath->clear();
+
+    if (!g_AgsEngine || g_AgsEngine->version < 28) {
+        if (error) {
+            *error = "AGS file streaming is unavailable with this engine version";
+        }
+        return false;
+    }
+
+    IAGSStream *stream = g_AgsEngine->OpenFileStream(scriptPath, AGSSTREAM_FILE_OPEN, AGSSTREAM_MODE_READ);
+    if (!stream) {
+        if (error) {
+            *error = "AGS could not open the packaged resource as a stream";
+        }
+        return false;
+    }
+
+    auto disposeStream = [&]() {
+        if (stream) {
+            stream->Dispose();
+            stream = nullptr;
+        }
+    };
+
+    std::error_code ec;
+    const std::filesystem::path tempDir = std::filesystem::temp_directory_path(ec);
+    if (ec) {
+        disposeStream();
+        if (error) {
+            *error = "unable to locate a temporary directory";
+        }
+        return false;
+    }
+
+    std::filesystem::path sourcePath = resolvedPath && resolvedPath[0] != '\0'
+        ? std::filesystem::path(resolvedPath)
+        : std::filesystem::path(scriptPath);
+    std::string extension = sourcePath.has_extension() ? sourcePath.extension().string() : ".sf2";
+
+    std::filesystem::path targetPath;
+    bool haveTargetPath = false;
+    for (int attempt = 0; attempt < 32; ++attempt) {
+        std::filesystem::path candidate = tempDir / ("imwrap-" + std::to_string(std::time(nullptr)) +
+                                                     "-" + std::to_string(std::rand()) + extension);
+        if (!std::filesystem::exists(candidate, ec)) {
+            targetPath = candidate;
+            haveTargetPath = true;
+            break;
+        }
+        ec.clear();
+    }
+
+    if (!haveTargetPath) {
+        disposeStream();
+        if (error) {
+            *error = "unable to allocate a temporary file path";
+        }
+        return false;
+    }
+
+    std::ofstream out(targetPath, std::ios::binary | std::ios::trunc);
+    if (!out) {
+        disposeStream();
+        if (error) {
+            *error = "unable to create the temporary SoundFont file";
+        }
+        return false;
+    }
+
+    std::vector<char> buffer(64 * 1024);
+    size_t totalBytes = 0;
+    while (!stream->EOS()) {
+        size_t bytesRead = stream->Read(buffer.data(), buffer.size());
+        if (bytesRead == 0) {
+            if (stream->GetError()) {
+                out.close();
+                disposeStream();
+                std::filesystem::remove(targetPath, ec);
+                if (error) {
+                    *error = "failed while reading the packaged SoundFont stream";
+                }
+                return false;
+            }
+            break;
+        }
+
+        out.write(buffer.data(), static_cast<std::streamsize>(bytesRead));
+        if (!out) {
+            out.close();
+            disposeStream();
+            std::filesystem::remove(targetPath, ec);
+            if (error) {
+                *error = "failed while writing the temporary SoundFont file";
+            }
+            return false;
+        }
+
+        totalBytes += bytesRead;
+    }
+
+    out.close();
+    disposeStream();
+
+    if (totalBytes == 0) {
+        std::filesystem::remove(targetPath, ec);
+        if (error) {
+            *error = "the packaged SoundFont stream was empty";
+        }
+        return false;
+    }
+
+    *tempPath = targetPath.string();
+    return true;
+}
+
 void CleanupCurrentDriver() {
     g_Engine.setMidiSink(nullptr);
     g_FluidMidiSink.synth = nullptr;
@@ -581,6 +744,7 @@ void CleanupCurrentDriver() {
         delete_fluid_settings(g_FluidSettings);
         g_FluidSettings = nullptr;
     }
+    RemoveTempSoundFontFile();
 
     if (g_AdlPlayer) {
         adl_close(g_AdlPlayer);
@@ -666,14 +830,7 @@ void Ags_iMWrap_LoadBank(const char *filename) {
 
     if (!loaded) {
         std::string resolvedPath = filename;
-        if (g_AgsEngine && g_AgsEngine->version >= 27) {
-            size_t needed = g_AgsEngine->ResolveFilePath(filename, nullptr, 0);
-            if (needed > 0) {
-                std::vector<char> buf(needed);
-                g_AgsEngine->ResolveFilePath(filename, buf.data(), needed);
-                resolvedPath = buf.data();
-            }
-        }
+        ResolveAgsPath(filename, &resolvedPath);
         if (!g_Bank.openFromFile(resolvedPath, &error)) {
             if (g_AgsEngine && !error.empty()) {
                 std::string msg = "iMWrap Error: " + error;
@@ -702,12 +859,22 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
 
         if (deviceOrPath && deviceOrPath[0] != '\0') {
             std::string resolvedPath = deviceOrPath;
-            if (g_AgsEngine && g_AgsEngine->version >= 27) {
-                size_t needed = g_AgsEngine->ResolveFilePath(deviceOrPath, nullptr, 0);
-                if (needed > 0) {
-                    std::vector<char> buf(needed);
-                    g_AgsEngine->ResolveFilePath(deviceOrPath, buf.data(), needed);
-                    resolvedPath = buf.data();
+            ResolveAgsPath(deviceOrPath, &resolvedPath);
+            std::string loadPath = resolvedPath;
+            std::string extractedTempPath;
+
+            if (!PathExists(resolvedPath)) {
+                std::string extractionError;
+                if (ExtractAgsFileToTemp(deviceOrPath, resolvedPath.c_str(), &extractedTempPath, &extractionError)) {
+                    loadPath = extractedTempPath;
+                    if (g_AgsEngine) {
+                        std::string msg = "iMWrap: Extracted packaged SoundFont to temporary file '" + loadPath + "'";
+                        IMWrapLog(msg.c_str());
+                    }
+                } else if (g_AgsEngine && !extractionError.empty()) {
+                    std::string msg = "iMWrap: SoundFont path '" + resolvedPath +
+                                      "' is not available on disk; temporary extraction failed: " + extractionError;
+                    IMWrapLog(msg.c_str());
                 }
             }
 
@@ -716,17 +883,22 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                 fluid_settings_setnum(g_FluidSettings, "synth.sample-rate", 44100.0);
                 g_FluidSynth = new_fluid_synth(g_FluidSettings);
                 if (g_FluidSynth) {
-                    if (fluid_synth_sfload(g_FluidSynth, resolvedPath.c_str(), 1) != FLUID_FAILED) {
+                    if (fluid_synth_sfload(g_FluidSynth, loadPath.c_str(), 1) != FLUID_FAILED) {
+                        g_FluidTempSoundFontPath = extractedTempPath;
                         g_FluidMidiSink.synth = g_FluidSynth;
                         g_Engine.setMidiSink(&g_FluidMidiSink);
                         g_FluidMidiSink.onAllNotesOff();
                         if (g_AgsEngine) {
-                            std::string msg = "iMWrap: FluidSynth driver initialized with SoundFont '" + resolvedPath + "'";
+                            std::string msg = "iMWrap: FluidSynth driver initialized with SoundFont '" + loadPath + "'";
                             IMWrapLog(msg.c_str());
                         }
                     } else {
+                        if (!extractedTempPath.empty()) {
+                            std::error_code ec;
+                            std::filesystem::remove(std::filesystem::path(extractedTempPath), ec);
+                        }
                         if (g_AgsEngine) {
-                            std::string msg = "iMWrap Error: FluidSynth failed to load SoundFont '" + resolvedPath + "'";
+                            std::string msg = "iMWrap Error: FluidSynth failed to load SoundFont '" + loadPath + "'";
                             IMWrapLog(msg.c_str());
                         }
                         delete_fluid_synth(g_FluidSynth);

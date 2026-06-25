@@ -236,8 +236,8 @@ La méthode la plus simple consiste à placer vos fichiers dans le dossier de co
 - **Fichiers `.ims` :**
   Le plugin appelle `IAGSEngine::OpenFileStream` fourni par l'interface d'AGS (disponible à partir de la version d'interface 28 / AGS 3.6.0+). Cette API recherche et lit le fichier directement depuis l'archive virtuelle AGS (dans le fichier `.vox` ou l'exécutable). Le plugin charge la totalité des octets en mémoire puis la passe au parseur d'iMWrap.
 - **Fichiers SoundFont `.sf2` :**
-  Étant donné que FluidSynth nécessite un chemin de fichier brut pour son chargement et n'utilise pas l'API de streaming d'AGS, le plugin fait appel à `IAGSEngine::ResolveFilePath` (disponible depuis l'interface 27). Cette fonction résout les chemins spéciaux comme `$DATA$/...` en chemins d'accès système absolus valides sur la machine de l'utilisateur, permettant à FluidSynth de charger la SoundFont directement depuis le disque.
-  *Note : Pour un chargement optimal, assurez-vous que les SoundFonts sont déployées en tant que fichiers physiques accessibles, ou gérées par le mécanisme de répertoires personnalisés d'AGS.*
+  FluidSynth nécessite un chemin de fichier brut et n'utilise pas directement l'API de streaming d'AGS. Le plugin commence donc par appeler `IAGSEngine::ResolveFilePath` (interface 27+) pour résoudre les chemins spéciaux comme `$DATA$/...`. Si ce chemin ne correspond pas à un vrai fichier physique mais qu'AGS peut encore ouvrir la ressource via `OpenFileStream` (interface 28+), le plugin extrait automatiquement la SoundFont vers un fichier temporaire avant de l'envoyer à FluidSynth.
+  *Note : ce fallback permet de charger aussi les SoundFonts empaquetées dans les données du jeu, pas seulement les fichiers loose présents à côté de l'exécutable.*
 
 ## Configuration MIDI Externe (`.imc` et outil `SetMIDI`)
 
