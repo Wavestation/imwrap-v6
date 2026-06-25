@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/Prog/imwrap-v6/build_mingw32/cmake_install.cmake",
-		"D:/Prog/imwrap-v6/build_mingw32/third_party/libadlmidi/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

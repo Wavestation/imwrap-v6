@@ -1,22 +1,49 @@
-# SoundFonts and Applications
+# SoundFonts and packaged applications
 *.sf2
 *.app/
 *.app
 
-# CMake and build directories
+# Generated build trees
+.build/
 build/
-build_msvc_x64/
+build*/
+cmake-build-*/
 dist/
 bin/
 obj/
 final-release/
-third_party/fluidsynth-build-win32/
+third_party/*-build/
+
+# Generated CMake and Visual Studio files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.recipe
+*.tlog
+*.obj
+*.lib
+*.dll
+*.exe
+*.exp
+*.pdb
+*.idb
+*.ilk
+
+# Build logs
+*.log
+
+# Qt generated files
+.qt/
+*_autogen/
 
 # macOS system files
 .DS_Store
 
 # Swift / Package Manager
-.build/
 .swiftpm/
 Packages/
 Generated/

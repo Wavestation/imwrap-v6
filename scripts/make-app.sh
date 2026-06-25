@@ -74,6 +74,28 @@ echo "Building Swift executables..."
 swift build
 
 # Helper function to package executable into .app bundle
+copy_optional_file() {
+    local source_path="$1"
+    local destination_path="$2"
+
+    if [ -f "$source_path" ]; then
+        cp "$source_path" "$destination_path"
+    else
+        echo "Skipping optional resource: $source_path"
+    fi
+}
+
+copy_optional_dir_contents() {
+    local source_dir="$1"
+    local destination_dir="$2"
+
+    if [ -d "$source_dir" ]; then
+        find "$source_dir" -maxdepth 1 -type f -exec cp {} "$destination_dir" \;
+    else
+        echo "Skipping optional resource directory: $source_dir"
+    fi
+}
+
 package_app() {
     local target_name="$1"
     local display_name="$2"
@@ -92,9 +114,10 @@ package_app() {
     
     if [ "$include_resources" = "true" ]; then
         mkdir -p "$resources_dir"
-        cp "$ROOT_DIR/samples/openquest-lite.ims" "$resources_dir/openquest-lite.ims"
-        cp "$ROOT_DIR/samples/openquest-demo.ims" "$resources_dir/openquest-demo.ims"
-        cp "$ROOT_DIR/baka/arachno.sf2" "$resources_dir/arachno.sf2"
+        copy_optional_file "$ROOT_DIR/samples/openquest-lite.ims" "$resources_dir/openquest-lite.ims"
+        copy_optional_file "$ROOT_DIR/samples/openquest-demo.ims" "$resources_dir/openquest-demo.ims"
+        copy_optional_file "$ROOT_DIR/baka/arachno.sf2" "$resources_dir/arachno.sf2"
+        copy_optional_dir_contents "$ROOT_DIR/baka/roms" "$resources_dir"
     fi
     
     cat > "$contents_dir/Info.plist" <<PLIST

@@ -1,3 +1,0 @@
-D:\MSYS2\mingw32\bin\cmake.exe -E rm -f CMakeFiles\imusepack.dir/objects.a
-D:\MSYS2\mingw32\bin\ar.exe qc CMakeFiles\imusepack.dir/objects.a @CMakeFiles\imusepack.dir\objects1.rsp
-D:\MSYS2\mingw32\bin\c++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\imusepack.dir/objects.a -Wl,--no-whole-archive -o imusepack.exe -Wl,--out-implib,libimusepack.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\imusepack.dir\linkLibs.rsp

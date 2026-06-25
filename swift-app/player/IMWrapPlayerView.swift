@@ -594,6 +594,22 @@ public final class AuthoringViewModel: ObservableObject {
 
     private func configureDefaultAssetPaths() {
         let fileManager = FileManager.default
+        let appDirUrl = Bundle.main.bundleURL.deletingLastPathComponent()
+        let candidateRoots = [
+            fileManager.currentDirectoryPath,
+            appDirUrl.path,
+            appDirUrl.deletingLastPathComponent().path
+        ]
+
+        func findProjectAssetPath(_ relativePath: String) -> String? {
+            for rootPath in candidateRoots {
+                let candidatePath = (rootPath as NSString).appendingPathComponent(relativePath)
+                if fileManager.fileExists(atPath: candidatePath) {
+                    return candidatePath
+                }
+            }
+            return nil
+        }
 
         // 1. Remember last loaded IMS path instead of defaulting to openquest-lite
         if let lastIms = UserDefaults.standard.string(forKey: "LastLoadedImsPath"),
@@ -605,17 +621,15 @@ public final class AuthoringViewModel: ObservableObject {
 
         // 2. SoundFont path default
         let bundledSoundFont = Bundle.main.path(forResource: "arachno", ofType: "sf2")
-        let workspaceSoundFont = "/Users/komasami/Dev/scumm-tools/imwrap-v6/baka/arachno.sf2"
 
         if let bundledSoundFont {
             soundFontPath = bundledSoundFont
-        } else if fileManager.fileExists(atPath: workspaceSoundFont) {
+        } else if let workspaceSoundFont = findProjectAssetPath("baka/arachno.sf2") {
             soundFontPath = workspaceSoundFont
         }
 
         // 3. Search for MT-32 ROMs in:
         // A. Same directory as the .app bundle (parent of main bundle URL)
-        let appDirUrl = Bundle.main.bundleURL.deletingLastPathComponent()
         let controlRomExistsInAppDir = fileManager.fileExists(atPath: appDirUrl.appendingPathComponent("MT32_CONTROL.ROM").path) ||
                                        fileManager.fileExists(atPath: appDirUrl.appendingPathComponent("mt32_control.rom").path) ||
                                        fileManager.fileExists(atPath: appDirUrl.appendingPathComponent("MT32_CONTROL.rom").path)
@@ -628,12 +642,9 @@ public final class AuthoringViewModel: ObservableObject {
                (fileManager.fileExists(atPath: (resourcePath as NSString).appendingPathComponent("MT32_CONTROL.ROM")) ||
                 fileManager.fileExists(atPath: (resourcePath as NSString).appendingPathComponent("mt32_control.rom"))) {
                 mt32RomDirPath = resourcePath
-            } else {
-                // C. Fallback to workspace path
-                let workspaceRomDir = "/Users/komasami/Dev/scumm-tools/imwrap-v6/baka/roms"
-                if fileManager.fileExists(atPath: workspaceRomDir) {
-                    mt32RomDirPath = workspaceRomDir
-                }
+            } else if let workspaceRomDir = findProjectAssetPath("baka/roms") {
+                // C. Fallback to a repo-relative path when running from source.
+                mt32RomDirPath = workspaceRomDir
             }
         }
     }

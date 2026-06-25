@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/Prog/imwrap-v6/build_nmake/cmake_install.cmake",
-		"D:/Prog/imwrap-v6/build_nmake/third_party/libadlmidi/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

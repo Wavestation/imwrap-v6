@@ -1,0 +1,9 @@
+Copyright (C) 2026 Masami Komuro and contributors
+
+This repository is distributed under the terms of the GNU General Public
+License v3.0 or, at your option, any later version. See the `LICENSE` file
+for the full license text.
+
+Third-party components bundled in this repository retain their own notices
+and license terms. See `THIRD_PARTY_LICENSES.md` and the upstream license
+files stored under `third_party/`.

@@ -50,8 +50,6 @@ endfunction()
 if(IMWRAP_BUILD_GUI_TOOLS)
     if(IMWRAP_QT6_PREFIX_PATH)
         list(APPEND CMAKE_PREFIX_PATH "${IMWRAP_QT6_PREFIX_PATH}")
-    elseif(EXISTS "D:/Outils/Qt/6.8.0/msvc2022_64")
-        list(APPEND CMAKE_PREFIX_PATH "D:/Outils/Qt/6.8.0/msvc2022_64")
     endif()
 
     find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
@@ -83,10 +81,6 @@ if(IMWRAP_BUILD_TOOLS)
     add_executable(imsprobe tools/imsprobe.cpp)
     target_link_libraries(imsprobe PRIVATE imwrap_v6)
     imwrap_apply_common_target_settings(imsprobe)
-
-    add_executable(test_crash C:/Users/Administrateur/.gemini/antigravity/brain/4a753803-9da4-49fb-b137-1f8dfabbbd08/scratch/test_crash.cpp)
-    target_link_libraries(test_crash PRIVATE imwrap_v6)
-    imwrap_apply_common_target_settings(test_crash)
 endif()
 
 # Configure libADLMIDI build options
