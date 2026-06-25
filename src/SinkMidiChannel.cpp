@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -20,9 +20,9 @@
  *
  ========================================================================== */
 
-#include "imuse/SinkMidiChannel.h"
+#include "imwrap/SinkMidiChannel.h"
 
-namespace imuse {
+namespace imwrap {
 
 SinkMidiChannel::SinkMidiChannel(MidiSink *sink, uint16_t soundId, uint8_t channel)
     : _sink(sink), _soundId(soundId), _channel(channel) {}
@@ -89,4 +89,4 @@ void SinkMidiChannel::sysExCustomInstrument(uint32_t type, ByteView data) {
     }
 }
 
-} // namespace imuse
+} // namespace imwrap

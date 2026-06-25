@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -24,25 +24,25 @@
 #include <string>
 #include <vector>
 
-#include "imuse/ImuseSequence.h"
-#include "imuse/ResourceBank.h"
+#include "imwrap/IMWrapSequence.h"
+#include "imwrap/ResourceBank.h"
 
 #include <iomanip>
 
 namespace {
 
-const char *VariantName(imuse::VariantKind kind) {
+const char *VariantName(imwrap::VariantKind kind) {
     switch (kind) {
-    case imuse::VariantKind::Gmd:
+    case imwrap::VariantKind::Gmd:
         return "GMD";
-    case imuse::VariantKind::Rol:
+    case imwrap::VariantKind::Rol:
         return "ROL";
     default:
         return "NONE";
     }
 }
 
-void PrintMdhd(const imuse::MdhdData &mdhd) {
+void PrintMdhd(const imwrap::MdhdData &mdhd) {
     if (!mdhd.present) {
         std::cout << "    mdhd: <defaults>\n";
         return;
@@ -59,15 +59,15 @@ void PrintMdhd(const imuse::MdhdData &mdhd) {
         << "\n";
 }
 
-void PrintVariant(const imuse::SoundResource &sound, imuse::VariantKind kind) {
+void PrintVariant(const imwrap::SoundResource &sound, imwrap::VariantKind kind) {
     if (!sound.hasVariant(kind)) {
         return;
     }
 
-    const imuse::TargetProfile profile =
-        (kind == imuse::VariantKind::Rol) ? imuse::TargetProfile::Mt32 : imuse::TargetProfile::GeneralMidi;
+    const imwrap::TargetProfile profile =
+        (kind == imwrap::VariantKind::Rol) ? imwrap::TargetProfile::Mt32 : imwrap::TargetProfile::GeneralMidi;
 
-    imuse::SoundVariantView variant = sound.selectVariant(profile);
+    imwrap::SoundVariantView variant = sound.selectVariant(profile);
     if (!variant.valid() || variant.kind != kind) {
         return;
     }
@@ -79,9 +79,9 @@ void PrintVariant(const imuse::SoundResource &sound, imuse::VariantKind kind) {
         << "\n";
     PrintMdhd(variant.mdhd);
 
-    imuse::ImuseSequence sequence;
+    imwrap::IMWrapSequence sequence;
     std::string error;
-    if (!imuse::LoadImuseSequence(variant, &sequence, &error)) {
+    if (!imwrap::LoadIMWrapSequence(variant, &sequence, &error)) {
         std::cout << "    parse: failed (" << error << ")\n";
         return;
     }
@@ -90,14 +90,14 @@ void PrintVariant(const imuse::SoundResource &sound, imuse::VariantKind kind) {
         << "    smf: format=" << sequence.smf.format
         << " tracks=" << sequence.smf.trackCount
         << " ppqn=" << sequence.smf.ppqn()
-        << " imuse_events=" << sequence.controlEvents.size()
+        << " imwrap_events=" << sequence.controlEvents.size()
         << "\n";
 
     std::cout << "    Raw SysEx events in SMF:\n";
     for (std::size_t trackIdx = 0; trackIdx < sequence.smf.tracks.size(); ++trackIdx) {
         const auto &track = sequence.smf.tracks[trackIdx];
         for (const auto &event : track.events) {
-            if (event.type == imuse::MidiEventType::SysEx) {
+            if (event.type == imwrap::MidiEventType::SysEx) {
                 std::cout << "      [track " << trackIdx << " tick " << event.tick << "] Raw: ";
                 for (uint8_t byte : event.payload) {
                     std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
@@ -105,11 +105,11 @@ void PrintVariant(const imuse::SoundResource &sound, imuse::VariantKind kind) {
                 std::cout << std::dec << "\n";
 
                 std::string err;
-                imuse::ImuseControlEvent control;
-                if (!imuse::DecodeImuseSysex(imuse::ByteView(event.payload.data(), event.payload.size()), &control, &err)) {
+                imwrap::IMWrapControlEvent control;
+                if (!imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &control, &err)) {
                     std::cout << "        -> Decode failed: " << (err.empty() ? "not a valid iMUSE SysEx header/manufacturer" : err) << "\n";
                 } else {
-                    std::cout << "        -> Decoded: " << imuse::DescribeImuseSysex(control) << "\n";
+                    std::cout << "        -> Decoded: " << imwrap::DescribeIMWrapSysex(control) << "\n";
                 }
             }
         }
@@ -125,14 +125,14 @@ int main(int argc, char **argv) {
     }
 
     const std::string path = argv[1];
-    imuse::ResourceBank bank;
+    imwrap::ResourceBank bank;
     std::string error;
     if (!bank.openFromFile(path, &error)) {
         std::cerr << "imsprobe: " << error << "\n";
         return 1;
     }
 
-    const imuse::ImsHeader &header = bank.header();
+    const imwrap::ImsHeader &header = bank.header();
     std::cout
         << "IMS version " << header.versionMajor << "." << header.versionMinor
         << ", sounds=" << header.soundCount
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 
     const std::vector<uint16_t> ids = bank.soundIds();
     for (uint16_t id : ids) {
-        imuse::SoundResource sound = bank.loadSound(id, &error);
+        imwrap::SoundResource sound = bank.loadSound(id, &error);
         if (!sound.valid()) {
             std::cerr << "  sound " << id << ": " << error << "\n";
             return 1;
@@ -153,8 +153,8 @@ int main(int argc, char **argv) {
         }
         std::cout << "\n";
 
-        PrintVariant(sound, imuse::VariantKind::Gmd);
-        PrintVariant(sound, imuse::VariantKind::Rol);
+        PrintVariant(sound, imwrap::VariantKind::Gmd);
+        PrintVariant(sound, imwrap::VariantKind::Rol);
     }
 
     return 0;

@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     app.setStyle("windowsvista");
 
     PackerWindow window;
-    window.setWindowTitle("iMUSE Packer Tool");
+    window.setWindowTitle("iMWrap Packer Tool");
     window.resize(1000, 750);
     window.show();
 

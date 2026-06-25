@@ -11,7 +11,7 @@
 
 namespace {
 
-constexpr wchar_t kWindowClassName[] = L"ImuseSetMidiWindow";
+constexpr wchar_t kWindowClassName[] = L"IMWrapSetMidiWindow";
 constexpr int kWindowWidth = 520;
 constexpr int kWindowHeight = 250;
 
@@ -43,10 +43,10 @@ bool IsBundledUtilityExecutable(const std::filesystem::path &path) {
 
     static const std::array<std::wstring_view, 6> bundledBaseNames = {
         L"setmidi",
-        L"imuse_sysex_gui",
-        L"imuse_player_gui",
-        L"imuse_packer_gui",
-        L"imusepack",
+        L"imwrap_sysex_gui",
+        L"imwrap_player_gui",
+        L"imwrap_packer_gui",
+        L"imwrappack",
         L"imsprobe"
     };
 
@@ -129,7 +129,7 @@ AppStrings MidiConfigWindow::GetStrings() const {
     switch (PRIMARYLANGID(GetUserDefaultUILanguage())) {
     case LANG_FRENCH:
         return {
-            L"Configuration MIDI iMUSE",
+            L"Configuration MIDI iMWrap",
             L"Pilote MIDI:",
             L"Peripherique MIDI:",
             L"Enregistrer",
@@ -144,7 +144,7 @@ AppStrings MidiConfigWindow::GetStrings() const {
         };
     case LANG_SPANISH:
         return {
-            L"Configuracion MIDI iMUSE",
+            L"Configuracion MIDI iMWrap",
             L"Controlador MIDI:",
             L"Dispositivo MIDI:",
             L"Guardar",
@@ -159,7 +159,7 @@ AppStrings MidiConfigWindow::GetStrings() const {
         };
     default:
         return {
-            L"iMUSE MIDI Configurator",
+            L"iMWrap MIDI Configurator",
             L"MIDI Driver:",
             L"MIDI Device:",
             L"Save",
@@ -208,7 +208,7 @@ std::wstring MidiConfigWindow::GetTargetConfigPath() const {
         }
     }
 
-    return (applicationDir / L"imuse.imc").wstring();
+    return (applicationDir / L"imwrap.imc").wstring();
 }
 
 bool MidiConfigWindow::RegisterWindowClass() {

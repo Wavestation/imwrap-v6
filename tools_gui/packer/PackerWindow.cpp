@@ -6,13 +6,13 @@
 #include <QFormLayout>
 #include <fstream>
 #include <algorithm>
-#include "imuse/SmfSequence.h"
+#include "imwrap/SmfSequence.h"
 
-static imuse::SmfTrack mergeTracksToFormat0(const imuse::SmfSequence &seq) {
+static imwrap::SmfTrack mergeTracksToFormat0(const imwrap::SmfSequence &seq) {
     struct AbsEvent {
         uint32_t absTick;
         uint32_t order;
-        imuse::MidiEvent event;
+        imwrap::MidiEvent event;
     };
     std::vector<AbsEvent> allEvents;
     uint32_t order = 0;
@@ -20,7 +20,7 @@ static imuse::SmfTrack mergeTracksToFormat0(const imuse::SmfSequence &seq) {
         uint32_t currentTick = 0;
         for (const auto &evt : trk.events) {
             currentTick += evt.delta;
-            if (evt.type == imuse::MidiEventType::Meta && evt.metaType == 0x2F) {
+            if (evt.type == imwrap::MidiEventType::Meta && evt.metaType == 0x2F) {
                 continue;
             }
             allEvents.push_back({currentTick, order++, evt});
@@ -34,18 +34,18 @@ static imuse::SmfTrack mergeTracksToFormat0(const imuse::SmfSequence &seq) {
         return a.order < b.order;
     });
     
-    imuse::SmfTrack outTrack;
+    imwrap::SmfTrack outTrack;
     uint32_t lastTick = 0;
     for (const auto &absEvt : allEvents) {
-        imuse::MidiEvent evt = absEvt.event;
+        imwrap::MidiEvent evt = absEvt.event;
         evt.delta = absEvt.absTick - lastTick;
         lastTick = absEvt.absTick;
         outTrack.events.push_back(evt);
     }
     
     // Append a single clean End of Track event
-    imuse::MidiEvent endEvt;
-    endEvt.type = imuse::MidiEventType::Meta;
+    imwrap::MidiEvent endEvt;
+    endEvt.type = imwrap::MidiEventType::Meta;
     endEvt.status = 0xFF;
     endEvt.metaType = 0x2F;
     endEvt.tick = lastTick;
@@ -59,9 +59,9 @@ static QString formatSoundLabel(const ProjectSound &ps) {
     QStringList present;
     for (const auto &pv : ps.variants) {
         if (pv.includeVariant) {
-            if (pv.kind == imuse::VariantKind::Gmd) present.append("GMD");
-            else if (pv.kind == imuse::VariantKind::Rol) present.append("ROL");
-            else if (pv.kind == imuse::VariantKind::Adl) present.append("ADL");
+            if (pv.kind == imwrap::VariantKind::Gmd) present.append("GMD");
+            else if (pv.kind == imwrap::VariantKind::Rol) present.append("ROL");
+            else if (pv.kind == imwrap::VariantKind::Adl) present.append("ADL");
         }
     }
     QStringList ordered;
@@ -131,9 +131,9 @@ void PackerWindow::setupUi() {
 
     // Variant selector
     variantKindCombo = new QComboBox();
-    variantKindCombo->addItem("General MIDI (GMD)", QVariant(static_cast<int>(imuse::VariantKind::Gmd)));
-    variantKindCombo->addItem("Roland MT-32 (ROL)", QVariant(static_cast<int>(imuse::VariantKind::Rol)));
-    variantKindCombo->addItem("AdLib (ADL)", QVariant(static_cast<int>(imuse::VariantKind::Adl)));
+    variantKindCombo->addItem("General MIDI (GMD)", QVariant(static_cast<int>(imwrap::VariantKind::Gmd)));
+    variantKindCombo->addItem("Roland MT-32 (ROL)", QVariant(static_cast<int>(imwrap::VariantKind::Rol)));
+    variantKindCombo->addItem("AdLib (ADL)", QVariant(static_cast<int>(imwrap::VariantKind::Adl)));
     connect(variantKindCombo, &QComboBox::currentIndexChanged, this, &PackerWindow::onVariantKindChanged);
     rightLayout->addWidget(variantKindCombo);
 
@@ -225,7 +225,7 @@ void PackerWindow::newProject() {
 }
 
 void PackerWindow::openProject() {
-    QString path = QFileDialog::getOpenFileName(this, "Ouvrir", "", "Fichiers iMUSE (*.ims)");
+    QString path = QFileDialog::getOpenFileName(this, "Ouvrir", "", "Fichiers iMWrap (*.ims)");
     if (!path.isEmpty()) {
         loadImsToModel(path.toStdString());
         currentFilePath = path;
@@ -241,7 +241,7 @@ void PackerWindow::saveProject() {
 }
 
 void PackerWindow::saveProjectAs() {
-    QString path = QFileDialog::getSaveFileName(this, "Enregistrer Sous", "banque.ims", "Fichiers iMUSE (*.ims)");
+    QString path = QFileDialog::getSaveFileName(this, "Enregistrer Sous", "banque.ims", "Fichiers iMWrap (*.ims)");
     if (!path.isEmpty()) {
         currentFilePath = path;
         saveModelToIms(path.toStdString());
@@ -249,7 +249,7 @@ void PackerWindow::saveProjectAs() {
 }
 
 void PackerWindow::loadImsToModel(const std::string &path) {
-    imuse::ResourceBank bank;
+    imwrap::ResourceBank bank;
     std::string err;
     if (!bank.openFromFile(path, &err)) {
         statusLabel->setText(QString("Erreur d'ouverture: %1").arg(QString::fromStdString(err)));
@@ -263,7 +263,7 @@ void PackerWindow::loadImsToModel(const std::string &path) {
         ps.id = id;
         ps.name = res.name();
         
-        std::vector<imuse::VariantKind> kinds = {imuse::VariantKind::Gmd, imuse::VariantKind::Rol, imuse::VariantKind::Adl};
+        std::vector<imwrap::VariantKind> kinds = {imwrap::VariantKind::Gmd, imwrap::VariantKind::Rol, imwrap::VariantKind::Adl};
         for (auto k : kinds) {
             if (res.hasVariant(k)) {
                 auto view = res.variant(k);
@@ -281,8 +281,8 @@ void PackerWindow::loadImsToModel(const std::string &path) {
                 }
                 
                 // Parse MIDI
-                imuse::SmfSequence seq;
-                if (imuse::SmfParser::Parse(view.smfData, &seq)) {
+                imwrap::SmfSequence seq;
+                if (imwrap::SmfParser::Parse(view.smfData, &seq)) {
                     pv.division = seq.division;
                     int tIdx = 0;
                     for (const auto &trk : seq.tracks) {
@@ -309,31 +309,31 @@ void PackerWindow::loadImsToModel(const std::string &path) {
 }
 
 void PackerWindow::saveModelToIms(const std::string &path) {
-    std::vector<imuse::SoundBankInput> inputs;
+    std::vector<imwrap::SoundBankInput> inputs;
     for (const auto &ps : projectSounds) {
-        imuse::SoundBankInput sbi;
+        imwrap::SoundBankInput sbi;
         sbi.soundId = ps.id;
         sbi.name = ps.name;
         
         for (const auto &pv : ps.variants) {
             if (!pv.includeVariant) continue;
-            imuse::VariantSource vs;
+            imwrap::VariantSource vs;
             vs.kind = pv.kind;
             vs.includeMdhd = pv.includeMdhd;
             vs.mdhd = pv.mdhd;
             
-            imuse::SmfSequence seq;
+            imwrap::SmfSequence seq;
             seq.format = 2; // iMUSE uses format 2
             seq.division = pv.division;
             seq.trackCount = static_cast<uint16_t>(pv.tracks.size());
             for (const auto &pt : pv.tracks) {
-                imuse::SmfTrack t;
+                imwrap::SmfTrack t;
                 t.events = pt.events;
                 seq.tracks.push_back(t);
             }
             
             std::string err;
-            if (!imuse::SmfSerializer::Serialize(seq, &vs.smfData, &err)) {
+            if (!imwrap::SmfSerializer::Serialize(seq, &vs.smfData, &err)) {
                 QMessageBox::warning(this, "Erreur", QString::fromStdString("Erreur sérialisation SMF: " + err));
                 return;
             }
@@ -342,7 +342,7 @@ void PackerWindow::saveModelToIms(const std::string &path) {
         inputs.push_back(sbi);
     }
     
-    imuse::ImsWriter writer;
+    imwrap::ImsWriter writer;
     std::string err;
     if (writer.writeFile(path, inputs, &err)) {
         statusLabel->setText(QString("Projet sauvegardé: %1").arg(QString::fromStdString(path)));
@@ -390,7 +390,7 @@ void PackerWindow::applySoundChanges() {
             ps.name = soundNameEdit->text().toStdString();
             ps.id = soundIdSpin->value();
             
-            imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+            imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
             bool found = false;
             for (auto &pv : ps.variants) {
                 if (pv.kind == currentKind) {
@@ -448,7 +448,7 @@ void PackerWindow::onVariantKindChanged() {
 void PackerWindow::updateVariantUi() {
     if (soundList->selectedItems().isEmpty()) return;
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
-    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
     bool found = false;
     for (const auto &ps : projectSounds) {
@@ -503,7 +503,7 @@ void PackerWindow::updateVariantUi() {
 void PackerWindow::importMidi() {
     if (soundList->selectedItems().isEmpty()) return;
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
-    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
     QStringList paths = QFileDialog::getOpenFileNames(this, "Importer MIDI", "", "Fichiers MIDI (*.mid *.midi)");
     if (paths.isEmpty()) return;
@@ -532,9 +532,9 @@ void PackerWindow::importMidi() {
                 if (!in) continue;
                 std::vector<uint8_t> data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
                 
-                imuse::SmfSequence seq;
+                imwrap::SmfSequence seq;
                 std::string err;
-                if (!imuse::SmfParser::Parse(imuse::ByteView(data.data(), data.size()), &seq, &err)) {
+                if (!imwrap::SmfParser::Parse(imwrap::ByteView(data.data(), data.size()), &seq, &err)) {
                     QMessageBox::warning(this, "Erreur", QString::fromStdString("Fichier MIDI invalide (" + path.toStdString() + "): " + err));
                     continue;
                 }
@@ -546,7 +546,7 @@ void PackerWindow::importMidi() {
                 
                 QFileInfo fi(path);
                 if (seq.format == 1) {
-                    imuse::SmfTrack merged = mergeTracksToFormat0(seq);
+                    imwrap::SmfTrack merged = mergeTracksToFormat0(seq);
                     ProjectTrack pt;
                     pt.name = paths.size() == 1 ? fi.baseName().toStdString() + " (Merged)" : fi.baseName().toStdString();
                     pt.sourceFileName = fi.fileName().toStdString();
@@ -574,7 +574,7 @@ void PackerWindow::importMidi() {
 void PackerWindow::deleteTrack() {
     if (soundList->selectedItems().isEmpty()) return;
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
-    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
     int row = tracksTable->currentRow();
     if (row < 0) return;
@@ -604,7 +604,7 @@ void PackerWindow::deleteTrack() {
 void PackerWindow::moveTrackUp() {
     if (soundList->selectedItems().isEmpty()) return;
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
-    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
     int row = tracksTable->currentRow();
     if (row <= 0) return;
@@ -630,7 +630,7 @@ void PackerWindow::moveTrackUp() {
 void PackerWindow::moveTrackDown() {
     if (soundList->selectedItems().isEmpty()) return;
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
-    imuse::VariantKind currentKind = static_cast<imuse::VariantKind>(variantKindCombo->currentData().toInt());
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
     int row = tracksTable->currentRow();
     if (row < 0) return;

@@ -5,7 +5,7 @@
 #include <QTextBrowser>
 #include <sstream>
 #include <iomanip>
-#include "imuse/ImuseSysex.h"
+#include "imwrap/IMWrapSysex.h"
 
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
@@ -46,7 +46,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     auto *layout = new QHBoxLayout(widget);
 
     // Left Column: Parameters
-    auto *leftBox = new QGroupBox("Type de Message iMUSE");
+    auto *leftBox = new QGroupBox("Type de Message iMWrap");
     formLayout = new QFormLayout(leftBox);
 
     typeCombo = new QComboBox();
@@ -154,7 +154,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     layout->addWidget(leftBox, 1);
 
     // Right Column: Output
-    auto *rightBox = new QGroupBox("SysEx iMUSE Généré");
+    auto *rightBox = new QGroupBox("SysEx iMWrap Généré");
     auto *rightLayout = new QVBoxLayout(rightBox);
 
     generatedHexDisplay = new QTextEdit();
@@ -210,6 +210,7 @@ void SysExWindow::updateFieldVisibility() {
         w->setVisible(v);
         if(formLayout->labelForField(w)) formLayout->labelForField(w)->setVisible(v);
     };
+    auto *unknownLabel = qobject_cast<QLabel *>(formLayout->labelForField(unknownSpin));
     
     // Hide all
     setVisible(partSpin, false); setVisible(channelSpin, false); setVisible(unknownSpin, false);
@@ -225,12 +226,19 @@ void SysExWindow::updateFieldVisibility() {
 
     // Show appropriate fields
     if (idx == 0) { // Allocate
+        unknownSpin->setRange(0, 15);
+        if (unknownLabel) unknownLabel->setText("Unknown nibble (0-15):");
         setVisible(partSpin, true); setVisible(unknownSpin, true);
         setVisible(partOnCheck, true); setVisible(reverbCheck, true);
         setVisible(prioritySpin, true); setVisible(volumeSpin, true); setVisible(panSpin, true);
         setVisible(percussionCheck, true); setVisible(transposeSpin, true); setVisible(detuneSpin, true);
         setVisible(pitchbendSpin, true); setVisible(programSpin, true);
-    } else if (idx == 1) { // Shutdown
+    } else {
+        unknownSpin->setRange(0, 127);
+        if (unknownLabel) unknownLabel->setText("Unknown (0-127):");
+    }
+
+    if (idx == 1) { // Shutdown
         setVisible(partSpin, true);
     } else if (idx == 3) { // AdLib Part
         setVisible(partSpin, true); setVisible(unknownSpin, true); setVisible(adlibHexEdit, true);
@@ -278,12 +286,10 @@ std::vector<uint8_t> SysExWindow::parseHexBytes(const QString& hex) {
 }
 
 std::vector<uint8_t> SysExWindow::generateAllocatePart() {
-    std::vector<uint8_t> payload;
-    payload.push_back(partSpin->value() & 0x0F);
-    payload.push_back(unknownSpin->value() & 0x7F);
-
     std::vector<uint8_t> params;
-    uint8_t b0 = (partOnCheck->isChecked() ? 0x01 : 0) | (reverbCheck->isChecked() ? 0x02 : 0);
+    uint8_t b0 = static_cast<uint8_t>(((unknownSpin->value() & 0x0F) << 4) |
+                                      (partOnCheck->isChecked() ? 0x01 : 0) |
+                                      (reverbCheck->isChecked() ? 0x02 : 0));
     params.push_back(b0);
     params.push_back(prioritySpin->value() & 0xFF);
     params.push_back(volumeSpin->value() & 0xFF);
@@ -295,8 +301,7 @@ std::vector<uint8_t> SysExWindow::generateAllocatePart() {
     params.push_back(programSpin->value() & 0xFF);
 
     std::vector<uint8_t> nibs = encodeNibbles(params);
-    std::vector<uint8_t> res = {0x7D, 0x00};
-    res.insert(res.end(), payload.begin(), payload.end());
+    std::vector<uint8_t> res = {0x7D, 0x00, static_cast<uint8_t>(partSpin->value() & 0x0F)};
     res.insert(res.end(), nibs.begin(), nibs.end());
     return res;
 }
@@ -403,18 +408,18 @@ void SysExWindow::parseHex() {
     
     std::vector<uint8_t> payload(bytes.begin() + start, bytes.begin() + end);
     if (payload.empty() || payload[0] != 0x7D) {
-        decoderOutput->setText("ID manufacturier iMUSE absent (devrait être 7D).");
+        decoderOutput->setText("ID manufacturier de compatibilité absent (valeur attendue : 7D).");
         return;
     }
     
-    imuse::ImuseControlEvent event;
+    imwrap::IMWrapControlEvent event;
     std::string err;
-    if (!imuse::DecodeImuseSysex(imuse::ByteView(payload.data(), payload.size()), &event, &err)) {
+    if (!imwrap::DecodeIMWrapSysex(imwrap::ByteView(payload.data(), payload.size()), &event, &err)) {
         decoderOutput->setText(QString("Erreur de décodage: %1").arg(QString::fromStdString(err)));
         return;
     }
     
-    QString desc = QString::fromStdString(imuse::DescribeImuseSysex(event));
+    QString desc = QString::fromStdString(imwrap::DescribeIMWrapSysex(event));
     decoderOutput->setText("Décodage réussi:\n\n" + desc);
 }
 
@@ -437,7 +442,7 @@ void SysExWindow::populateMidiDevices() {
     }
 #endif
 
-    QSettings settings("Wavestation", "iMUSE_SysEx");
+    QSettings settings("imwrap", "IMWrapSysExGui");
     QString savedDevice = settings.value("midi_device").toString();
     if (!savedDevice.isEmpty()) {
         int idx = midiCombo->findText(savedDevice);
@@ -457,7 +462,7 @@ void SysExWindow::onMidiDeviceChanged(int index) {
         hMidiOut = nullptr;
     }
 
-    QSettings settings("Wavestation", "iMUSE_SysEx");
+    QSettings settings("imwrap", "IMWrapSysExGui");
     if (index > 0) {
         UINT devId = midiCombo->itemData(index).toUInt();
         HMIDIOUT hOut = nullptr;
@@ -521,10 +526,10 @@ QWidget* SysExWindow::createGuideTab() {
         "}"
     );
 
-    const char* markdownText = R"MARKDOWN(# Guide du Compositeur iMUSE
+    const char* markdownText = R"MARKDOWN(# Guide du Compositeur iMWrap
 ## Intégration et Utilisation des Messages SysEx dans MOTU Digital Performer
 
-Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
+Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx iMWrap** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
 
 ---
 
@@ -591,18 +596,18 @@ Définit ou annule une boucle de lecture dynamique sur une section de la séquen
 
 ## 3. Configuration et Routage via loopMIDI
 
-Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMUSE** à **Digital Performer** en passant par des câbles MIDI virtuels.
+Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMWrap** à **Digital Performer** en passant par des câbles MIDI virtuels.
 
 ### Étape 1 : Créer le port virtuel dans loopMIDI
 1. Lancez le logiciel **loopMIDI**.
 2. Dans le panneau de configuration, cliquez sur le bouton `+` pour ajouter un nouveau port.
-3. Nommez-le par exemple : `iMUSE Generator`.
+3. Nommez-le par exemple : `iMWrap Generator`.
 4. loopMIDI crée un port d'entrée et de sortie MIDI virtuel visible par toutes vos applications.
 
 ### Étape 2 : Connecter le Générateur de SysEx
-1. Lancez le Générateur de SysEx (`imuse_sysex_gui.exe`).
+1. Lancez le Générateur de SysEx (`imwrap_sysex_gui.exe`).
 2. Dans la section **Envoi MIDI Direct** (à droite), repérez la liste déroulante **Périphérique**.
-3. Sélectionnez le port virtuel créé : `iMUSE Generator`.
+3. Sélectionnez le port virtuel créé : `iMWrap Generator`.
 4. Désormais, chaque clic sur le bouton **Envoyer le SysEx** transmettra la trame MIDI sur ce canal virtuel.
 
 ### Étape 3 : Configurer Digital Performer pour l'enregistrement en temps réel
@@ -610,7 +615,7 @@ Si vous préférez enregistrer en temps réel vos manipulations ou vos commandes
 1. Ouvrez Digital Performer.
 2. Allez dans **Setup > Input Filter...** et assurez-vous que la case **System Exclusive** est bien cochée.
 3. Dans votre projet DP, créez une nouvelle piste MIDI.
-4. Réglez l'entrée MIDI de cette piste sur `iMUSE Generator`.
+4. Réglez l'entrée MIDI de cette piste sur `iMWrap Generator`.
 5. Armez la piste MIDI en enregistrement.
 6. Lancez l'enregistrement dans DP, puis cliquez sur **Envoyer le SysEx** dans le Générateur.
 7. DP enregistre précisément le message SysEx généré sous la forme d'un événement dans la piste !

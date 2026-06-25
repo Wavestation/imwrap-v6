@@ -1,20 +1,20 @@
-# iMWRAP V6
+# iMWrap v6
 
-**iMWRAP V6** est une implémentation moderne, modulaire et multiplateforme en C++ du célèbre moteur interactif de musique **LucasArts iMUSE (version 6)**. Ce projet inclut un plugin d'exécution pour Adventure Game Studio (AGS), des applications graphiques macOS (SwiftUI) de lecture et de création, ainsi que des wrappers .NET (C# et VB.NET) pour s'intégrer directement dans l'éditeur de jeu d'AGS ou d'autres outils Windows.
+**iMWrap v6** est une implémentation moderne, modulaire et multiplateforme en C++ du célèbre moteur interactif de musique **LucasArts iMUSE (version 6)**. Ce projet inclut un plugin d'exécution pour Adventure Game Studio (AGS), des applications graphiques macOS (SwiftUI) de lecture et de création, ainsi que des wrappers .NET (C# et VB.NET) pour s'intégrer directement dans l'éditeur de jeu d'AGS ou d'autres outils Windows.
 
 ---
 
 ## 🚀 Fonctionnalités Clés
 
-- **Moteur C++ iMUSE V6 complet** : Gestion des évènements musicaux dynamiques, transpositions, coupures de pistes, boucles intelligentes, fades et exécution inconditionnelle ou conditionnelle des déclencheurs (**Hooks**).
+- **Moteur C++ iMWrap v6 complet** : Gestion des évènements musicaux dynamiques, transpositions, coupures de pistes, boucles intelligentes, fades et exécution inconditionnelle ou conditionnelle des déclencheurs (**Hooks**).
 - **Backends Audio & Émulation supportés** :
   - **FluidSynth** (Rendu via SoundFonts `.sf2`).
   - **Roland MT-32 Emulation** (Via la bibliothèque Munt / `mt32emu` intégrée).
   - **AdLib / OPL3** (Via l'émulateur `libADLMIDI` intégré).
   - **MIDI Matériel / Virtuel** (Via CoreMIDI sur macOS et les APIs multimédias Windows natifs `winmm.dll`).
 - **Compatibilité AGS intégrée** :
-  - Plugin runtime AGS (`agsimuse`) compilable sous macOS (`.dylib`) et Windows (`.dll`).
-  - **NOUVEAU - API Script 100% Interactive** : Contrôle total en temps réel (Volume/Pan/Transpose par canal), gestion des sauts et des boucles (`Jump`, `SetLoop`, `Scan`), fades temporels, et exécution de scripts asynchrones sur marqueurs (`iMuse_OnTrigger`).
+  - Plugin runtime AGS (`agsimwrap`) compilable sous macOS (`.dylib`) et Windows (`.dll`).
+  - **NOUVEAU - API Script 100% Interactive** : Contrôle total en temps réel (Volume/Pan/Transpose par canal), gestion des sauts et des boucles (`Jump`, `SetLoop`, `Scan`), fades temporels, et exécution de scripts asynchrones sur marqueurs (`iMWrap_OnTrigger`).
   - API script d'AGS pour interroger le tempo, les statuts de lecture et les profils de compatibilité (Standard vs Sam & Max).
   - Registre dynamique de correspondances de timbres Roland MT-32 personnalisés vers General MIDI.
 - **Intégration .NET (Éditeur AGS)** :
@@ -24,13 +24,13 @@
 
 ## 📂 Structure du Dépôt
 
-- **`src/` & `include/`** : Code source C++ du moteur iMUSE core.
+- **`src/` & `include/`** : Code source C++ du moteur iMWrap core.
 - **`ags-wrapper/`** : Wrappers d'intégration pour les technologies .NET :
-  - [ImuseShim.cs](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/ImuseShim.cs) (C#)
-  - [ImuseShim.vb](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/ImuseShim.vb) (VB.NET)
-- **`swift-shim/`** : Couche de transition de type C (`CImuseShim`) facilitant l'intégration avec Swift ou P/Invoke.
+  - [IMWrapShim.cs](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/IMWrapShim.cs) (C#)
+  - [IMWrapShim.vb](file:///Users/komasami/Dev/scumm-tools/imwrap-v6/ags-wrapper/IMWrapShim.vb) (VB.NET)
+- **`swift-shim/`** : Couche de transition de type C (`CIMWrapShim`) facilitant l'intégration avec Swift ou P/Invoke.
 - **`swift-app/`** : Suite d'applications graphiques macOS en SwiftUI (Player, Packer, SysEx utility). Inclut l'intégration de l'émulateur AdLib (OPL2) sans aucune configuration (Zero-config).
-- **`tools/`** : Utilitaires en ligne de commande C++ (`imusepack` et `imsprobe`).
+- **`tools/`** : Utilitaires en ligne de commande C++ (`imwrappack` et `imsprobe`).
 - **`third_party/`** : Dépendances intégrées (`libadlmidi`, `mt32emu`, `miniaudio`).
 
 ---
@@ -50,7 +50,7 @@ CMake gère la génération des fichiers de solution Visual Studio.
    - Choisissez le générateur **Visual Studio 11 2012** (ou votre version actuelle).
    - Choisissez l'architecture cible (ex: `Win32` pour l'éditeur AGS standard).
 5. Cliquez sur **Generate** puis **Open Project** pour ouvrir la solution `.sln` directement dans Visual Studio.
-6. Compilez en mode *Release* pour générer la DLL du plugin AGS (`libagsimuse.dll`) et du shim (`imuse_shim.dll`).
+6. Compilez en mode *Release* pour générer la DLL du plugin AGS (`libagsimwrap.dll`) et du shim (`imwrap_shim.dll`).
 
 Pour reconstruire le bundle Windows de diffusion depuis zero :
 
@@ -58,7 +58,7 @@ Pour reconstruire le bundle Windows de diffusion depuis zero :
 powershell -ExecutionPolicy Bypass -File .\scripts\build-windows-release.ps1 -QtPrefixPath "C:\Qt\6.8.0\msvc2022_64"
 ```
 
-Le dossier final prêt à distribuer est ensuite généré dans `final-release/windows`.
+Le dossier final prêt à distribuer est ensuite généré dans `final-release/imwrap-windows`.
 
 ### 2. Sous macOS
 

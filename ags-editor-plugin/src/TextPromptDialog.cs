@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AgsImuse.Editor
+namespace AgsIMWrap.Editor
 {
     internal sealed class TextPromptDialog : Form
     {

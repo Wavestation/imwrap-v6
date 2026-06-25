@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -20,7 +20,7 @@
  *
  ========================================================================== */
 
-#include "imuse/ResourceBank.h"
+#include "imwrap/ResourceBank.h"
 
 #include <algorithm>
 #include <array>
@@ -28,7 +28,7 @@
 #include <iterator>
 #include <sstream>
 
-namespace imuse {
+namespace imwrap {
 namespace {
 
 constexpr std::array<char, 4> kImsb = {{'I', 'M', 'S', 'B'}};
@@ -452,4 +452,4 @@ bool ResourceBank::parse(std::string *error) {
     return true;
 }
 
-} // namespace imuse
+} // namespace imwrap

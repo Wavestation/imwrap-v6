@@ -19,9 +19,9 @@
 #include <queue>
 #include <atomic>
 
-#include "imuse/ImuseEngine.h"
-#include "imuse/ResourceBank.h"
-#include "imuse/MidiSink.h"
+#include "imwrap/IMWrapEngine.h"
+#include "imwrap/ResourceBank.h"
+#include "imwrap/MidiSink.h"
 
 class QTreeWidget;
 class QTreeWidgetItem;
@@ -67,10 +67,10 @@ private:
     QSpinBox *hookChannelSpin;
     QSpinBox *advanceSpin;
 
-    imuse::ResourceBank bank;
-    imuse::ImuseEngine engine;
+    imwrap::ResourceBank bank;
+    imwrap::IMWrapEngine engine;
     
-    class WinMMSink : public imuse::MidiSink {
+    class WinMMSink : public imwrap::MidiSink {
     public:
         HMIDIOUT hMidiOut = nullptr;
         
@@ -79,7 +79,7 @@ private:
         bool openDevice(UINT deviceId);
         void closeDevice();
         void onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) override;
-        void onSysEx(uint16_t soundId, imuse::ByteView message) override;
+        void onSysEx(uint16_t soundId, imwrap::ByteView message) override;
     };
     
     WinMMSink midiSink;

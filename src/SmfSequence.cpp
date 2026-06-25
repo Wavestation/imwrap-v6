@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -20,11 +20,11 @@
  *
  ========================================================================== */
 
-#include "imuse/SmfSequence.h"
+#include "imwrap/SmfSequence.h"
 
 #include <array>
 
-namespace imuse {
+namespace imwrap {
 namespace {
 
 constexpr std::array<char, 4> kMthd = {{'M', 'T', 'h', 'd'}};
@@ -368,4 +368,4 @@ bool SmfSerializer::Serialize(const SmfSequence &seq, std::vector<uint8_t> *outB
     return true;
 }
 
-} // namespace imuse
+} // namespace imwrap

@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     app.setStyle("windowsvista");
 
     PlayerWindow window;
-    window.setWindowTitle("iMUSE Player Tool");
+    window.setWindowTitle("iMWrap Player Tool");
     window.resize(900, 700);
     window.show();
 

@@ -1,31 +1,38 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(imuse_v6 LANGUAGES CXX)
+project(imwrap_v6 LANGUAGES CXX)
 
-option(IMUSE_BUILD_TOOLS "Build imuse command-line tools" ON)
-option(IMUSE_BUILD_GUI_TOOLS "Build imuse Qt6 GUI tools" ON)
-option(IMUSE_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
-option(IMUSE_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
-option(IMUSE_BUILD_SHARED_LIB "Build the shared imuse_v6 library" ON)
-option(IMUSE_BUILD_SHIM "Build the native imuse_shim DLL used by wrappers and editor tooling" ON)
-option(IMUSE_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in imuse_shim" OFF)
+option(IMWRAP_BUILD_TOOLS "Build imwrap command-line tools" ON)
+option(IMWRAP_BUILD_GUI_TOOLS "Build imwrap Qt6 GUI tools" ON)
+option(IMWRAP_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
+option(IMWRAP_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
+option(IMWRAP_BUILD_SHARED_LIB "Build the shared imwrap_v6 library" ON)
+option(IMWRAP_BUILD_SHIM "Build the native imwrap_shim DLL used by wrappers and editor tooling" ON)
+option(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in imwrap_shim" OFF)
 
-set(IMUSE_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
-set(IMUSE_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimuse")
+set(IMWRAP_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
+set(IMWRAP_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimwrap")
 
-set(IMUSE_CORE_SOURCES
+# The Win32 AGS plugin release is built without Qt and links against prebuilt
+# static third-party libraries, so align the whole configuration on the static
+# MSVC runtime to avoid CRT mismatches. Qt-enabled builds keep the default CRT.
+if(MSVC AND IMWRAP_BUILD_AGS_PLUGIN AND NOT IMWRAP_BUILD_GUI_TOOLS)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
+set(IMWRAP_CORE_SOURCES
     src/Instrument.cpp
-    src/ImuseSequence.cpp
-    src/ImuseSysex.cpp
+    src/IMWrapSequence.cpp
+    src/IMWrapSysex.cpp
     src/ImsWriter.cpp
-    src/ImuseEngine.cpp
-    src/ImuseEngineSerialize.cpp
+    src/IMWrapEngine.cpp
+    src/IMWrapEngineSerialize.cpp
     src/ResourceBank.cpp
     src/SinkMidiChannel.cpp
     src/SmfSequence.cpp
 )
 
-function(imuse_apply_common_target_settings target_name)
+function(imwrap_apply_common_target_settings target_name)
     target_include_directories(${target_name}
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -40,9 +47,9 @@ function(imuse_apply_common_target_settings target_name)
     endif()
 endfunction()
 
-if(IMUSE_BUILD_GUI_TOOLS)
-    if(IMUSE_QT6_PREFIX_PATH)
-        list(APPEND CMAKE_PREFIX_PATH "${IMUSE_QT6_PREFIX_PATH}")
+if(IMWRAP_BUILD_GUI_TOOLS)
+    if(IMWRAP_QT6_PREFIX_PATH)
+        list(APPEND CMAKE_PREFIX_PATH "${IMWRAP_QT6_PREFIX_PATH}")
     elseif(EXISTS "D:/Outils/Qt/6.8.0/msvc2022_64")
         list(APPEND CMAKE_PREFIX_PATH "D:/Outils/Qt/6.8.0/msvc2022_64")
     endif()
@@ -53,33 +60,33 @@ if(IMUSE_BUILD_GUI_TOOLS)
     set(CMAKE_AUTORCC ON)
 endif()
 
-add_library(imuse_v6 STATIC ${IMUSE_CORE_SOURCES})
-set_target_properties(imuse_v6 PROPERTIES OUTPUT_NAME "imuse_v6_static")
-imuse_apply_common_target_settings(imuse_v6)
+add_library(imwrap_v6 STATIC ${IMWRAP_CORE_SOURCES})
+set_target_properties(imwrap_v6 PROPERTIES OUTPUT_NAME "imwrap_v6_static")
+imwrap_apply_common_target_settings(imwrap_v6)
 
-if(IMUSE_BUILD_SHARED_LIB)
-    add_library(imuse_v6_shared SHARED ${IMUSE_CORE_SOURCES})
-    target_compile_definitions(imuse_v6_shared PRIVATE IMUSE_DLL IMUSE_BUILD_DLL)
-    target_compile_definitions(imuse_v6_shared INTERFACE IMUSE_DLL)
-    set_target_properties(imuse_v6_shared PROPERTIES
-        OUTPUT_NAME "imuse_v6"
-        ARCHIVE_OUTPUT_NAME "imuse_v6_dll"
+if(IMWRAP_BUILD_SHARED_LIB)
+    add_library(imwrap_v6_shared SHARED ${IMWRAP_CORE_SOURCES})
+    target_compile_definitions(imwrap_v6_shared PRIVATE IMWRAP_DLL IMWRAP_BUILD_DLL)
+    target_compile_definitions(imwrap_v6_shared INTERFACE IMWRAP_DLL)
+    set_target_properties(imwrap_v6_shared PROPERTIES
+        OUTPUT_NAME "imwrap_v6"
+        ARCHIVE_OUTPUT_NAME "imwrap_v6_dll"
     )
-    imuse_apply_common_target_settings(imuse_v6_shared)
+    imwrap_apply_common_target_settings(imwrap_v6_shared)
 endif()
 
-if(IMUSE_BUILD_TOOLS)
-    add_executable(imusepack tools/imusepack.cpp)
-    target_link_libraries(imusepack PRIVATE imuse_v6)
-    imuse_apply_common_target_settings(imusepack)
+if(IMWRAP_BUILD_TOOLS)
+    add_executable(imwrappack tools/imwrappack.cpp)
+    target_link_libraries(imwrappack PRIVATE imwrap_v6)
+    imwrap_apply_common_target_settings(imwrappack)
 
     add_executable(imsprobe tools/imsprobe.cpp)
-    target_link_libraries(imsprobe PRIVATE imuse_v6)
-    imuse_apply_common_target_settings(imsprobe)
+    target_link_libraries(imsprobe PRIVATE imwrap_v6)
+    imwrap_apply_common_target_settings(imsprobe)
 
     add_executable(test_crash C:/Users/Administrateur/.gemini/antigravity/brain/4a753803-9da4-49fb-b137-1f8dfabbbd08/scratch/test_crash.cpp)
-    target_link_libraries(test_crash PRIVATE imuse_v6)
-    imuse_apply_common_target_settings(test_crash)
+    target_link_libraries(test_crash PRIVATE imwrap_v6)
+    imwrap_apply_common_target_settings(test_crash)
 endif()
 
 # Configure libADLMIDI build options
@@ -95,37 +102,37 @@ set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
 
 add_subdirectory(third_party/libadlmidi)
 
-if(IMUSE_BUILD_SHIM)
-    add_library(imuse_shim SHARED
-        swift-shim/CImuseShim.cpp
+if(IMWRAP_BUILD_SHIM)
+    add_library(imwrap_shim SHARED
+        swift-shim/CIMWrapShim.cpp
     )
 
-    target_include_directories(imuse_shim PRIVATE
+    target_include_directories(imwrap_shim PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/swift-shim/include
     )
 
-    target_link_libraries(imuse_shim PRIVATE
-        imuse_v6
+    target_link_libraries(imwrap_shim PRIVATE
+        imwrap_v6
     )
 
-    set_target_properties(imuse_shim PROPERTIES
+    set_target_properties(imwrap_shim PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS ON
     )
 
-    if(IMUSE_SHIM_ENABLE_EXTERNAL_BACKENDS)
-        target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_ADLIB=1)
-        target_include_directories(imuse_shim PRIVATE
+    if(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS)
+        target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_ADLIB=1)
+        target_include_directories(imwrap_shim PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
         )
-        target_link_libraries(imuse_shim PRIVATE ADLMIDI)
+        target_link_libraries(imwrap_shim PRIVATE ADLMIDI)
 
-        if(EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h" AND EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/Release/libfluidsynth-3.lib")
-            target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_FLUIDSYNTH=1)
-            target_include_directories(imuse_shim PRIVATE
-                ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include
+        if(EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h" AND EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/Release/libfluidsynth-3.lib")
+            target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_FLUIDSYNTH=1)
+            target_include_directories(imwrap_shim PRIVATE
+                ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include
             )
-            target_link_libraries(imuse_shim PRIVATE
-                "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+            target_link_libraries(imwrap_shim PRIVATE
+                "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
                 winmm
                 dsound
                 ole32
@@ -133,13 +140,13 @@ if(IMUSE_BUILD_SHIM)
             )
         endif()
 
-        find_path(IMUSE_MT32EMU_INCLUDE_DIR
+        find_path(IMWRAP_MT32EMU_INCLUDE_DIR
             NAMES mt32emu.h
             PATHS
                 ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/include
             NO_DEFAULT_PATH
         )
-        find_library(IMUSE_MT32EMU_LIBRARY
+        find_library(IMWRAP_MT32EMU_LIBRARY
             NAMES mt32emu libmt32emu
             PATHS
                 ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build
@@ -149,61 +156,61 @@ if(IMUSE_BUILD_SHIM)
             NO_DEFAULT_PATH
         )
 
-        if(IMUSE_MT32EMU_INCLUDE_DIR AND IMUSE_MT32EMU_LIBRARY)
-            target_compile_definitions(imuse_shim PRIVATE IMUSE_SHIM_WITH_MT32EMU=1)
-            target_include_directories(imuse_shim PRIVATE
-                ${IMUSE_MT32EMU_INCLUDE_DIR}
+        if(IMWRAP_MT32EMU_INCLUDE_DIR AND IMWRAP_MT32EMU_LIBRARY)
+            target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_MT32EMU=1)
+            target_include_directories(imwrap_shim PRIVATE
+                ${IMWRAP_MT32EMU_INCLUDE_DIR}
             )
-            target_link_libraries(imuse_shim PRIVATE
-                ${IMUSE_MT32EMU_LIBRARY}
+            target_link_libraries(imwrap_shim PRIVATE
+                ${IMWRAP_MT32EMU_LIBRARY}
             )
         endif()
     endif()
 
-    imuse_apply_common_target_settings(imuse_shim)
+    imwrap_apply_common_target_settings(imwrap_shim)
 endif()
 
-if(IMUSE_BUILD_AGS_PLUGIN)
-    if(NOT EXISTS "${IMUSE_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
-        message(FATAL_ERROR "IMUSE_BUILD_AGS_PLUGIN=ON requires a prebuilt FluidSynth tree with headers under ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include")
+if(IMWRAP_BUILD_AGS_PLUGIN)
+    if(NOT EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
+        message(FATAL_ERROR "IMWRAP_BUILD_AGS_PLUGIN=ON requires a prebuilt FluidSynth tree with headers under ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include")
     endif()
 
-    add_library(agsimuse SHARED
-        src/AgsImusePlugin.cpp
+    add_library(agsimwrap SHARED
+        src/AgsIMWrapPlugin.cpp
     )
 
-    target_compile_definitions(agsimuse PRIVATE THIS_IS_THE_PLUGIN)
+    target_compile_definitions(agsimwrap PRIVATE THIS_IS_THE_PLUGIN)
 
-    target_include_directories(agsimuse PRIVATE
+    target_include_directories(agsimwrap PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ags
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/miniaudio
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-master/include
-        ${IMUSE_FLUIDSYNTH_BUILD_DIR}/include
+        ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include
     )
 
-    target_link_libraries(agsimuse PRIVATE
-        imuse_v6
+    target_link_libraries(agsimwrap PRIVATE
+        imwrap_v6
         ADLMIDI
-        "${IMUSE_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+        "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
         winmm
         dsound
         ole32
         ksuser
     )
 
-    imuse_apply_common_target_settings(agsimuse)
+    imwrap_apply_common_target_settings(agsimwrap)
 
     if(MSVC)
-        target_link_libraries(agsimuse PRIVATE winmm)
+        target_link_libraries(agsimwrap PRIVATE winmm)
     else()
         if(NOT APPLE)
-            target_link_libraries(agsimuse PRIVATE winmm)
+            target_link_libraries(agsimwrap PRIVATE winmm)
         endif()
     endif()
 
     if(APPLE)
-        target_link_libraries(agsimuse PRIVATE
+        target_link_libraries(agsimwrap PRIVATE
             "-framework CoreAudio"
             "-framework AudioUnit"
             "-framework AudioToolbox"
@@ -214,21 +221,21 @@ if(IMUSE_BUILD_AGS_PLUGIN)
     endif()
 endif()
 
-if(IMUSE_BUILD_GUI_TOOLS)
+if(IMWRAP_BUILD_GUI_TOOLS)
     # SysEx Tool
-    add_executable(imuse_sysex_gui WIN32 tools_gui/sysex/main.cpp tools_gui/sysex/SysExWindow.cpp)
-    target_link_libraries(imuse_sysex_gui PRIVATE Qt6::Widgets imuse_v6 winmm)
-    target_include_directories(imuse_sysex_gui PRIVATE tools_gui/sysex)
+    add_executable(imwrap_sysex_gui WIN32 tools_gui/sysex/main.cpp tools_gui/sysex/SysExWindow.cpp)
+    target_link_libraries(imwrap_sysex_gui PRIVATE Qt6::Widgets imwrap_v6 winmm)
+    target_include_directories(imwrap_sysex_gui PRIVATE tools_gui/sysex)
 
     # Player Tool
-    add_executable(imuse_player_gui WIN32 tools_gui/player/main.cpp tools_gui/player/PlayerWindow.cpp)
-    target_link_libraries(imuse_player_gui PRIVATE Qt6::Widgets imuse_v6 winmm dsound ole32 ksuser)
-    target_include_directories(imuse_player_gui PRIVATE tools_gui/player)
+    add_executable(imwrap_player_gui WIN32 tools_gui/player/main.cpp tools_gui/player/PlayerWindow.cpp)
+    target_link_libraries(imwrap_player_gui PRIVATE Qt6::Widgets imwrap_v6 winmm dsound ole32 ksuser)
+    target_include_directories(imwrap_player_gui PRIVATE tools_gui/player)
 
     # Packer Tool
-    add_executable(imuse_packer_gui WIN32 tools_gui/packer/main.cpp tools_gui/packer/PackerWindow.cpp)
-    target_link_libraries(imuse_packer_gui PRIVATE Qt6::Widgets imuse_v6)
-    target_include_directories(imuse_packer_gui PRIVATE tools_gui/packer)
+    add_executable(imwrap_packer_gui WIN32 tools_gui/packer/main.cpp tools_gui/packer/PackerWindow.cpp)
+    target_link_libraries(imwrap_packer_gui PRIVATE Qt6::Widgets imwrap_v6)
+    target_include_directories(imwrap_packer_gui PRIVATE tools_gui/packer)
 
     # Windeployqt to copy required DLLs and plugins
     if(MSVC OR MINGW)
@@ -244,33 +251,33 @@ if(IMUSE_BUILD_GUI_TOOLS)
                 --skip-plugin-types imageformats,iconengines,networkinformation,tls
             )
 
-            add_custom_command(TARGET imuse_sysex_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_sysex_gui>\"
+            add_custom_command(TARGET imwrap_sysex_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imwrap_sysex_gui>\"
             )
-            add_custom_command(TARGET imuse_player_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_player_gui>\"
+            add_custom_command(TARGET imwrap_player_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imwrap_player_gui>\"
             )
-            add_custom_command(TARGET imuse_packer_gui POST_BUILD
-                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imuse_packer_gui>\"
+            add_custom_command(TARGET imwrap_packer_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imwrap_packer_gui>\"
             )
         endif()
     endif()
 endif()
 
-if(WIN32 AND IMUSE_BUILD_SETMIDI)
-    add_executable(imuse_setmidi WIN32 tools_gui/setmidi/main.cpp tools_gui/setmidi/MidiConfigWindow.cpp)
-    target_link_libraries(imuse_setmidi PRIVATE winmm comctl32)
-    target_include_directories(imuse_setmidi PRIVATE tools_gui/setmidi)
-    set_target_properties(imuse_setmidi PROPERTIES
+if(WIN32 AND IMWRAP_BUILD_SETMIDI)
+    add_executable(imwrap_setmidi WIN32 tools_gui/setmidi/main.cpp tools_gui/setmidi/MidiConfigWindow.cpp)
+    target_link_libraries(imwrap_setmidi PRIVATE winmm comctl32)
+    target_include_directories(imwrap_setmidi PRIVATE tools_gui/setmidi)
+    set_target_properties(imwrap_setmidi PROPERTIES
         OUTPUT_NAME "SetMIDI"
         AUTOMOC OFF
         AUTOUIC OFF
         AUTORCC OFF
     )
-    imuse_apply_common_target_settings(imuse_setmidi)
+    imwrap_apply_common_target_settings(imwrap_setmidi)
 
     if(MSVC)
-        set_target_properties(imuse_setmidi PROPERTIES
+        set_target_properties(imwrap_setmidi PROPERTIES
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
         )
     endif()

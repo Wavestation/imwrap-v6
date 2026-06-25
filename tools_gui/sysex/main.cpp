@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     app.setStyle("windowsvista");
 
     SysExWindow window;
-    window.setWindowTitle("iMUSE SysEx Tool");
+    window.setWindowTitle("iMWrap SysEx Tool");
     window.resize(800, 600);
     window.show();
 

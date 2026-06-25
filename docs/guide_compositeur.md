@@ -1,7 +1,7 @@
-# Guide du Compositeur iMUSE
+# Guide du Compositeur iMWrap
 ## Intégration et Utilisation des Messages SysEx dans MOTU Digital Performer
 
-Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
+Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx iMWrap** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
 
 ---
 
@@ -69,18 +69,18 @@ Définit ou annule une boucle de lecture dynamique sur une section de la séquen
 
 ## 3. Configuration et Routage via loopMIDI
 
-Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMUSE** à **Digital Performer** en passant par des câbles MIDI virtuels.
+Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMWrap** à **Digital Performer** en passant par des câbles MIDI virtuels.
 
 ### Étape 1 : Créer le port virtuel dans loopMIDI
 1. Téléchargez et lancez le logiciel gratuit **loopMIDI** (de Tobias Erichsen).
 2. Dans le panneau de configuration, cliquez sur le bouton `+` pour ajouter un nouveau port.
-3. Nommez-le par exemple : `iMUSE Generator`.
+3. Nommez-le par exemple : `iMWrap Generator`.
 4. loopMIDI tourne en arrière-plan et crée un port d'entrée et de sortie MIDI virtuel visible par toutes vos applications.
 
 ### Étape 2 : Connecter le Générateur de SysEx
-1. Lancez le Générateur de SysEx (`imuse_sysex_gui.exe`).
+1. Lancez le Générateur de SysEx (`imwrap_sysex_gui.exe`).
 2. Dans la section **Envoi MIDI Direct** (à droite), repérez la liste déroulante **Périphérique**.
-3. Sélectionnez le port virtuel créé : `iMUSE Generator`.
+3. Sélectionnez le port virtuel créé : `iMWrap Generator`.
 4. Désormais, chaque clic sur le bouton **Envoyer le SysEx** transmettra la trame MIDI sur ce canal virtuel.
 
 ### Étape 3 : Configurer Digital Performer pour l'enregistrement en temps réel
@@ -88,7 +88,7 @@ Si vous préférez enregistrer en temps réel vos manipulations ou vos commandes
 1. Ouvrez Digital Performer.
 2. Allez dans **Setup > Input Filter...** et assurez-vous que la case **System Exclusive** est bien cochée (pour autoriser DP à enregistrer les SysEx).
 3. Dans votre projet DP, créez une nouvelle piste MIDI.
-4. Réglez l'entrée MIDI de cette piste sur `iMUSE Generator`.
+4. Réglez l'entrée MIDI de cette piste sur `iMWrap Generator`.
 5. Armez la piste MIDI en enregistrement.
 6. Lancez l'enregistrement dans DP, puis cliquez sur **Envoyer le SysEx** dans le Générateur.
 7. DP enregistre précisément le message SysEx généré sous la forme d'un événement dans la piste !

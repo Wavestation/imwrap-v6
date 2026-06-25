@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace AgsImuse.Editor
+namespace AgsIMWrap.Editor
 {
     internal static class EmbeddedIconLoader
     {

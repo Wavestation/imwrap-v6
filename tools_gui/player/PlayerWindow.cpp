@@ -15,7 +15,7 @@
 #include <QFormLayout>
 #include <sstream>
 #include <iomanip>
-#include "imuse/ImuseSysex.h"
+#include "imwrap/IMWrapSysex.h"
 
 PlayerWindow::WinMMSink::~WinMMSink() {
     closeDevice();
@@ -46,7 +46,7 @@ void PlayerWindow::WinMMSink::onMidiMessage(uint16_t soundId, uint8_t status, ui
     midiOutShortMsg(hMidiOut, msg);
 }
 
-void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imuse::ByteView message) {
+void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imwrap::ByteView message) {
     if (!hMidiOut || message.empty()) return;
     
     std::vector<char> buffer;
@@ -85,7 +85,7 @@ PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnable
     setupUi();
     refreshDevices();
 
-    QSettings settings("imwrap", "ImusePlayerGui");
+    QSettings settings("imwrap", "IMWrapPlayerGui");
     QString lastBank = settings.value("lastBank", "").toString();
     if (!lastBank.isEmpty()) {
         bankPathEdit->setText(lastBank);
@@ -107,7 +107,7 @@ PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnable
 }
 
 PlayerWindow::~PlayerWindow() {
-    QSettings settings("imwrap", "ImusePlayerGui");
+    QSettings settings("imwrap", "IMWrapPlayerGui");
     settings.setValue("lastBank", bankPathEdit->text());
     settings.setValue("lastDevice", deviceCombo->currentText());
     settings.setValue("lastProfile", profileCombo->currentIndex());
@@ -119,7 +119,7 @@ void PlayerWindow::setupUi() {
     setCentralWidget(central);
     auto *layout = new QVBoxLayout(central);
 
-    auto *configBox = new QGroupBox("Configuration iMUSE");
+    auto *configBox = new QGroupBox("Configuration iMWrap");
     auto *configLayout = new QVBoxLayout(configBox);
     
     auto *bankLayout = new QHBoxLayout();
@@ -138,14 +138,14 @@ void PlayerWindow::setupUi() {
 
     backendLayout->addWidget(new QLabel("Type de Rendu:"));
     profileCombo = new QComboBox();
-    profileCombo->addItem("General MIDI", static_cast<int>(imuse::TargetProfile::GeneralMidi));
-    profileCombo->addItem("Roland MT-32", static_cast<int>(imuse::TargetProfile::Mt32));
-    profileCombo->addItem("AdLib", static_cast<int>(imuse::TargetProfile::Adlib));
+    profileCombo->addItem("General MIDI", static_cast<int>(imwrap::TargetProfile::GeneralMidi));
+    profileCombo->addItem("Roland MT-32", static_cast<int>(imwrap::TargetProfile::Mt32));
+    profileCombo->addItem("AdLib", static_cast<int>(imwrap::TargetProfile::Adlib));
     connect(profileCombo, &QComboBox::currentIndexChanged, this, [this](int idx) {
         if (idx >= 0) {
-            auto profile = static_cast<imuse::TargetProfile>(profileCombo->itemData(idx).toInt());
+            auto profile = static_cast<imwrap::TargetProfile>(profileCombo->itemData(idx).toInt());
             engine.setTargetProfile(profile);
-            engine.setNativeMt32Output(profile == imuse::TargetProfile::Mt32);
+            engine.setNativeMt32Output(profile == imwrap::TargetProfile::Mt32);
         }
     });
     backendLayout->addWidget(profileCombo);
@@ -198,7 +198,7 @@ void PlayerWindow::setupUi() {
     rightLayout->addLayout(controlsLayout);
     
     // Hooks and Advance
-    auto *hookBox = new QGroupBox("Contrôle iMUSE");
+    auto *hookBox = new QGroupBox("Contrôle iMWrap");
     auto *hookLayout = new QFormLayout(hookBox);
     hookClassCombo = new QComboBox();
     hookClassCombo->addItems({
@@ -248,7 +248,7 @@ void PlayerWindow::refreshDevices() {
 }
 
 void PlayerWindow::browseBank() {
-    QString path = QFileDialog::getOpenFileName(this, "Ouvrir IMS", "", "iMUSE Banks (*.ims *.data)");
+    QString path = QFileDialog::getOpenFileName(this, "Ouvrir IMS", "", "iMWrap Banks (*.ims *.data)");
     if (!path.isEmpty()) {
         bankPathEdit->setText(path);
         loadBank();
@@ -269,8 +269,8 @@ void PlayerWindow::loadBank() {
             soundItem->setData(0, Qt::UserRole, id);
             
             // Add tracks as children
-            imuse::SmfSequence seq;
-            if (res.valid() && imuse::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
+            imwrap::SmfSequence seq;
+            if (res.valid() && imwrap::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
                 uint16_t tIdx = 0;
                 for (const auto &trk : seq.tracks) {
                     QTreeWidgetItem *trackItem = new QTreeWidgetItem(soundItem);
@@ -299,7 +299,7 @@ void PlayerWindow::togglePreview() {
                 previewEnabled = true;
                 previewBtn->setText("Désactiver la Préécoute");
                 statusLabel->setText("Préécoute activée.");
-                if (engine.targetProfile() == imuse::TargetProfile::Mt32) {
+                if (engine.targetProfile() == imwrap::TargetProfile::Mt32) {
                     engine.initMt32();
                 }
             } else {
@@ -338,7 +338,7 @@ void PlayerWindow::stopAllSounds() {
 void PlayerWindow::applyHook() {
     if (soundTree->selectedItems().isEmpty()) return;
     uint16_t id = soundTree->selectedItems().first()->data(0, Qt::UserRole).toUInt();
-    // iMUSE Command: 0x010C is PlayerSetHook
+    // iMWrap command: 0x010C is PlayerSetHook
     int16_t args[5] = {0x010C, (int16_t)id, (int16_t)hookClassCombo->currentIndex(), (int16_t)hookValueSpin->value(), (int16_t)hookChannelSpin->value()};
     engine.doCommand(5, args);
 }
@@ -378,20 +378,20 @@ void PlayerWindow::updateUiState() {
         struct SimpleEvent { uint32_t tick; uint16_t track; std::string text; };
         std::vector<SimpleEvent> seqEvents;
         
-        imuse::SmfSequence seq;
-        if (res.valid() && imuse::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
+        imwrap::SmfSequence seq;
+        if (res.valid() && imwrap::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
             uint16_t tIdx = 0;
             for (const auto &trk : seq.tracks) {
                 uint32_t absTick = 0;
                 for (const auto &evt : trk.events) {
                     absTick += evt.delta;
-                    if (evt.type == imuse::MidiEventType::Meta && evt.metaType == 0x06) {
+                    if (evt.type == imwrap::MidiEventType::Meta && evt.metaType == 0x06) {
                         seqEvents.push_back({absTick, tIdx, std::string(evt.payload.begin(), evt.payload.end())});
-                    } else if (evt.type == imuse::MidiEventType::SysEx) {
-                        imuse::ImuseControlEvent ctrlEvt;
-                        if (imuse::DecodeImuseSysex(imuse::ByteView(evt.payload.data(), evt.payload.size()), &ctrlEvt)) {
-                            std::string desc = imuse::DescribeImuseSysex(ctrlEvt);
-                            seqEvents.push_back({absTick, tIdx, "iMUSE SysEx: " + desc});
+                    } else if (evt.type == imwrap::MidiEventType::SysEx) {
+                        imwrap::IMWrapControlEvent ctrlEvt;
+                        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(evt.payload.data(), evt.payload.size()), &ctrlEvt)) {
+                            std::string desc = imwrap::DescribeIMWrapSysex(ctrlEvt);
+                            seqEvents.push_back({absTick, tIdx, "iMWrap SysEx: " + desc});
                         } else {
                             // Fallback raw hex for other SysEx
                             std::stringstream ss;

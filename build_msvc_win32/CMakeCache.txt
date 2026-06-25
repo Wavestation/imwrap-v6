@@ -163,7 +163,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=imuse_v6
+CMAKE_PROJECT_NAME:STATIC=imwrap_v6
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=1.6.2
@@ -297,6 +297,34 @@ IMUSE_QT6_PREFIX_PATH:PATH=
 //Enable optional playback backends in imuse_shim
 IMUSE_SHIM_ENABLE_EXTERNAL_BACKENDS:BOOL=OFF
 
+//Build the AGS runtime plugin
+IMWRAP_BUILD_AGS_PLUGIN:BOOL=ON
+
+//Build imwrap Qt6 GUI tools
+IMWRAP_BUILD_GUI_TOOLS:BOOL=ON
+
+//Build the native Windows SetMIDI utility
+IMWRAP_BUILD_SETMIDI:BOOL=ON
+
+//Build the shared imwrap_v6 library
+IMWRAP_BUILD_SHARED_LIB:BOOL=ON
+
+//Build the native imwrap_shim DLL used by wrappers and editor
+// tooling
+IMWRAP_BUILD_SHIM:BOOL=ON
+
+//Build imwrap command-line tools
+IMWRAP_BUILD_TOOLS:BOOL=ON
+
+//Path to the prebuilt FluidSynth build tree used by agsimwrap
+IMWRAP_FLUIDSYNTH_BUILD_DIR:PATH=D:/Prog/imwrap-v6/third_party/fluidsynth-build
+
+//Optional Qt6 installation prefix
+IMWRAP_QT6_PREFIX_PATH:PATH=
+
+//Enable optional playback backends in imwrap_shim
+IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS:BOOL=OFF
+
 //Build Demo MIDI player without support of real time playing.
 // It will output into WAV only.
 MIDIPLAY_WAVE_ONLY:BOOL=OFF
@@ -396,6 +424,15 @@ imuse_v6_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 imuse_v6_SOURCE_DIR:STATIC=D:/Prog/imwrap-v6
+
+//Value Computed by CMake
+imwrap_v6_BINARY_DIR:STATIC=D:/Prog/imwrap-v6/build_msvc_win32
+
+//Value Computed by CMake
+imwrap_v6_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+imwrap_v6_SOURCE_DIR:STATIC=D:/Prog/imwrap-v6
 
 //Value Computed by CMake
 libADLMIDI_BINARY_DIR:STATIC=D:/Prog/imwrap-v6/build_msvc_win32/third_party/libadlmidi
@@ -529,7 +566,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //noop for ranlib

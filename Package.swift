@@ -3,19 +3,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "imuse-v6",
+    name: "imwrap-v6",
     platforms: [
         .macOS(.v13)
     ],
     products: [
-        .library(name: "CImuseShim", targets: ["CImuseShim"]),
-        .executable(name: "ImuseAuthoringApp", targets: ["ImuseAuthoringApp"]),
-        .executable(name: "ImuseSysExTool", targets: ["ImuseSysExTool"]),
-        .executable(name: "ImusePackerTool", targets: ["ImusePackerTool"])
+        .library(name: "CIMWrapShim", targets: ["CIMWrapShim"]),
+        .executable(name: "IMWrapAuthoringApp", targets: ["IMWrapAuthoringApp"]),
+        .executable(name: "IMWrapSysExTool", targets: ["IMWrapSysExTool"]),
+        .executable(name: "IMWrapPackerTool", targets: ["IMWrapPackerTool"])
     ],
     targets: [
         .target(
-            name: "ImuseCpp",
+            name: "IMWrapCpp",
             path: ".",
             exclude: [
                 "baka",
@@ -29,9 +29,9 @@ let package = Package(
             ],
             sources: [
                 "src/Instrument.cpp",
-                "src/ImuseEngine.cpp",
-                "src/ImuseSequence.cpp",
-                "src/ImuseSysex.cpp",
+                "src/IMWrapEngine.cpp",
+                "src/IMWrapSequence.cpp",
+                "src/IMWrapSysex.cpp",
                 "src/ImsWriter.cpp",
                 "src/ResourceBank.cpp",
                 "src/SinkMidiChannel.cpp",
@@ -43,8 +43,8 @@ let package = Package(
             ]
         ),
         .target(
-            name: "CImuseShim",
-            dependencies: ["ImuseCpp"],
+            name: "CIMWrapShim",
+            dependencies: ["IMWrapCpp"],
             path: "swift-shim",
             publicHeadersPath: "include",
             cxxSettings: [
@@ -71,21 +71,21 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ImuseCoreSwift",
+            name: "IMWrapCoreSwift",
             path: "swift-app/core"
         ),
         .executableTarget(
-            name: "ImuseAuthoringApp",
-            dependencies: ["CImuseShim", "ImuseCoreSwift"],
+            name: "IMWrapAuthoringApp",
+            dependencies: ["CIMWrapShim", "IMWrapCoreSwift"],
             path: "swift-app/player"
         ),
         .executableTarget(
-            name: "ImuseSysExTool",
+            name: "IMWrapSysExTool",
             path: "swift-app/sysex"
         ),
         .executableTarget(
-            name: "ImusePackerTool",
-            dependencies: ["ImuseCoreSwift"],
+            name: "IMWrapPackerTool",
+            dependencies: ["IMWrapCoreSwift"],
             path: "swift-app/packer"
         )
     ],

@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -20,7 +20,7 @@
  *
  ========================================================================== */
 
-#include "imuse/Instrument.h"
+#include "imwrap/Instrument.h"
 
 #include <algorithm>
 #include <array>
@@ -31,7 +31,7 @@
 #include <string>
 #include <mutex>
 
-namespace imuse {
+namespace imwrap {
 namespace {
 
 std::unordered_map<std::string, uint8_t> g_dynamicRolandToGmMap;
@@ -355,4 +355,4 @@ void ClearRolandTimbreMappings() {
     g_dynamicRolandToGmMap.clear();
 }
 
-} // namespace imuse
+} // namespace imwrap

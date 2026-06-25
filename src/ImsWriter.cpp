@@ -1,6 +1,6 @@
 /* ==========================================================================
  *
- * iMWRAP V6 - A modern iMuse implementation attempt with Adventure Game Studio Companion Plugin
+ * iMWrap v6 - A modern iMWrap implementation attempt with Adventure Game Studio Companion Plugin
  *
  * This program is the legal property of Masami Komuro and few other contributors,
  * Please refer to the COPYRIGHT file distributed with this source distribution.
@@ -20,14 +20,14 @@
  *
  ========================================================================== */
 
-#include "imuse/ImsWriter.h"
+#include "imwrap/ImsWriter.h"
 
 #include <algorithm>
 #include <fstream>
 #include <iterator>
 #include <map>
 
-namespace imuse {
+namespace imwrap {
 namespace {
 
 void AppendU16BE(std::vector<uint8_t> *out, uint16_t value) {
@@ -287,4 +287,4 @@ bool ImsWriter::writeFile(const std::string &outputPath, const std::vector<Sound
     return true;
 }
 
-} // namespace imuse
+} // namespace imwrap

@@ -16,21 +16,21 @@
 #include <vector>
 #include <string>
 
-#include "imuse/ImsWriter.h"
-#include "imuse/SmfSequence.h"
-#include "imuse/ResourceBank.h"
+#include "imwrap/ImsWriter.h"
+#include "imwrap/SmfSequence.h"
+#include "imwrap/ResourceBank.h"
 
 struct ProjectTrack {
     std::string name;
     std::string sourceFileName;
-    std::vector<imuse::MidiEvent> events;
+    std::vector<imwrap::MidiEvent> events;
 };
 
 struct ProjectVariant {
-    imuse::VariantKind kind = imuse::VariantKind::Gmd;
+    imwrap::VariantKind kind = imwrap::VariantKind::Gmd;
     bool includeVariant = false;
     bool includeMdhd = false;
-    imuse::MdhdData mdhd = imuse::MdhdData::Defaults();
+    imwrap::MdhdData mdhd = imwrap::MdhdData::Defaults();
     uint16_t division = 480;
     std::vector<ProjectTrack> tracks;
 };

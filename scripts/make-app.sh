@@ -132,8 +132,8 @@ PLIST
 }
 
 # Package the 3 apps
-package_app "ImuseAuthoringApp" "iMUSE Lecteur" "org.scummtools.imuse.player" "true"
-package_app "ImuseSysExTool" "iMUSE SysEx Tool" "org.scummtools.imuse.sysex" "false"
-package_app "ImusePackerTool" "iMUSE Packer Tool" "org.scummtools.imuse.packer" "false"
+package_app "IMWrapAuthoringApp" "iMWrap Player" "org.scummtools.imwrap.player" "true"
+package_app "IMWrapSysExTool" "iMWrap SysEx Tool" "org.scummtools.imwrap.sysex" "false"
+package_app "IMWrapPackerTool" "iMWrap Packer Tool" "org.scummtools.imwrap.packer" "false"
 
 echo "All apps packaged successfully in $DIST_DIR!"

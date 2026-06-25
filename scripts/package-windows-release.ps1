@@ -2,6 +2,7 @@
 param(
     [string]$PluginBuildDir,
     [string]$GuiBuildDir,
+    [string]$AgsEditorPluginBuildDir,
     [string]$OutputDir
 )
 
@@ -16,12 +17,16 @@ if ([string]::IsNullOrWhiteSpace($PluginBuildDir)) {
 if ([string]::IsNullOrWhiteSpace($GuiBuildDir)) {
     $GuiBuildDir = Join-Path $RootDir ".build\\windows-release\\x64"
 }
+if ([string]::IsNullOrWhiteSpace($AgsEditorPluginBuildDir)) {
+    $AgsEditorPluginBuildDir = Join-Path $RootDir "ags-editor-plugin\bin\Release"
+}
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
-    $OutputDir = Join-Path $RootDir "final-release\windows"
+    $OutputDir = Join-Path $RootDir "final-release\imwrap-windows"
 }
 
 $PluginBuildDir = [System.IO.Path]::GetFullPath($PluginBuildDir)
 $GuiBuildDir = [System.IO.Path]::GetFullPath($GuiBuildDir)
+$AgsEditorPluginBuildDir = [System.IO.Path]::GetFullPath($AgsEditorPluginBuildDir)
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 
 function Assert-WithinWorkspace {
@@ -134,21 +139,22 @@ $examplesDir = Join-Path $OutputDir "examples"
 $wrappersDir = Join-Path $OutputDir "wrappers"
 $licensesDir = Join-Path $OutputDir "licenses"
 $toolsDir = Join-Path $OutputDir "tools"
+$agsEditorPluginDir = Join-Path $OutputDir "ags-editor-plugin"
 
-foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir)) {
+foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir, $agsEditorPluginDir)) {
     Ensure-Directory -Path $dir
 }
 
 $projectBinaries = @(
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.dll")); Name = "agsimuse-x32.dll" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimuse.lib")); Name = "agsimuse-x32.lib" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6.dll")); Name = "imuse_v6-x32.dll" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_dll.lib")); Name = "imuse_v6-x32.lib" },
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imuse_v6_static.lib"), (Join-Path $PluginBuildDir "Release\imuse_v6.lib")); Name = "imuse_v6-static-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimwrap.dll")); Name = "agsimwrap-x32.dll" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\agsimwrap.lib")); Name = "agsimwrap-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_v6.dll")); Name = "imwrap_v6-x32.dll" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_v6_dll.lib")); Name = "imwrap_v6-x32.lib" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_v6_static.lib"), (Join-Path $PluginBuildDir "Release\imwrap_v6.lib")); Name = "imwrap_v6-static-x32.lib" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\ADLMIDI.lib")); Name = "ADLMIDI-x32.lib" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6.dll")); Name = "imuse_v6-x64.dll" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6_dll.lib")); Name = "imuse_v6-x64.lib" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_v6_static.lib"), (Join-Path $GuiBuildDir "Release\imuse_v6.lib")); Name = "imuse_v6-static-x64.lib" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_v6.dll")); Name = "imwrap_v6-x64.dll" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_v6_dll.lib")); Name = "imwrap_v6-x64.lib" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_v6_static.lib"), (Join-Path $GuiBuildDir "Release\imwrap_v6.lib")); Name = "imwrap_v6-static-x64.lib" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\ADLMIDI.lib")); Name = "ADLMIDI-x64.lib" }
 )
 
@@ -157,19 +163,39 @@ foreach ($binary in $projectBinaries) {
 }
 
 $toolBinaries = @(
-    @{ Sources = @((Join-Path $PluginBuildDir "Release\imusepack.exe")); Name = "imusepack-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrappack.exe")); Name = "imwrappack-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x32.exe" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imusepack.exe")); Name = "imusepack-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrappack.exe")); Name = "imwrappack-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x64.exe" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_packer_gui.exe")); Name = "imuse_packer_gui-x64.exe" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_player_gui.exe")); Name = "imuse_player_gui-x64.exe" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\imuse_sysex_gui.exe")); Name = "imuse_sysex_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_packer_gui.exe")); Name = "imwrap_packer_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_player_gui.exe")); Name = "imwrap_player_gui-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_sysex_gui.exe")); Name = "imwrap_sysex_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x64.exe" }
 )
 
 foreach ($binary in $toolBinaries) {
     Copy-FirstExistingFileAs -Sources $binary.Sources -Destination (Join-Path $toolsDir $binary.Name)
+}
+
+$agsEditorPluginFiles = @(
+    @{ Sources = @((Join-Path $AgsEditorPluginBuildDir "AGS.Plugin.IMWrap.Editor.dll")); Name = "AGS.Plugin.IMWrap.Editor.dll" },
+    @{ Sources = @((Join-Path $AgsEditorPluginBuildDir "AGS.Plugin.IMWrap.Editor.pdb")); Name = "AGS.Plugin.IMWrap.Editor.pdb"; Optional = $true },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_shim.dll")); Name = "imwrap_shim.dll" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_shim.pdb")); Name = "imwrap_shim.pdb"; Optional = $true },
+    @{ Sources = @((Join-Path $RootDir "ags-editor-plugin\README.md")); Name = "README.md" }
+)
+
+foreach ($artifact in $agsEditorPluginFiles) {
+    if ($artifact.ContainsKey("Optional") -and $artifact.Optional) {
+        $optionalSource = $artifact.Sources[0]
+        if (Test-Path -LiteralPath $optionalSource -PathType Leaf) {
+            Copy-FileAs -Source $optionalSource -Destination (Join-Path $agsEditorPluginDir $artifact.Name)
+        }
+        continue
+    }
+
+    Copy-FirstExistingFileAs -Sources $artifact.Sources -Destination (Join-Path $agsEditorPluginDir $artifact.Name)
 }
 
 $qtRuntimeFiles = @(
@@ -197,7 +223,7 @@ $documentationFiles = @(
     @{ Source = Join-Path $RootDir "docs\windows-release.md"; Name = "README.md" },
     @{ Source = Join-Path $RootDir "README.md"; Name = "docs\imwrap-v6-overview.md" },
     @{ Source = Join-Path $RootDir "docs\ags-plugin.md"; Name = "docs\ags-plugin.md" },
-    @{ Source = Join-Path $RootDir "docs\imusepack.md"; Name = "docs\imusepack.md" },
+    @{ Source = Join-Path $RootDir "docs\imwrappack.md"; Name = "docs\imwrappack.md" },
     @{ Source = Join-Path $RootDir "docs\ims-v1.md"; Name = "docs\ims-v1.md" },
     @{ Source = Join-Path $RootDir "docs\guide_compositeur.md"; Name = "docs\guide-compositeur.md" }
 )
@@ -207,8 +233,8 @@ foreach ($doc in $documentationFiles) {
 }
 
 $wrapperFiles = @(
-    @{ Source = Join-Path $RootDir "ags-wrapper\ImuseShim.cs"; Name = "wrappers\ImuseShim.cs" },
-    @{ Source = Join-Path $RootDir "ags-wrapper\ImuseShim.vb"; Name = "wrappers\ImuseShim.vb" }
+    @{ Source = Join-Path $RootDir "ags-wrapper\IMWrapShim.cs"; Name = "wrappers\IMWrapShim.cs" },
+    @{ Source = Join-Path $RootDir "ags-wrapper\IMWrapShim.vb"; Name = "wrappers\IMWrapShim.vb" }
 )
 
 foreach ($wrapper in $wrapperFiles) {

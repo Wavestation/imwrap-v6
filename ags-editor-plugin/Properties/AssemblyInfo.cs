@@ -1,12 +1,12 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("AGS.Plugin.Imuse.Editor")]
-[assembly: AssemblyDescription("AGS editor plugin for browsing iMUSE banks in project trees.")]
+[assembly: AssemblyTitle("AGS.Plugin.IMWrap.Editor")]
+[assembly: AssemblyDescription("AGS editor plugin for browsing iMWrap banks in project trees.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iMWRAP contributors")]
-[assembly: AssemblyProduct("iMWRAP V6")]
-[assembly: AssemblyCopyright("Copyright (C) iMWRAP contributors")]
+[assembly: AssemblyCompany("iMWrap contributors")]
+[assembly: AssemblyProduct("iMWrap v6")]
+[assembly: AssemblyCopyright("Copyright (C) iMWrap contributors")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
