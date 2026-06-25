@@ -470,7 +470,10 @@ namespace AgsIMWrap.Editor
             {
                 byte[] bytes = documentContext.Pane.BuildBankBytes();
                 IMWrapBankFileService.SaveBankBytes(BuildFullPath(documentContext.RelativePath), bytes);
-                documentContext.Pane.MarkClean(showStatus ? "Saved " + Path.GetFileName(documentContext.RelativePath) + "." : null);
+                string statusMessage = showStatus
+                    ? "Saved " + Path.GetFileName(documentContext.RelativePath) + "."
+                    : "Saved.";
+                documentContext.Pane.MarkClean(statusMessage);
                 UpdateDocumentCaption(documentContext);
             }
             catch (Exception ex)
@@ -650,6 +653,12 @@ namespace AgsIMWrap.Editor
             }
 
             documentContext.Document.Name = name;
+            documentContext.Pane.Text = name;
+            if (documentContext.Pane.DockingContainer != null && !documentContext.Pane.DockingContainer.IsDisposed)
+            {
+                documentContext.Pane.DockingContainer.Text = name;
+                documentContext.Pane.DockingContainer.Refresh();
+            }
         }
 
         private void OnDocumentClosed(OpenBankDocument documentContext)

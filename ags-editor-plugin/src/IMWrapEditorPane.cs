@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -43,6 +44,7 @@ namespace AgsIMWrap.Editor
         private bool _isDirty;
         private bool _layoutRestorePending;
         private int _preferredMainSplitterDistance;
+        private bool _pendingImportAsReplace;
         private bool _suppressUiEvents;
 
         public IMWrapEditorPane()
@@ -189,6 +191,8 @@ namespace AgsIMWrap.Editor
 
             _soundNameTextBox = new TextBox();
             _soundNameTextBox.Dock = DockStyle.Fill;
+            _soundNameTextBox.TextChanged += SoundNameTextBox_TextChanged;
+            _soundNameTextBox.Leave += SoundIdentityControl_Leave;
             soundProperties.Controls.Add(_soundNameTextBox, 1, 0);
 
             Label soundIdLabel = new Label();
@@ -200,12 +204,15 @@ namespace AgsIMWrap.Editor
             _soundIdSpin = new NumericUpDown();
             _soundIdSpin.Maximum = 65535;
             _soundIdSpin.Width = 90;
+            _soundIdSpin.ValueChanged += SoundIdSpin_ValueChanged;
+            _soundIdSpin.Leave += SoundIdentityControl_Leave;
             soundProperties.Controls.Add(_soundIdSpin, 3, 0);
 
             _applyButton = new Button();
             _applyButton.AutoSize = true;
             _applyButton.Text = "Apply Sound Changes";
             _applyButton.Click += ApplyButton_Click;
+            _applyButton.Visible = false;
             soundProperties.Controls.Add(_applyButton, 4, 0);
 
             TableLayoutPanel variantHeader = new TableLayoutPanel();
@@ -258,11 +265,13 @@ namespace AgsIMWrap.Editor
             _includeVariantCheck = new CheckBox();
             _includeVariantCheck.AutoSize = true;
             _includeVariantCheck.Text = "Include this variant";
+            _includeVariantCheck.CheckedChanged += VariantSettingsControlChanged;
             variantFlags.Controls.Add(_includeVariantCheck);
 
             _includeMdhdCheck = new CheckBox();
             _includeMdhdCheck.AutoSize = true;
             _includeMdhdCheck.Text = "Include MDhd";
+            _includeMdhdCheck.CheckedChanged += VariantSettingsControlChanged;
             variantFlags.Controls.Add(_includeMdhdCheck);
 
             TableLayoutPanel mdhdLayout = new TableLayoutPanel();
@@ -283,6 +292,12 @@ namespace AgsIMWrap.Editor
             _transposeSpin = CreateNumeric(mdhdLayout, "Transpose:", -128, 127, 0, 2, 1);
             _detuneSpin = CreateNumeric(mdhdLayout, "Detune:", -128, 127, 0, 0, 2);
             _speedSpin = CreateNumeric(mdhdLayout, "Speed:", 0, 255, 128, 2, 2);
+            _prioritySpin.ValueChanged += VariantSettingsControlChanged;
+            _volumeSpin.ValueChanged += VariantSettingsControlChanged;
+            _panSpin.ValueChanged += VariantSettingsControlChanged;
+            _transposeSpin.ValueChanged += VariantSettingsControlChanged;
+            _detuneSpin.ValueChanged += VariantSettingsControlChanged;
+            _speedSpin.ValueChanged += VariantSettingsControlChanged;
 
             GroupBox tracksGroup = new GroupBox();
             tracksGroup.Text = "Tracks";
@@ -300,6 +315,8 @@ namespace AgsIMWrap.Editor
             _tracksView.Columns.Add("Name", 200);
             _tracksView.Columns.Add("Source", 170);
             _tracksView.Columns.Add("Events", 70);
+            _tracksView.Enter += TracksView_Enter;
+            _tracksView.Leave += TracksView_Leave;
             _tracksView.SelectedIndexChanged += TracksView_SelectedIndexChanged;
             tracksGroup.Controls.Add(_tracksView);
 
@@ -313,6 +330,7 @@ namespace AgsIMWrap.Editor
             _importButton = new Button();
             _importButton.AutoSize = true;
             _importButton.Text = "Import MIDI...";
+            _importButton.MouseDown += ImportButton_MouseDown;
             _importButton.Click += ImportButton_Click;
             importPanel.Controls.Add(_importButton);
 
@@ -426,6 +444,7 @@ namespace AgsIMWrap.Editor
 
         public void MarkClean(string message)
         {
+            bool stateChanged = _isDirty;
             _isDirty = false;
             if (!string.IsNullOrEmpty(message))
             {
@@ -433,12 +452,15 @@ namespace AgsIMWrap.Editor
             }
 
             UpdateSummary();
-            RaiseDirtyStateChanged();
+            if (stateChanged)
+            {
+                RaiseDirtyStateChanged();
+            }
         }
 
         public byte[] BuildBankBytes()
         {
-            ApplyCurrentSoundChanges();
+            EnsureCurrentEditorStateIsValid();
             return IMWrapBankCodec.SaveToBytes(_bank);
         }
 
@@ -566,6 +588,14 @@ namespace AgsIMWrap.Editor
                 return;
             }
 
+            if (!ConfirmDestructiveAction(
+                "Delete Sound",
+                "Delete sound '" + sound.DisplayLabel + "'?" + Environment.NewLine +
+                "All variants and tracks in this sound will be removed."))
+            {
+                return;
+            }
+
             int index = _bank.Sounds.IndexOf(sound);
             _bank.Sounds.Remove(sound);
             PopulateSoundList(null);
@@ -586,7 +616,126 @@ namespace AgsIMWrap.Editor
             ApplyCurrentSoundChanges();
         }
 
+        private void SoundNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_suppressUiEvents)
+            {
+                return;
+            }
+
+            TryApplySelectedSoundIdentity(true, true);
+        }
+
+        private void SoundIdSpin_ValueChanged(object sender, EventArgs e)
+        {
+            if (_suppressUiEvents)
+            {
+                return;
+            }
+
+            TryApplySelectedSoundIdentity(true, true);
+        }
+
+        private void SoundIdentityControl_Leave(object sender, EventArgs e)
+        {
+            RefreshSoundListDisplay();
+        }
+
+        private void VariantSettingsControlChanged(object sender, EventArgs e)
+        {
+            if (_suppressUiEvents)
+            {
+                return;
+            }
+
+            TryApplyVariantSettingsFromUi(true, true);
+        }
+
+        private void TracksView_Enter(object sender, EventArgs e)
+        {
+            UpdateImportButtonMode();
+        }
+
+        private void TracksView_Leave(object sender, EventArgs e)
+        {
+            if (!_pendingImportAsReplace &&
+                Control.MouseButtons == MouseButtons.Left &&
+                _importButton != null &&
+                GetSelectedTrackIndex() >= 0 &&
+                _importButton.ClientRectangle.Contains(_importButton.PointToClient(Cursor.Position)))
+            {
+                _pendingImportAsReplace = true;
+            }
+
+            UpdateImportButtonMode();
+        }
+
+        private void ImportButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            _pendingImportAsReplace = e.Button == MouseButtons.Left && HasFocusedTrackSelection();
+            UpdateImportButtonMode();
+        }
+
         private void ImportButton_Click(object sender, EventArgs e)
+        {
+            bool replaceTrack = _pendingImportAsReplace || HasFocusedTrackSelection();
+            try
+            {
+                if (replaceTrack)
+                {
+                    ReplaceTrackButton_Click(sender, e);
+                    return;
+                }
+
+                IMWrapSoundModel sound = GetSelectedSound();
+                if (sound == null)
+                {
+                    return;
+                }
+
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.Filter = "MIDI files (*.mid;*.midi)|*.mid;*.midi|All files (*.*)|*.*";
+                dialog.Title = "Import MIDI";
+                dialog.Multiselect = true;
+                if (dialog.ShowDialog(GetDialogOwner()) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                try
+                {
+                    ushort division;
+                    IMWrapVariantModel variant = sound.EnsureVariant(GetSelectedVariantKind());
+                    ApplyVariantSettings(variant, true);
+                    // Do not clear. Append tracks.
+                    variant.Tracks.AddRange(IMWrapBankCodec.ImportMidiTracks(dialog.FileNames, out division));
+                    variant.Division = division;
+
+                    UpdateVariantUi();
+                    RefreshSelectedSoundListItem();
+                    string filesDescription = dialog.FileNames.Length == 1 ?
+                        "'" + Path.GetFileName(dialog.FileName) + "'" :
+                        dialog.FileNames.Length + " MIDI files";
+                    MarkDirty("Imported MIDI file " + filesDescription + ".");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        GetDialogOwner(),
+                        ex.Message,
+                        "Import MIDI",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+            finally
+            {
+                _pendingImportAsReplace = false;
+                UpdateImportButtonMode();
+            }
+        }
+
+        private void ReplaceTrackButton_Click(object sender, EventArgs e)
         {
             IMWrapSoundModel sound = GetSelectedSound();
             if (sound == null)
@@ -594,10 +743,24 @@ namespace AgsIMWrap.Editor
                 return;
             }
 
+            IMWrapVariantModel variant = sound.FindVariant(GetSelectedVariantKind());
+            if (variant == null)
+            {
+                return;
+            }
+
+            int selectedIndex = GetSelectedTrackIndex();
+            if (selectedIndex < 0 || selectedIndex >= variant.Tracks.Count)
+            {
+                return;
+            }
+
+            IMWrapTrackModel selectedTrack = variant.Tracks[selectedIndex];
+
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "MIDI files (*.mid;*.midi)|*.mid;*.midi|All files (*.*)|*.*";
-            dialog.Title = "Import MIDI";
-            dialog.Multiselect = true;
+            dialog.Title = "Replace Track with MIDI";
+            dialog.Multiselect = false;
             if (dialog.ShowDialog(GetDialogOwner()) != DialogResult.OK)
             {
                 return;
@@ -606,26 +769,70 @@ namespace AgsIMWrap.Editor
             try
             {
                 ushort division;
-                IMWrapVariantModel variant = sound.EnsureVariant(GetSelectedVariantKind());
-                variant.IncludeVariant = true;
-                ApplyVariantSettings(variant);
-                // Do not clear. Append tracks.
-                variant.Tracks.AddRange(IMWrapBankCodec.ImportMidiTracks(dialog.FileNames, out division));
+                List<IMWrapTrackModel> importedTracks = IMWrapBankCodec.ImportMidiTracks(new[] { dialog.FileName }, out division);
+                if (importedTracks.Count == 0)
+                {
+                    MessageBox.Show(
+                        GetDialogOwner(),
+                        "The selected MIDI file did not contain any importable tracks.",
+                        "Replace Track",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string fileName = Path.GetFileName(dialog.FileName);
+                string trackLabel = BuildTrackLabel(selectedTrack, selectedIndex);
+                string confirmationMessage;
+                if (importedTracks.Count == 1)
+                {
+                    confirmationMessage = "Replace track '" + trackLabel + "' with '" + fileName + "'?";
+                }
+                else
+                {
+                    confirmationMessage =
+                        "Replace track '" + trackLabel + "' with the first track from '" + fileName + "'?" + Environment.NewLine +
+                        (importedTracks.Count - 1) + " additional track(s) will be inserted right after it.";
+                }
+
+                if (!ConfirmDestructiveAction("Replace Track", confirmationMessage))
+                {
+                    return;
+                }
+
+                ApplyVariantSettings(variant, true);
+                variant.Tracks.RemoveAt(selectedIndex);
+                for (int i = 0; i < importedTracks.Count; ++i)
+                {
+                    variant.Tracks.Insert(selectedIndex + i, importedTracks[i]);
+                }
                 variant.Division = division;
 
                 UpdateVariantUi();
                 RefreshSelectedSoundListItem();
-                string filesDescription = dialog.FileNames.Length == 1 ?
-                    "'" + Path.GetFileName(dialog.FileName) + "'" :
-                    dialog.FileNames.Length + " MIDI files";
-                MarkDirty("Imported MIDI file " + filesDescription + ".");
+                if (_tracksView.Items.Count > selectedIndex)
+                {
+                    _tracksView.Items[selectedIndex].Selected = true;
+                    _tracksView.Items[selectedIndex].EnsureVisible();
+                }
+
+                if (importedTracks.Count == 1)
+                {
+                    MarkDirty("Replaced track with MIDI file '" + fileName + "'.");
+                }
+                else
+                {
+                    MarkDirty(
+                        "Replaced track and inserted " + (importedTracks.Count - 1) +
+                        " additional track(s) from '" + fileName + "'.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
                     GetDialogOwner(),
                     ex.Message,
-                    "Import MIDI",
+                    "Replace Track",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -646,6 +853,14 @@ namespace AgsIMWrap.Editor
             if (_tracksView.SelectedIndices.Count > 0)
             {
                 int selectedIndex = _tracksView.SelectedIndices[0];
+                IMWrapTrackModel selectedTrack = variant.Tracks[selectedIndex];
+                if (!ConfirmDestructiveAction(
+                    "Delete Track",
+                    "Delete track '" + BuildTrackLabel(selectedTrack, selectedIndex) + "'?"))
+                {
+                    return;
+                }
+
                 variant.Tracks.RemoveAt(selectedIndex);
                 UpdateVariantUi();
                 
@@ -729,62 +944,127 @@ namespace AgsIMWrap.Editor
 
         private void ApplyCurrentSoundChanges()
         {
+            if (!TryApplySelectedSoundIdentity(true, true))
+            {
+                return;
+            }
+
+            TryApplyVariantSettingsFromUi(true, true);
+        }
+
+        private bool TryApplySelectedSoundIdentity(bool showValidationStatus, bool markDirtyOnChange)
+        {
             IMWrapSoundModel sound = GetSelectedSound();
             if (_bank == null || sound == null)
             {
-                return;
+                return true;
             }
 
-            string trimmedName = _soundNameTextBox.Text.Trim();
-            if (trimmedName.Length == 0)
-            {
-                MessageBox.Show(
-                    GetDialogOwner(),
-                    "Sound name cannot be empty.",
-                    "Apply Sound Changes",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return;
-            }
-
+            string name = _soundNameTextBox.Text;
             ushort newId = (ushort)_soundIdSpin.Value;
+            bool soundIdChanged = sound.SoundId != newId;
+            bool soundNameChanged = !string.Equals(sound.Name, name, StringComparison.Ordinal);
+            if (!soundIdChanged && !soundNameChanged)
+            {
+                if (showValidationStatus)
+                {
+                    string validationMessage = ValidateSelectedSoundIdentity(sound, name, newId);
+                    if (validationMessage != null)
+                    {
+                        ShowStatus(validationMessage);
+                    }
+                }
+
+                return true;
+            }
+
+            sound.Name = name;
+            sound.SoundId = newId;
+            RefreshSoundListDisplay();
+
+            if (markDirtyOnChange)
+            {
+                string validationMessage = ValidateSelectedSoundIdentity(sound, name, newId);
+                MarkDirty(validationMessage ?? "Unsaved changes pending.");
+            }
+
+            return true;
+        }
+
+        private string ValidateSelectedSoundIdentity(IMWrapSoundModel sound, string trimmedName, ushort newId)
+        {
+            if (_bank == null || sound == null)
+            {
+                return null;
+            }
+
+            if (trimmedName == null || trimmedName.Trim().Length == 0)
+            {
+                return "Sound name cannot be empty.";
+            }
+
             for (int i = 0; i < _bank.Sounds.Count; ++i)
             {
                 if (!object.ReferenceEquals(_bank.Sounds[i], sound) && _bank.Sounds[i].SoundId == newId)
                 {
-                    MessageBox.Show(
-                        GetDialogOwner(),
-                        "Another sound already uses ID " + newId + ".",
-                        "Apply Sound Changes",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    return;
+                    return "Another sound already uses ID " + newId + ".";
                 }
             }
 
-            sound.Name = trimmedName;
-            sound.SoundId = newId;
+            return null;
+        }
+
+        private bool TryApplyVariantSettingsFromUi(bool createVariantWhenNeeded, bool markDirtyOnChange)
+        {
+            IMWrapSoundModel sound = GetSelectedSound();
+            if (sound == null)
+            {
+                return true;
+            }
 
             IMWrapVariantKind variantKind = GetSelectedVariantKind();
             IMWrapVariantModel variant = sound.FindVariant(variantKind);
-            if (variant == null && _includeVariantCheck.Checked)
+            if (variant == null && !createVariantWhenNeeded)
+            {
+                return true;
+            }
+
+            bool variantChanged =
+                variant == null ||
+                variant.Kind != variantKind ||
+                variant.IncludeVariant != _includeVariantCheck.Checked ||
+                variant.IncludeMdhd != _includeMdhdCheck.Checked ||
+                variant.Priority != (byte)_prioritySpin.Value ||
+                variant.Volume != (byte)_volumeSpin.Value ||
+                variant.Pan != (sbyte)_panSpin.Value ||
+                variant.Transpose != (sbyte)_transposeSpin.Value ||
+                variant.Detune != (sbyte)_detuneSpin.Value ||
+                variant.Speed != (byte)_speedSpin.Value;
+
+            if (!variantChanged)
+            {
+                return true;
+            }
+
+            if (variant == null)
             {
                 variant = sound.EnsureVariant(variantKind);
             }
 
-            if (variant != null)
+            ApplyVariantSettings(variant);
+            RefreshSelectedSoundListItem();
+            if (markDirtyOnChange)
             {
-                ApplyVariantSettings(variant);
+                MarkDirty("Unsaved changes pending.");
             }
 
-            PopulateSoundList(newId);
-            MarkDirty("Applied changes to sound " + sound.DisplayLabel + ".");
+            return true;
         }
 
-        private void ApplyVariantSettings(IMWrapVariantModel variant)
+        private void ApplyVariantSettings(IMWrapVariantModel variant, bool forceIncludeVariant)
         {
             variant.Kind = GetSelectedVariantKind();
-            variant.IncludeVariant = _includeVariantCheck.Checked;
+            variant.IncludeVariant = forceIncludeVariant || _includeVariantCheck.Checked;
             variant.IncludeMdhd = _includeMdhdCheck.Checked;
             variant.Priority = (byte)_prioritySpin.Value;
             variant.Volume = (byte)_volumeSpin.Value;
@@ -795,6 +1075,29 @@ namespace AgsIMWrap.Editor
             if (variant.Division == 0)
             {
                 variant.Division = 480;
+            }
+        }
+
+        private void ApplyVariantSettings(IMWrapVariantModel variant)
+        {
+            ApplyVariantSettings(variant, false);
+        }
+
+        private void EnsureCurrentEditorStateIsValid()
+        {
+            if (_bank == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _bank.Sounds.Count; ++i)
+            {
+                IMWrapSoundModel sound = _bank.Sounds[i];
+                string validationMessage = ValidateSelectedSoundIdentity(sound, sound.Name, sound.SoundId);
+                if (validationMessage != null)
+                {
+                    throw new InvalidOperationException(validationMessage);
+                }
             }
         }
 
@@ -852,16 +1155,28 @@ namespace AgsIMWrap.Editor
                 return;
             }
 
-            _soundNameTextBox.Text = sound.Name;
-            _soundIdSpin.Value = sound.SoundId;
+            _suppressUiEvents = true;
+            try
+            {
+                _soundNameTextBox.Text = sound.Name;
+                _soundIdSpin.Value = sound.SoundId;
+            }
+            finally
+            {
+                _suppressUiEvents = false;
+            }
         }
 
         private void RefreshSelectedSoundListItem()
         {
-            int index = _soundList.SelectedIndex;
-            if (index >= 0)
+            RefreshSoundListDisplay();
+        }
+
+        private void RefreshSoundListDisplay()
+        {
+            if (_soundList != null && !_soundList.IsDisposed)
             {
-                _soundList.Items[index] = _soundList.Items[index];
+                _soundList.Invalidate();
             }
         }
 
@@ -1004,12 +1319,23 @@ namespace AgsIMWrap.Editor
             _deleteTrackButton.Enabled = hasSelectedTrack;
             _moveTrackUpButton.Enabled = hasSelectedTrack && _tracksView.SelectedIndices[0] > 0;
             _moveTrackDownButton.Enabled = hasSelectedTrack && _tracksView.SelectedIndices[0] < _tracksView.Items.Count - 1;
+            UpdateImportButtonMode();
         }
 
         private void ClearEditorFields()
         {
-            _soundNameTextBox.Text = string.Empty;
-            _soundIdSpin.Value = 0;
+            _pendingImportAsReplace = false;
+            _suppressUiEvents = true;
+            try
+            {
+                _soundNameTextBox.Text = string.Empty;
+                _soundIdSpin.Value = 0;
+            }
+            finally
+            {
+                _suppressUiEvents = false;
+            }
+
             _tracksView.Items.Clear();
             UpdateEnabledState();
         }
@@ -1023,6 +1349,7 @@ namespace AgsIMWrap.Editor
 
         private void MarkDirty(string message)
         {
+            bool stateChanged = !_isDirty;
             _isDirty = true;
             UpdateSummary();
             if (!string.IsNullOrEmpty(message))
@@ -1030,7 +1357,10 @@ namespace AgsIMWrap.Editor
                 _statusLabel.Text = message;
             }
 
-            RaiseDirtyStateChanged();
+            if (stateChanged)
+            {
+                RaiseDirtyStateChanged();
+            }
         }
 
         private void RaiseDirtyStateChanged()
@@ -1067,6 +1397,74 @@ namespace AgsIMWrap.Editor
             }
 
             return IMWrapVariantKind.GeneralMidi;
+        }
+
+        private void UpdateImportButtonMode()
+        {
+            if (_importButton == null)
+            {
+                return;
+            }
+
+            _importButton.Text = HasFocusedTrackSelection() || _pendingImportAsReplace
+                ? "Replace Track..."
+                : "Import MIDI...";
+        }
+
+        private int GetSelectedTrackIndex()
+        {
+            return _tracksView.SelectedIndices.Count > 0 ? _tracksView.SelectedIndices[0] : -1;
+        }
+
+        private bool HasFocusedTrackSelection()
+        {
+            return _tracksView != null && _tracksView.Focused && GetSelectedTrackIndex() >= 0;
+        }
+
+        private static string BuildTrackLabel(IMWrapTrackModel track, int index)
+        {
+            string name = track != null && !string.IsNullOrEmpty(track.Name)
+                ? track.Name
+                : "Track " + index;
+            return name + " (#" + index + ")";
+        }
+
+        private bool ConfirmDestructiveAction(string title, string message)
+        {
+            return MessageBox.Show(
+                GetDialogOwner(),
+                message + Environment.NewLine + Environment.NewLine + "This action cannot be undone.",
+                title,
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2) == DialogResult.OK;
+        }
+
+        protected override void OnPanelClosing(bool canCancel, ref bool cancelClose)
+        {
+            base.OnPanelClosing(canCancel, ref cancelClose);
+            if (cancelClose)
+            {
+                return;
+            }
+
+            if (!canCancel || !_isDirty)
+            {
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                GetDialogOwner(),
+                "Unsaved changes will be lost. Do you want to continue?",
+                "Close Document",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (result != DialogResult.OK)
+            {
+                cancelClose = true;
+            }
         }
 
         private IWin32Window GetDialogOwner()
