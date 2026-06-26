@@ -100,7 +100,9 @@ struct IMWrapControlEvent {
 };
 
 IMWRAP_API bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *error = nullptr);
+IMWRAP_API bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *out);
 IMWRAP_API std::string DescribeIMWrapSysex(const IMWrapControlEvent &event);
+IMWRAP_API bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *out);
 
 } // namespace imwrap
 

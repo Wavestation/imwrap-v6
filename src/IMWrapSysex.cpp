@@ -40,6 +40,16 @@ bool DecodeNibbles(ByteView data, std::vector<uint8_t> *out) {
     return true;
 }
 
+std::vector<uint8_t> EncodeNibbles(const std::vector<uint8_t>& bytes) {
+    std::vector<uint8_t> nibbles;
+    nibbles.reserve(bytes.size() * 2);
+    for (uint8_t b : bytes) {
+        nibbles.push_back((b >> 4) & 0x0F);
+        nibbles.push_back(b & 0x0F);
+    }
+    return nibbles;
+}
+
 uint16_t ReadU16BE(const std::vector<uint8_t> &bytes, std::size_t offset) {
     return static_cast<uint16_t>((bytes[offset] << 8) | bytes[offset + 1]);
 }
@@ -356,6 +366,166 @@ bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *e
     }
 }
 
+bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *out) {
+    if (!out) return false;
+    out->clear();
+    
+    std::vector<uint8_t> payload;
+    switch (event.type) {
+    case IMWrapSysexType::AllocatePart: {
+        out->push_back(0x7D);
+        out->push_back(0x00);
+        out->push_back(event.part & 0x0F);
+        
+        std::vector<uint8_t> params;
+        uint8_t b0 = static_cast<uint8_t>(((event.unknown & 0x0F) << 4) |
+                                          (event.partOn ? 0x01 : 0) |
+                                          (event.reverb ? 0x02 : 0));
+        params.push_back(b0);
+        params.push_back(event.priority);
+        params.push_back(event.volume);
+        params.push_back(static_cast<uint8_t>(event.pan));
+        uint8_t b4 = (event.percussion ? 0x80 : 0) | (static_cast<uint8_t>(event.transpose) & 0x7F);
+        params.push_back(b4);
+        params.push_back(static_cast<uint8_t>(event.detune));
+        params.push_back(event.pitchbendFactor);
+        params.push_back(event.program);
+        
+        std::vector<uint8_t> nibs = EncodeNibbles(params);
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::ShutdownPart:
+        out->push_back(0x7D);
+        out->push_back(0x01);
+        out->push_back(event.part & 0x0F);
+        break;
+    case IMWrapSysexType::StartSong:
+        out->push_back(0x7D);
+        out->push_back(0x02);
+        break;
+    case IMWrapSysexType::AdlibPartInstrument: {
+        out->push_back(0x7D);
+        out->push_back(0x10);
+        out->push_back(event.part & 0x0F);
+        out->push_back(event.unknown & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles(event.decodedBytes);
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::AdlibGlobalInstrument: {
+        out->push_back(0x7D);
+        out->push_back(0x11);
+        out->push_back(event.unknown & 0x7F);
+        out->push_back(event.value & 0x7F);
+        out->push_back(event.program & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles(event.decodedBytes);
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::ParameterAdjust: {
+        out->push_back(0x7D);
+        out->push_back(0x21);
+        out->push_back(event.part & 0x0F);
+        out->push_back(event.unknown & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles({
+            static_cast<uint8_t>((event.param >> 8) & 0xFF), static_cast<uint8_t>(event.param & 0xFF),
+            static_cast<uint8_t>((event.paramValue >> 8) & 0xFF), static_cast<uint8_t>(event.paramValue & 0xFF)
+        });
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::HookJump: {
+        out->push_back(0x7D);
+        out->push_back(0x30);
+        out->push_back(event.unknown & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles({
+            event.hookCommand,
+            static_cast<uint8_t>((event.targetTrack >> 8) & 0xFF), static_cast<uint8_t>(event.targetTrack & 0xFF),
+            static_cast<uint8_t>((event.targetBeat >> 8) & 0xFF), static_cast<uint8_t>(event.targetBeat & 0xFF),
+            static_cast<uint8_t>((event.targetTick >> 8) & 0xFF), static_cast<uint8_t>(event.targetTick & 0xFF)
+        });
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::HookGlobalTranspose: {
+        out->push_back(0x7D);
+        out->push_back(0x31);
+        out->push_back(event.unknown & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles({
+            event.hookCommand, static_cast<uint8_t>(event.relative ? 1 : 0), static_cast<uint8_t>(event.signedValue)
+        });
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::HookPartOnOff:
+    case IMWrapSysexType::HookSetVolume:
+    case IMWrapSysexType::HookSetProgram: {
+        out->push_back(0x7D);
+        out->push_back(event.type == IMWrapSysexType::HookPartOnOff ? 0x32 : (event.type == IMWrapSysexType::HookSetVolume ? 0x33 : 0x34));
+        out->push_back(event.channel & 0x0F);
+        std::vector<uint8_t> nibs = EncodeNibbles({event.hookCommand, event.value});
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::HookSetTranspose: {
+        out->push_back(0x7D);
+        out->push_back(0x35);
+        out->push_back(event.channel & 0x0F);
+        std::vector<uint8_t> nibs = EncodeNibbles({
+            event.hookCommand, static_cast<uint8_t>(event.relative ? 1 : 0), static_cast<uint8_t>(event.signedValue)
+        });
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::Marker: {
+        out->push_back(0x7D);
+        out->push_back(0x40);
+        out->push_back(event.unknown & 0x7F);
+        out->insert(out->end(), event.markerText.begin(), event.markerText.end());
+        break;
+    }
+    case IMWrapSysexType::SetLoop: {
+        out->push_back(0x7D);
+        out->push_back(0x50);
+        out->push_back(event.unknown & 0x7F);
+        std::vector<uint8_t> nibs = EncodeNibbles({
+            static_cast<uint8_t>((event.loopCount >> 8) & 0xFF), static_cast<uint8_t>(event.loopCount & 0xFF),
+            static_cast<uint8_t>((event.loopToBeat >> 8) & 0xFF), static_cast<uint8_t>(event.loopToBeat & 0xFF),
+            static_cast<uint8_t>((event.loopToTick >> 8) & 0xFF), static_cast<uint8_t>(event.loopToTick & 0xFF),
+            static_cast<uint8_t>((event.loopFromBeat >> 8) & 0xFF), static_cast<uint8_t>(event.loopFromBeat & 0xFF),
+            static_cast<uint8_t>((event.loopFromTick >> 8) & 0xFF), static_cast<uint8_t>(event.loopFromTick & 0xFF)
+        });
+        out->insert(out->end(), nibs.begin(), nibs.end());
+        break;
+    }
+    case IMWrapSysexType::ClearLoop:
+        out->push_back(0x7D);
+        out->push_back(0x51);
+        break;
+    case IMWrapSysexType::SetInstrument:
+        out->push_back(0x7D);
+        out->push_back(0x60);
+        out->push_back(event.channel & 0x0F);
+        out->push_back(static_cast<uint8_t>((event.instrument >> 12) & 0x0F));
+        out->push_back(static_cast<uint8_t>((event.instrument >> 8) & 0x0F));
+        out->push_back(static_cast<uint8_t>((event.instrument >> 4) & 0x0F));
+        out->push_back(static_cast<uint8_t>(event.instrument & 0x0F));
+        break;
+    default:
+        if (!event.rawMessage.empty()) {
+            out->assign(event.rawMessage.begin(), event.rawMessage.end());
+        } else {
+            return false;
+        }
+        break;
+    }
+    
+    out->insert(out->begin(), 0xF0);
+    out->push_back(0xF7);
+    return true;
+}
+
 std::string DescribeIMWrapSysex(const IMWrapControlEvent &event) {
     std::ostringstream oss;
     oss << TypeName(event.type);
@@ -418,6 +588,107 @@ std::string DescribeIMWrapSysex(const IMWrapControlEvent &event) {
     }
 
     return oss.str();
+}
+
+
+bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *out) {
+    if (!out) return false;
+    
+    // Set some defaults
+    out->unknown = 0;
+    out->hasPart = false;
+    out->hasChannel = false;
+    out->partOn = true;
+    out->reverb = false;
+    out->percussion = false;
+    out->relative = false;
+    out->priority = 90;
+    out->volume = 127;
+    out->pitchbendFactor = 2;
+    out->program = 0;
+    out->value = 0;
+    out->pan = 0;
+    out->transpose = 0;
+    out->detune = 0;
+    out->signedValue = 0;
+
+    int p1, p2, p3, p4, p5, p6, p7;
+    char s1[256];
+
+    if (sscanf(desc.c_str(), "allocate-part part=%d pri=%d vol=%d pan=%d program=%d", &p1, &p2, &p3, &p4, &p5) == 5) {
+        out->type = IMWrapSysexType::AllocatePart;
+        out->hasPart = true; out->part = p1; out->priority = p2; out->volume = p3; out->pan = p4; out->program = p5;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "shutdown-part part=%d", &p1) == 1) {
+        out->type = IMWrapSysexType::ShutdownPart;
+        out->hasPart = true; out->part = p1;
+        return true;
+    }
+    if (desc == "start-song") {
+        out->type = IMWrapSysexType::StartSong;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "parameter-adjust part=%d param=%d value=%d", &p1, &p2, &p3) == 3) {
+        out->type = IMWrapSysexType::ParameterAdjust;
+        out->hasPart = true; out->part = p1; out->param = p2; out->paramValue = p3;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-jump cmd=%d track=%d beat=%d tick=%d", &p1, &p2, &p3, &p4) == 4) {
+        out->type = IMWrapSysexType::HookJump;
+        out->hookCommand = p1; out->targetTrack = p2; out->targetBeat = p3; out->targetTick = p4;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-global-transpose cmd=%d relative=%255s value=%d", &p1, s1, &p2) == 3) {
+        out->type = IMWrapSysexType::HookGlobalTranspose;
+        out->hookCommand = p1; out->relative = (std::string(s1) == "yes"); out->signedValue = p2;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-set-transpose cmd=%d relative=%255s value=%d", &p1, s1, &p2) == 3) {
+        out->type = IMWrapSysexType::HookSetTranspose;
+        out->hookCommand = p1; out->relative = (std::string(s1) == "yes"); out->signedValue = p2;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-part-onoff chan=%d cmd=%d value=%d", &p1, &p2, &p3) == 3) {
+        out->type = IMWrapSysexType::HookPartOnOff;
+        out->hasChannel = true; out->channel = p1; out->hookCommand = p2; out->value = p3;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-set-volume chan=%d cmd=%d value=%d", &p1, &p2, &p3) == 3) {
+        out->type = IMWrapSysexType::HookSetVolume;
+        out->hasChannel = true; out->channel = p1; out->hookCommand = p2; out->value = p3;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "hook-set-program chan=%d cmd=%d value=%d", &p1, &p2, &p3) == 3) {
+        out->type = IMWrapSysexType::HookSetProgram;
+        out->hasChannel = true; out->channel = p1; out->hookCommand = p2; out->value = p3;
+        return true;
+    }
+    if (desc.find("marker text=\"") == 0) {
+        out->type = IMWrapSysexType::Marker;
+        size_t start = desc.find_first_of('"');
+        size_t end = desc.find_last_of('"');
+        if (start != std::string::npos && end != std::string::npos && end > start) {
+            out->markerText = desc.substr(start + 1, end - start - 1);
+        }
+        return true;
+    }
+    if (sscanf(desc.c_str(), "set-loop count=%d to=%d:%d from=%d:%d", &p1, &p2, &p3, &p4, &p5) == 5) {
+        out->type = IMWrapSysexType::SetLoop;
+        out->loopCount = p1; out->loopToBeat = p2; out->loopToTick = p3; out->loopFromBeat = p4; out->loopFromTick = p5;
+        return true;
+    }
+    if (desc == "clear-loop") {
+        out->type = IMWrapSysexType::ClearLoop;
+        return true;
+    }
+    if (sscanf(desc.c_str(), "set-instrument chan=%d instrument=%d", &p1, &p2) == 2) {
+        out->type = IMWrapSysexType::SetInstrument;
+        out->hasChannel = true; out->channel = p1; out->instrument = p2;
+        return true;
+    }
+    
+    return false;
 }
 
 } // namespace imwrap
