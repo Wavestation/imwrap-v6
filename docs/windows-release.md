@@ -19,6 +19,7 @@ Ce bundle rassemble les sorties Windows du projet dans un seul dossier de diffus
   - `tools/styles/`
   - `tools/generic/`
 - `tools/imageformats/` est copie seulement si `windeployqt` l'a effectivement genere.
+- Si le PoC VST3 SysEx est compile, son bundle `imwrap_sysex_tool.vst3/` est aussi copie dans `tools/`.
 - `SetMIDI` est maintenant un utilitaire Win32 natif. Il est livre en `x32` et `x64` et ne depend plus de Qt.
 - La documentation, les wrappers, les licences et les exemples sont ranges dans :
   - `docs/`
@@ -41,6 +42,12 @@ Pour reconstruire toute la release Windows depuis zero :
 powershell -ExecutionPolicy Bypass -File .\scripts\build-windows-release.ps1 -QtPrefixPath "C:\Qt\6.8.0\msvc2022_64"
 ```
 
+Avec un SDK VST3 local explicite :
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-windows-release.ps1 -QtPrefixPath "C:\Qt\6.8.0\msvc2022_64" -Vst3SdkDir "D:\Prog\third_party\vst3sdk"
+```
+
 Par defaut, le script assemble :
 
 - `.build\windows-release\win32\Release` pour le plugin AGS et les outils Win32
@@ -52,6 +59,7 @@ Le script de build complet utilise plutot :
 - `.build\windows-release\win32` pour Win32
 - `.build\windows-release\x64` pour x64
 - `third_party\fluidsynth-build` pour la dependance FluidSynth Win32 vendoree du plugin AGS
+- `third_party\vst3sdk` si vous voulez que le build Windows prenne automatiquement en compte le PoC VST3
 
 ## Release GitHub v1
 

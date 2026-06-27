@@ -2,6 +2,7 @@
 param(
     [string]$PluginBuildDir,
     [string]$GuiBuildDir,
+    [string]$Vst3BuildDir,
     [string]$AgsEditorPluginBuildDir,
     [string]$OutputDir
 )
@@ -17,6 +18,9 @@ if ([string]::IsNullOrWhiteSpace($PluginBuildDir)) {
 if ([string]::IsNullOrWhiteSpace($GuiBuildDir)) {
     $GuiBuildDir = Join-Path $RootDir ".build\\windows-release\\x64"
 }
+if ([string]::IsNullOrWhiteSpace($Vst3BuildDir)) {
+    $Vst3BuildDir = $GuiBuildDir
+}
 if ([string]::IsNullOrWhiteSpace($AgsEditorPluginBuildDir)) {
     $AgsEditorPluginBuildDir = Join-Path $RootDir "ags-editor-plugin\bin\Release"
 }
@@ -26,6 +30,7 @@ if ([string]::IsNullOrWhiteSpace($OutputDir)) {
 
 $PluginBuildDir = [System.IO.Path]::GetFullPath($PluginBuildDir)
 $GuiBuildDir = [System.IO.Path]::GetFullPath($GuiBuildDir)
+$Vst3BuildDir = [System.IO.Path]::GetFullPath($Vst3BuildDir)
 $AgsEditorPluginBuildDir = [System.IO.Path]::GetFullPath($AgsEditorPluginBuildDir)
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 
@@ -132,6 +137,27 @@ function Copy-DirectoryTreeIfExists {
     }
 }
 
+function Copy-FirstMatchingDirectoryTreeAs {
+    param(
+        [Parameter(Mandatory = $true)][string]$SearchRoot,
+        [Parameter(Mandatory = $true)][string]$DirectoryName,
+        [Parameter(Mandatory = $true)][string]$Destination
+    )
+
+    if (-not (Test-Path -LiteralPath $SearchRoot -PathType Container)) {
+        return $false
+    }
+
+    $match = Get-ChildItem -Path $SearchRoot -Directory -Recurse -Filter $DirectoryName -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+    if (-not $match) {
+        return $false
+    }
+
+    Copy-DirectoryTree -Source $match.FullName -Destination $Destination
+    return $true
+}
+
 Ensure-CleanDirectory -Path $OutputDir
 
 $docsDir = Join-Path $OutputDir "docs"
@@ -177,6 +203,11 @@ $toolBinaries = @(
 foreach ($binary in $toolBinaries) {
     Copy-FirstExistingFileAs -Sources $binary.Sources -Destination (Join-Path $toolsDir $binary.Name)
 }
+
+[void](Copy-FirstMatchingDirectoryTreeAs `
+    -SearchRoot $Vst3BuildDir `
+    -DirectoryName "imwrap_sysex_tool.vst3" `
+    -Destination (Join-Path $toolsDir "imwrap_sysex_tool.vst3"))
 
 $agsEditorPluginFiles = @(
     @{ Sources = @((Join-Path $AgsEditorPluginBuildDir "AGS.Plugin.IMWrap.Editor.dll")); Name = "AGS.Plugin.IMWrap.Editor.dll" },
@@ -225,7 +256,7 @@ $documentationFiles = @(
     @{ Source = Join-Path $RootDir "docs\ags-plugin.md"; Name = "docs\ags-plugin.md" },
     @{ Source = Join-Path $RootDir "docs\imwrappack.md"; Name = "docs\imwrappack.md" },
     @{ Source = Join-Path $RootDir "docs\ims-v1.md"; Name = "docs\ims-v1.md" },
-    @{ Source = Join-Path $RootDir "docs\guide_compositeur.md"; Name = "docs\guide-compositeur.md" }
+    @{ Source = Join-Path $RootDir "docs\guide_compositeur_fr.md"; Name = "docs\guide-compositeur.md" }
 )
 
 foreach ($doc in $documentationFiles) {

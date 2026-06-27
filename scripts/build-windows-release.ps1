@@ -5,7 +5,8 @@ param(
     [string]$X64BuildDir,
     [string]$FluidSynthBuildDir,
     [string]$QtPrefixPath = "",
-    [string]$AGSReferenceDir = ""
+    [string]$AGSReferenceDir = "",
+    [string]$Vst3SdkDir = ""
 )
 
 Set-StrictMode -Version Latest
@@ -29,6 +30,9 @@ $FluidSynthBuildDir = [System.IO.Path]::GetFullPath($FluidSynthBuildDir)
 if (-not [string]::IsNullOrWhiteSpace($AGSReferenceDir)) {
     $AGSReferenceDir = [System.IO.Path]::GetFullPath($AGSReferenceDir)
 }
+if (-not [string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
+    $Vst3SdkDir = [System.IO.Path]::GetFullPath($Vst3SdkDir)
+}
 
 if ([string]::IsNullOrWhiteSpace($QtPrefixPath)) {
     if (-not [string]::IsNullOrWhiteSpace($env:Qt6_DIR)) {
@@ -43,6 +47,13 @@ if ([string]::IsNullOrWhiteSpace($QtPrefixPath)) {
 }
 
 $QtPrefixPath = [System.IO.Path]::GetFullPath($QtPrefixPath)
+
+if ([string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
+    $vendoredVst3SdkDir = Join-Path $RootDir "third_party\vst3sdk"
+    if (Test-Path -LiteralPath (Join-Path $vendoredVst3SdkDir "CMakeLists.txt") -PathType Leaf) {
+        $Vst3SdkDir = [System.IO.Path]::GetFullPath($vendoredVst3SdkDir)
+    }
+}
 
 function Invoke-CMake {
     param(
@@ -163,7 +174,7 @@ Invoke-CMakeBuild -BuildDir $Win32BuildDir -Targets @(
     "agsimwrap"
 )
 
-Invoke-CMake -Arguments @(
+$x64ConfigureArguments = @(
     "-S", $RootDir,
     "-B", $X64BuildDir,
     "-A", "x64",
@@ -174,7 +185,22 @@ Invoke-CMake -Arguments @(
     "-DIMWRAP_BUILD_SHARED_LIB=ON"
 )
 
-Invoke-CMakeBuild -BuildDir $X64BuildDir -Targets @(
+if (-not [string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
+    if (-not (Test-Path -LiteralPath (Join-Path $Vst3SdkDir "CMakeLists.txt") -PathType Leaf)) {
+        throw "Vst3SdkDir does not look like a VST3 SDK checkout: $Vst3SdkDir"
+    }
+
+    $x64ConfigureArguments += @(
+        "-DIMWRAP_BUILD_VST3_TOOL=ON",
+        "-DIMWRAP_VST3_SDK_DIR=$Vst3SdkDir"
+    )
+} else {
+    $x64ConfigureArguments += "-DIMWRAP_BUILD_VST3_TOOL=OFF"
+}
+
+Invoke-CMake -Arguments $x64ConfigureArguments
+
+$x64Targets = @(
     "ADLMIDI_static",
     "imwrap_v6",
     "imwrap_v6_shared",
@@ -185,6 +211,12 @@ Invoke-CMakeBuild -BuildDir $X64BuildDir -Targets @(
     "imwrap_sysex_gui",
     "imwrap_setmidi"
 )
+
+if (-not [string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
+    $x64Targets += "imwrap_sysex_tool"
+}
+
+Invoke-CMakeBuild -BuildDir $X64BuildDir -Targets $x64Targets
 
 Invoke-DotNetMsBuild -ProjectPath (Join-Path $RootDir "ags-editor-plugin\AGS.Plugin.IMWrap.Editor.csproj") -Properties @(
     "Configuration=$Configuration",

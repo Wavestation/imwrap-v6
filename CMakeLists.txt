@@ -8,10 +8,12 @@ option(IMWRAP_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
 option(IMWRAP_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
 option(IMWRAP_BUILD_SHARED_LIB "Build the shared imwrap_v6 library" ON)
 option(IMWRAP_BUILD_SHIM "Build the native imwrap_shim DLL used by wrappers and editor tooling" ON)
+option(IMWRAP_BUILD_VST3_TOOL "Build the VST3 SysEx generator proof of concept" OFF)
 option(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in imwrap_shim" OFF)
 
 set(IMWRAP_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
 set(IMWRAP_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimwrap")
+set(IMWRAP_VST3_SDK_DIR "" CACHE PATH "Path to a local Steinberg VST3 SDK checkout")
 
 # The Win32 AGS plugin release is built without Qt and links against prebuilt
 # static third-party libraries, so align the whole configuration on the static
@@ -275,4 +277,28 @@ if(WIN32 AND IMWRAP_BUILD_SETMIDI)
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
         )
     endif()
+endif()
+
+if(IMWRAP_BUILD_VST3_TOOL)
+    if(CMAKE_VERSION VERSION_LESS 3.25)
+        message(FATAL_ERROR "IMWRAP_BUILD_VST3_TOOL=ON requires CMake 3.25 or newer because the Steinberg VST3 SDK requires it.")
+    endif()
+
+    if(NOT IMWRAP_VST3_SDK_DIR)
+        message(FATAL_ERROR "IMWRAP_BUILD_VST3_TOOL=ON requires IMWRAP_VST3_SDK_DIR to point to a local Steinberg VST3 SDK checkout.")
+    endif()
+
+    get_filename_component(IMWRAP_VST3_SDK_DIR "${IMWRAP_VST3_SDK_DIR}" ABSOLUTE)
+    if(NOT EXISTS "${IMWRAP_VST3_SDK_DIR}/CMakeLists.txt")
+        message(FATAL_ERROR "IMWRAP_VST3_SDK_DIR does not look like a VST3 SDK checkout: ${IMWRAP_VST3_SDK_DIR}")
+    endif()
+
+    # Reuse the SDK helper targets without building its examples or VSTGUI.
+    set(SDK_ROOT "${IMWRAP_VST3_SDK_DIR}")
+    set(SMTG_ENABLE_VST3_PLUGIN_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(SMTG_ENABLE_VST3_HOSTING_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(SMTG_ENABLE_VSTGUI_SUPPORT OFF CACHE BOOL "" FORCE)
+
+    add_subdirectory("${IMWRAP_VST3_SDK_DIR}" "${CMAKE_BINARY_DIR}/third_party/vst3sdk" EXCLUDE_FROM_ALL)
+    add_subdirectory(sysex-tool-vst)
 endif()

@@ -1495,6 +1495,8 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMWrap_EnableLog", (void*)Ags_iMWrap_EnableLog);
 
     g_AgsEngine->RequestEventHook(AGSE_PRESCREENDRAW);
+    g_AgsEngine->RequestEventHook(AGSE_SAVEGAME);
+    g_AgsEngine->RequestEventHook(AGSE_RESTOREGAME);
 
     // Initialize miniaudio
     ma_device_config config = ma_device_config_init(ma_device_type_playback);
