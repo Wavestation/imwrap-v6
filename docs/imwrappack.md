@@ -1,6 +1,6 @@
 # imwrappack
 
-`imwrappack` construit une banque `.ims` a partir d'un ensemble de MIDIs type 2.
+`imwrappack` construit une banque `.ims` à partir d'un ensemble de MIDIs type 2.
 
 ## Syntaxe v1
 
@@ -13,7 +13,7 @@ imwrappack build output.ims \
   81:gmd=81_interior.mid
 ```
 
-## Entrees de variante
+## Entrées de variante
 
 Format :
 
@@ -21,7 +21,7 @@ Format :
 soundId:variant=path.mid
 ```
 
-Variantes supportees :
+Variantes supportées :
 
 - `gmd`
 - `rol`
@@ -32,9 +32,9 @@ Variantes supportees :
 --name=80:Woodtick
 ```
 
-Ajoute un chunk `NAME` au `SOUN` vise.
+Ajoute un chunk `NAME` au `SOUN` visé.
 
-## Parametres `MDhd`
+## Paramètres `MDhd`
 
 ```text
 --mdhd=soundId:variant:priority:volume:pan:transpose:detune:speed
@@ -46,4 +46,4 @@ Exemple :
 --mdhd=80:gmd:90:127:0:0:0:128
 ```
 
-Si aucune option `--mdhd` n'est fournie pour une variante, le chunk `MDhd` n'est pas ecrit.
+Si aucune option `--mdhd` n'est fournie pour une variante, le chunk `MDhd` n'est pas écrit.

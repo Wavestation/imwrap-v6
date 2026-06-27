@@ -2,12 +2,12 @@
 
 Le fichier `.ims` est une banque iMUSE pour AGS. Le format est chunked, big-endian, et proche de l'esprit des ressources `SOUN` SCUMM.
 
-## Regles globales
+## Règles globales
 
 - Chaque chunk commence par `FourCC(4)` puis `u32be size`.
-- `size` inclut les 8 octets d'en-tete.
+- `size` inclut les 8 octets d'en-tête.
 - Le fichier complet est un chunk racine `IMSB`.
-- Les morceaux transportes dans les variantes `GMD ` ou `ROL ` sont des SMF type 2 contenant les SysEx iMUSE d'origine.
+- Les morceaux transportés dans les variantes `GMD ` ou `ROL ` sont des SMF type 2 contenant les SysEx iMUSE d'origine.
 
 ## Structure canonique
 
@@ -41,7 +41,7 @@ Pour la v1 :
 
 ## `SDIR`
 
-Table d'index compacte. Une entree = 12 octets :
+Table d'index compacte. Une entrée = 12 octets :
 
 ```text
 u16be sound_id
@@ -85,7 +85,7 @@ Le corps d'une variante peut contenir :
 - un chunk `MDhd` optionnel ;
 - puis un flux MIDI complet commençant par `MThd`.
 
-Le loader v1 preserve le flux MIDI byte-for-byte a partir de `MThd`.
+Le loader v1 préserve le flux MIDI byte-for-byte à partir de `MThd`.
 
 ## `MDhd`
 
@@ -102,7 +102,7 @@ s8  detune
 u8  speed
 ```
 
-Valeurs par defaut quand `MDhd` est absent :
+Valeurs par défaut quand `MDhd` est absent :
 
 - `priority = 128`
 - `volume = 127`
