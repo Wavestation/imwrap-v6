@@ -1,114 +1,253 @@
-# Guide du Compositeur iMWrap
-## Intégration et Utilisation des Messages SysEx dans MOTU Digital Performer
+# Guide compositeur iMWrap
 
-Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx iMWrap** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
+Ce guide est une version courte, orientee pratique, pour authorer des SysEx iMWrap dans un sequenceur.
 
----
+Pour la specification complete, voir :
 
-## 1. Comprendre la Structure des Messages SysEx iMUSE
+- [imwrap_sysex_format.md](./imwrap_sysex_format.md)
+- [imwrap_sysex_reference_detaillee_fr.md](./imwrap_sysex_reference_detaillee_fr.md)
 
-Tous les messages iMUSE sont transmis sous la forme de messages système exclusifs (SysEx) standard MIDI.
+## 1. La regle simple
 
-### Format général d'un message iMUSE :
+Si vous composez un morceau interactif pour `imwrap-v6`, partez sur cette logique :
+
+1. au tout debut, envoyez `Start Song`
+2. allouez chaque part utile avec `Allocate Part`
+3. placez ensuite vos notes MIDI normales
+4. ajoutez si besoin des `Marker`, `Set Loop` et `Hooks`
+
+La forme generale est toujours :
+
 ```text
-F0 7D [Code_Commande] [ID_Partie_Logique] [Données_en_Nibbles...] F7
+F0 7D [CODE] [PAYLOAD] F7
 ```
 
-- **`F0`** : Indicateur de début de message exclusif.
-- **`7D`** : ID Manufacturier. iMUSE utilise l'ID standard `0x7D` (réservé aux projets éducatifs et de recherche) comme identifiant.
-- **`Code_Commande`** : Spécifie l'action à réaliser (ex: `0x00` pour Allocate Part).
-- **`ID_Partie_Logique`** : Identifie la partie (le canal virtuel/track de la séquence) ciblée par l'instruction. Les valeurs vont de `0x00` à `0x0F` (canaux 1 à 16).
-- **`Données_en_Nibbles`** : Les paramètres associés à la commande. iMUSE sépare chaque octet de données (8 bits) en **deux demi-octets (nibles de 4 bits)** transmis consécutivement (poids fort puis poids faible), chaque nibble occupant les 4 bits inférieurs d'un octet MIDI valide.
-  *Exemple* : Pour envoyer la valeur `0x5A` (90 en décimal), on transmettra deux octets : `0x05` suivi de `0x0A`.
-- **`F7`** : Indicateur de fin de message exclusif (EOX).
+## 2. Le kit minimal
 
----
+### 2.1. Reset du morceau
 
-## 2. Tableau des Commandes iMUSE les plus Courantes
-
-### A. Allocate Part (`0x00`)
-Cette commande configure et active une partie virtuelle (canal iMUSE). Elle initialise l'instrument, la priorité relative, le volume, la panoramique, la transposition et le comportement du pitch bend.
-*Format d'encodage des nibbles de paramètres (16 nibbles / 8 octets décodés)* :
-1. **Octet 0** : Bit 0 = Partie active (1=Oui, 0=Non) | Bit 1 = Reverb active (1=Oui, 0=Non).
-2. **Octet 1** : Priorité de la partie (0 à 255).
-3. **Octet 2** : Volume de la partie (0 à 127).
-4. **Octet 3** : Panoramique (0 à 127, centré à 64).
-5. **Octet 4** : Bit 7 = Percussion (1=Oui, 0=Non) | Bits 0-6 = Transposition (-127 à +127, encodée en complément à deux).
-6. **Octet 5** : Désaccordage (Detune, -128 à 127).
-7. **Octet 6** : Facteur de Pitch Bend (1 à 12 demi-tons).
-8. **Octet 7** : Numéro de programme (Instrument de base, 0 à 127).
-
-> [!NOTE]
-> Notre moteur révisé applique dynamiquement toutes ces valeurs (volume, pan, etc.) et recharge le timbre personnalisé Roland MT-32 associé à la partie, même si celle-ci est déjà en cours de lecture.
-
-### B. Shutdown Part (`0x01`)
-Désactive et réinitialise une partie virtuelle. Elle éteint toutes les notes actives sur le canal physique associé.
 ```text
-F0 7D 01 [ID_Partie] F7
+F0 7D 02 F7
 ```
 
-### C. Parameter Adjust (`0x21`)
-Modifie dynamiquement les paramètres iMUSE internes ou les contrôles MIDI standard pour une partie en cours de lecture.
+Placez ce message au tick `0`.
 
-### D. Hook Jump (`0x30`)
-Permet d'insérer un saut conditionnel (Smart Jump) dans la séquence de lecture MIDI. Le moteur de jeu peut déclencher cette transition à la fin d'une mesure ou d'un battement pour synchroniser la musique avec les actions du joueur.
+### 2.2. Allocation d'une part
+
+Exemple de part minimale :
+
 ```text
-F0 7D 30 [ID_Partie] [Nibbles de Commande, Piste, Mesure et Tick cible] F7
+F0 7D 00 00 00 01 05 0A 07 0F 00 00 00 00 00 00 00 02 00 00 F7
 ```
 
-### E. Marker (`0x40`)
-Envoie un marqueur textuel au moteur de script du jeu pour lui notifier qu'un point précis de la musique a été atteint (ex: déclencher une animation ou un dialogue sur un battement précis).
+Cela signifie en pratique :
+
+- part logique `0`
+- part active
+- priorite `0x5A`
+- volume `0x7F`
+- pan centre
+- transpose `0`
+- detune `0`
+- pitch bend factor `2`
+- programme `0`
+
+Faites ensuite une allocation similaire pour chaque part logique dont vous avez besoin.
+
+## 3. Les messages les plus utiles en composition
+
+### 3.1. Marker
+
+Format :
+
 ```text
-F0 7D 40 [ID_Partie] [Texte du Marqueur en ASCII] F7
+F0 7D 40 00 [ID] F7
 ```
 
-### F. Set Loop (`0x50`) & Clear Loop (`0x51`)
-Définit ou annule une boucle de lecture dynamique sur une section de la séquence (indiquée en mesures et ticks).
+Exemple :
 
----
+```text
+F0 7D 40 00 01 F7
+```
 
-## 3. Configuration et Routage via loopMIDI
+Conseil important :
 
-Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMWrap** à **Digital Performer** en passant par des câbles MIDI virtuels.
+- utilisez un seul octet utile si vous voulez un seul trigger
+- n'utilisez pas une chaine ASCII complete si vous pensez obtenir un seul marqueur logique
 
-### Étape 1 : Créer le port virtuel dans loopMIDI
-1. Téléchargez et lancez le logiciel gratuit **loopMIDI** (de Tobias Erichsen).
-2. Dans le panneau de configuration, cliquez sur le bouton `+` pour ajouter un nouveau port.
-3. Nommez-le par exemple : `iMWrap Generator`.
-4. loopMIDI tourne en arrière-plan et crée un port d'entrée et de sortie MIDI virtuel visible par toutes vos applications.
+Dans le code actuel, chaque octet utile declenche un marqueur separe.
 
-### Étape 2 : Connecter le Générateur de SysEx
-1. Lancez le Générateur de SysEx (`imwrap_sysex_gui.exe`).
-2. Dans la section **Envoi MIDI Direct** (à droite), repérez la liste déroulante **Périphérique**.
-3. Sélectionnez le port virtuel créé : `iMWrap Generator`.
-4. Désormais, chaque clic sur le bouton **Envoyer le SysEx** transmettra la trame MIDI sur ce canal virtuel.
+### 3.2. Set Loop
 
-### Étape 3 : Configurer Digital Performer pour l'enregistrement en temps réel
-Si vous préférez enregistrer en temps réel vos manipulations ou vos commandes iMUSE dans Digital Performer :
-1. Ouvrez Digital Performer.
-2. Allez dans **Setup > Input Filter...** et assurez-vous que la case **System Exclusive** est bien cochée (pour autoriser DP à enregistrer les SysEx).
-3. Dans votre projet DP, créez une nouvelle piste MIDI.
-4. Réglez l'entrée MIDI de cette piste sur `iMWrap Generator`.
-5. Armez la piste MIDI en enregistrement.
-6. Lancez l'enregistrement dans DP, puis cliquez sur **Envoyer le SysEx** dans le Générateur.
-7. DP enregistre précisément le message SysEx généré sous la forme d'un événement dans la piste !
+Format :
 
----
+```text
+F0 7D 50 00 [COUNT16] [TO_BEAT16] [TO_TICK16] [FROM_BEAT16] [FROM_TICK16] F7
+```
 
-## 4. Insérer manuellement des SysEx iMUSE dans Digital Performer
+Exemple :
 
-Si vous souhaitez saisir ou copier-coller manuellement les messages hexadécimaux iMUSE dans vos pistes MIDI existantes :
+```text
+F0 7D 50 00 00 00 00 02 00 00 00 04 00 00 00 00 00 00 00 0A 00 00 00 00 F7
+```
 
-1. Dans le Générateur de SysEx, configurez vos curseurs pour obtenir le message désiré.
-2. Cliquez sur le bouton **Copier dans le presse-papiers**.
-3. Dans Digital Performer, ouvrez l'**Event List** (Liste d'Événements) de la piste MIDI ciblée.
-4. Placez votre curseur de lecture à la position temporelle exacte (Mesure|Temps|Tick) où l'instruction doit s'exécuter.
-5. Insérez un nouvel événement de type **System Exclusive (SysEx)** :
-   - Dans DP, utilisez le raccourci d'insertion ou sélectionnez `SysEx` dans le menu d'ajout d'événements.
-6. Une boîte de dialogue d'édition s'ouvre. Double-cliquez sur l'événement SysEx créé pour ouvrir l'éditeur de texte hexadécimal.
-7. **Collez** le texte hexadécimal copié depuis le Générateur (il est déjà pré-formaté avec les balises `F0` et `F7`).
-8. Validez. Le message fait désormais partie intégrante de votre séquence MIDI et sera exécuté à la microseconde près par le moteur iMUSE.
+Ici :
 
-> [!TIP]
-> **Recommandation pour le Roland MT-32** :
-> Lorsque vous utilisez des timbres personnalisés Roland, veillez à ce que les messages SysEx Roland (les dumps de timbres) soient positionnés au moins **50 ticks** avant la commande `Allocate Part` ou les premières notes de musique. Cela donne le temps physique au MT-32 (ou à l'émulateur Munt) d'enregistrer le patch en mémoire et d'éviter les notes tronquées ou jouées avec un mauvais instrument.
+- boucle `2` fois
+- quand on atteint `beat 10 tick 0`
+- on saute a `beat 4 tick 0`
+
+Points a retenir :
+
+- `count = 0` ne donne pas une boucle infinie dans ce moteur
+- utilisez `count >= 1`
+- le point `FROM` doit etre plus loin que le point `TO`
+
+Pour annuler une boucle :
+
+```text
+F0 7D 51 F7
+```
+
+### 3.3. Hooks
+
+Les hooks servent a conditionner une action a un etat arme par le jeu.
+
+Les plus utiles sont :
+
+- `0x30` : jump
+- `0x32` : part on/off
+- `0x33` : volume
+- `0x34` : programme
+- `0x35` : transpose de part
+
+En pratique :
+
+- `cmd = 00` : action inconditionnelle
+- `cmd = 01..7F` : action conditionnelle
+- `cmd = FF` : hook persistant arme par defaut dans l'etat reset du moteur
+
+Si vous ne pilotez pas les hooks cote jeu, vous pouvez ignorer cette famille.
+
+## 4. Ce qu'il vaut mieux eviter
+
+### `0x21` Parameter Adjust
+
+Ne comptez pas dessus aujourd'hui.
+
+Le moteur actuel le parse, mais n'en fait rien.
+
+### Marker texte long
+
+Evitez :
+
+```text
+F0 7D 40 00 49 4E 54 52 4F F7
+```
+
+si vous voulez un seul trigger logique.
+
+Dans ce code, cela declenche cinq marqueurs successifs :
+
+- `I`
+- `N`
+- `T`
+- `R`
+- `O`
+
+## 5. Conseils par profil sonore
+
+### General MIDI
+
+Le plus simple :
+
+- `Start Song`
+- `Allocate Part`
+- notes MIDI classiques
+- `Marker` / `Loop` si besoin
+
+### Roland MT-32
+
+Si vous utilisez des timbres personnalises Roland :
+
+- placez les dumps SysEx Roland avant `Allocate Part`
+- laissez une marge, idealement une cinquantaine de ticks, avant les premieres notes
+
+Le moteur sait ensuite :
+
+- stocker le dump par part
+- le recharger sur la memoire timbre MT-32
+- rafraichir le patch actif
+
+### AdLib
+
+Si vous travaillez avec des instruments OPL :
+
+- utilisez `0x10` pour une part
+- utilisez `0x11` pour une diffusion globale
+- considerez `30` octets comme taille canonique d'un instrument AdLib iMUSE
+
+## 6. Workflow conseille dans un sequenceur
+
+### Piste de controle
+
+Utilisez une piste dediee, souvent la piste `0`, pour les SysEx :
+
+- `Start Song`
+- `Allocate Part`
+- `Marker`
+- `Set Loop`
+- `Hooks`
+
+### Pistes musicales
+
+Gardez ensuite les pistes musicales normales pour :
+
+- notes
+- CC standards
+- Program Changes si necessaire
+
+## 7. Exemple de structure simple
+
+### Intro puis boucle
+
+Tick `0` :
+
+```text
+F0 7D 02 F7
+F0 7D 00 00 00 01 05 0A 07 0F 00 00 00 00 00 00 00 02 00 00 F7
+F0 7D 00 01 00 01 05 0A 07 0F 00 00 00 00 00 00 00 02 00 01 F7
+```
+
+Au point d'entree de boucle :
+
+```text
+F0 7D 40 00 01 F7
+```
+
+Au point de sortie de section :
+
+```text
+F0 7D 50 00 00 00 00 03 00 00 00 08 00 00 00 00 00 00 00 10 00 00 00 00 F7
+```
+
+Ce dernier exemple signifie :
+
+- boucle `3` fois
+- quand on atteint `beat 16`
+- on saute a `beat 8`
+
+## 8. En cas de doute
+
+Si vous voulez authorer vite et proprement :
+
+1. utilisez `Start Song` au debut
+2. utilisez `Allocate Part` pour chaque part
+3. utilisez `Marker` avec un seul octet utile
+4. utilisez `Set Loop` avec `count >= 1`
+5. laissez `Parameter Adjust` de cote
+
+Si vous avez besoin du niveau "octet par octet", reportez-vous a :
+
+- [imwrap_sysex_format.md](./imwrap_sysex_format.md)
+- [imwrap_sysex_reference_detaillee_fr.md](./imwrap_sysex_reference_detaillee_fr.md)

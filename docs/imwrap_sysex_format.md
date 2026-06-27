@@ -1,109 +1,269 @@
-# Format des messages SysEx iMWrap pour les séquences MIDI
+# Format des messages SysEx iMWrap
 
-Pour piloter les fonctionnalités avancées d'iMWrap (boucles, marqueurs, allocations de pistes interactives) directement depuis vos fichiers MIDI (`.mid` / `.smf`), vous devez y insérer des événements **System Exclusive (SysEx)** spécialement formatés.
+Ce document est une reference courte et fiable pour les SysEx reconnus par `imwrap-v6`.
 
-Ce document détaille la structure binaire attendue par le moteur iMWrap.
+Pour la version detaillee, voir [imwrap_sysex_reference_detaillee_fr.md](./imwrap_sysex_reference_detaillee_fr.md).
 
----
+## 1. Forme generale
 
-## 1. Structure générale de l'enveloppe SysEx
-
-Tous les messages SysEx iMWrap suivent une structure stricte. En hexadécimal, la forme globale est la suivante :
+Tous les SysEx iMWrap suivent cette forme :
 
 ```text
 F0 7D [CODE] [PAYLOAD...] F7
 ```
 
-- `F0` : Début du message SysEx (Standard MIDI).
-- `7D` : Identifiant constructeur (ID non-commercial souvent utilisé par les jeux éducatifs ou prototypes, réutilisé par iMUSE/iMWrap).
-- `[CODE]` : Un octet identifiant l'action à réaliser (ex: `0x40` pour un marqueur, `0x50` pour définir une boucle).
-- `[PAYLOAD...]` : Les arguments de la commande (certaines données sont encodées en "nibbles", voir section suivante).
-- `F7` : Fin du message SysEx (Standard MIDI).
+- `F0` : debut du SysEx
+- `7D` : identifiant iMWrap/iMUSE
+- `CODE` : code de commande
+- `PAYLOAD` : parametres
+- `F7` : fin du SysEx
 
-### L'encodage "Nibbles" (Demi-octets)
-Pour éviter qu'un octet de donnée MIDI ne dépasse `0x7F` (ce qui casserait le protocole MIDI), iMWrap encode la plupart des valeurs binaires de charge utile (payload) sous forme de **nibbles**. 
-Un octet original (ex: `0xAB`) est scindé en deux octets envoyés successivement : `0x0A` puis `0x0B`.
+### Encodage en nibbles
 
----
+Beaucoup de donnees sont encodees en nibbles :
 
-## 2. Liste des Commandes (Codes SysEx)
+```text
+5A -> 05 0A
+AB -> 0A 0B
+000A -> 00 00 00 0A
+```
 
-Voici la syntaxe précise à utiliser dans votre éditeur MIDI pour les commandes les plus courantes.
+## 2. Messages principaux
 
-### `0x02` : Start Song (Démarrer le morceau)
-Déclare le véritable début du morceau interactif.
+### `0x00` Allocate Part
+
+Format canonique :
+
+```text
+F0 7D 00 [PART] [8 octets encodes en 16 nibbles] F7
+```
+
+Payload decode :
+
+1. `Flags` : bit 0 = part on, bit 1 = reverb
+2. `Priority`
+3. `Volume`
+4. `Pan`
+5. `Trans/Perc` : bit 7 = percussion, bits 0-6 = transpose
+6. `Detune`
+7. `PitchBendFactor`
+8. `Program`
+
+Effet : alloue et configure une part logique.
+
+Note importante : dans le moteur actuel, `pan` est interprete comme une valeur signee centree sur `0`, pas comme `0..127` centre sur `64`.
+
+### `0x01` Shutdown Part
+
+```text
+F0 7D 01 [PART] F7
+```
+
+Effet : coupe la part et remet son etat a zero.
+
+### `0x02` Start Song
+
 ```text
 F0 7D 02 F7
 ```
 
-### `0x40` : Text Marker (Marqueur de synchronisation)
-Place un marqueur temporel permettant de déclencher du code dans le jeu (via `MarkerCallback`).
-- **Format** : `F0 7D 40 [ID] [TEXTE ASCII] F7`
-- `[ID]` : Identifiant (généralement `0x00`).
-- `[TEXTE ASCII]` : Le texte du marqueur, encodé en ASCII.
-- **Exemple** pour le marqueur "INTRO" :
+Effet : reinitialise toutes les parts du son courant.
+
+Usage recommande : au tout debut du morceau, au tick `0`.
+
+### `0x21` Parameter Adjust
+
 ```text
-F0 7D 40 00 49 4E 54 52 4F F7
+F0 7D 21 [PART] [UNKNOWN] [PARAM16] [VALUE16] F7
 ```
 
-### `0x50` : Set Loop (Définir une boucle temporelle)
-Ordonne au séquenceur de boucler d'un point B (To) vers un point A (From), un certain nombre de fois.
-- **Format** : `F0 7D 50 [ID] [10 octets originaux encodés en 20 nibbles] F7`
-- `[ID]` : Généralement `0x00`.
-- **Payload décodé (10 octets en Big-Endian)** :
-  1. `LoopCount` (2 octets) : Nombre de boucles (0 = infini).
-  2. `ToBeat` (2 octets) : Beat de fin de boucle.
-  3. `ToTick` (2 octets) : Tick de fin de boucle.
-  4. `FromBeat` (2 octets) : Beat de retour de boucle.
-  5. `FromTick` (2 octets) : Tick de retour de boucle.
-- **Exemple** : Boucle infinie (`0x0000`) depuis le beat 10 (`0x000A`), tick 0 (`0x0000`) vers le beat 4 (`0x0004`), tick 0 (`0x0000`).
-  - Données d'origine : `00 00` | `00 0A` | `00 00` | `00 04` | `00 00`
-  - Encodage Nibbles : `00 00 00 00` | `00 00 00 0A` | `00 00 00 00` | `00 00 00 04` | `00 00 00 00`
+Effet actuel dans `imwrap-v6` : aucun.
+
+Le message est parse, mais ignore par le moteur runtime.
+
+### `0x30` Hook Jump
+
 ```text
-F0 7D 50 00 00 00 00 00 00 00 00 0A 00 00 00 00 00 00 00 04 00 00 00 00 F7
+F0 7D 30 [UNKNOWN] [CMD] [TRACK16] [BEAT16] [TICK16] F7
 ```
 
-### `0x51` : Clear Loop (Annuler la boucle)
-Annule la boucle actuellement configurée. La musique continuera de manière linéaire.
+Effet : saut conditionnel intelligent.
+
+### `0x31` Hook Global Transpose
+
+```text
+F0 7D 31 [UNKNOWN] [CMD] [RELATIVE] [SIGNED_VALUE] F7
+```
+
+Effet : transpose le son entier.
+
+### `0x32` Hook Part On/Off
+
+```text
+F0 7D 32 [CHAN] [CMD] [VALUE] F7
+```
+
+Effet :
+
+- `VALUE = 00` : eteint la part
+- `VALUE != 00` : allume la part
+
+### `0x33` Hook Set Volume
+
+```text
+F0 7D 33 [CHAN] [CMD] [VALUE] F7
+```
+
+Effet : change le volume d'une part.
+
+### `0x34` Hook Set Program
+
+```text
+F0 7D 34 [CHAN] [CMD] [VALUE] F7
+```
+
+Effet : change l'instrument d'une part.
+
+### `0x35` Hook Set Transpose
+
+```text
+F0 7D 35 [CHAN] [CMD] [RELATIVE] [SIGNED_VALUE] F7
+```
+
+Effet : change la transposition d'une part.
+
+### `0x40` Marker
+
+```text
+F0 7D 40 [UNKNOWN] [MARKER_BYTES...] F7
+```
+
+Effet reel du moteur : un trigger par octet utile.
+
+Exemple robuste :
+
+```text
+F0 7D 40 00 01 F7
+```
+
+Si vous envoyez un texte comme `INTRO`, le moteur declenche cinq marqueurs successifs, un par caractere.
+
+### `0x50` Set Loop
+
+```text
+F0 7D 50 [UNKNOWN] [COUNT16] [TO_BEAT16] [TO_TICK16] [FROM_BEAT16] [FROM_TICK16] F7
+```
+
+Effet reel :
+
+- quand la lecture atteint `FROM_BEAT:FROM_TICK`
+- elle saute vers `TO_BEAT:TO_TICK`
+
+Important :
+
+- dans le code actuel, `COUNT = 0` ne veut pas dire "infini"
+- `COUNT = 0` desactive la boucle
+- il faut `FROM` strictement plus loin que `TO`
+
+Exemple :
+
+```text
+F0 7D 50 00 00 00 00 02 00 00 00 04 00 00 00 00 00 00 00 0A 00 00 00 00 F7
+```
+
+Ici :
+
+- boucle `2` fois
+- quand on atteint `beat 10 tick 0`
+- on saute a `beat 4 tick 0`
+
+### `0x51` Clear Loop
+
 ```text
 F0 7D 51 F7
 ```
 
-### `0x00` : Allocate Part (Allouer et configurer une piste interactive)
-Déclare une piste, sa priorité, son panoramique, son instrument, etc. C'est l'équivalent d'un super *Program Change* combiné à d'autres contrôles.
-- **Format** : `F0 7D 00 [PART_ID] [Max 8 octets originaux encodés en 16 nibbles] F7`
-- `[PART_ID]` : ID de la partie (0 à 15, soit le canal MIDI ciblé).
-- **Payload décodé (jusqu'à 8 octets)** :
-  1. `Flags` : bit 0 = Part On, bit 1 = Reverb.
-  2. `Priority` : Priorité de la piste (ex: 90).
-  3. `Volume` : 0 à 127.
-  4. `Pan` : Panoramique.
-  5. `Trans/Perc` : Bit 7 = Percussion, Bits 0-6 = Transpose.
-  6. `Detune` : Désaccordage.
-  7. `PitchBendFactor` : Facteur de PitchBend (défaut = 2).
-  8. `Program` : Numéro de l'instrument.
+Effet : annule la boucle courante.
 
-### `0x01` : Shutdown Part (Éteindre une piste)
-Coupe définitivement une piste allouée.
-- **Format** : `F0 7D 01 [PART_ID] F7`
+### `0x60` Set Instrument
 
-### `0x60` : Set Instrument (Changer l'instrument interne)
-Permet de mapper un canal vers un identifiant d'instrument iMUSE complet.
-- **Format** : `F0 7D 60 [CHAN] [4 Nibbles pour uint16_t Instrument] F7`
-- **Exemple** : Canal 2 (`0x02`), Instrument 124 (`0x007C` en nibbles `00 00 07 0C`) :
+```text
+F0 7D 60 [CHAN] [N1] [N2] [N3] [N4] F7
+```
+
+Les 4 nibbles forment un `uint16`, interprete comme :
+
+- octet haut = `bank`
+- octet bas = `program`
+
+Exemple :
+
 ```text
 F0 7D 60 02 00 00 07 0C F7
 ```
 
-### Les Commandes "Hook" (`0x30` à `0x35`)
-Ces SysEx servent à déclencher des événements automatiques.
-- `0x30` : Hook Jump (Saut conditionnel).
-- `0x31` / `0x35` : Hook Global Transpose / Hook Set Transpose.
-- `0x32` / `0x33` / `0x34` : Hook Part On/Off, Hook Volume, Hook Program.
-Elles partagent toutes un même principe : le premier nibble contient l'ID de la sous-commande Hook, suivi des paramètres de l'action, le tout encodé en nibbles.
+correspond a :
 
----
+- `bank = 0x00`
+- `program = 0x7C`
 
-## 3. Conseil d'intégration
+## 3. Messages AdLib
 
-Si vous utilisez un séquenceur externe (comme Cubase, REAPER ou FL Studio), ajoutez un **événement SysEx** sur la piste principale (Track 0) au tout début du morceau (Tick 0) pour initialiser vos boucles ou marqueurs, en veillant à toujours inclure l'enveloppe complète avec le header `F0 7D` et le footer `F7`.
+### `0x10` AdLib Part Instrument
+
+```text
+F0 7D 10 [PART] [UNKNOWN] [DONNEES_ADLIB en nibbles] F7
+```
+
+### `0x11` AdLib Global Instrument
+
+```text
+F0 7D 11 [UNKNOWN] [VALUE] [PROGRAM] [DONNEES_ADLIB en nibbles] F7
+```
+
+En authoring, il faut considerer qu'un instrument AdLib canonique fait `30` octets.
+
+Voir l'annexe AdLib dans la reference detaillee pour le layout complet.
+
+## 4. Messages Roland MT-32
+
+Le moteur sait aussi transporter des SysEx Roland MT-32 natifs, distincts des SysEx `7D`.
+
+Ces SysEx ne font pas partie de la famille `0x00..0x60`, mais ils sont utilises pour :
+
+- les timbres personnalises
+- l'initialisation MT-32
+- la mise a jour de patch memory
+
+Voir l'annexe MT-32 dans la reference detaillee pour la structure exacte.
+
+## 5. Ce qui est vraiment obligatoire
+
+Pour produire du son, aucun SysEx iMWrap n'est strictement obligatoire.
+
+Pour un morceau iMUSE proprement authorie, recommande :
+
+1. `0x02` au tick `0`
+2. un `0x00` pour chaque part logique utilisee
+
+Ensuite :
+
+- `0x40` si vous avez besoin de triggers
+- `0x50` / `0x51` si vous avez besoin de boucles
+- `0x30..0x35` si vous utilisez les hooks
+- `0x10` / `0x11` si vous authoriez pour AdLib
+
+## 6. Debut minimal de morceau
+
+```text
+F0 7D 02 F7
+F0 7D 00 00 00 01 05 0A 07 0F 00 00 00 00 00 00 00 02 00 00 F7
+F0 7D 00 01 00 01 05 0A 07 0F 00 00 00 00 00 00 00 02 00 01 F7
+```
+
+## 7. Ecarts importants avec certaines docs simplifiees
+
+- `0x21 Parameter Adjust` : reconnu, mais sans effet runtime actuel
+- `0x40 Marker` : un octet utile = un trigger
+- `0x50 Set Loop` : `count = 0` ne fait pas de boucle infinie dans ce code
+- `0x00 Allocate Part` : `pan` est traite comme une valeur signee centree sur `0`
