@@ -215,7 +215,8 @@ $agsEditorPluginFiles = @(
     @{ Sources = @((Join-Path $AgsEditorPluginBuildDir "AGS.Plugin.IMWrap.Editor.pdb")); Name = "AGS.Plugin.IMWrap.Editor.pdb"; Optional = $true },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_shim.dll")); Name = "imwrap_shim.dll" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrap_shim.pdb")); Name = "imwrap_shim.pdb"; Optional = $true },
-    @{ Sources = @((Join-Path $RootDir "ags-editor-plugin\README.md")); Name = "README.md" }
+    @{ Sources = @((Join-Path $RootDir "ags-editor-plugin\README.md")); Name = "README.md" },
+    @{ Sources = @((Join-Path $RootDir "ags-editor-plugin\README_fr.md")); Name = "README_fr.md"; Optional = $true }
 )
 
 foreach ($artifact in $agsEditorPluginFiles) {
@@ -254,6 +255,8 @@ foreach ($qtDir in $qtPluginDirs) {
 $documentationFiles = @(
     @{ Source = Join-Path $RootDir "docs\windows-release.md"; Name = "README.md" },
     @{ Source = Join-Path $RootDir "README.md"; Name = "docs\imwrap-v6-overview.md" },
+    @{ Source = Join-Path $RootDir "README.md"; Name = "docs\imwrap-v6-overview_en.md" },
+    @{ Source = Join-Path $RootDir "README_fr.md"; Name = "docs\imwrap-v6-overview_fr.md" },
     @{ Source = Join-Path $RootDir "docs\ags-plugin.md"; Name = "docs\ags-plugin.md" },
     @{ Source = Join-Path $RootDir "docs\imwrappack.md"; Name = "docs\imwrappack.md" },
     @{ Source = Join-Path $RootDir "docs\ims-v1.md"; Name = "docs\ims-v1.md" },
