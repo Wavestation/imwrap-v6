@@ -264,6 +264,10 @@ foreach ($doc in $documentationFiles) {
     Copy-FileAs -Source $doc.Source -Destination (Join-Path $OutputDir $doc.Name)
 }
 
+Get-ChildItem -Path (Join-Path $RootDir "docs") -File | ForEach-Object {
+    Copy-FileAs -Source $_.FullName -Destination (Join-Path $docsDir $_.Name)
+}
+
 $wrapperFiles = @(
     @{ Source = Join-Path $RootDir "ags-wrapper\IMWrapShim.cs"; Name = "wrappers\IMWrapShim.cs" },
     @{ Source = Join-Path $RootDir "ags-wrapper\IMWrapShim.vb"; Name = "wrappers\IMWrapShim.vb" }
