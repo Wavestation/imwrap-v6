@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     
     // Pour un look natif Windows
     app.setStyle("windowsvista");
-    app.setWindowIcon(QIcon(":/imwrap/sysex_generator_gui.ico"));
+    app.setWindowIcon(QIcon(":/imwrap/sysex_generator_gui.256.png"));
 
     SysExWindow window;
     window.setWindowTitle("iMWrap SysEx Tool");

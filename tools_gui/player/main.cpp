@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     app.setStyle("windowsvista");
-    app.setWindowIcon(QIcon(":/imwrap/player_gui.ico"));
+    app.setWindowIcon(QIcon(":/imwrap/player_gui.256.png"));
 
     PlayerWindow window;
     window.setWindowTitle("iMWrap Player Tool");

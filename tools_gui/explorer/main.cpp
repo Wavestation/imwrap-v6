@@ -6,7 +6,7 @@
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     app.setStyle("windowsvista");
-    app.setWindowIcon(QIcon(":/imwrap/explorer_gui.ico"));
+    app.setWindowIcon(QIcon(":/imwrap/explorer_gui.256.png"));
 
     ExplorerWindow window;
     window.setWindowIcon(app.windowIcon());

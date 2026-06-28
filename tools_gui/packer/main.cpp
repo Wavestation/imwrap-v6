@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     app.setStyle("windowsvista");
-    app.setWindowIcon(QIcon(":/imwrap/packer_gui.ico"));
+    app.setWindowIcon(QIcon(":/imwrap/packer_gui.256.png"));
 
     PackerWindow window;
     window.setWindowTitle("iMWrap Packer Tool");
