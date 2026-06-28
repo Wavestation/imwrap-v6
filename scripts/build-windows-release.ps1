@@ -206,6 +206,7 @@ $x64Targets = @(
     "imwrap_v6_shared",
     "imwrappack",
     "imsprobe",
+    "imwrap_explorer_gui",
     "imwrap_packer_gui",
     "imwrap_player_gui",
     "imwrap_sysex_gui",

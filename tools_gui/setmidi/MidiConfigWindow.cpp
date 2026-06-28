@@ -1,4 +1,5 @@
 #include "MidiConfigWindow.h"
+#include "imwrap_icon_ids.h"
 
 #include <mmsystem.h>
 
@@ -41,11 +42,12 @@ bool IsBundledUtilityExecutable(const std::filesystem::path &path) {
         baseName.erase(baseName.size() - 4);
     }
 
-    static const std::array<std::wstring_view, 6> bundledBaseNames = {
+    static const std::array<std::wstring_view, 7> bundledBaseNames = {
         L"setmidi",
         L"imwrap_sysex_gui",
         L"imwrap_player_gui",
         L"imwrap_packer_gui",
+        L"imwrap_explorer_gui",
         L"imwrappack",
         L"imsprobe"
     };
@@ -212,12 +214,28 @@ std::wstring MidiConfigWindow::GetTargetConfigPath() const {
 }
 
 bool MidiConfigWindow::RegisterWindowClass() {
+    const HICON largeIcon = reinterpret_cast<HICON>(LoadImageW(
+        instance_,
+        MAKEINTRESOURCEW(IDI_MAIN_APP),
+        IMAGE_ICON,
+        GetSystemMetrics(SM_CXICON),
+        GetSystemMetrics(SM_CYICON),
+        LR_DEFAULTCOLOR));
+    const HICON smallIcon = reinterpret_cast<HICON>(LoadImageW(
+        instance_,
+        MAKEINTRESOURCEW(IDI_MAIN_APP),
+        IMAGE_ICON,
+        GetSystemMetrics(SM_CXSMICON),
+        GetSystemMetrics(SM_CYSMICON),
+        LR_DEFAULTCOLOR));
+
     WNDCLASSEXW windowClass = {};
     windowClass.cbSize = sizeof(windowClass);
     windowClass.lpfnWndProc = &MidiConfigWindow::WindowProc;
     windowClass.hInstance = instance_;
     windowClass.hCursor = LoadCursorW(nullptr, reinterpret_cast<LPCWSTR>(IDC_ARROW));
-    windowClass.hIcon = LoadIconW(nullptr, reinterpret_cast<LPCWSTR>(IDI_APPLICATION));
+    windowClass.hIcon = largeIcon;
+    windowClass.hIconSm = smallIcon;
     windowClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
     windowClass.lpszClassName = kWindowClassName;
 
@@ -243,6 +261,23 @@ bool MidiConfigWindow::CreateMainWindow(int showCommand) {
     if (hwnd_ == nullptr) {
         return false;
     }
+
+    const HICON largeIcon = reinterpret_cast<HICON>(LoadImageW(
+        instance_,
+        MAKEINTRESOURCEW(IDI_MAIN_APP),
+        IMAGE_ICON,
+        GetSystemMetrics(SM_CXICON),
+        GetSystemMetrics(SM_CYICON),
+        LR_DEFAULTCOLOR));
+    const HICON smallIcon = reinterpret_cast<HICON>(LoadImageW(
+        instance_,
+        MAKEINTRESOURCEW(IDI_MAIN_APP),
+        IMAGE_ICON,
+        GetSystemMetrics(SM_CXSMICON),
+        GetSystemMetrics(SM_CYSMICON),
+        LR_DEFAULTCOLOR));
+    SendMessageW(hwnd_, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(largeIcon));
+    SendMessageW(hwnd_, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(smallIcon));
 
     ShowWindow(hwnd_, showCommand);
     UpdateWindow(hwnd_);

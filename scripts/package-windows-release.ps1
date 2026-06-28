@@ -194,6 +194,7 @@ $toolBinaries = @(
     @{ Sources = @((Join-Path $PluginBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x32.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrappack.exe")); Name = "imwrappack-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_explorer_gui.exe")); Name = "imwrap_explorer_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_packer_gui.exe")); Name = "imwrap_packer_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_player_gui.exe")); Name = "imwrap_player_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_sysex_gui.exe")); Name = "imwrap_sysex_gui-x64.exe" },

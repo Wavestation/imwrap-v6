@@ -2,11 +2,18 @@
     <qresource prefix="/imwrap">
         <file>adlib.png</file>
         <file>default-event.png</file>
+        <file>easteregg.ico</file>
+        <file>explorer_gui.ico</file>
         <file>filetypes.png</file>
         <file>generalmidi.png</file>
+        <file>ims_file.ico</file>
         <file>mt32.png</file>
         <file>package_settings.png</file>
+        <file>packer_gui.ico</file>
+        <file>player_gui.ico</file>
         <file>sound.png</file>
+        <file>setmidi.ico</file>
+        <file>sysex_generator_gui.ico</file>
         <file>syx-adlib-instr.png</file>
         <file>syx-allocate-part.png</file>
         <file>syx-hook-part-onoff.png</file>

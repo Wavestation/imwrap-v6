@@ -1,0 +1,5 @@
+#include "imwrap_icon_ids.h"
+
+IDI_MAIN_APP ICON "explorer_gui.ico"
+IDR_IMS_DOCUMENT_ICO RCDATA "ims_file.ico"
+IDR_EASTEREGG_ICO RCDATA "easteregg.ico"

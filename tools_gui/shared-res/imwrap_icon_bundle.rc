@@ -1,0 +1,11 @@
+#include "imwrap_icon_ids.h"
+
+IDR_IMS_DOCUMENT_ICO RCDATA "ims_file.ico"
+IDR_EASTEREGG_ICO RCDATA "easteregg.ico"
+IDR_EXPLORER_GUI_ICO RCDATA "explorer_gui.ico"
+IDR_PACKER_GUI_ICO RCDATA "packer_gui.ico"
+IDR_PLAYER_GUI_ICO RCDATA "player_gui.ico"
+IDR_SETMIDI_ICO RCDATA "setmidi.ico"
+IDR_SYSEX_GENERATOR_GUI_ICO RCDATA "sysex_generator_gui.ico"
+IDR_PACKER_COMMANDLINE_ICO RCDATA "packer_commandline.ico"
+IDR_PROBE_COMMANDLINE_ICO RCDATA "probe_commandline.ico"
