@@ -33,6 +33,7 @@ namespace imwrap {
 class IMWRAP_API MidiSink {
 public:
     virtual ~MidiSink() = default;
+    virtual bool isAvailable() const { return true; }
 
     virtual void onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) = 0;
     virtual void onSysEx(uint16_t soundId, ByteView message) {

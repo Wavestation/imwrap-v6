@@ -37,6 +37,10 @@ void PlayerWindow::WinMMSink::closeDevice() {
     }
 }
 
+bool PlayerWindow::WinMMSink::isAvailable() const {
+    return hMidiOut != nullptr;
+}
+
 void PlayerWindow::WinMMSink::onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) {
     if (!hMidiOut) return;
     DWORD msg = status | (data1 << 8);
@@ -73,7 +77,6 @@ void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imwrap::ByteView message
         }
         midiOutUnprepareHeader(hMidiOut, &hdr, sizeof(hdr));
     }
-    Sleep(20);
 }
 
 PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnabled(false), tickAccumulator(0) {
@@ -289,6 +292,7 @@ void PlayerWindow::togglePreview() {
     if (previewEnabled) {
         transportTimer->stop();
         midiSink.closeDevice();
+        engine.resetMt32Initialization();
         previewEnabled = false;
         previewBtn->setText("Activer la Préécoute");
         statusLabel->setText("Préécoute désactivée.");
@@ -296,6 +300,7 @@ void PlayerWindow::togglePreview() {
         if (deviceCombo->currentIndex() >= 0) {
             UINT devId = deviceCombo->currentData().toUInt();
             if (midiSink.openDevice(devId)) {
+                engine.resetMt32Initialization();
                 previewEnabled = true;
                 previewBtn->setText("Désactiver la Préécoute");
                 statusLabel->setText("Préécoute activée.");

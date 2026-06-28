@@ -78,6 +78,7 @@ private:
         ~WinMMSink();
         bool openDevice(UINT deviceId);
         void closeDevice();
+        bool isAvailable() const override;
         void onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) override;
         void onSysEx(uint16_t soundId, imwrap::ByteView message) override;
     };

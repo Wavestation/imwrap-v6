@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/imwrap">
+        <file>adlib.png</file>
+        <file>default-event.png</file>
+        <file>filetypes.png</file>
+        <file>generalmidi.png</file>
+        <file>mt32.png</file>
+        <file>package_settings.png</file>
+        <file>sound.png</file>
+        <file>syx-adlib-instr.png</file>
+        <file>syx-allocate-part.png</file>
+        <file>syx-hook-part-onoff.png</file>
+        <file>syx-hook-program.png</file>
+        <file>syx-hook-transpose.png</file>
+        <file>syx-hook-volume.png</file>
+        <file>syx-hookjump.png</file>
+        <file>syx-loop.png</file>
+        <file>syx-marker.png</file>
+        <file>syx-parameter.png</file>
+        <file>syx-roland.png</file>
+        <file>syx-shutdown.png</file>
+        <file>syx-startsong.png</file>
+        <file>syx-unknown.png</file>
+        <file>track.png</file>
+    </qresource>
+</RCC>

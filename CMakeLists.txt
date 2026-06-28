@@ -233,6 +233,17 @@ if(IMWRAP_BUILD_GUI_TOOLS)
     target_link_libraries(imwrap_packer_gui PRIVATE Qt6::Widgets imwrap_v6)
     target_include_directories(imwrap_packer_gui PRIVATE tools_gui/packer)
 
+    # Explorer Tool
+    add_executable(imwrap_explorer_gui WIN32
+        tools_gui/explorer/main.cpp
+        tools_gui/explorer/ExplorerWindow.cpp
+        tools_gui/explorer/IMWrapSysExDialog.cpp
+        tools_gui/common/ImsProject.cpp
+        tools_gui/shared-res/imwrap_gui_resources.qrc
+    )
+    target_link_libraries(imwrap_explorer_gui PRIVATE Qt6::Widgets imwrap_v6 winmm dsound ole32 ksuser)
+    target_include_directories(imwrap_explorer_gui PRIVATE tools_gui/explorer tools_gui/common)
+
     # Windeployqt to copy required DLLs and plugins
     if(MSVC OR MINGW)
         find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${Qt6_DIR}/../../../bin")
@@ -255,6 +266,9 @@ if(IMWRAP_BUILD_GUI_TOOLS)
             )
             add_custom_command(TARGET imwrap_packer_gui POST_BUILD
                 COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imwrap_packer_gui>\"
+            )
+            add_custom_command(TARGET imwrap_explorer_gui POST_BUILD
+                COMMAND "${WINDEPLOYQT_EXECUTABLE}" ${MINIMAL_WINDEPLOYQT_ARGS} \"$<TARGET_FILE:imwrap_explorer_gui>\"
             )
         endif()
     endif()

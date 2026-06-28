@@ -2970,7 +2970,8 @@ int32_t IMWrapEngine::doCommand(uint16_t argc, const int16_t *args) {
 void IMWrapEngine::setTargetProfile(TargetProfile profile) {
     if (_profile != profile) {
         _profile = profile;
-        if (_profile == TargetProfile::Mt32 && _midiSink) {
+        _mt32Initialized = false;
+        if (_profile == TargetProfile::Mt32 && _midiSink && _midiSink->isAvailable()) {
             initMt32();
         }
     }
@@ -2978,13 +2979,25 @@ void IMWrapEngine::setTargetProfile(TargetProfile profile) {
 
 void IMWrapEngine::setMidiSink(MidiSink *sink) {
     _midiSink = sink;
-    if (_profile == TargetProfile::Mt32 && _midiSink) {
+    _mt32Initialized = false;
+    if (_profile == TargetProfile::Mt32 && _midiSink && _midiSink->isAvailable()) {
         initMt32();
     }
 }
 
+void IMWrapEngine::resetMt32Initialization() {
+    _mt32Initialized = false;
+}
+
+void IMWrapEngine::setWelcomeMessage(const std::string &msg) {
+    _welcomeMessage = msg;
+    _mt32Initialized = false;
+}
+
 void IMWrapEngine::initMt32() {
-    if (!_midiSink) return;
+    if (!_midiSink || !_midiSink->isAvailable() || _mt32Initialized) {
+        return;
+    }
     
     // 1. Reset MT-32
     sendMt32Sysex(0, 0x1FC000, nullptr, 0);
@@ -3032,6 +3045,7 @@ void IMWrapEngine::initMt32() {
         msg = msg.substr(0, 20);
     }
     sendMt32Sysex(0, 0x80000, reinterpret_cast<const uint8_t*>(msg.c_str()), 20);
+    _mt32Initialized = true;
 }
 
 } // namespace imwrap

@@ -54,6 +54,7 @@ public:
     TargetProfile targetProfile() const { return _profile; }
     void setMidiSink(MidiSink *sink);
     void initMt32();
+    void resetMt32Initialization();
     void setCompatibilityProfile(CompatibilityProfile profile) { _compatibility = profile; }
     CompatibilityProfile compatibilityProfile() const { return _compatibility; }
 
@@ -65,7 +66,7 @@ public:
 
     void setNativeMt32Output(bool enabled) { _nativeMt32Output = enabled; }
     bool nativeMt32Output() const { return _nativeMt32Output; }
-    void setWelcomeMessage(const std::string &msg) { _welcomeMessage = msg; }
+    void setWelcomeMessage(const std::string &msg);
 
     bool startSound(uint16_t soundId);
     void stopSound(uint16_t soundId);
@@ -357,6 +358,7 @@ private:
     ScanContext _scan;
     CompatibilityProfile _compatibility = CompatibilityProfile::GenericV6;
     bool _nativeMt32Output = false;
+    bool _mt32Initialized = false;
     LogCallback _logCallback;
     MarkerCallback _markerCallback;
     std::string _welcomeMessage = "iMUSE MT-32 Init  ";
