@@ -172,7 +172,7 @@ void PlayerWindow::setupUi() {
     auto *centerLayout = new QVBoxLayout();
     centerLayout->addWidget(new QLabel("Evénements du Son:"));
     eventsTable = new QTableWidget(0, 3);
-    eventsTable->setHorizontalHeaderLabels({"Tick", "Track", "Texte"});
+    eventsTable->setHorizontalHeaderLabels({"Tick", "Track", "Description"});
     eventsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     centerLayout->addWidget(eventsTable);
     split->addLayout(centerLayout, 2);

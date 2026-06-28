@@ -123,6 +123,7 @@ private:
     NumericField targetTickField_{};
     CheckboxField relativeField_{};
     NumericField hookValueField_{};
+    NumericField markerValueField_{};
     NumericField loopCountField_{};
     NumericField loopToBeatField_{};
     NumericField loopToTickField_{};

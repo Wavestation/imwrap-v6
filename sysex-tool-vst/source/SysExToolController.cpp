@@ -71,6 +71,7 @@ Steinberg::tresult PLUGIN_API SysExToolController::initialize(Steinberg::FUnknow
     messageType->appendString(STR16("Hook Set Volume"));
     messageType->appendString(STR16("Hook Set Program"));
     messageType->appendString(STR16("Hook Set Transpose"));
+    messageType->appendString(STR16("Marker"));
     messageType->appendString(STR16("Set Loop"));
     messageType->appendString(STR16("Clear Loop"));
     messageType->appendString(STR16("Set Instrument"));
@@ -83,7 +84,7 @@ Steinberg::tresult PLUGIN_API SysExToolController::initialize(Steinberg::FUnknow
     AddBoolParameter(parameters, STR16("Reverb"), kReverbId, false);
     AddRangeParameter(parameters, STR16("Priority"), kPriorityId, 0, 255, 90);
     AddRangeParameter(parameters, STR16("Volume"), kVolumeId, 0, 127, 127);
-    AddRangeParameter(parameters, STR16("Pan"), kPanId, 0, 127, 64);
+    AddRangeParameter(parameters, STR16("Pan"), kPanId, -64, 63, 0);
     AddBoolParameter(parameters, STR16("Percussion"), kPercussionId, false);
     AddRangeParameter(parameters, STR16("Transpose"), kTransposeId, -127, 127, 0);
     AddRangeParameter(parameters, STR16("Detune"), kDetuneId, -128, 127, 0);
@@ -97,6 +98,7 @@ Steinberg::tresult PLUGIN_API SysExToolController::initialize(Steinberg::FUnknow
     AddRangeParameter(parameters, STR16("Target Tick"), kTargetTickId, 0, 65535, 0);
     AddBoolParameter(parameters, STR16("Relative"), kRelativeId, false);
     AddRangeParameter(parameters, STR16("Hook Value"), kHookValueId, -128, 255, 0);
+    AddRangeParameter(parameters, STR16("Marker Value"), kMarkerValueId, 0, 127, 0);
     AddRangeParameter(parameters, STR16("Loop Count"), kLoopCountId, 0, 65535, 0);
     AddRangeParameter(parameters, STR16("Loop To Beat"), kLoopToBeatId, 0, 65535, 0);
     AddRangeParameter(parameters, STR16("Loop To Tick"), kLoopToTickId, 0, 65535, 0);
@@ -204,7 +206,7 @@ SysExToolState SysExToolController::CaptureState() const {
     state.reverb = DenormalizeBool(ReadNormalizedValue(parameters, kReverbId, 0.0));
     state.priority = DenormalizeInt(ReadNormalizedValue(parameters, kPriorityId, NormalizeInt(90, 0, 255)), 0, 255);
     state.volume = DenormalizeInt(ReadNormalizedValue(parameters, kVolumeId, NormalizeInt(127, 0, 127)), 0, 127);
-    state.pan = DenormalizeInt(ReadNormalizedValue(parameters, kPanId, NormalizeInt(64, 0, 127)), 0, 127);
+    state.pan = DenormalizeInt(ReadNormalizedValue(parameters, kPanId, NormalizeInt(0, -64, 63)), -64, 63);
     state.percussion = DenormalizeBool(ReadNormalizedValue(parameters, kPercussionId, 0.0));
     state.transpose = DenormalizeInt(ReadNormalizedValue(parameters, kTransposeId, NormalizeInt(0, -127, 127)), -127, 127);
     state.detune = DenormalizeInt(ReadNormalizedValue(parameters, kDetuneId, NormalizeInt(0, -128, 127)), -128, 127);
@@ -218,6 +220,7 @@ SysExToolState SysExToolController::CaptureState() const {
     state.targetTick = DenormalizeInt(ReadNormalizedValue(parameters, kTargetTickId, 0.0), 0, 65535);
     state.relative = DenormalizeBool(ReadNormalizedValue(parameters, kRelativeId, 0.0));
     state.hookValue = DenormalizeInt(ReadNormalizedValue(parameters, kHookValueId, NormalizeInt(0, -128, 255)), -128, 255);
+    state.markerValue = DenormalizeInt(ReadNormalizedValue(parameters, kMarkerValueId, 0.0), 0, 127);
     state.loopCount = DenormalizeInt(ReadNormalizedValue(parameters, kLoopCountId, 0.0), 0, 65535);
     state.loopToBeat = DenormalizeInt(ReadNormalizedValue(parameters, kLoopToBeatId, 0.0), 0, 65535);
     state.loopToTick = DenormalizeInt(ReadNormalizedValue(parameters, kLoopToTickId, 0.0), 0, 65535);
@@ -238,7 +241,7 @@ void SysExToolController::ApplyState(const SysExToolState& state) {
     setParamNormalized(kReverbId, NormalizeBool(state.reverb));
     setParamNormalized(kPriorityId, NormalizeInt(state.priority, 0, 255));
     setParamNormalized(kVolumeId, NormalizeInt(state.volume, 0, 127));
-    setParamNormalized(kPanId, NormalizeInt(state.pan, 0, 127));
+    setParamNormalized(kPanId, NormalizeInt(state.pan, -64, 63));
     setParamNormalized(kPercussionId, NormalizeBool(state.percussion));
     setParamNormalized(kTransposeId, NormalizeInt(state.transpose, -127, 127));
     setParamNormalized(kDetuneId, NormalizeInt(state.detune, -128, 127));
@@ -252,6 +255,7 @@ void SysExToolController::ApplyState(const SysExToolState& state) {
     setParamNormalized(kTargetTickId, NormalizeInt(state.targetTick, 0, 65535));
     setParamNormalized(kRelativeId, NormalizeBool(state.relative));
     setParamNormalized(kHookValueId, NormalizeInt(state.hookValue, -128, 255));
+    setParamNormalized(kMarkerValueId, NormalizeInt(state.markerValue, 0, 127));
     setParamNormalized(kLoopCountId, NormalizeInt(state.loopCount, 0, 65535));
     setParamNormalized(kLoopToBeatId, NormalizeInt(state.loopToBeat, 0, 65535));
     setParamNormalized(kLoopToTickId, NormalizeInt(state.loopToTick, 0, 65535));

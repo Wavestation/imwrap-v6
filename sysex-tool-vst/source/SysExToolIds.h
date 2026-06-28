@@ -29,6 +29,7 @@ enum ParameterId : Steinberg::Vst::ParamID {
     kTargetTickId,
     kRelativeId,
     kHookValueId,
+    kMarkerValueId,
     kLoopCountId,
     kLoopToBeatId,
     kLoopToTickId,

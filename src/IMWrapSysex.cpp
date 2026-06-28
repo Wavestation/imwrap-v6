@@ -22,6 +22,7 @@
 
 #include "imwrap/IMWrapSysex.h"
 
+#include <iomanip>
 #include <sstream>
 
 namespace imwrap {
@@ -88,6 +89,31 @@ const char *TypeName(IMWrapSysexType type) {
     case IMWrapSysexType::Unknown: return "unknown";
     }
     return "unknown";
+}
+
+std::vector<uint8_t> LegacyMarkerTextToBytes(const std::string &text) {
+    std::vector<uint8_t> bytes;
+    bytes.reserve(text.size());
+    for (unsigned char byte : text) {
+        bytes.push_back(static_cast<uint8_t>(byte));
+    }
+    return bytes;
+}
+
+std::vector<uint8_t> MarkerBytesForEvent(const IMWrapControlEvent &event) {
+    if (!event.markerBytes.empty()) {
+        return event.markerBytes;
+    }
+    return LegacyMarkerTextToBytes(event.markerText);
+}
+
+void AppendHexByte(std::ostringstream &oss, uint8_t value) {
+    const std::ios_base::fmtflags flags = oss.flags();
+    const char fill = oss.fill();
+    oss << "0x" << std::uppercase << std::hex << std::setw(2) << std::setfill('0')
+        << static_cast<int>(value);
+    oss.flags(flags);
+    oss.fill(fill);
 }
 
 } // namespace
@@ -314,6 +340,7 @@ bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *e
         }
         event.type = IMWrapSysexType::Marker;
         event.unknown = payload.data()[0] & 0x7F;
+        event.markerBytes.assign(payload.data() + 1, payload.data() + payload.size());
         event.markerText.assign(reinterpret_cast<const char *>(payload.data() + 1), payload.size() - 1);
         return (*out = std::move(event)), true;
     case 0x50: {
@@ -482,7 +509,8 @@ bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *ou
         out->push_back(0x7D);
         out->push_back(0x40);
         out->push_back(event.unknown & 0x7F);
-        out->insert(out->end(), event.markerText.begin(), event.markerText.end());
+        const std::vector<uint8_t> markerBytes = MarkerBytesForEvent(event);
+        out->insert(out->end(), markerBytes.begin(), markerBytes.end());
         break;
     }
     case IMWrapSysexType::SetLoop: {
@@ -565,9 +593,23 @@ std::string DescribeIMWrapSysex(const IMWrapControlEvent &event) {
             << " cmd=" << static_cast<int>(event.hookCommand)
             << " value=" << static_cast<int>(event.value);
         break;
-    case IMWrapSysexType::Marker:
-        oss << " text=\"" << event.markerText << "\"";
+    case IMWrapSysexType::Marker: {
+        const std::vector<uint8_t> markerBytes = MarkerBytesForEvent(event);
+        if (markerBytes.size() == 1) {
+            oss << " value=" << static_cast<int>(markerBytes[0]);
+        } else if (markerBytes.empty()) {
+            oss << " value=<none>";
+        } else {
+            oss << " bytes=";
+            for (std::size_t i = 0; i < markerBytes.size(); ++i) {
+                if (i > 0) {
+                    oss << ",";
+                }
+                AppendHexByte(oss, markerBytes[i]);
+            }
+        }
         break;
+    }
     case IMWrapSysexType::SetLoop:
         oss << " count=" << event.loopCount
             << " to=" << event.loopToBeat << ":" << event.loopToTick
@@ -611,6 +653,8 @@ bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *ou
     out->transpose = 0;
     out->detune = 0;
     out->signedValue = 0;
+    out->markerBytes.clear();
+    out->markerText.clear();
 
     int p1, p2, p3, p4, p5, p6, p7;
     char s1[256];
@@ -664,12 +708,21 @@ bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *ou
         out->hasChannel = true; out->channel = p1; out->hookCommand = p2; out->value = p3;
         return true;
     }
+    if (sscanf(desc.c_str(), "marker value=%d", &p1) == 1) {
+        if (p1 < 0 || p1 > 255) {
+            return false;
+        }
+        out->type = IMWrapSysexType::Marker;
+        out->markerBytes.push_back(static_cast<uint8_t>(p1));
+        return true;
+    }
     if (desc.find("marker text=\"") == 0) {
         out->type = IMWrapSysexType::Marker;
         size_t start = desc.find_first_of('"');
         size_t end = desc.find_last_of('"');
         if (start != std::string::npos && end != std::string::npos && end > start) {
             out->markerText = desc.substr(start + 1, end - start - 1);
+            out->markerBytes = LegacyMarkerTextToBytes(out->markerText);
         }
         return true;
     }

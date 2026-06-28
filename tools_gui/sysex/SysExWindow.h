@@ -74,7 +74,7 @@ private:
     QSpinBox *hookValueSpin;
     
     // Marker
-    QLineEdit *markerTextEdit;
+    QSpinBox *markerValueSpin;
     
     // Loop
     QSpinBox *loopCountSpin;

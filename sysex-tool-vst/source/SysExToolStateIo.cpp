@@ -1,12 +1,14 @@
 #include "SysExToolStateIo.h"
 
+#include <algorithm>
+
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/base/ibstream.h"
 
 namespace imwrap::vst3tool {
 namespace {
 
-constexpr Steinberg::int32 kStateVersion = 2;
+constexpr Steinberg::int32 kStateVersion = 4;
 
 bool ReadBool(Steinberg::IBStreamer& streamer, bool* value) {
     Steinberg::int32 raw = 0;
@@ -42,6 +44,9 @@ bool ReadState(Steinberg::IBStream* stream, SysExToolState* out) {
     }
 
     SysExToolState state;
+    if (version < 3 && messageType >= static_cast<Steinberg::int32>(MessageType::Marker)) {
+        ++messageType;
+    }
     state.messageType = static_cast<MessageType>(messageType);
 
     const bool ok = (version >= 2 ? streamer.readInt32(state.midiOutDeviceIndex)
@@ -67,6 +72,8 @@ bool ReadState(Steinberg::IBStream* stream, SysExToolState* out) {
            streamer.readInt32(state.targetBeat) &&
            streamer.readInt32(state.targetTick) &&
            streamer.readInt32(state.hookValue) &&
+           (version >= 3 ? streamer.readInt32(state.markerValue)
+                         : ((state.markerValue = 0), true)) &&
            streamer.readInt32(state.loopCount) &&
            streamer.readInt32(state.loopToBeat) &&
            streamer.readInt32(state.loopToTick) &&
@@ -75,6 +82,10 @@ bool ReadState(Steinberg::IBStream* stream, SysExToolState* out) {
            streamer.readInt32(state.instrument);
     if (!ok) {
         return false;
+    }
+
+    if (version < 4) {
+        state.pan = std::max(-64, std::min(63, state.pan - 64));
     }
 
     *out = state;
@@ -111,6 +122,7 @@ bool WriteState(Steinberg::IBStream* stream, const SysExToolState& state) {
            streamer.writeInt32(state.targetBeat) &&
            streamer.writeInt32(state.targetTick) &&
            streamer.writeInt32(state.hookValue) &&
+           streamer.writeInt32(state.markerValue) &&
            streamer.writeInt32(state.loopCount) &&
            streamer.writeInt32(state.loopToBeat) &&
            streamer.writeInt32(state.loopToTick) &&

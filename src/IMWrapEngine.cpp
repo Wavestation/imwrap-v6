@@ -2248,8 +2248,14 @@ bool IMWrapEngine::executeControlEvent(uint16_t soundId, const IMWrapControlEven
         }
         return true;
     case IMWrapSysexType::Marker:
-        for (unsigned char marker : event.markerText) {
-            handleMarker(soundId, static_cast<uint8_t>(marker));
+        if (!event.markerBytes.empty()) {
+            for (uint8_t marker : event.markerBytes) {
+                handleMarker(soundId, marker);
+            }
+        } else {
+            for (unsigned char marker : event.markerText) {
+                handleMarker(soundId, static_cast<uint8_t>(marker));
+            }
         }
         return true;
     case IMWrapSysexType::SetLoop:

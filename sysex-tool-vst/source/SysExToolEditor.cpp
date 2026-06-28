@@ -48,6 +48,7 @@ constexpr int kTargetBeatEditId = 2117;
 constexpr int kTargetTickEditId = 2118;
 constexpr int kRelativeCheckId = 2119;
 constexpr int kHookValueEditId = 2120;
+constexpr int kMarkerValueEditId = 2127;
 constexpr int kLoopCountEditId = 2121;
 constexpr int kLoopToBeatEditId = 2122;
 constexpr int kLoopToTickEditId = 2123;
@@ -66,6 +67,7 @@ constexpr std::array<const wchar_t*, kMessageTypeCount> kMessageTypeNames = {
     L"Hook Set Volume (0x33)",
     L"Hook Set Program (0x34)",
     L"Hook Set Transpose (0x35)",
+    L"Marker (0x40)",
     L"Set Loop (0x50)",
     L"Clear Loop (0x51)",
     L"Set Instrument (0x60)",
@@ -338,7 +340,7 @@ void SysExToolEditorView::CreateControls() {
     reverbField_ = CreateCheckboxField(kReverbCheckId, L"Reverb", kReverbId);
     priorityField_ = CreateNumericField(kPriorityEditId, L"Priority:", kPriorityId, 0, 255);
     volumeField_ = CreateNumericField(kVolumeEditId, L"Volume:", kVolumeId, 0, 127);
-    panField_ = CreateNumericField(kPanEditId, L"Pan:", kPanId, 0, 127);
+    panField_ = CreateNumericField(kPanEditId, L"Pan (-64..63):", kPanId, -64, 63);
     percussionField_ = CreateCheckboxField(kPercussionCheckId, L"Percussion", kPercussionId);
     transposeField_ =
         CreateNumericField(kTransposeEditId, L"Transpose:", kTransposeId, -127, 127);
@@ -360,6 +362,8 @@ void SysExToolEditorView::CreateControls() {
     relativeField_ = CreateCheckboxField(kRelativeCheckId, L"Relative", kRelativeId);
     hookValueField_ =
         CreateNumericField(kHookValueEditId, L"Hook Value:", kHookValueId, -128, 255);
+    markerValueField_ =
+        CreateNumericField(kMarkerValueEditId, L"Marker Value:", kMarkerValueId, 0, 127);
     loopCountField_ =
         CreateNumericField(kLoopCountEditId, L"Loop Count:", kLoopCountId, 0, 65535);
     loopToBeatField_ =
@@ -487,6 +491,7 @@ void SysExToolEditorView::LayoutControls(int width, int height) {
     layoutVisibleNumeric(targetTickField_);
     layoutVisibleCheckbox(relativeField_);
     layoutVisibleNumeric(hookValueField_);
+    layoutVisibleNumeric(markerValueField_);
     layoutVisibleNumeric(loopCountField_);
     layoutVisibleNumeric(loopToBeatField_);
     layoutVisibleNumeric(loopToTickField_);
@@ -560,6 +565,7 @@ void SysExToolEditorView::SyncFromController() {
     SyncNumericField(targetTickField_, state.targetTick);
     SyncCheckboxField(relativeField_, state.relative);
     SyncNumericField(hookValueField_, state.hookValue);
+    SyncNumericField(markerValueField_, state.markerValue);
     SyncNumericField(loopCountField_, state.loopCount);
     SyncNumericField(loopToBeatField_, state.loopToBeat);
     SyncNumericField(loopToTickField_, state.loopToTick);
@@ -603,6 +609,7 @@ void SysExToolEditorView::UpdateFieldVisibility() {
     SetFieldVisible(targetTickField_, false);
     SetFieldVisible(relativeField_, false);
     SetFieldVisible(hookValueField_, false);
+    SetFieldVisible(markerValueField_, false);
     SetFieldVisible(loopCountField_, false);
     SetFieldVisible(loopToBeatField_, false);
     SetFieldVisible(loopToTickField_, false);
@@ -662,6 +669,10 @@ void SysExToolEditorView::UpdateFieldVisibility() {
         SetFieldVisible(hookCommandField_, true);
         SetFieldVisible(relativeField_, true);
         SetFieldVisible(hookValueField_, true);
+        break;
+    case MessageType::Marker:
+        SetFieldVisible(unknownField_, true);
+        SetFieldVisible(markerValueField_, true);
         break;
     case MessageType::SetLoop:
         SetFieldVisible(unknownField_, true);
@@ -791,12 +802,13 @@ void SysExToolEditorView::TriggerSend() {
 }
 
 void SysExToolEditorView::ApplyAllPendingNumericFields(bool rewriteText) {
-    for (NumericField* field : std::array<NumericField*, 20>{
+    for (NumericField* field : std::array<NumericField*, 21>{
              &partField_,        &channelField_,      &unknownField_,     &priorityField_,
              &volumeField_,      &panField_,          &transposeField_,   &detuneField_,
              &pitchbendField_,   &programField_,      &paramField_,       &paramValueField_,
              &hookCommandField_, &targetTrackField_,  &targetBeatField_,  &targetTickField_,
-             &hookValueField_,   &loopCountField_,    &loopToBeatField_,  &loopToTickField_,
+             &hookValueField_,   &markerValueField_,  &loopCountField_,   &loopToBeatField_,
+             &loopToTickField_,
          }) {
         CommitNumericField(*field, rewriteText);
     }
@@ -904,13 +916,13 @@ SysExToolEditorView::CheckboxField SysExToolEditorView::CreateCheckboxField(
 
 SysExToolEditorView::NumericField* SysExToolEditorView::FindNumericFieldByControlId(
     int controlId) {
-    for (NumericField* field : std::array<NumericField*, 23>{
+    for (NumericField* field : std::array<NumericField*, 24>{
              &partField_,        &channelField_,       &unknownField_,      &priorityField_,
              &volumeField_,      &panField_,           &transposeField_,    &detuneField_,
              &pitchbendField_,   &programField_,       &paramField_,        &paramValueField_,
              &hookCommandField_, &targetTrackField_,   &targetBeatField_,   &targetTickField_,
-             &hookValueField_,   &loopCountField_,     &loopToBeatField_,   &loopToTickField_,
-             &loopFromBeatField_, &loopFromTickField_, &instrumentField_,
+             &hookValueField_,   &markerValueField_,   &loopCountField_,    &loopToBeatField_,
+             &loopToTickField_,  &loopFromBeatField_,  &loopFromTickField_, &instrumentField_,
          }) {
         if (field->edit && GetDlgCtrlID(field->edit) == controlId) {
             return field;

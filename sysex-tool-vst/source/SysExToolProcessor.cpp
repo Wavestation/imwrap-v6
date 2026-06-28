@@ -285,7 +285,7 @@ bool SysExToolProcessor::ApplyParameterChanges(Steinberg::Vst::IParameterChanges
         case kReverbId: state_.reverb = DenormalizeBool(normalizedValue); break;
         case kPriorityId: state_.priority = DenormalizeInt(normalizedValue, 0, 255); break;
         case kVolumeId: state_.volume = DenormalizeInt(normalizedValue, 0, 127); break;
-        case kPanId: state_.pan = DenormalizeInt(normalizedValue, 0, 127); break;
+        case kPanId: state_.pan = DenormalizeInt(normalizedValue, -64, 63); break;
         case kPercussionId: state_.percussion = DenormalizeBool(normalizedValue); break;
         case kTransposeId: state_.transpose = DenormalizeInt(normalizedValue, -127, 127); break;
         case kDetuneId: state_.detune = DenormalizeInt(normalizedValue, -128, 127); break;
@@ -301,6 +301,7 @@ bool SysExToolProcessor::ApplyParameterChanges(Steinberg::Vst::IParameterChanges
         case kTargetTickId: state_.targetTick = DenormalizeInt(normalizedValue, 0, 65535); break;
         case kRelativeId: state_.relative = DenormalizeBool(normalizedValue); break;
         case kHookValueId: state_.hookValue = DenormalizeInt(normalizedValue, -128, 255); break;
+        case kMarkerValueId: state_.markerValue = DenormalizeInt(normalizedValue, 0, 127); break;
         case kLoopCountId: state_.loopCount = DenormalizeInt(normalizedValue, 0, 65535); break;
         case kLoopToBeatId: state_.loopToBeat = DenormalizeInt(normalizedValue, 0, 65535); break;
         case kLoopToTickId: state_.loopToTick = DenormalizeInt(normalizedValue, 0, 65535); break;

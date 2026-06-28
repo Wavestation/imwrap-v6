@@ -94,6 +94,7 @@ struct IMWrapControlEvent {
     uint16_t loopFromTick = 0;
     uint16_t instrument = 0;
 
+    std::vector<uint8_t> markerBytes;
     std::string markerText;
     std::vector<uint8_t> rawMessage;
     std::vector<uint8_t> decodedBytes;

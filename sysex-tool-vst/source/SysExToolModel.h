@@ -19,12 +19,13 @@ enum class MessageType : std::int32_t {
     HookSetVolume,
     HookSetProgram,
     HookSetTranspose,
+    Marker,
     SetLoop,
     ClearLoop,
     SetInstrument
 };
 
-constexpr std::int32_t kMessageTypeCount = 13;
+constexpr std::int32_t kMessageTypeCount = 14;
 
 struct SysExToolState {
     MessageType messageType = MessageType::AllocatePart;
@@ -40,7 +41,7 @@ struct SysExToolState {
 
     int priority = 90;
     int volume = 127;
-    int pan = 64;
+    int pan = 0;
     int transpose = 0;
     int detune = 0;
     int pitchbendFactor = 2;
@@ -53,6 +54,7 @@ struct SysExToolState {
     int targetBeat = 0;
     int targetTick = 0;
     int hookValue = 0;
+    int markerValue = 0;
 
     int loopCount = 0;
     int loopToBeat = 0;

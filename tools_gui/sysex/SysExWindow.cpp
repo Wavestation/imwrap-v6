@@ -82,7 +82,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     
     prioritySpin = makeSpin(0, 255, 90);
     volumeSpin = makeSpin(0, 127, 127);
-    panSpin = makeSpin(0, 128, 64);
+    panSpin = makeSpin(-64, 63, 0);
     transposeSpin = makeSpin(-127, 127, 0);
     detuneSpin = makeSpin(-128, 127, 0);
     pitchbendSpin = makeSpin(0, 255, 2);
@@ -100,8 +100,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     connect(hookRelativeCheck, &QCheckBox::stateChanged, this, &SysExWindow::updateGeneratedHex);
     hookValueSpin = makeSpin(-128, 127);
     
-    markerTextEdit = new QLineEdit("Intro");
-    connect(markerTextEdit, &QLineEdit::textChanged, this, &SysExWindow::updateGeneratedHex);
+    markerValueSpin = makeSpin(0, 127, 0);
     
     loopCountSpin = makeSpin(0, 65535);
     loopToBeatSpin = makeSpin(0, 65535);
@@ -123,7 +122,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     formLayout->addRow("", reverbCheck);
     formLayout->addRow("Priorité:", prioritySpin);
     formLayout->addRow("Volume:", volumeSpin);
-    formLayout->addRow("Panoramique:", panSpin);
+    formLayout->addRow("Panoramique (-64..63):", panSpin);
     formLayout->addRow("", percussionCheck);
     formLayout->addRow("Transposition:", transposeSpin);
     formLayout->addRow("Désaccordage:", detuneSpin);
@@ -140,7 +139,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     formLayout->addRow("", hookRelativeCheck);
     formLayout->addRow("Valeur Hook:", hookValueSpin);
     
-    formLayout->addRow("Texte Marqueur:", markerTextEdit);
+    formLayout->addRow("Valeur Marker (0-127):", markerValueSpin);
     
     formLayout->addRow("Nombre de Boucles:", loopCountSpin);
     formLayout->addRow("Aller à (Mesure):", loopToBeatSpin);
@@ -220,7 +219,7 @@ void SysExWindow::updateFieldVisibility() {
     setVisible(programSpin, false); setVisible(paramSpin, false); setVisible(paramValueSpin, false);
     setVisible(hookCmdSpin, false); setVisible(targetTrackSpin, false); setVisible(targetBeatSpin, false);
     setVisible(targetTickSpin, false); setVisible(hookRelativeCheck, false); setVisible(hookValueSpin, false);
-    setVisible(markerTextEdit, false); setVisible(loopCountSpin, false); setVisible(loopToBeatSpin, false);
+    setVisible(markerValueSpin, false); setVisible(loopCountSpin, false); setVisible(loopToBeatSpin, false);
     setVisible(loopToTickSpin, false); setVisible(loopFromBeatSpin, false); setVisible(loopFromTickSpin, false);
     setVisible(instrumentIdSpin, false); setVisible(adlibHexEdit, false);
 
@@ -256,7 +255,7 @@ void SysExWindow::updateFieldVisibility() {
     } else if (idx == 11) { // Hook Transpose
         setVisible(channelSpin, true); setVisible(hookCmdSpin, true); setVisible(hookRelativeCheck, true); setVisible(hookValueSpin, true);
     } else if (idx == 12) { // Marker
-        setVisible(unknownSpin, true); setVisible(markerTextEdit, true);
+        setVisible(unknownSpin, true); setVisible(markerValueSpin, true);
     } else if (idx == 13) { // Set Loop
         setVisible(unknownSpin, true); setVisible(loopCountSpin, true); setVisible(loopToBeatSpin, true); setVisible(loopToTickSpin, true);
         setVisible(loopFromBeatSpin, true); setVisible(loopFromTickSpin, true);
@@ -293,7 +292,7 @@ std::vector<uint8_t> SysExWindow::generateAllocatePart() {
     params.push_back(b0);
     params.push_back(prioritySpin->value() & 0xFF);
     params.push_back(volumeSpin->value() & 0xFF);
-    params.push_back(panSpin->value() & 0xFF);
+    params.push_back(static_cast<uint8_t>(static_cast<int8_t>(panSpin->value())));
     uint8_t b4 = (percussionCheck->isChecked() ? 0x80 : 0) | ((int8_t)transposeSpin->value() & 0x7F);
     params.push_back(b4);
     params.push_back((int8_t)detuneSpin->value());
@@ -359,9 +358,8 @@ void SysExWindow::updateGeneratedHex() {
         bytes = {0x7D, 0x35, static_cast<uint8_t>(channelSpin->value() & 0x0F)};
         bytes.insert(bytes.end(), nibs.begin(), nibs.end());
     } else if (idx == 12) { // Marker
-        bytes = {0x7D, 0x40, static_cast<uint8_t>(unknownSpin->value() & 0x7F)};
-        auto mTxt = markerTextEdit->text().toUtf8();
-        bytes.insert(bytes.end(), mTxt.begin(), mTxt.end());
+        bytes = {0x7D, 0x40, static_cast<uint8_t>(unknownSpin->value() & 0x7F),
+                 static_cast<uint8_t>(markerValueSpin->value() & 0x7F)};
     } else if (idx == 13) { // Set Loop
         auto nibs = encodeNibbles({static_cast<uint8_t>((loopCountSpin->value() >> 8) & 0xFF), static_cast<uint8_t>(loopCountSpin->value() & 0xFF),
                                    static_cast<uint8_t>((loopToBeatSpin->value() >> 8) & 0xFF), static_cast<uint8_t>(loopToBeatSpin->value() & 0xFF),
@@ -560,7 +558,7 @@ Cette commande configure et active une partie virtuelle (canal iMUSE). Elle init
 1. **Octet 0** : Bit 0 = Partie active (1=Oui, 0=Non) | Bit 1 = Reverb active (1=Oui, 0=Non).
 2. **Octet 1** : Priorité de la partie (0 à 255).
 3. **Octet 2** : Volume de la partie (0 à 127).
-4. **Octet 3** : Panoramique (0 à 127, centré à 64).
+4. **Octet 3** : Panoramique signée (-64 à +63, centrée à 0).
 5. **Octet 4** : Bit 7 = Percussion (1=Oui, 0=Non) | Bits 0-6 = Transposition (-127 à +127, encodée en complément à deux).
 6. **Octet 5** : Désaccordage (Detune, -128 à 127).
 7. **Octet 6** : Facteur de Pitch Bend (1 à 12 demi-tons).
@@ -584,9 +582,9 @@ F0 7D 30 [ID_Partie] [Nibbles de Commande, Piste, Mesure et Tick cible] F7
 ```
 
 ### E. Marker (`0x40`)
-Envoie un marqueur textuel au moteur de script du jeu pour lui notifier qu'un point précis de la musique a été atteint (ex: déclencher une animation ou un dialogue sur un battement précis).
+Envoie un marqueur numérique (un seul octet de donnée) au moteur de script du jeu pour lui notifier qu'un point précis de la musique a été atteint (ex: déclencher une animation ou un dialogue sur un battement précis).
 ```text
-F0 7D 40 [ID_Partie] [Texte du Marqueur en ASCII] F7
+F0 7D 40 [ID_Partie] [Valeur du Marker sur 1 octet] F7
 ```
 
 ### F. Set Loop (`0x50`) & Clear Loop (`0x51`)

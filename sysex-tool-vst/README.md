@@ -18,13 +18,13 @@ Current scope:
   - Hook Set Volume
   - Hook Set Program
   - Hook Set Transpose
+  - Marker (single-byte value)
   - Set Loop
   - Clear Loop
   - Set Instrument
 
 Not supported yet in this VSTi editor:
 
-- Marker text
 - AdLib register payloads
 - Full parity with the standalone desktop SysEx tool tabs and guide content
 

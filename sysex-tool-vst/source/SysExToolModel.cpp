@@ -25,6 +25,7 @@ const char* MessageTypeName(MessageType type) {
     case MessageType::HookSetVolume: return "Hook Set Volume";
     case MessageType::HookSetProgram: return "Hook Set Program";
     case MessageType::HookSetTranspose: return "Hook Set Transpose";
+    case MessageType::Marker: return "Marker";
     case MessageType::SetLoop: return "Set Loop";
     case MessageType::ClearLoop: return "Clear Loop";
     case MessageType::SetInstrument: return "Set Instrument";
@@ -81,7 +82,7 @@ bool BuildControlEvent(const SysExToolState& state, IMWrapControlEvent* out, std
         event.reverb = state.reverb;
         event.priority = static_cast<std::uint8_t>(Clamp(state.priority, 0, 255));
         event.volume = static_cast<std::uint8_t>(Clamp(state.volume, 0, 127));
-        event.pan = static_cast<std::int8_t>(Clamp(state.pan, 0, 127));
+        event.pan = static_cast<std::int8_t>(Clamp(state.pan, -64, 63));
         event.percussion = state.percussion;
         event.transpose = static_cast<std::int8_t>(Clamp(state.transpose, -127, 127));
         event.detune = static_cast<std::int8_t>(Clamp(state.detune, -128, 127));
@@ -156,6 +157,14 @@ bool BuildControlEvent(const SysExToolState& state, IMWrapControlEvent* out, std
         event.hookCommand = static_cast<std::uint8_t>(Clamp(state.hookCommand, 0, 255));
         event.relative = state.relative;
         event.signedValue = static_cast<std::int8_t>(Clamp(state.hookValue, -128, 127));
+        break;
+
+    case MessageType::Marker:
+        event.type = IMWrapSysexType::Marker;
+        event.unknown = static_cast<std::uint8_t>(Clamp(state.unknown, 0, 127));
+        event.markerBytes = {
+            static_cast<std::uint8_t>(Clamp(state.markerValue, 0, 127))
+        };
         break;
 
     case MessageType::SetLoop:

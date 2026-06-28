@@ -117,7 +117,7 @@ struct IMWrapSysExView: View {
     @State private var reverb: Bool = false
     @State private var priority: Int = 90
     @State private var volume: Int = 127
-    @State private var pan: Int = 64
+    @State private var pan: Int = 0
     @State private var percussion: Bool = false
     @State private var transpose: Int = 0
     @State private var detune: Int = 0
@@ -432,21 +432,21 @@ struct IMWrapSysExView: View {
             }.onChange(of: volume) { _ in updateGeneratedHex() }
             
             HStack {
-                Text("Panoramique (0-128):")
+                Text("Panoramique (-64..63):")
                 Spacer()
                 TextField("", value: $pan, format: .number)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 65)
                     .multilineTextAlignment(.trailing)
                     .onChange(of: pan) { newValue in
-                        if newValue < 0 { pan = 0 }
-                        else if newValue > 128 { pan = 128 }
+                        if newValue < -64 { pan = -64 }
+                        else if newValue > 63 { pan = 63 }
                         updateGeneratedHex()
                     }
-                Slider(value: Binding(get: { Double(pan) }, set: { pan = Int($0) }), in: 0...128)
+                Slider(value: Binding(get: { Double(pan) }, set: { pan = Int($0) }), in: -64...63)
                     .frame(width: 120)
             }.onChange(of: pan) { _ in updateGeneratedHex() }
-            Text(pan == 128 ? "128 (Défaut/Percussion)" : "\(pan)").font(.caption2).foregroundColor(.secondary)
+            Text("\(pan)").font(.caption2).foregroundColor(.secondary)
             
             Toggle("Percussion", isOn: $percussion)
                 .onChange(of: percussion) { _ in updateGeneratedHex() }
@@ -634,7 +634,7 @@ struct IMWrapSysExView: View {
         params.append(UInt8(b0))
         params.append(UInt8(priority & 0xFF))
         params.append(UInt8(volume & 0xFF))
-        params.append(UInt8(pan & 0xFF))
+        params.append(UInt8(bitPattern: Int8(pan)))
         
         let b4 = (percussion ? 0x80 : 0) | (UInt8(bitPattern: Int8(transpose)) & 0x7F)
         params.append(b4)
@@ -757,7 +757,7 @@ struct IMWrapSysExView: View {
             let reverb = (decBytes[0] & 0x02) != 0
             let priority = decBytes[1]
             let volume = decBytes[2]
-            let pan = decBytes[3]
+            let pan = Int(Int8(bitPattern: decBytes[3]))
             let percussion = (decBytes[4] & 0x80) != 0
             let transpose = Int8(bitPattern: decBytes[4] & 0x7F)
             let detune = Int8(bitPattern: decBytes[5])
@@ -771,7 +771,7 @@ struct IMWrapSysExView: View {
                 ("Reverb", "\(reverb)"),
                 ("Priorité", "\(priority)"),
                 ("Volume", "\(volume)"),
-                ("Panoramique", pan == 128 ? "128 (Par défaut / Percussions)" : "\(pan)"),
+                ("Panoramique", "\(pan)"),
                 ("Percussion", "\(percussion)"),
                 ("Transposition", "\(transpose)"),
                 ("Detune", "\(detune)"),
