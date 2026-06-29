@@ -93,7 +93,7 @@ void PackerWindow::setupUi() {
     // Left: Sound list
     auto *leftWidget = new QWidget();
     auto *leftLayout = new QVBoxLayout(leftWidget);
-    leftLayout->addWidget(new QLabel("Sons:"));
+    leftLayout->addWidget(new QLabel("Sounds:"));
     soundList = new QListWidget();
     connect(soundList, &QListWidget::itemSelectionChanged, this, &PackerWindow::onSoundSelected);
     leftLayout->addWidget(soundList);
@@ -117,14 +117,14 @@ void PackerWindow::setupUi() {
     soundPropsWidget = new QWidget();
     auto *soundPropsLayout = new QHBoxLayout(soundPropsWidget);
     soundPropsLayout->setContentsMargins(0, 0, 0, 0);
-    soundPropsLayout->addWidget(new QLabel("Nom:"));
+    soundPropsLayout->addWidget(new QLabel("Name:"));
     soundNameEdit = new QLineEdit();
     soundPropsLayout->addWidget(soundNameEdit);
     soundPropsLayout->addWidget(new QLabel("ID:"));
     soundIdSpin = new QSpinBox();
     soundIdSpin->setRange(0, 65535);
     soundPropsLayout->addWidget(soundIdSpin);
-    applyBtn = new QPushButton("Appliquer Modif. Son");
+    applyBtn = new QPushButton("Apply Sound Changes");
     connect(applyBtn, &QPushButton::clicked, this, &PackerWindow::applySoundChanges);
     soundPropsLayout->addWidget(applyBtn);
     rightLayout->addWidget(soundPropsWidget);
@@ -138,13 +138,13 @@ void PackerWindow::setupUi() {
     rightLayout->addWidget(variantKindCombo);
 
     // Variant Editor
-    auto *variantBox = new QGroupBox("Edition Variante");
+    auto *variantBox = new QGroupBox("Variant Editing");
     auto *vLayout = new QVBoxLayout(variantBox);
     
-    includeVariantCheck = new QCheckBox("Inclure cette variante");
+    includeVariantCheck = new QCheckBox("Include this variant");
     vLayout->addWidget(includeVariantCheck);
 
-    includeMdhdCheck = new QCheckBox("Inclure MDhd");
+    includeMdhdCheck = new QCheckBox("Include MDhd");
     vLayout->addWidget(includeMdhdCheck);
 
     auto *mdhdLayout = new QFormLayout();
@@ -154,16 +154,16 @@ void PackerWindow::setupUi() {
     transposeSpin = new QSpinBox(); transposeSpin->setRange(-128, 127);
     detuneSpin = new QSpinBox(); detuneSpin->setRange(-128, 127);
     speedSpin = new QSpinBox(); speedSpin->setRange(0, 255);
-    mdhdLayout->addRow("Priorité:", prioritySpin);
+    mdhdLayout->addRow("Priority:", prioritySpin);
     mdhdLayout->addRow("Volume:", volumeSpin);
-    mdhdLayout->addRow("Panoramique:", panSpin);
+    mdhdLayout->addRow("Pan:", panSpin);
     mdhdLayout->addRow("Transpose:", transposeSpin);
     mdhdLayout->addRow("Detune:", detuneSpin);
     mdhdLayout->addRow("Speed:", speedSpin);
     vLayout->addLayout(mdhdLayout);
 
     tracksTable = new QTableWidget(0, 3);
-    tracksTable->setHorizontalHeaderLabels({"Nom", "Source", "Evénements"});
+    tracksTable->setHorizontalHeaderLabels({"Name", "Source", "Events"});
     tracksTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     tracksTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     tracksTable->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -173,20 +173,20 @@ void PackerWindow::setupUi() {
     });
     vLayout->addWidget(tracksTable);
     
-    importBtn = new QPushButton("Importer MIDI...");
+    importBtn = new QPushButton("Import MIDI...");
     connect(importBtn, &QPushButton::clicked, this, &PackerWindow::importMidi);
     vLayout->addWidget(importBtn);
 
     auto *trackBtnLayout = new QHBoxLayout();
-    deleteTrackBtn = new QPushButton("Supprimer la piste");
+    deleteTrackBtn = new QPushButton("Delete Track");
     connect(deleteTrackBtn, &QPushButton::clicked, this, &PackerWindow::deleteTrack);
     trackBtnLayout->addWidget(deleteTrackBtn);
 
-    moveUpBtn = new QPushButton("Monter");
+    moveUpBtn = new QPushButton("Move Up");
     connect(moveUpBtn, &QPushButton::clicked, this, &PackerWindow::moveTrackUp);
     trackBtnLayout->addWidget(moveUpBtn);
 
-    moveDownBtn = new QPushButton("Descendre");
+    moveDownBtn = new QPushButton("Move Down");
     connect(moveDownBtn, &QPushButton::clicked, this, &PackerWindow::moveTrackDown);
     trackBtnLayout->addWidget(moveDownBtn);
 
@@ -199,18 +199,18 @@ void PackerWindow::setupUi() {
 
     layout->addWidget(splitter);
 
-    statusLabel = new QLabel("Nouveau projet.");
+    statusLabel = new QLabel("New project.");
     layout->addWidget(statusLabel);
 
     // Menu bar
-    auto *fileMenu = menuBar()->addMenu("&Fichier");
-    auto *newAct = fileMenu->addAction("&Nouveau Projet", this, &PackerWindow::newProject);
+    auto *fileMenu = menuBar()->addMenu("&File");
+    auto *newAct = fileMenu->addAction("&New Project", this, &PackerWindow::newProject);
     newAct->setShortcut(QKeySequence::New);
-    auto *openAct = fileMenu->addAction("&Ouvrir...", this, &PackerWindow::openProject);
+    auto *openAct = fileMenu->addAction("&Open...", this, &PackerWindow::openProject);
     openAct->setShortcut(QKeySequence::Open);
-    auto *saveAct = fileMenu->addAction("&Enregistrer", this, &PackerWindow::saveProject);
+    auto *saveAct = fileMenu->addAction("&Save", this, &PackerWindow::saveProject);
     saveAct->setShortcut(QKeySequence::Save);
-    auto *saveAsAct = fileMenu->addAction("Enregistrer &Sous...", this, &PackerWindow::saveProjectAs);
+    auto *saveAsAct = fileMenu->addAction("Save &As...", this, &PackerWindow::saveProjectAs);
     saveAsAct->setShortcut(QKeySequence::SaveAs);
     
     updateVariantUi();
@@ -220,12 +220,12 @@ void PackerWindow::newProject() {
     projectSounds.clear();
     soundList->clear();
     currentFilePath = "";
-    statusLabel->setText("Nouveau projet.");
+    statusLabel->setText("New project.");
     updateVariantUi();
 }
 
 void PackerWindow::openProject() {
-    QString path = QFileDialog::getOpenFileName(this, "Ouvrir", "", "Fichiers iMWrap (*.ims)");
+    QString path = QFileDialog::getOpenFileName(this, "Open", "", "iMWrap Files (*.ims)");
     if (!path.isEmpty()) {
         loadImsToModel(path.toStdString());
         currentFilePath = path;
@@ -241,7 +241,7 @@ void PackerWindow::saveProject() {
 }
 
 void PackerWindow::saveProjectAs() {
-    QString path = QFileDialog::getSaveFileName(this, "Enregistrer Sous", "banque.ims", "Fichiers iMWrap (*.ims)");
+    QString path = QFileDialog::getSaveFileName(this, "Save As", "bank.ims", "iMWrap Files (*.ims)");
     if (!path.isEmpty()) {
         currentFilePath = path;
         saveModelToIms(path.toStdString());
@@ -252,7 +252,7 @@ void PackerWindow::loadImsToModel(const std::string &path) {
     imwrap::ResourceBank bank;
     std::string err;
     if (!bank.openFromFile(path, &err)) {
-        statusLabel->setText(QString("Erreur d'ouverture: %1").arg(QString::fromStdString(err)));
+        statusLabel->setText(QString("Open error: %1").arg(QString::fromStdString(err)));
         return;
     }
 
@@ -287,8 +287,8 @@ void PackerWindow::loadImsToModel(const std::string &path) {
                     int tIdx = 0;
                     for (const auto &trk : seq.tracks) {
                         ProjectTrack pt;
-                        pt.name = "Piste " + std::to_string(tIdx++);
-                        pt.sourceFileName = "Importé";
+                        pt.name = "Track " + std::to_string(tIdx++);
+                        pt.sourceFileName = "Imported";
                         pt.events = trk.events;
                         pv.tracks.push_back(pt);
                     }
@@ -305,7 +305,7 @@ void PackerWindow::loadImsToModel(const std::string &path) {
         item->setData(Qt::UserRole, ps.id);
         soundList->addItem(item);
     }
-    statusLabel->setText(QString("Projet chargé: %1 sons").arg(projectSounds.size()));
+    statusLabel->setText(QString("Project loaded: %1 sounds").arg(projectSounds.size()));
 }
 
 void PackerWindow::saveModelToIms(const std::string &path) {
@@ -334,7 +334,7 @@ void PackerWindow::saveModelToIms(const std::string &path) {
             
             std::string err;
             if (!imwrap::SmfSerializer::Serialize(seq, &vs.smfData, &err)) {
-                QMessageBox::warning(this, "Erreur", QString::fromStdString("Erreur sérialisation SMF: " + err));
+                QMessageBox::warning(this, "Error", QString::fromStdString("SMF serialization error: " + err));
                 return;
             }
             sbi.variants.push_back(vs);
@@ -345,9 +345,9 @@ void PackerWindow::saveModelToIms(const std::string &path) {
     imwrap::ImsWriter writer;
     std::string err;
     if (writer.writeFile(path, inputs, &err)) {
-        statusLabel->setText(QString("Projet sauvegardé: %1").arg(QString::fromStdString(path)));
+        statusLabel->setText(QString("Project saved: %1").arg(QString::fromStdString(path)));
     } else {
-        QMessageBox::critical(this, "Erreur", QString::fromStdString("Erreur sauvegarde: " + err));
+        QMessageBox::critical(this, "Error", QString::fromStdString("Save error: " + err));
     }
 }
 
@@ -358,7 +358,7 @@ void PackerWindow::addSound() {
     }
     ProjectSound ps;
     ps.id = newId;
-    ps.name = "NouveauSon";
+    ps.name = "NewSound";
     projectSounds.push_back(ps);
     
     QListWidgetItem *item = new QListWidgetItem(formatSoundLabel(ps));
@@ -505,7 +505,7 @@ void PackerWindow::importMidi() {
     uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
     imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
     
-    QStringList paths = QFileDialog::getOpenFileNames(this, "Importer MIDI", "", "Fichiers MIDI (*.mid *.midi)");
+    QStringList paths = QFileDialog::getOpenFileNames(this, "Import MIDI", "", "MIDI Files (*.mid *.midi)");
     if (paths.isEmpty()) return;
     
     for (auto &ps : projectSounds) {
@@ -535,7 +535,7 @@ void PackerWindow::importMidi() {
                 imwrap::SmfSequence seq;
                 std::string err;
                 if (!imwrap::SmfParser::Parse(imwrap::ByteView(data.data(), data.size()), &seq, &err)) {
-                    QMessageBox::warning(this, "Erreur", QString::fromStdString("Fichier MIDI invalide (" + path.toStdString() + "): " + err));
+                    QMessageBox::warning(this, "Error", QString::fromStdString("Invalid MIDI file (" + path.toStdString() + "): " + err));
                     continue;
                 }
                 

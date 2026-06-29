@@ -35,9 +35,9 @@ void SysExWindow::setupUi() {
     auto *mainLayout = new QVBoxLayout(central);
 
     auto *tabs = new QTabWidget(this);
-    tabs->addTab(createGeneratorTab(), "Générateur de SysEx");
-    tabs->addTab(createDecoderTab(), "Décodeur de SysEx");
-    tabs->addTab(createGuideTab(), "Guide du Compositeur");
+    tabs->addTab(createGeneratorTab(), "SysEx Generator");
+    tabs->addTab(createDecoderTab(), "SysEx Decoder");
+    tabs->addTab(createGuideTab(), "Composer's Guide");
     mainLayout->addWidget(tabs);
 }
 
@@ -46,7 +46,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     auto *layout = new QHBoxLayout(widget);
 
     // Left Column: Parameters
-    auto *leftBox = new QGroupBox("Type de Message iMWrap");
+    auto *leftBox = new QGroupBox("iMWrap Message Type");
     formLayout = new QFormLayout(leftBox);
 
     typeCombo = new QComboBox();
@@ -73,9 +73,9 @@ QWidget* SysExWindow::createGeneratorTab() {
     channelSpin = makeSpin(0, 15);
     unknownSpin = makeSpin(0, 127);
     
-    partOnCheck = new QCheckBox("Partie Active"); partOnCheck->setChecked(true);
+    partOnCheck = new QCheckBox("Part Enabled"); partOnCheck->setChecked(true);
     connect(partOnCheck, &QCheckBox::stateChanged, this, &SysExWindow::updateGeneratedHex);
-    reverbCheck = new QCheckBox("Reverb Active");
+    reverbCheck = new QCheckBox("Reverb Enabled");
     connect(reverbCheck, &QCheckBox::stateChanged, this, &SysExWindow::updateGeneratedHex);
     percussionCheck = new QCheckBox("Percussion");
     connect(percussionCheck, &QCheckBox::stateChanged, this, &SysExWindow::updateGeneratedHex);
@@ -96,7 +96,7 @@ QWidget* SysExWindow::createGeneratorTab() {
     targetBeatSpin = makeSpin(0, 65535);
     targetTickSpin = makeSpin(0, 65535);
     
-    hookRelativeCheck = new QCheckBox("Transposition Relative");
+    hookRelativeCheck = new QCheckBox("Relative Transposition");
     connect(hookRelativeCheck, &QCheckBox::stateChanged, this, &SysExWindow::updateGeneratedHex);
     hookValueSpin = makeSpin(-128, 127);
     
@@ -115,45 +115,45 @@ QWidget* SysExWindow::createGeneratorTab() {
     connect(adlibHexEdit, &QTextEdit::textChanged, this, &SysExWindow::updateGeneratedHex);
 
     formLayout->addRow("Part (0-15):", partSpin);
-    formLayout->addRow("Canal MIDI (0-15):", channelSpin);
+    formLayout->addRow("MIDI Channel (0-15):", channelSpin);
     formLayout->addRow("Unknown (0-127):", unknownSpin);
     
     formLayout->addRow("", partOnCheck);
     formLayout->addRow("", reverbCheck);
-    formLayout->addRow("Priorité:", prioritySpin);
+    formLayout->addRow("Priority:", prioritySpin);
     formLayout->addRow("Volume:", volumeSpin);
-    formLayout->addRow("Panoramique (-64..63):", panSpin);
+    formLayout->addRow("Pan (-64..63):", panSpin);
     formLayout->addRow("", percussionCheck);
-    formLayout->addRow("Transposition:", transposeSpin);
-    formLayout->addRow("Désaccordage:", detuneSpin);
+    formLayout->addRow("Transpose:", transposeSpin);
+    formLayout->addRow("Detune:", detuneSpin);
     formLayout->addRow("Pitchbend Factor:", pitchbendSpin);
-    formLayout->addRow("Programme:", programSpin);
+    formLayout->addRow("Program:", programSpin);
     
-    formLayout->addRow("Paramètre:", paramSpin);
-    formLayout->addRow("Valeur:", paramValueSpin);
+    formLayout->addRow("Parameter:", paramSpin);
+    formLayout->addRow("Value:", paramValueSpin);
     
-    formLayout->addRow("Commande Hook:", hookCmdSpin);
-    formLayout->addRow("Piste cible:", targetTrackSpin);
-    formLayout->addRow("Mesure cible:", targetBeatSpin);
-    formLayout->addRow("Tick cible:", targetTickSpin);
+    formLayout->addRow("Hook Command:", hookCmdSpin);
+    formLayout->addRow("Target Track:", targetTrackSpin);
+    formLayout->addRow("Target Beat:", targetBeatSpin);
+    formLayout->addRow("Target Tick:", targetTickSpin);
     formLayout->addRow("", hookRelativeCheck);
-    formLayout->addRow("Valeur Hook:", hookValueSpin);
+    formLayout->addRow("Hook Value:", hookValueSpin);
     
-    formLayout->addRow("Valeur Marker (0-127):", markerValueSpin);
+    formLayout->addRow("Marker Value (0-127):", markerValueSpin);
     
-    formLayout->addRow("Nombre de Boucles:", loopCountSpin);
-    formLayout->addRow("Aller à (Mesure):", loopToBeatSpin);
-    formLayout->addRow("Aller à (Tick):", loopToTickSpin);
-    formLayout->addRow("Depuis (Mesure):", loopFromBeatSpin);
-    formLayout->addRow("Depuis (Tick):", loopFromTickSpin);
+    formLayout->addRow("Loop Count:", loopCountSpin);
+    formLayout->addRow("Jump to (Beat):", loopToBeatSpin);
+    formLayout->addRow("Jump to (Tick):", loopToTickSpin);
+    formLayout->addRow("From (Beat):", loopFromBeatSpin);
+    formLayout->addRow("From (Tick):", loopFromTickSpin);
     
     formLayout->addRow("Instrument ID:", instrumentIdSpin);
-    formLayout->addRow("Registres AdLib:", adlibHexEdit);
+    formLayout->addRow("AdLib Registers:", adlibHexEdit);
 
     layout->addWidget(leftBox, 1);
 
     // Right Column: Output
-    auto *rightBox = new QGroupBox("SysEx iMWrap Généré");
+    auto *rightBox = new QGroupBox("Generated iMWrap SysEx");
     auto *rightLayout = new QVBoxLayout(rightBox);
 
     generatedHexDisplay = new QTextEdit();
@@ -161,19 +161,19 @@ QWidget* SysExWindow::createGeneratorTab() {
     generatedHexDisplay->setStyleSheet("font-family: monospace; font-weight: bold; color: purple; font-size: 14pt;");
     rightLayout->addWidget(generatedHexDisplay);
 
-    auto *copyBtn = new QPushButton("Copier dans le presse-papiers");
+    auto *copyBtn = new QPushButton("Copy to Clipboard");
     connect(copyBtn, &QPushButton::clicked, this, &SysExWindow::copyToClipboard);
     rightLayout->addWidget(copyBtn);
 
     // Direct MIDI Out GroupBox
-    auto *midiBox = new QGroupBox("Envoi MIDI Direct");
+    auto *midiBox = new QGroupBox("Direct MIDI Send");
     auto *midiLayout = new QFormLayout(midiBox);
     
     midiCombo = new QComboBox();
-    midiLayout->addRow("Périphérique :", midiCombo);
+    midiLayout->addRow("Device:", midiCombo);
     connect(midiCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SysExWindow::onMidiDeviceChanged);
     
-    sendMidiBtn = new QPushButton("Envoyer le SysEx");
+    sendMidiBtn = new QPushButton("Send SysEx");
     connect(sendMidiBtn, &QPushButton::clicked, this, &SysExWindow::sendMidiSysEx);
     midiLayout->addRow("", sendMidiBtn);
     
@@ -187,13 +187,13 @@ QWidget* SysExWindow::createDecoderTab() {
     auto *widget = new QWidget();
     auto *layout = new QVBoxLayout(widget);
     
-    auto *inputBox = new QGroupBox("Saisie du Message Hexadécimal");
+    auto *inputBox = new QGroupBox("Hexadecimal Message Input");
     auto *inputLayout = new QVBoxLayout(inputBox);
     hexInput = new QTextEdit();
     connect(hexInput, &QTextEdit::textChanged, this, &SysExWindow::parseHex);
     inputLayout->addWidget(hexInput);
     
-    decoderOutput = new QLabel("Collez un SysEx hexadécimal ci-dessus pour afficher le décodage détaillé.");
+    decoderOutput = new QLabel("Paste a SysEx hex message above to view detailed decoding.");
     decoderOutput->setWordWrap(true);
     decoderOutput->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     decoderOutput->setStyleSheet("font-family: monospace;");
@@ -390,13 +390,13 @@ void SysExWindow::updateGeneratedHex() {
 void SysExWindow::parseHex() {
     QString text = hexInput->toPlainText().simplified().remove(" ");
     if (text.isEmpty()) {
-        decoderOutput->setText("Collez un SysEx hexadécimal ci-dessus.");
+        decoderOutput->setText("Paste a SysEx hex message above.");
         return;
     }
     
     auto bytes = parseHexBytes(text);
     if (bytes.size() < 2) {
-        decoderOutput->setText("Message trop court.");
+        decoderOutput->setText("Message too short.");
         return;
     }
     
@@ -406,19 +406,19 @@ void SysExWindow::parseHex() {
     
     std::vector<uint8_t> payload(bytes.begin() + start, bytes.begin() + end);
     if (payload.empty() || payload[0] != 0x7D) {
-        decoderOutput->setText("ID manufacturier de compatibilité absent (valeur attendue : 7D).");
+        decoderOutput->setText("Missing compatibility manufacturer ID (expected: 7D).");
         return;
     }
     
     imwrap::IMWrapControlEvent event;
     std::string err;
     if (!imwrap::DecodeIMWrapSysex(imwrap::ByteView(payload.data(), payload.size()), &event, &err)) {
-        decoderOutput->setText(QString("Erreur de décodage: %1").arg(QString::fromStdString(err)));
+        decoderOutput->setText(QString("Decoding error: %1").arg(QString::fromStdString(err)));
         return;
     }
     
     QString desc = QString::fromStdString(imwrap::DescribeIMWrapSysex(event));
-    decoderOutput->setText("Décodage réussi:\n\n" + desc);
+    decoderOutput->setText("Decoding successful:\n\n" + desc);
 }
 
 void SysExWindow::copyToClipboard() {
@@ -428,7 +428,7 @@ void SysExWindow::copyToClipboard() {
 void SysExWindow::populateMidiDevices() {
     if (!midiCombo) return;
     midiCombo->clear();
-    midiCombo->addItem("Aucun (Désactivé)");
+    midiCombo->addItem("None (Disabled)");
 
 #ifdef Q_OS_WIN
     UINT numDevs = midiOutGetNumDevs();
@@ -524,117 +524,117 @@ QWidget* SysExWindow::createGuideTab() {
         "}"
     );
 
-    const char* markdownText = R"MARKDOWN(# Guide du Compositeur iMWrap
-## Intégration et Utilisation des Messages SysEx dans MOTU Digital Performer
+    const char* markdownText = R"MARKDOWN(# iMWrap Composer Guide
+## Integration and Usage of SysEx Messages in MOTU Digital Performer
 
-Ce guide est destiné aux compositeurs et concepteurs sonores qui intègrent des instructions interactives **iMUSE** dans leurs séquences MIDI de jeux d'aventure (comme dans les moteurs de jeux d'aventure utilisant la librairie `imwrap-v6` ou ScummVM). Il détaille la structure des messages SysEx iMUSE, les principales commandes, et explique comment utiliser l'outil **Générateur de SysEx iMWrap** en le reliant à **MOTU Digital Performer (DP)** via **loopMIDI**.
+This guide is designed for composers and sound designers who integrate **iMUSE** interactive commands into their MIDI sequences for adventure games (such as those using adventure game engines with the `imwrap-v6` library or ScummVM). It details the structure of iMUSE SysEx messages, main commands, and explains how to use the **iMWrap SysEx Generator** tool by linking it to **MOTU Digital Performer (DP)** via **loopMIDI**.
 
 ---
 
-## 1. Comprendre la Structure des Messages SysEx iMUSE
+## 1. Understanding the Structure of iMUSE SysEx Messages
 
-Tous les messages iMUSE sont transmis sous la forme de messages système exclusifs (SysEx) standard MIDI.
+All iMUSE messages are transmitted as standard MIDI System Exclusive (SysEx) messages.
 
-### Format général d'un message iMUSE :
+### General format of an iMUSE message:
 ```text
-F0 7D [Code_Commande] [ID_Partie_Logique] [Données_en_Nibbles...] F7
+F0 7D [Command_Code] [Logical_Part_ID] [Nibbles_Data...] F7
 ```
 
-- **`F0`** : Indicateur de début de message exclusif.
-- **`7D`** : ID Manufacturier. iMUSE utilise l'ID standard `0x7D` (réservé aux projets éducatifs et de recherche) comme identifiant.
-- **`Code_Commande`** : Spécifie l'action à réaliser (ex: `0x00` pour Allocate Part).
-- **`ID_Partie_Logique`** : Identifie la partie (le canal virtuel/track de la séquence) ciblée par l'instruction. Les valeurs vont de `0x00` à `0x0F` (canaux 1 à 16).
-- **`Données_en_Nibbles`** : Les paramètres associés à la commande. iMUSE sépare chaque octet de données (8 bits) en **deux demi-octets (nibles de 4 bits)** transmis consécutivement (poids fort puis poids faible), chaque nibble occupant les 4 bits inférieurs d'un octet MIDI valide.
-  *Exemple* : Pour envoyer la valeur `0x5A` (90 en décimal), on transmettra deux octets : `0x05` suivi de `0x0A`.
-- **`F7`** : Indicateur de fin de message exclusif (EOX).
+- **`F0`**: Exclusive message start indicator.
+- **`7D`**: Manufacturer ID. iMUSE uses the standard ID `0x7D` (reserved for educational and research projects) as its identifier.
+- **`Command_Code`**: Specifies the action to perform (e.g., `0x00` for Allocate Part).
+- **`Logical_Part_ID`**: Identifies the part (the virtual channel/track of the sequence) targeted by the instruction. Values range from `0x00` to `0x0F` (channels 1 to 16).
+- **`Nibbles_Data`**: The parameters associated with the command. iMUSE splits each data byte (8-bit) into **two half-bytes (4-bit nibbles)** transmitted consecutively (most significant first, then least significant), with each nibble occupying the lower 4 bits of a valid MIDI byte.
+  *Example*: To send the value `0x5A` (90 in decimal), two bytes are transmitted: `0x05` followed by `0x0A`.
+- **`F7`**: End of Exclusive (EOX) indicator.
 
 ---
 
-## 2. Tableau des Commandes iMUSE les plus Courantes
+## 2. Table of Most Common iMUSE Commands
 
 ### A. Allocate Part (`0x00`)
-Cette commande configure et active une partie virtuelle (canal iMUSE). Elle initialise l'instrument, la priorité relative, le volume, la panoramique, la transposition et le comportement du pitch bend.
-*Format d'encodage des nibbles de paramètres (16 nibbles / 8 octets décodés)* :
-1. **Octet 0** : Bit 0 = Partie active (1=Oui, 0=Non) | Bit 1 = Reverb active (1=Oui, 0=Non).
-2. **Octet 1** : Priorité de la partie (0 à 255).
-3. **Octet 2** : Volume de la partie (0 à 127).
-4. **Octet 3** : Panoramique signée (-64 à +63, centrée à 0).
-5. **Octet 4** : Bit 7 = Percussion (1=Oui, 0=Non) | Bits 0-6 = Transposition (-127 à +127, encodée en complément à deux).
-6. **Octet 5** : Désaccordage (Detune, -128 à 127).
-7. **Octet 6** : Facteur de Pitch Bend (1 à 12 demi-tons).
-8. **Octet 7** : Numéro de programme (Instrument de base, 0 à 127).
+This command configures and activates a virtual part (iMUSE channel). It initializes the instrument, relative priority, volume, pan, transpose, and pitch bend behavior.
+*Parameter nibble encoding format (16 nibbles / 8 decoded bytes)*:
+1. **Byte 0**: Bit 0 = Part enabled (1=Yes, 0=No) | Bit 1 = Reverb enabled (1=Yes, 0=No).
+2. **Byte 1**: Part priority (0 to 255).
+3. **Byte 2**: Part volume (0 to 127).
+4. **Byte 3**: Signed pan (-64 to +63, centered at 0).
+5. **Byte 4**: Bit 7 = Percussion (1=Yes, 0=No) | Bits 0-6 = Transpose (-127 to +127, encoded in two's complement).
+6. **Byte 5**: Detune (-128 to 127).
+7. **Byte 6**: Pitch Bend Factor (1 to 12 semitones).
+8. **Byte 7**: Program number (Base instrument, 0 to 127).
 
-> *Note* : Notre moteur révisé applique dynamiquement toutes ces valeurs (volume, pan, etc.) et recharge le timbre personnalisé Roland MT-32 associé à la partie, même si celle-ci est déjà en cours de lecture.
+> *Note*: Our revised engine dynamically applies all these values (volume, pan, etc.) and reloads the custom Roland MT-32 timbre associated with the part, even if the part is already playing.
 
 ### B. Shutdown Part (`0x01`)
-Désactive et réinitialise une partie virtuelle. Elle éteint toutes les notes actives sur le canal physique associé.
+Deactivates and resets a virtual part. It turns off all active notes on the associated physical channel.
 ```text
-F0 7D 01 [ID_Partie] F7
+F0 7D 01 [Part_ID] F7
 ```
 
 ### C. Parameter Adjust (`0x21`)
-Modifie dynamiquement les paramètres iMUSE internes ou les contrôles MIDI standard pour une partie en cours de lecture.
+Dynamically changes internal iMUSE parameters or standard MIDI controls for a playing part.
 
 ### D. Hook Jump (`0x30`)
-Permet d'insérer un saut conditionnel (Smart Jump) dans la séquence de lecture MIDI. Le moteur de jeu peut déclencher cette transition à la fin d'une mesure ou d'un battement pour synchroniser la musique avec les actions du joueur.
+Allows inserting a conditional jump (Smart Jump) into the MIDI playback sequence. The game engine can trigger this transition at the end of a measure or beat to synchronize the music with player actions.
 ```text
-F0 7D 30 [ID_Partie] [Nibbles de Commande, Piste, Mesure et Tick cible] F7
+F0 7D 30 [Part_ID] [Target Command, Track, Measure, and Tick Nibbles] F7
 ```
 
 ### E. Marker (`0x40`)
-Envoie un marqueur numérique (un seul octet de donnée) au moteur de script du jeu pour lui notifier qu'un point précis de la musique a été atteint (ex: déclencher une animation ou un dialogue sur un battement précis).
+Sends a numeric marker (a single byte of data) to the game's script engine to notify it that a specific point in the music has been reached (e.g., to trigger an animation or dialogue on a specific beat).
 ```text
-F0 7D 40 [ID_Partie] [Valeur du Marker sur 1 octet] F7
+F0 7D 40 [Part_ID] [1-byte Marker Value] F7
 ```
 
 ### F. Set Loop (`0x50`) & Clear Loop (`0x51`)
-Définit ou annule une boucle de lecture dynamique sur une section de la séquence (indiquée en mesures et ticks).
+Defines or clears a dynamic playback loop on a section of the sequence (specified in measures and ticks).
 
 ---
 
-## 3. Configuration et Routage via loopMIDI
+## 3. Configuration and Routing via loopMIDI
 
-Pour simplifier la composition et tester en temps réel vos commandes SysEx directement dans votre projet de musique, vous pouvez relier l'outil **Générateur de SysEx iMWrap** à **Digital Performer** en passant par des câbles MIDI virtuels.
+To simplify composition and test your SysEx commands in real-time directly within your music project, you can connect the **iMWrap SysEx Generator** tool to **Digital Performer** using virtual MIDI cables.
 
-### Étape 1 : Créer le port virtuel dans loopMIDI
-1. Lancez le logiciel **loopMIDI**.
-2. Dans le panneau de configuration, cliquez sur le bouton `+` pour ajouter un nouveau port.
-3. Nommez-le par exemple : `iMWrap Generator`.
-4. loopMIDI crée un port d'entrée et de sortie MIDI virtuel visible par toutes vos applications.
+### Step 1: Create the virtual port in loopMIDI
+1. Start the **loopMIDI** software.
+2. In the configuration panel, click the `+` button to add a new port.
+3. Name it, for example: `iMWrap Generator`.
+4. loopMIDI creates a virtual MIDI input and output port visible to all your applications.
 
-### Étape 2 : Connecter le Générateur de SysEx
-1. Lancez le Générateur de SysEx (`imwrap_sysex_gui.exe`).
-2. Dans la section **Envoi MIDI Direct** (à droite), repérez la liste déroulante **Périphérique**.
-3. Sélectionnez le port virtuel créé : `iMWrap Generator`.
-4. Désormais, chaque clic sur le bouton **Envoyer le SysEx** transmettra la trame MIDI sur ce canal virtuel.
+### Step 2: Connect the SysEx Generator
+1. Launch the SysEx Generator (`imwrap_sysex_gui.exe`).
+2. In the **Direct MIDI Send** section (on the right), locate the **Device** drop-down list.
+3. Select the created virtual port: `iMWrap Generator`.
+4. Now, every click on the **Send SysEx** button will transmit the MIDI message over this virtual channel.
 
-### Étape 3 : Configurer Digital Performer pour l'enregistrement en temps réel
-Si vous préférez enregistrer en temps réel vos manipulations ou vos commandes iMUSE dans Digital Performer :
-1. Ouvrez Digital Performer.
-2. Allez dans **Setup > Input Filter...** et assurez-vous que la case **System Exclusive** est bien cochée.
-3. Dans votre projet DP, créez une nouvelle piste MIDI.
-4. Réglez l'entrée MIDI de cette piste sur `iMWrap Generator`.
-5. Armez la piste MIDI en enregistrement.
-6. Lancez l'enregistrement dans DP, puis cliquez sur **Envoyer le SysEx** dans le Générateur.
-7. DP enregistre précisément le message SysEx généré sous la forme d'un événement dans la piste !
+### Step 3: Configure Digital Performer for real-time recording
+If you prefer to record your actions or iMUSE commands in real-time in Digital Performer:
+1. Open Digital Performer.
+2. Go to **Setup > Input Filter...** and ensure the **System Exclusive** checkbox is checked.
+3. In your DP project, create a new MIDI track.
+4. Set the MIDI input of this track to `iMWrap Generator`.
+5. Arm the MIDI track for recording.
+6. Start recording in DP, then click **Send SysEx** in the Generator.
+7. DP records the generated SysEx message precisely as an event on the track!
 
 ---
 
-## 4. Insérer manuellement des SysEx iMUSE dans Digital Performer
+## 4. Manually Inserting iMUSE SysEx in Digital Performer
 
-Si vous souhaitez saisir ou copier-coller manuellement les messages hexadécimaux iMUSE dans vos pistes MIDI existantes :
+If you want to manually type or copy-paste hexadecimal iMUSE messages into your existing MIDI tracks:
 
-1. Dans le Générateur de SysEx, configurez vos curseurs pour obtenir le message désiré.
-2. Cliquez sur le bouton **Copier dans le presse-papiers**.
-3. Dans Digital Performer, ouvrez l'**Event List** de la piste MIDI ciblée.
-4. Placez votre curseur de lecture à la position temporelle exacte (Mesure|Temps|Tick) où l'instruction doit s'exécuter.
-5. Insérez un nouvel événement de type **System Exclusive (SysEx)**.
-6. Une boîte de dialogue d'édition s'ouvre. Double-cliquez sur l'événement SysEx pour ouvrir l'éditeur.
-7. **Collez** le texte hexadécimal copié depuis le Générateur.
-8. Validez. Le message sera exécuté par le moteur iMUSE.
+1. In the SysEx Generator, configure your sliders to get the desired message.
+2. Click the **Copy to Clipboard** button.
+3. In Digital Performer, open the **Event List** of the target MIDI track.
+4. Place your playback cursor at the exact time position (Measure|Beat|Tick) where the instruction should execute.
+5. Insert a new **System Exclusive (SysEx)** event.
+6. An edit dialog opens. Double-click the SysEx event to open the editor.
+7. **Paste** the hexadecimal text copied from the Generator.
+8. Confirm. The message will be executed by the iMUSE engine.
 
-> **Recommandation pour le Roland MT-32** :
-> Lorsque vous utilisez des timbres personnalisés Roland, veillez à ce que les messages SysEx Roland (les dumps de timbres) soient positionnés au moins **50 ticks** avant la commande `Allocate Part` ou les premières notes de musique.
+> **Recommendation for Roland MT-32**:
+> When using custom Roland timbres, make sure that the Roland SysEx messages (timbre dumps) are placed at least **50 ticks** before the `Allocate Part` command or the first musical notes.
 )MARKDOWN";
 
     browser->setMarkdown(markdownText);

@@ -122,24 +122,24 @@ void PlayerWindow::setupUi() {
     setCentralWidget(central);
     auto *layout = new QVBoxLayout(central);
 
-    auto *configBox = new QGroupBox("Configuration iMWrap");
+    auto *configBox = new QGroupBox("iMWrap Configuration");
     auto *configLayout = new QVBoxLayout(configBox);
     
     auto *bankLayout = new QHBoxLayout();
-    bankLayout->addWidget(new QLabel("Fichier Banque (.ims):"));
+    bankLayout->addWidget(new QLabel("Bank File (.ims):"));
     bankPathEdit = new QLineEdit();
     bankLayout->addWidget(bankPathEdit);
-    auto *browseBankBtn = new QPushButton("Parcourir...");
+    auto *browseBankBtn = new QPushButton("Browse...");
     connect(browseBankBtn, &QPushButton::clicked, this, &PlayerWindow::browseBank);
     bankLayout->addWidget(browseBankBtn);
     configLayout->addLayout(bankLayout);
 
     auto *backendLayout = new QHBoxLayout();
-    backendLayout->addWidget(new QLabel("Midi Out (WinMM):"));
+    backendLayout->addWidget(new QLabel("MIDI Out (WinMM):"));
     deviceCombo = new QComboBox();
     backendLayout->addWidget(deviceCombo);
 
-    backendLayout->addWidget(new QLabel("Type de Rendu:"));
+    backendLayout->addWidget(new QLabel("Render Type:"));
     profileCombo = new QComboBox();
     profileCombo->addItem("General MIDI", static_cast<int>(imwrap::TargetProfile::GeneralMidi));
     profileCombo->addItem("Roland MT-32", static_cast<int>(imwrap::TargetProfile::Mt32));
@@ -153,7 +153,7 @@ void PlayerWindow::setupUi() {
     });
     backendLayout->addWidget(profileCombo);
     
-    previewBtn = new QPushButton("Activer la Préécoute");
+    previewBtn = new QPushButton("Enable Preview");
     connect(previewBtn, &QPushButton::clicked, this, &PlayerWindow::togglePreview);
     backendLayout->addWidget(previewBtn);
     configLayout->addLayout(backendLayout);
@@ -164,7 +164,7 @@ void PlayerWindow::setupUi() {
     
     // Left: Sound List
     auto *leftLayout = new QVBoxLayout();
-    leftLayout->addWidget(new QLabel("Sons:"));
+    leftLayout->addWidget(new QLabel("Sounds:"));
     soundTree = new QTreeWidget();
     soundTree->setHeaderHidden(true);
     connect(soundTree, &QTreeWidget::itemSelectionChanged, this, &PlayerWindow::updateUiState);
@@ -173,7 +173,7 @@ void PlayerWindow::setupUi() {
 
     // Center: Events
     auto *centerLayout = new QVBoxLayout();
-    centerLayout->addWidget(new QLabel("Evénements du Son:"));
+    centerLayout->addWidget(new QLabel("Sound Events:"));
     eventsTable = new QTableWidget(0, 3);
     eventsTable->setHorizontalHeaderLabels({"Tick", "Track", "Description"});
     eventsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -182,26 +182,26 @@ void PlayerWindow::setupUi() {
 
     // Right: Active & Controls
     auto *rightLayout = new QVBoxLayout();
-    rightLayout->addWidget(new QLabel("Sons Actifs:"));
+    rightLayout->addWidget(new QLabel("Active Sounds:"));
     activeTable = new QTableWidget(0, 4);
     activeTable->setHorizontalHeaderLabels({"ID", "Track", "Beat", "Tick"});
     activeTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     rightLayout->addWidget(activeTable);
     
     auto *controlsLayout = new QHBoxLayout();
-    playBtn = new QPushButton("▶ Jouer");
+    playBtn = new QPushButton("▶ Play");
     connect(playBtn, &QPushButton::clicked, this, &PlayerWindow::playSound);
     controlsLayout->addWidget(playBtn);
-    stopBtn = new QPushButton("⏹ Stopper");
+    stopBtn = new QPushButton("⏹ Stop");
     connect(stopBtn, &QPushButton::clicked, this, &PlayerWindow::stopSound);
     controlsLayout->addWidget(stopBtn);
-    stopAllBtn = new QPushButton("⏹ Tout Stopper");
+    stopAllBtn = new QPushButton("⏹ Stop All");
     connect(stopAllBtn, &QPushButton::clicked, this, &PlayerWindow::stopAllSounds);
     controlsLayout->addWidget(stopAllBtn);
     rightLayout->addLayout(controlsLayout);
     
     // Hooks and Advance
-    auto *hookBox = new QGroupBox("Contrôle iMWrap");
+    auto *hookBox = new QGroupBox("iMWrap Control");
     auto *hookLayout = new QFormLayout(hookBox);
     hookClassCombo = new QComboBox();
     hookClassCombo->addItems({
@@ -214,7 +214,7 @@ void PlayerWindow::setupUi() {
     });
     hookValueSpin = new QSpinBox(); hookValueSpin->setRange(0, 255);
     hookChannelSpin = new QSpinBox(); hookChannelSpin->setRange(0, 16);
-    auto *applyHookBtn = new QPushButton("Appliquer Hook");
+    auto *applyHookBtn = new QPushButton("Apply Hook");
     connect(applyHookBtn, &QPushButton::clicked, this, &PlayerWindow::applyHook);
 
     auto *hookHBox = new QHBoxLayout();
@@ -222,18 +222,18 @@ void PlayerWindow::setupUi() {
     hookLayout->addRow("Hook (C/V/Ch):", hookHBox);
     
     advanceSpin = new QSpinBox(); advanceSpin->setRange(0, 99999); advanceSpin->setValue(480);
-    auto *advBtn = new QPushButton("Avancer (Ticks)");
+    auto *advBtn = new QPushButton("Advance (Ticks)");
     connect(advBtn, &QPushButton::clicked, this, &PlayerWindow::advanceTicks);
     auto *advHBox = new QHBoxLayout();
     advHBox->addWidget(advanceSpin); advHBox->addWidget(advBtn);
-    hookLayout->addRow("Avance Manuelle:", advHBox);
+    hookLayout->addRow("Manual Advance:", advHBox);
     rightLayout->addWidget(hookBox);
 
     split->addLayout(rightLayout, 2);
 
     layout->addLayout(split, 1);
 
-    statusLabel = new QLabel("Prêt.");
+    statusLabel = new QLabel("Ready.");
     layout->addWidget(statusLabel);
     
     updateUiState();
@@ -251,7 +251,7 @@ void PlayerWindow::refreshDevices() {
 }
 
 void PlayerWindow::browseBank() {
-    QString path = QFileDialog::getOpenFileName(this, "Ouvrir IMS", "", "iMWrap Banks (*.ims *.data)");
+    QString path = QFileDialog::getOpenFileName(this, "Open IMS", "", "iMWrap Banks (*.ims *.data)");
     if (!path.isEmpty()) {
         bankPathEdit->setText(path);
         loadBank();
@@ -261,7 +261,7 @@ void PlayerWindow::browseBank() {
 void PlayerWindow::loadBank() {
     std::string err;
     if (bank.openFromFile(bankPathEdit->text().toStdString(), &err)) {
-        statusLabel->setText(QString("Banque chargée: %1").arg(bankPathEdit->text()));
+        statusLabel->setText(QString("Bank loaded: %1").arg(bankPathEdit->text()));
         engine.setResourceBank(&bank);
         
         soundTree->clear();
@@ -284,7 +284,7 @@ void PlayerWindow::loadBank() {
             }
         }
     } else {
-        statusLabel->setText(QString("Erreur: %1").arg(QString::fromStdString(err)));
+        statusLabel->setText(QString("Error: %1").arg(QString::fromStdString(err)));
     }
 }
 
@@ -294,21 +294,21 @@ void PlayerWindow::togglePreview() {
         midiSink.closeDevice();
         engine.resetMt32Initialization();
         previewEnabled = false;
-        previewBtn->setText("Activer la Préécoute");
-        statusLabel->setText("Préécoute désactivée.");
+        previewBtn->setText("Enable Preview");
+        statusLabel->setText("Preview disabled.");
     } else {
         if (deviceCombo->currentIndex() >= 0) {
             UINT devId = deviceCombo->currentData().toUInt();
             if (midiSink.openDevice(devId)) {
                 engine.resetMt32Initialization();
                 previewEnabled = true;
-                previewBtn->setText("Désactiver la Préécoute");
-                statusLabel->setText("Préécoute activée.");
+                previewBtn->setText("Disable Preview");
+                statusLabel->setText("Preview enabled.");
                 if (engine.targetProfile() == imwrap::TargetProfile::Mt32) {
                     engine.initMt32();
                 }
             } else {
-                QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le périphérique MIDI.");
+                QMessageBox::warning(this, "Error", "Cannot open MIDI device.");
             }
         }
     }
