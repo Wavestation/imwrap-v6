@@ -10,6 +10,7 @@ class QFormLayout;
 class QLabel;
 class QSpinBox;
 class QTextEdit;
+class QWidget;
 
 class IMWrapSysExDialog : public QDialog {
     Q_OBJECT
@@ -28,6 +29,8 @@ public:
 private slots:
     void updateFieldVisibility();
     void updatePreview();
+    void importAdlibSbi();
+    void exportAdlibSbi();
 
 protected:
     void accept() override;
@@ -81,8 +84,11 @@ private:
     QSpinBox* beatSpin = nullptr;
     QSpinBox* positionTickSpin = nullptr;
 
+    QWidget* adlibEditorWidget = nullptr;
     QTextEdit* adlibHexEdit = nullptr;
     QTextEdit* previewEdit = nullptr;
 
+    imwrap::IMWrapControlEvent sourceEvent_;
+    bool hasSourceEvent_ = false;
     imwrap::IMWrapControlEvent resultEvent_;
 };

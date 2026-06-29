@@ -25,7 +25,8 @@
 
 namespace imwrap {
 
-bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *out, std::string *error) {
+bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *out, std::string *error,
+                        IMWrapSysexDialect dialect) {
     if (!out) {
         if (error) {
             *error = "output sequence pointer is null";
@@ -54,7 +55,7 @@ bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *out, st
             }
 
             IMWrapControlEvent control;
-            if (!DecodeIMWrapSysex(ByteView(event.payload.data(), event.payload.size()), &control, nullptr)) {
+            if (!DecodeIMWrapSysex(ByteView(event.payload.data(), event.payload.size()), &control, dialect, nullptr)) {
                 continue;
             }
             control.tick = event.tick;

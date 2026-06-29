@@ -1190,7 +1190,7 @@ int Ags_iMWrap_GetTempo() {
 void Ags_iMWrap_SetCompatibilityProfile(int profile) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (profile == 1) {
-        g_Engine.setCompatibilityProfile(imwrap::IMWrapEngine::CompatibilityProfile::SamAndMax);
+        g_Engine.setCompatibilityProfile(imwrap::IMWrapEngine::CompatibilityProfile::Snm);
     } else {
         g_Engine.setCompatibilityProfile(imwrap::IMWrapEngine::CompatibilityProfile::GenericV6);
     }
@@ -1198,7 +1198,7 @@ void Ags_iMWrap_SetCompatibilityProfile(int profile) {
 
 int Ags_iMWrap_GetCompatibilityProfile() {
     std::lock_guard<std::mutex> lock(g_Mutex);
-    return g_Engine.compatibilityProfile() == imwrap::IMWrapEngine::CompatibilityProfile::SamAndMax ? 1 : 0;
+    return g_Engine.compatibilityProfile() == imwrap::IMWrapEngine::CompatibilityProfile::Snm ? 1 : 0;
 }
 
 void Ags_iMWrap_RegisterRolandTimbreMapping(const char *name, int gmProgram) {

@@ -42,6 +42,98 @@ constexpr int kRoleVariantIndex = Qt::UserRole + 2;
 constexpr int kRoleTrackIndex = Qt::UserRole + 3;
 constexpr int kLayoutVersion = 2;
 
+QString SanitizeMetaText(const std::vector<uint8_t>& payload) {
+    QString text = QString::fromLatin1(reinterpret_cast<const char*>(payload.data()), static_cast<int>(payload.size()));
+    text.replace('\r', ' ');
+    text.replace('\n', ' ');
+    text.replace('\t', ' ');
+    return text.trimmed();
+}
+
+QString FormatNoteName(uint8_t note) {
+    static const char* kNames[] = {
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+    };
+    const int octave = static_cast<int>(note / 12) - 1;
+    return QString("%1%2").arg(kNames[note % 12]).arg(octave);
+}
+
+QString ControllerName(uint8_t controller) {
+    switch (controller) {
+    case 0: return "Bank Select MSB";
+    case 1: return "Modulation";
+    case 7: return "Channel Volume";
+    case 10: return "Pan";
+    case 11: return "Expression";
+    case 32: return "Bank Select LSB";
+    case 64: return "Sustain Pedal";
+    case 91: return "Reverb Send";
+    case 93: return "Chorus Send";
+    case 98: return "NRPN LSB";
+    case 99: return "NRPN MSB";
+    case 100: return "RPN LSB";
+    case 101: return "RPN MSB";
+    case 120: return "All Sound Off";
+    case 121: return "Reset All Controllers";
+    case 123: return "All Notes Off";
+    default:
+        return QString();
+    }
+}
+
+QString MidiEventTypeLabel(const imwrap::MidiEvent& event) {
+    switch (event.type) {
+    case imwrap::MidiEventType::Channel:
+        switch (event.status & 0xF0) {
+        case 0x80: return "Note Off";
+        case 0x90: return (event.hasData2 && event.data2 == 0) ? "Note Off" : "Note On";
+        case 0xA0: return "Poly Aftertouch";
+        case 0xB0: return "Control Change";
+        case 0xC0: return "Program Change";
+        case 0xD0: return "Channel Pressure";
+        case 0xE0: return "Pitch Bend";
+        default: return "Channel";
+        }
+    case imwrap::MidiEventType::Meta:
+        switch (event.metaType) {
+        case 0x01: return "Meta Text";
+        case 0x02: return "Copyright";
+        case 0x03: return "Track Name";
+        case 0x04: return "Instrument Name";
+        case 0x05: return "Lyric";
+        case 0x06: return "Marker";
+        case 0x07: return "Cue Point";
+        case 0x20: return "Channel Prefix";
+        case 0x2F: return "End Of Track";
+        case 0x51: return "Tempo";
+        case 0x54: return "SMPTE Offset";
+        case 0x58: return "Time Signature";
+        case 0x59: return "Key Signature";
+        default:
+            return QString("Meta 0x%1").arg(event.metaType, 2, 16, QChar('0')).toUpper();
+        }
+    case imwrap::MidiEventType::SysEx:
+        return "SysEx";
+    case imwrap::MidiEventType::System:
+        switch (event.status) {
+        case 0xF1: return "MTC Quarter Frame";
+        case 0xF2: return "Song Position";
+        case 0xF3: return "Song Select";
+        case 0xF6: return "Tune Request";
+        case 0xF8: return "Timing Clock";
+        case 0xFA: return "Start";
+        case 0xFB: return "Continue";
+        case 0xFC: return "Stop";
+        case 0xFE: return "Active Sensing";
+        case 0xFF: return "System Reset";
+        default:
+            return QString("System 0x%1").arg(event.status, 2, 16, QChar('0')).toUpper();
+        }
+    }
+
+    return "Event";
+}
+
 imwrap::TargetProfile ProfileFromVariantKind(imwrap::VariantKind kind) {
     switch (kind) {
     case imwrap::VariantKind::Rol:
@@ -126,7 +218,7 @@ QIcon EventIconForControlEvent(const imwrap::IMWrapControlEvent& event) {
     }
 }
 
-QIcon EventIconForMidiEvent(const imwrap::MidiEvent& event) {
+QIcon EventIconForMidiEvent(const imwrap::MidiEvent& event, imwrap::IMWrapSysexDialect dialect) {
     switch (event.type) {
     case imwrap::MidiEventType::Channel:
         return QIcon(":/imwrap/default-event.png");
@@ -136,7 +228,7 @@ QIcon EventIconForMidiEvent(const imwrap::MidiEvent& event) {
         return QIcon(":/imwrap/package_settings.png");
     case imwrap::MidiEventType::SysEx: {
         imwrap::IMWrapControlEvent controlEvent;
-        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, nullptr)) {
+        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, dialect, nullptr)) {
             return EventIconForControlEvent(controlEvent);
         }
         return QIcon(":/imwrap/syx-unknown.png");
@@ -230,7 +322,9 @@ ExplorerWindow::ExplorerWindow(QWidget* parent)
     updateUiState();
 }
 
-ExplorerWindow::~ExplorerWindow() = default;
+ExplorerWindow::~ExplorerWindow() {
+    disablePreviewBackend();
+}
 
 void ExplorerWindow::closeEvent(QCloseEvent* event) {
     saveSettings();
@@ -411,6 +505,15 @@ void ExplorerWindow::setupUi() {
     profileCombo_->addItem("AdLib", static_cast<int>(imwrap::TargetProfile::Adlib));
     playbackLayout->addRow("Fallback Profile:", profileCombo_);
 
+    snmModeCheck_ = new QCheckBox("SNM mode");
+    connect(snmModeCheck_, &QCheckBox::toggled, this, [this](bool) {
+        engine_.setCompatibilityProfile(currentCompatibilityProfile());
+        rebuildEventTable();
+        rebuildDetailPane();
+        updateUiState();
+    });
+    playbackLayout->addRow("", snmModeCheck_);
+
     auto* refreshBtn = new QPushButton("Refresh Devices");
     connect(refreshBtn, &QPushButton::clicked, this, &ExplorerWindow::refreshDevices);
     playbackLayout->addRow("", refreshBtn);
@@ -540,10 +643,55 @@ void ExplorerWindow::refreshDevices() {
     }
 }
 
+bool ExplorerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::string* error) {
+    if (profile == imwrap::TargetProfile::Adlib) {
+        midiSink_.closeDevice();
+        if (!adlibSink_.isAvailable() && !adlibSink_.start(error)) {
+            return false;
+        }
+        previewBackend_ = PreviewBackend::Adlib;
+        engine_.setMidiSink(&adlibSink_);
+        if (error) {
+            error->clear();
+        }
+        return true;
+    }
+
+    adlibSink_.stop();
+    if (deviceCombo_->currentIndex() < 0) {
+        if (error) {
+            *error = "No MIDI output device is selected.";
+        }
+        return false;
+    }
+
+    const UINT deviceId = deviceCombo_->currentData().toUInt();
+    if (!midiSink_.openDevice(deviceId)) {
+        if (error) {
+            *error = "Unable to open the selected MIDI output.";
+        }
+        return false;
+    }
+
+    previewBackend_ = PreviewBackend::WinMM;
+    engine_.setMidiSink(&midiSink_);
+    if (error) {
+        error->clear();
+    }
+    return true;
+}
+
+void ExplorerWindow::disablePreviewBackend() {
+    transportTimer_->stop();
+    adlibSink_.stop();
+    midiSink_.closeDevice();
+    previewBackend_ = PreviewBackend::None;
+    engine_.setMidiSink(nullptr);
+}
+
 void ExplorerWindow::togglePreview() {
     if (previewEnabled_) {
-        transportTimer_->stop();
-        midiSink_.closeDevice();
+        disablePreviewBackend();
         engine_.resetMt32Initialization();
         previewEnabled_ = false;
         previewBtn_->setText("Enable Preview");
@@ -551,24 +699,18 @@ void ExplorerWindow::togglePreview() {
         return;
     }
 
-    if (deviceCombo_->currentIndex() < 0) {
-        QMessageBox::warning(this, "Preview", "No MIDI output device is selected.");
-        return;
-    }
-
-    const UINT deviceId = deviceCombo_->currentData().toUInt();
-    if (!midiSink_.openDevice(deviceId)) {
-        QMessageBox::warning(this, "Preview", "Unable to open the selected MIDI output.");
+    std::string error;
+    if (!ensurePreviewBackend(effectiveProfileForSelection(), &error)) {
+        QMessageBox::warning(this, "Preview", QString::fromStdString(error));
         return;
     }
 
     engine_.resetMt32Initialization();
     previewEnabled_ = true;
     previewBtn_->setText("Disable Preview");
-    if (engine_.targetProfile() == imwrap::TargetProfile::Mt32) {
-        engine_.initMt32();
-    }
-    statusLabel_->setText("Preview enabled.");
+    statusLabel_->setText(effectiveProfileForSelection() == imwrap::TargetProfile::Adlib
+                              ? "Preview enabled with embedded AdLib audio."
+                              : "Preview enabled.");
 }
 
 void ExplorerWindow::playSelectedSound() {
@@ -592,8 +734,22 @@ void ExplorerWindow::playSelectedSound() {
 
     engine_.setTargetProfile(effectiveProfileForSelection());
     engine_.setNativeMt32Output(engine_.targetProfile() == imwrap::TargetProfile::Mt32);
+    engine_.setCompatibilityProfile(currentCompatibilityProfile());
+    if (!ensurePreviewBackend(engine_.targetProfile(), &error)) {
+        QMessageBox::warning(this, "Playback", QString::fromStdString(error));
+        disablePreviewBackend();
+        engine_.resetMt32Initialization();
+        previewEnabled_ = false;
+        previewBtn_->setText("Enable Preview");
+        statusLabel_->setText("Preview disabled.");
+        return;
+    }
 
     engine_.stopAllSounds();
+    if (engine_.targetProfile() == imwrap::TargetProfile::Mt32) {
+        engine_.resetMt32Initialization();
+        engine_.initMt32();
+    }
     if (!engine_.startSound(soundId)) {
         QMessageBox::warning(this, "Playback", "Unable to start the selected sound.");
         return;
@@ -916,7 +1072,8 @@ void ExplorerWindow::editSelectedEvent() {
 
     imwrap::IMWrapControlEvent controlEvent;
     std::string error;
-    if (!imwrap::DecodeIMWrapSysex(imwrap::ByteView(midiEvent.payload.data(), midiEvent.payload.size()), &controlEvent, &error)) {
+    if (!imwrap::DecodeIMWrapSysex(imwrap::ByteView(midiEvent.payload.data(), midiEvent.payload.size()), &controlEvent,
+                                   currentSysexDialect(), &error)) {
         QMessageBox::information(this, "Edit Event", QString("The selected SysEx is not a recognized iMWrap message.\n\n%1").arg(QString::fromStdString(error)));
         return;
     }
@@ -1066,9 +1223,9 @@ void ExplorerWindow::rebuildEventTable() {
         eventsTable_->setItem(visibleIndex, 0, new QTableWidgetItem(QString::number(modelIndex)));
         eventsTable_->setItem(visibleIndex, 1, new QTableWidgetItem(QString::number(event.delta)));
         eventsTable_->setItem(visibleIndex, 2, new QTableWidgetItem(formatMbtPosition(segments, event.tick)));
-        eventsTable_->setItem(visibleIndex, 3, new QTableWidgetItem(QString("0x%1").arg(event.status, 2, 16, QChar('0')).toUpper()));
+        eventsTable_->setItem(visibleIndex, 3, new QTableWidgetItem(MidiEventTypeLabel(event)));
         auto* descriptionItem = new QTableWidgetItem(describeMidiEvent(event, nullptr));
-        descriptionItem->setIcon(EventIconForMidiEvent(event));
+        descriptionItem->setIcon(EventIconForMidiEvent(event, currentSysexDialect()));
         eventsTable_->setItem(visibleIndex, 4, descriptionItem);
     }
 
@@ -1100,9 +1257,11 @@ void ExplorerWindow::rebuildDetailPane() {
     const std::vector<TimeSignatureSegment> segments = buildTimeSignatureSegments(*variant);
     bool editable = false;
     const QString description = describeMidiEvent(event, &editable);
+    const QString typeLabel = MidiEventTypeLabel(event);
 
     QStringList lines;
-    lines << QString("Type: %1").arg(description);
+    lines << QString("Type: %1").arg(typeLabel);
+    lines << QString("Description: %1").arg(description);
     lines << QString("Position (M:B:T): %1").arg(formatMbtPosition(segments, event.tick));
     lines << QString("Status: 0x%1").arg(event.status, 2, 16, QChar('0')).toUpper();
     lines << QString("Delta: %1").arg(event.delta);
@@ -1114,7 +1273,8 @@ void ExplorerWindow::rebuildDetailPane() {
     if (event.type == imwrap::MidiEventType::SysEx) {
         imwrap::IMWrapControlEvent controlEvent;
         std::string error;
-        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, &error)) {
+        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent,
+                                      currentSysexDialect(), &error)) {
             lines << "";
             lines << QString("Decoded: %1").arg(QString::fromStdString(imwrap::DescribeIMWrapSysex(controlEvent)));
         } else if (!error.empty()) {
@@ -1230,6 +1390,7 @@ void ExplorerWindow::updateUiState() {
     applySelectionBtn_->setEnabled(hasSound);
     applyHookBtn_->setEnabled(hasActiveSelectedSound);
     variantKindCombo_->setEnabled(hasSound && !hasVariant);
+    snmModeCheck_->setEnabled(engine_.activeSoundIds().empty());
     playBtn_->setEnabled(hasSound);
     stopBtn_->setEnabled(hasSound);
     stopAllBtn_->setEnabled(!engine_.activeSoundIds().empty());
@@ -1261,6 +1422,8 @@ void ExplorerWindow::loadSettings() {
     if (profileIndex >= 0 && profileIndex < profileCombo_->count()) {
         profileCombo_->setCurrentIndex(profileIndex);
     }
+    snmModeCheck_->setChecked(settings.value("playback/snmMode", false).toBool());
+    engine_.setCompatibilityProfile(currentCompatibilityProfile());
 
     const bool filterNonImwrap = settings.value("events/filterNonImwrap", true).toBool();
     filterNonImwrapCheck_->setChecked(filterNonImwrap);
@@ -1306,6 +1469,7 @@ void ExplorerWindow::saveSettings() const {
     settings.setValue("document/lastFilePath", currentFilePath_);
     settings.setValue("playback/midiDeviceName", deviceCombo_->currentText());
     settings.setValue("playback/profileIndex", profileCombo_->currentIndex());
+    settings.setValue("playback/snmMode", snmModeCheck_->isChecked());
     settings.setValue("events/filterNonImwrap", filterNonImwrapCheck_->isChecked());
     settings.setValue("window/layoutVersion", kLayoutVersion);
     settings.setValue("window/geometry", saveGeometry());
@@ -1822,24 +1986,139 @@ QString ExplorerWindow::formatPayloadHex(const std::vector<uint8_t>& payload) {
     return parts.join(' ');
 }
 
-QString ExplorerWindow::describeMidiEvent(const imwrap::MidiEvent& event, bool* editableImwrapSysEx) {
+QString ExplorerWindow::describeMidiEvent(const imwrap::MidiEvent& event, bool* editableImwrapSysEx) const {
     if (editableImwrapSysEx) {
         *editableImwrapSysEx = false;
     }
 
     switch (event.type) {
     case imwrap::MidiEventType::Channel: {
-        return QString("Channel data1=%1 data2=%2")
-            .arg(event.hasData1 ? QString::number(event.data1) : "-")
-            .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        const uint8_t channel = static_cast<uint8_t>(event.status & 0x0F);
+        switch (event.status & 0xF0) {
+        case 0x80:
+            return QString("Ch %1, note %2 (%3), velocity %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0x90:
+            if (event.hasData2 && event.data2 == 0) {
+                return QString("Ch %1, note %2 (%3), velocity 0")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(FormatNoteName(event.data1));
+            }
+            return QString("Ch %1, note %2 (%3), velocity %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0xA0:
+            return QString("Ch %1, note %2 (%3), pressure %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0xB0: {
+            const QString controllerName = ControllerName(event.data1);
+            return controllerName.isEmpty()
+                ? QString("Ch %1, controller %2, value %3")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(event.hasData2 ? QString::number(event.data2) : "-")
+                : QString("Ch %1, controller %2 (%3), value %4")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(controllerName)
+                    .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
+        case 0xC0:
+            return QString("Ch %1, program %2")
+                .arg(channel + 1)
+                .arg(event.data1);
+        case 0xD0:
+            return QString("Ch %1, pressure %2")
+                .arg(channel + 1)
+                .arg(event.data1);
+        case 0xE0: {
+            const int bend = static_cast<int>((static_cast<uint16_t>(event.data2) << 7) | event.data1) - 8192;
+            return QString("Ch %1, bend %2 (LSB=%3 MSB=%4)")
+                .arg(channel + 1)
+                .arg(bend)
+                .arg(event.data1)
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
+        default:
+            return QString("Ch %1, data1=%2 data2=%3")
+                .arg(channel + 1)
+                .arg(event.hasData1 ? QString::number(event.data1) : "-")
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
     }
     case imwrap::MidiEventType::Meta:
-        return QString("Meta 0x%1 (%2 bytes)")
-            .arg(event.metaType, 2, 16, QChar('0'))
-            .arg(event.payload.size());
+        switch (event.metaType) {
+        case 0x01:
+        case 0x02:
+        case 0x03:
+        case 0x04:
+        case 0x05:
+        case 0x06:
+        case 0x07:
+            return SanitizeMetaText(event.payload);
+        case 0x20:
+            return event.payload.size() == 1
+                ? QString("Channel %1").arg(static_cast<int>(event.payload[0]) + 1)
+                : QString("Malformed channel prefix (%1 bytes)").arg(event.payload.size());
+        case 0x2F:
+            return "End of track";
+        case 0x51:
+            if (event.payload.size() == 3) {
+                const uint32_t microsPerQuarter =
+                    (static_cast<uint32_t>(event.payload[0]) << 16) |
+                    (static_cast<uint32_t>(event.payload[1]) << 8) |
+                    static_cast<uint32_t>(event.payload[2]);
+                const double bpm = microsPerQuarter > 0 ? (60000000.0 / static_cast<double>(microsPerQuarter)) : 0.0;
+                return QString("%1 us/qn (%2 BPM)")
+                    .arg(microsPerQuarter)
+                    .arg(QString::number(bpm, 'f', 2));
+            }
+            return QString("Malformed tempo (%1 bytes)").arg(event.payload.size());
+        case 0x54:
+            return event.payload.size() == 5
+                ? QString("%1:%2:%3 frame %4 subframe %5")
+                    .arg(event.payload[0])
+                    .arg(event.payload[1])
+                    .arg(event.payload[2])
+                    .arg(event.payload[3])
+                    .arg(event.payload[4])
+                : QString("Malformed SMPTE offset (%1 bytes)").arg(event.payload.size());
+        case 0x58:
+            if (event.payload.size() == 4) {
+                const int numerator = event.payload[0];
+                const int denominator = 1 << event.payload[1];
+                return QString("%1/%2, clocks=%3, 32nds=%4")
+                    .arg(numerator)
+                    .arg(denominator)
+                    .arg(event.payload[2])
+                    .arg(event.payload[3]);
+            }
+            return QString("Malformed time signature (%1 bytes)").arg(event.payload.size());
+        case 0x59:
+            if (event.payload.size() == 2) {
+                const int sharpsFlats = static_cast<int8_t>(event.payload[0]);
+                return QString("%1, %2")
+                    .arg(sharpsFlats == 0 ? "0 accidentals" : QString("%1 accidentals").arg(sharpsFlats))
+                    .arg(event.payload[1] == 0 ? "major" : "minor");
+            }
+            return QString("Malformed key signature (%1 bytes)").arg(event.payload.size());
+        default:
+            return QString("%1 bytes")
+                .arg(event.payload.size());
+        }
     case imwrap::MidiEventType::SysEx: {
         imwrap::IMWrapControlEvent controlEvent;
-        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, nullptr)) {
+        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent,
+                                      currentSysexDialect(), nullptr)) {
             if (editableImwrapSysEx) {
                 *editableImwrapSysEx = true;
             }
@@ -1848,7 +2127,16 @@ QString ExplorerWindow::describeMidiEvent(const imwrap::MidiEvent& event, bool* 
         return QString("SysEx (%1 bytes)").arg(event.payload.size());
     }
     case imwrap::MidiEventType::System:
-        return QString("System (%1 bytes)").arg(event.payload.size());
+        if (event.status == 0xF2 && event.payload.size() == 2) {
+            const uint16_t position = static_cast<uint16_t>(event.payload[0] | (static_cast<uint16_t>(event.payload[1]) << 7));
+            return QString("Position %1").arg(position);
+        }
+        if ((event.status == 0xF1 || event.status == 0xF3) && event.payload.size() == 1) {
+            return QString("Value %1").arg(event.payload[0]);
+        }
+        return event.payload.empty()
+            ? QString("No payload")
+            : QString("%1 bytes").arg(event.payload.size());
     }
 
     return "Event";
@@ -1866,11 +2154,24 @@ std::vector<uint8_t> ExplorerWindow::encodeSmfPayload(const imwrap::IMWrapContro
     return fullBytes;
 }
 
-bool ExplorerWindow::isRecognizedImwrapEvent(const imwrap::MidiEvent& event) {
+bool ExplorerWindow::isRecognizedImwrapEvent(const imwrap::MidiEvent& event) const {
     if (event.type != imwrap::MidiEventType::SysEx || event.payload.empty()) {
         return false;
     }
 
     imwrap::IMWrapControlEvent controlEvent;
-    return imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, nullptr);
+    return imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent,
+                                     currentSysexDialect(), nullptr);
+}
+
+imwrap::IMWrapEngine::CompatibilityProfile ExplorerWindow::currentCompatibilityProfile() const {
+    return (snmModeCheck_ && snmModeCheck_->isChecked())
+        ? imwrap::IMWrapEngine::CompatibilityProfile::Snm
+        : imwrap::IMWrapEngine::CompatibilityProfile::GenericV6;
+}
+
+imwrap::IMWrapSysexDialect ExplorerWindow::currentSysexDialect() const {
+    return (snmModeCheck_ && snmModeCheck_->isChecked())
+        ? imwrap::IMWrapSysexDialect::Snm
+        : imwrap::IMWrapSysexDialect::GenericV6;
 }

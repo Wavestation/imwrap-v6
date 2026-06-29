@@ -28,6 +28,8 @@
 namespace imwrap {
 namespace {
 
+constexpr uint16_t kSnmTicksPerBeat = 480;
+
 bool DecodeNibbles(ByteView data, std::vector<uint8_t> *out) {
     if (!out) {
         return false;
@@ -91,6 +93,16 @@ const char *TypeName(IMWrapSysexType type) {
     return "unknown";
 }
 
+const char *DisplayTypeName(const IMWrapControlEvent &event) {
+    if (event.type == IMWrapSysexType::Marker && event.code == 0x00) {
+        return "snm-trigger";
+    }
+    if (event.type == IMWrapSysexType::HookJump && event.code == 0x01) {
+        return "snm-maybe-jump";
+    }
+    return TypeName(event.type);
+}
+
 std::vector<uint8_t> LegacyMarkerTextToBytes(const std::string &text) {
     std::vector<uint8_t> bytes;
     bytes.reserve(text.size());
@@ -119,6 +131,10 @@ void AppendHexByte(std::ostringstream &oss, uint8_t value) {
 } // namespace
 
 bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *error) {
+    return DecodeIMWrapSysex(message, out, IMWrapSysexDialect::GenericV6, error);
+}
+
+bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, IMWrapSysexDialect dialect, std::string *error) {
     if (!out) {
         if (error) {
             *error = "output control event pointer is null";
@@ -139,6 +155,47 @@ bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *e
     event.rawMessage.assign(body.data(), body.data() + body.size());
 
     ByteView payload = body.subview(2, body.size() - 2);
+
+    if (dialect == IMWrapSysexDialect::Snm) {
+        switch (event.code) {
+        case 0x00:
+            if (payload.size() != 1) {
+                if (error) {
+                    *error = "snm-trigger payload must contain exactly one byte";
+                }
+                return false;
+            }
+            event.type = IMWrapSysexType::Marker;
+            event.markerBytes.push_back(payload.data()[0]);
+            event.markerText.assign(1, static_cast<char>(payload.data()[0]));
+            event.decodedBytes.assign(payload.data(), payload.data() + payload.size());
+            return (*out = std::move(event)), true;
+        case 0x01: {
+            if (payload.size() != 8) {
+                if (error) {
+                    *error = "snm-maybe-jump payload must contain exactly eight bytes";
+                }
+                return false;
+            }
+            if (payload.data()[1] == 0) {
+                if (error) {
+                    *error = "snm-maybe-jump track byte must be non-zero";
+                }
+                return false;
+            }
+            const uint16_t measure = static_cast<uint16_t>((payload.data()[2] << 8) | payload.data()[3]);
+            event.type = IMWrapSysexType::HookJump;
+            event.hookCommand = payload.data()[0];
+            event.targetTrack = static_cast<uint16_t>(payload.data()[1] - 1);
+            event.targetBeat = static_cast<uint16_t>((measure > 0 ? (measure - 1) * 4 : 0) + payload.data()[4]);
+            event.targetTick = static_cast<uint16_t>(((payload.data()[5] * kSnmTicksPerBeat) >> 2) + payload.data()[6]);
+            event.decodedBytes.assign(payload.data(), payload.data() + payload.size());
+            return (*out = std::move(event)), true;
+        }
+        default:
+            break;
+        }
+    }
 
     switch (event.code) {
     case 0x00: {
@@ -463,6 +520,27 @@ bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *ou
         break;
     }
     case IMWrapSysexType::HookJump: {
+        if (event.code == 0x01 && event.targetBeat > 0 && event.targetTrack < 0xFF && event.targetTick < kSnmTicksPerBeat) {
+            const uint16_t beatBase = static_cast<uint16_t>(event.targetBeat - 1);
+            const uint16_t measure = static_cast<uint16_t>((beatBase / 4) + 1);
+            const uint8_t beatInMeasure = static_cast<uint8_t>((beatBase % 4) + 1);
+            const uint8_t quarterTick = static_cast<uint8_t>(event.targetTick / (kSnmTicksPerBeat / 4));
+            const uint8_t remainderTick = static_cast<uint8_t>(event.targetTick % (kSnmTicksPerBeat / 4));
+            const uint8_t trailingByte = event.decodedBytes.size() > 7 ? event.decodedBytes[7] : 0;
+
+            out->push_back(0x7D);
+            out->push_back(0x01);
+            out->push_back(event.hookCommand);
+            out->push_back(static_cast<uint8_t>(event.targetTrack + 1));
+            out->push_back(static_cast<uint8_t>((measure >> 8) & 0xFF));
+            out->push_back(static_cast<uint8_t>(measure & 0xFF));
+            out->push_back(beatInMeasure);
+            out->push_back(quarterTick);
+            out->push_back(remainderTick);
+            out->push_back(trailingByte);
+            break;
+        }
+
         out->push_back(0x7D);
         out->push_back(0x30);
         out->push_back(event.unknown & 0x7F);
@@ -506,6 +584,16 @@ bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *ou
         break;
     }
     case IMWrapSysexType::Marker: {
+        if (event.code == 0x00) {
+            const std::vector<uint8_t> markerBytes = MarkerBytesForEvent(event);
+            if (markerBytes.size() == 1) {
+                out->push_back(0x7D);
+                out->push_back(0x00);
+                out->push_back(markerBytes[0]);
+                break;
+            }
+        }
+
         out->push_back(0x7D);
         out->push_back(0x40);
         out->push_back(event.unknown & 0x7F);
@@ -556,7 +644,7 @@ bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *ou
 
 std::string DescribeIMWrapSysex(const IMWrapControlEvent &event) {
     std::ostringstream oss;
-    oss << TypeName(event.type);
+    oss << DisplayTypeName(event);
 
     switch (event.type) {
     case IMWrapSysexType::AllocatePart:
@@ -678,8 +766,10 @@ bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *ou
         out->hasPart = true; out->part = p1; out->param = p2; out->paramValue = p3;
         return true;
     }
-    if (sscanf(desc.c_str(), "hook-jump cmd=%d track=%d beat=%d tick=%d", &p1, &p2, &p3, &p4) == 4) {
+    if (sscanf(desc.c_str(), "hook-jump cmd=%d track=%d beat=%d tick=%d", &p1, &p2, &p3, &p4) == 4 ||
+        sscanf(desc.c_str(), "snm-maybe-jump cmd=%d track=%d beat=%d tick=%d", &p1, &p2, &p3, &p4) == 4) {
         out->type = IMWrapSysexType::HookJump;
+        out->code = desc.find("snm-maybe-jump") == 0 ? 0x01 : 0x30;
         out->hookCommand = p1; out->targetTrack = p2; out->targetBeat = p3; out->targetTick = p4;
         return true;
     }
@@ -708,11 +798,13 @@ bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *ou
         out->hasChannel = true; out->channel = p1; out->hookCommand = p2; out->value = p3;
         return true;
     }
-    if (sscanf(desc.c_str(), "marker value=%d", &p1) == 1) {
+    if (sscanf(desc.c_str(), "marker value=%d", &p1) == 1 ||
+        sscanf(desc.c_str(), "snm-trigger value=%d", &p1) == 1) {
         if (p1 < 0 || p1 > 255) {
             return false;
         }
         out->type = IMWrapSysexType::Marker;
+        out->code = desc.find("snm-trigger") == 0 ? 0x00 : 0x40;
         out->markerBytes.push_back(static_cast<uint8_t>(p1));
         return true;
     }

@@ -39,7 +39,8 @@ struct IMWrapSequence {
     std::vector<IMWrapControlEvent> controlEvents;
 };
 
-IMWRAP_API bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *out, std::string *error = nullptr);
+IMWRAP_API bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *out, std::string *error = nullptr,
+                                   IMWrapSysexDialect dialect = IMWrapSysexDialect::GenericV6);
 
 } // namespace imwrap
 

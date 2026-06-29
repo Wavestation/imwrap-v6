@@ -136,10 +136,10 @@ import int  iMWrap_GetTempo();
 
 // --- COMPATIBILITÉ & MAPPAGE ROLAND MT-32 ---
 
-// Définit le profil de compatibilité du moteur (0 = Generic v6 standard, 1 = Sam & Max Hit the Road)
+// Définit le profil de compatibilité du moteur (0 = Generic v6 standard, 1 = SNM)
 import void iMWrap_SetCompatibilityProfile(int profile);
 
-// Retourne le profil de compatibilité actuel (0 = Generic v6 standard, 1 = Sam & Max)
+// Retourne le profil de compatibilité actuel (0 = Generic v6 standard, 1 = SNM)
 import int  iMWrap_GetCompatibilityProfile();
 
 // Associe un nom de timbre Roland MT-32 à un programme General MIDI (GM)

@@ -3,6 +3,9 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDialogButtonBox>
+#include <QFile>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QFormLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -15,6 +18,8 @@
 
 #include <iterator>
 #include <sstream>
+
+#include "OplSbi.h"
 
 namespace {
 
@@ -45,6 +50,47 @@ constexpr MessageDescriptor kMessages[] = {
 bool IsSignedHookType(imwrap::IMWrapSysexType type) {
     return type == imwrap::IMWrapSysexType::HookGlobalTranspose ||
            type == imwrap::IMWrapSysexType::HookSetTranspose;
+}
+
+bool ReadFileBytes(const QString& path, std::vector<uint8_t>* out, QString* error) {
+    if (!out) {
+        if (error) {
+            *error = "Internal error: missing output buffer.";
+        }
+        return false;
+    }
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        if (error) {
+            *error = file.errorString();
+        }
+        return false;
+    }
+
+    const QByteArray data = file.readAll();
+    out->assign(data.begin(), data.end());
+    return true;
+}
+
+bool WriteFileBytes(const QString& path, const std::vector<uint8_t>& bytes, QString* error) {
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        if (error) {
+            *error = file.errorString();
+        }
+        return false;
+    }
+
+    const qint64 written = file.write(reinterpret_cast<const char*>(bytes.data()), static_cast<qint64>(bytes.size()));
+    if (written != static_cast<qint64>(bytes.size())) {
+        if (error) {
+            *error = file.errorString();
+        }
+        return false;
+    }
+
+    return true;
 }
 
 } // namespace
@@ -135,6 +181,20 @@ void IMWrapSysExDialog::setupUi() {
     adlibHexEdit = new QTextEdit();
     adlibHexEdit->setMaximumHeight(72);
     connect(adlibHexEdit, &QTextEdit::textChanged, this, &IMWrapSysExDialog::updatePreview);
+    adlibEditorWidget = new QWidget();
+    auto* adlibLayout = new QVBoxLayout(adlibEditorWidget);
+    adlibLayout->setContentsMargins(0, 0, 0, 0);
+    adlibLayout->setSpacing(6);
+    adlibLayout->addWidget(adlibHexEdit);
+    auto* adlibButtonsLayout = new QHBoxLayout();
+    auto* importSbiBtn = new QPushButton("Import SBI...");
+    connect(importSbiBtn, &QPushButton::clicked, this, &IMWrapSysExDialog::importAdlibSbi);
+    adlibButtonsLayout->addWidget(importSbiBtn);
+    auto* exportSbiBtn = new QPushButton("Export SBI...");
+    connect(exportSbiBtn, &QPushButton::clicked, this, &IMWrapSysExDialog::exportAdlibSbi);
+    adlibButtonsLayout->addWidget(exportSbiBtn);
+    adlibButtonsLayout->addStretch(1);
+    adlibLayout->addLayout(adlibButtonsLayout);
 
     formLayout->addRow("Part:", partSpin);
     formLayout->addRow("Channel:", channelSpin);
@@ -169,7 +229,7 @@ void IMWrapSysExDialog::setupUi() {
     formLayout->addRow("Loop From Tick:", loopFromTickSpin);
 
     formLayout->addRow("Instrument ID:", instrumentIdSpin);
-    formLayout->addRow("AdLib Bytes:", adlibHexEdit);
+    formLayout->addRow("AdLib Bytes:", adlibEditorWidget);
 
     contentLayout->addWidget(leftBox, 1);
 
@@ -188,6 +248,8 @@ void IMWrapSysExDialog::setupUi() {
 }
 
 void IMWrapSysExDialog::setEvent(const imwrap::IMWrapControlEvent& event) {
+    sourceEvent_ = event;
+    hasSourceEvent_ = true;
     typeCombo->setCurrentIndex(comboIndexForType(event.type));
 
     partSpin->setValue(event.part);
@@ -293,7 +355,7 @@ void IMWrapSysExDialog::updateFieldVisibility() {
     setVisible(loopFromBeatSpin, false);
     setVisible(loopFromTickSpin, false);
     setVisible(instrumentIdSpin, false);
-    setVisible(adlibHexEdit, false);
+    setVisible(adlibEditorWidget, false);
 
     unknownSpin->setRange(type == imwrap::IMWrapSysexType::AllocatePart ? 0 : 0,
                           type == imwrap::IMWrapSysexType::AllocatePart ? 15 : 127);
@@ -320,13 +382,13 @@ void IMWrapSysExDialog::updateFieldVisibility() {
     case imwrap::IMWrapSysexType::AdlibPartInstrument:
         setVisible(partSpin, true);
         setVisible(unknownSpin, true);
-        setVisible(adlibHexEdit, true);
+        setVisible(adlibEditorWidget, true);
         break;
     case imwrap::IMWrapSysexType::AdlibGlobalInstrument:
         setVisible(unknownSpin, true);
         setVisible(hookValueSpin, true);
         setVisible(programSpin, true);
-        setVisible(adlibHexEdit, true);
+        setVisible(adlibEditorWidget, true);
         break;
     case imwrap::IMWrapSysexType::ParameterAdjust:
         setVisible(partSpin, true);
@@ -400,6 +462,57 @@ void IMWrapSysExDialog::updatePreview() {
     previewEdit->setPlainText(formatHexBytes(bytes));
 }
 
+void IMWrapSysExDialog::importAdlibSbi() {
+    const QString path = QFileDialog::getOpenFileName(this, "Import SBI", QString(), "Sound Blaster Instrument (*.sbi)");
+    if (path.isEmpty()) {
+        return;
+    }
+
+    std::vector<uint8_t> fileBytes;
+    QString fileError;
+    if (!ReadFileBytes(path, &fileBytes, &fileError)) {
+        QMessageBox::warning(this, "Import SBI", QString("Unable to read the SBI file.\n\n%1").arg(fileError));
+        return;
+    }
+
+    imwrap::gui::SbiTimbre timbre;
+    std::string decodeError;
+    if (!imwrap::gui::DecodeSbi(fileBytes, &timbre, &decodeError)) {
+        QMessageBox::warning(this, "Import SBI", QString::fromStdString(decodeError));
+        return;
+    }
+
+    adlibHexEdit->setPlainText(formatHexBytes(std::vector<uint8_t>(timbre.imuseInstrument.begin(), timbre.imuseInstrument.end())));
+}
+
+void IMWrapSysExDialog::exportAdlibSbi() {
+    const std::vector<uint8_t> adlibBytes = parseHexBytes(adlibHexEdit->toPlainText());
+    std::vector<uint8_t> sbiBytes;
+    std::string encodeError;
+
+    const QString path = QFileDialog::getSaveFileName(this, "Export SBI", "instrument.sbi", "Sound Blaster Instrument (*.sbi)");
+    if (path.isEmpty()) {
+        return;
+    }
+
+    if (!imwrap::gui::EncodeSbi(adlibBytes, QFileInfo(path).completeBaseName().toStdString(), &sbiBytes, &encodeError)) {
+        QMessageBox::warning(this, "Export SBI", QString::fromStdString(encodeError));
+        return;
+    }
+
+    QString fileError;
+    if (!WriteFileBytes(path, sbiBytes, &fileError)) {
+        QMessageBox::warning(this, "Export SBI", QString("Unable to save the SBI file.\n\n%1").arg(fileError));
+        return;
+    }
+
+    if (imwrap::gui::ImuseAdlibHasExtendedData(adlibBytes)) {
+        QMessageBox::information(this, "Export SBI",
+                                 "The SBI file stores the ScummVM-compatible 11-byte OPL core only.\n"
+                                 "Extended iMUSE-only AdLib bytes were not exported.");
+    }
+}
+
 void IMWrapSysExDialog::accept() {
     std::string error;
     if (!buildEvent(&resultEvent_, &error)) {
@@ -419,6 +532,11 @@ bool IMWrapSysExDialog::buildEvent(imwrap::IMWrapControlEvent* out, std::string*
 
     imwrap::IMWrapControlEvent event;
     event.type = typeForComboIndex(typeCombo->currentIndex());
+    if (hasSourceEvent_ && event.type == sourceEvent_.type) {
+        event.code = sourceEvent_.code;
+        event.rawMessage = sourceEvent_.rawMessage;
+        event.decodedBytes = sourceEvent_.decodedBytes;
+    }
 
     switch (event.type) {
     case imwrap::IMWrapSysexType::AllocatePart:

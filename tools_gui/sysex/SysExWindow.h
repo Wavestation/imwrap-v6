@@ -27,6 +27,8 @@ private slots:
     void parseHex();
     void copyToClipboard();
     void updateFieldVisibility();
+    void importAdlibSbi();
+    void exportAdlibSbi();
     void onMidiDeviceChanged(int index);
     void sendMidiSysEx();
 
@@ -87,7 +89,8 @@ private:
     QSpinBox *instrumentIdSpin;
     
     // Adlib
-    QTextEdit *adlibHexEdit;
+    QWidget *adlibEditorWidget = nullptr;
+    QTextEdit *adlibHexEdit = nullptr;
     
     // Display
     QTextEdit *generatedHexDisplay;

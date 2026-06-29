@@ -232,21 +232,23 @@ if(IMWRAP_BUILD_GUI_TOOLS)
     add_executable(imwrap_sysex_gui WIN32
         tools_gui/sysex/main.cpp
         tools_gui/sysex/SysExWindow.cpp
+        tools_gui/common/OplSbi.cpp
         tools_gui/shared-res/imwrap_gui_resources.qrc
         tools_gui/shared-res/imwrap_sysex_gui.rc
     )
     target_link_libraries(imwrap_sysex_gui PRIVATE Qt6::Widgets imwrap_v6 winmm)
-    target_include_directories(imwrap_sysex_gui PRIVATE tools_gui/sysex)
+    target_include_directories(imwrap_sysex_gui PRIVATE tools_gui/sysex tools_gui/common)
 
     # Player Tool
     add_executable(imwrap_player_gui WIN32
         tools_gui/player/main.cpp
         tools_gui/player/PlayerWindow.cpp
+        tools_gui/common/AdlibPreviewOutput.cpp
         tools_gui/shared-res/imwrap_gui_resources.qrc
         tools_gui/shared-res/imwrap_player_gui.rc
     )
-    target_link_libraries(imwrap_player_gui PRIVATE Qt6::Widgets imwrap_v6 winmm dsound ole32 ksuser)
-    target_include_directories(imwrap_player_gui PRIVATE tools_gui/player)
+    target_link_libraries(imwrap_player_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI winmm dsound ole32 ksuser)
+    target_include_directories(imwrap_player_gui PRIVATE tools_gui/player tools_gui/common)
 
     # Packer Tool
     add_executable(imwrap_packer_gui WIN32
@@ -263,11 +265,13 @@ if(IMWRAP_BUILD_GUI_TOOLS)
         tools_gui/explorer/main.cpp
         tools_gui/explorer/ExplorerWindow.cpp
         tools_gui/explorer/IMWrapSysExDialog.cpp
+        tools_gui/common/AdlibPreviewOutput.cpp
         tools_gui/common/ImsProject.cpp
+        tools_gui/common/OplSbi.cpp
         tools_gui/shared-res/imwrap_gui_resources.qrc
         tools_gui/shared-res/imwrap_explorer_gui.rc
     )
-    target_link_libraries(imwrap_explorer_gui PRIVATE Qt6::Widgets imwrap_v6 winmm dsound ole32 ksuser)
+    target_link_libraries(imwrap_explorer_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI winmm dsound ole32 ksuser)
     target_include_directories(imwrap_explorer_gui PRIVATE tools_gui/explorer tools_gui/common)
 
     # Windeployqt to copy required DLLs and plugins

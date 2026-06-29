@@ -909,7 +909,7 @@ void IMWrapEngine::applyPartPitchBend(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    if (_compatibility == CompatibilityProfile::SamAndMax && part->pitchBendFactor == 0) {
+    if (_compatibility == CompatibilityProfile::Snm && part->pitchBendFactor == 0) {
         const int16_t fadeModifier = static_cast<int16_t>(((((part->pitchBend >= 0) ? 127 - part->volume : part->volume) + 1) * part->pitchBend) >> 7);
         const uint16_t vol = static_cast<uint16_t>((part->volume + fadeModifier + 1) * sound->effectiveVolume);
         part->effectiveVolume = static_cast<uint8_t>(ClampInt((vol * (part->volControlSensitivity + 1)) >> 14, 0, 127));
@@ -1013,7 +1013,7 @@ void IMWrapEngine::applyPartPolyphony(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    if (_compatibility != CompatibilityProfile::SamAndMax || part->percussion || !clearToTransmit(sound, part)) {
+    if (_compatibility != CompatibilityProfile::Snm || part->percussion || !clearToTransmit(sound, part)) {
         return;
     }
 
@@ -1440,7 +1440,7 @@ void IMWrapEngine::partNoteOn(ActiveSound *sound, uint8_t channel, uint8_t sourc
         if (_rhyState.vol != part->effectiveVolume) {
             emitMidiMessage(sound->soundId, static_cast<uint8_t>(0xB0 | physicalChannel), 7, true, part->effectiveVolume);
         }
-        if (_compatibility == CompatibilityProfile::SamAndMax) {
+        if (_compatibility == CompatibilityProfile::Snm) {
             if (_rhyState.prio != part->priorityEffective) {
                 emitMidiMessage(sound->soundId, static_cast<uint8_t>(0xB0 | physicalChannel), 18, true, part->priorityEffective);
             }
@@ -1582,14 +1582,14 @@ bool IMWrapEngine::dispatchChannelEvent(ActiveSound *sound, uint8_t status, uint
             partSetPitchBendFactor(sound, channel, data2);
             return true;
         case 17:
-            if (_compatibility == CompatibilityProfile::SamAndMax) {
+            if (_compatibility == CompatibilityProfile::Snm) {
                 partSetPolyphony(sound, channel, data2);
             } else {
                 partSetDetune(sound, channel, static_cast<int16_t>(static_cast<int>(data2) - 0x40));
             }
             return true;
         case 18:
-            if (_compatibility == CompatibilityProfile::SamAndMax) {
+            if (_compatibility == CompatibilityProfile::Snm) {
                 partSetPriority(sound, channel, static_cast<int8_t>(data2));
             } else {
                 partSetPriority(sound, channel, static_cast<int8_t>(static_cast<int>(data2) - 0x40));
@@ -2001,7 +2001,9 @@ bool IMWrapEngine::handleMidiEvent(uint16_t soundId, const MidiEvent &event) {
         return true;
     case MidiEventType::SysEx: {
         IMWrapControlEvent controlEvent;
-        if (DecodeIMWrapSysex(ByteView(event.payload.data(), event.payload.size()), &controlEvent, nullptr)) {
+        const IMWrapSysexDialect dialect =
+            (_compatibility == CompatibilityProfile::Snm) ? IMWrapSysexDialect::Snm : IMWrapSysexDialect::GenericV6;
+        if (DecodeIMWrapSysex(ByteView(event.payload.data(), event.payload.size()), &controlEvent, dialect, nullptr)) {
             controlEvent.tick = event.tick;
             controlEvent.trackIndex = sound->trackIndex;
             return executeControlEvent(soundId, controlEvent);
@@ -2469,7 +2471,9 @@ bool IMWrapEngine::startSound(uint16_t soundId) {
     if (!active.variant.valid()) {
         return false;
     }
-    if (!LoadIMWrapSequence(active.variant, &active.sequence, nullptr)) {
+    const IMWrapSysexDialect dialect =
+        (_compatibility == CompatibilityProfile::Snm) ? IMWrapSysexDialect::Snm : IMWrapSysexDialect::GenericV6;
+    if (!LoadIMWrapSequence(active.variant, &active.sequence, nullptr, dialect)) {
         return false;
     }
 

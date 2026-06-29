@@ -1,21 +1,269 @@
 #include "PlayerWindow.h"
-#include <QSettings>
 #include <QFileDialog>
-#include <QMessageBox>
-#include <QTreeWidget>
-#include <QSettings>
-#include <QHeaderView>
-#include <QDateTime>
 #include <QFormLayout>
+#include <QHeaderView>
+#include <QMessageBox>
+#include <QSettings>
+#include <QStringList>
+#include <QTreeWidget>
+#include <QDateTime>
+#include <QCheckBox>
 #include <thread>
 #include <mutex>
 #include <queue>
 #include <atomic>
-#include <sstream>
-#include <QFormLayout>
-#include <sstream>
-#include <iomanip>
+#include <algorithm>
 #include "imwrap/IMWrapSysex.h"
+
+namespace {
+
+QString SanitizeMetaText(const std::vector<uint8_t>& payload) {
+    QString text = QString::fromLatin1(reinterpret_cast<const char*>(payload.data()), static_cast<int>(payload.size()));
+    text.replace('\r', ' ');
+    text.replace('\n', ' ');
+    text.replace('\t', ' ');
+    return text.trimmed();
+}
+
+QString FormatNoteName(uint8_t note) {
+    static const char* kNames[] = {
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
+    };
+    const int octave = static_cast<int>(note / 12) - 1;
+    return QString("%1%2").arg(kNames[note % 12]).arg(octave);
+}
+
+QString ControllerName(uint8_t controller) {
+    switch (controller) {
+    case 0: return "Bank Select MSB";
+    case 1: return "Modulation";
+    case 7: return "Channel Volume";
+    case 10: return "Pan";
+    case 11: return "Expression";
+    case 32: return "Bank Select LSB";
+    case 64: return "Sustain Pedal";
+    case 91: return "Reverb Send";
+    case 93: return "Chorus Send";
+    case 98: return "NRPN LSB";
+    case 99: return "NRPN MSB";
+    case 100: return "RPN LSB";
+    case 101: return "RPN MSB";
+    case 120: return "All Sound Off";
+    case 121: return "Reset All Controllers";
+    case 123: return "All Notes Off";
+    default:
+        return QString();
+    }
+}
+
+QString MidiEventTypeLabel(const imwrap::MidiEvent& event) {
+    switch (event.type) {
+    case imwrap::MidiEventType::Channel:
+        switch (event.status & 0xF0) {
+        case 0x80: return "Note Off";
+        case 0x90: return (event.hasData2 && event.data2 == 0) ? "Note Off" : "Note On";
+        case 0xA0: return "Poly Aftertouch";
+        case 0xB0: return "Control Change";
+        case 0xC0: return "Program Change";
+        case 0xD0: return "Channel Pressure";
+        case 0xE0: return "Pitch Bend";
+        default: return "Channel";
+        }
+    case imwrap::MidiEventType::Meta:
+        switch (event.metaType) {
+        case 0x01: return "Meta Text";
+        case 0x02: return "Copyright";
+        case 0x03: return "Track Name";
+        case 0x04: return "Instrument Name";
+        case 0x05: return "Lyric";
+        case 0x06: return "Marker";
+        case 0x07: return "Cue Point";
+        case 0x20: return "Channel Prefix";
+        case 0x2F: return "End Of Track";
+        case 0x51: return "Tempo";
+        case 0x54: return "SMPTE Offset";
+        case 0x58: return "Time Signature";
+        case 0x59: return "Key Signature";
+        default:
+            return QString("Meta 0x%1").arg(event.metaType, 2, 16, QChar('0')).toUpper();
+        }
+    case imwrap::MidiEventType::SysEx:
+        return "SysEx";
+    case imwrap::MidiEventType::System:
+        switch (event.status) {
+        case 0xF1: return "MTC Quarter Frame";
+        case 0xF2: return "Song Position";
+        case 0xF3: return "Song Select";
+        case 0xF6: return "Tune Request";
+        case 0xF8: return "Timing Clock";
+        case 0xFA: return "Start";
+        case 0xFB: return "Continue";
+        case 0xFC: return "Stop";
+        case 0xFE: return "Active Sensing";
+        case 0xFF: return "System Reset";
+        default:
+            return QString("System 0x%1").arg(event.status, 2, 16, QChar('0')).toUpper();
+        }
+    }
+
+    return "Event";
+}
+
+QString DescribePlayerMidiEvent(const imwrap::MidiEvent& event, imwrap::IMWrapSysexDialect dialect) {
+    switch (event.type) {
+    case imwrap::MidiEventType::Channel: {
+        const uint8_t channel = static_cast<uint8_t>(event.status & 0x0F);
+        switch (event.status & 0xF0) {
+        case 0x80:
+            return QString("Ch %1, note %2 (%3), velocity %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0x90:
+            if (event.hasData2 && event.data2 == 0) {
+                return QString("Ch %1, note %2 (%3), velocity 0")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(FormatNoteName(event.data1));
+            }
+            return QString("Ch %1, note %2 (%3), velocity %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0xA0:
+            return QString("Ch %1, note %2 (%3), pressure %4")
+                .arg(channel + 1)
+                .arg(event.data1)
+                .arg(FormatNoteName(event.data1))
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        case 0xB0: {
+            const QString controllerName = ControllerName(event.data1);
+            return controllerName.isEmpty()
+                ? QString("Ch %1, controller %2, value %3")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(event.hasData2 ? QString::number(event.data2) : "-")
+                : QString("Ch %1, controller %2 (%3), value %4")
+                    .arg(channel + 1)
+                    .arg(event.data1)
+                    .arg(controllerName)
+                    .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
+        case 0xC0:
+            return QString("Ch %1, program %2")
+                .arg(channel + 1)
+                .arg(event.data1);
+        case 0xD0:
+            return QString("Ch %1, pressure %2")
+                .arg(channel + 1)
+                .arg(event.data1);
+        case 0xE0: {
+            const int bend = static_cast<int>((static_cast<uint16_t>(event.data2) << 7) | event.data1) - 8192;
+            return QString("Ch %1, bend %2 (LSB=%3 MSB=%4)")
+                .arg(channel + 1)
+                .arg(bend)
+                .arg(event.data1)
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
+        default:
+            return QString("Ch %1, data1=%2 data2=%3")
+                .arg(channel + 1)
+                .arg(event.hasData1 ? QString::number(event.data1) : "-")
+                .arg(event.hasData2 ? QString::number(event.data2) : "-");
+        }
+    }
+    case imwrap::MidiEventType::Meta:
+        switch (event.metaType) {
+        case 0x01:
+        case 0x02:
+        case 0x03:
+        case 0x04:
+        case 0x05:
+        case 0x06:
+        case 0x07:
+            return SanitizeMetaText(event.payload);
+        case 0x20:
+            return event.payload.size() == 1
+                ? QString("Channel %1").arg(static_cast<int>(event.payload[0]) + 1)
+                : QString("Malformed channel prefix (%1 bytes)").arg(event.payload.size());
+        case 0x2F:
+            return "End of track";
+        case 0x51:
+            if (event.payload.size() == 3) {
+                const uint32_t microsPerQuarter =
+                    (static_cast<uint32_t>(event.payload[0]) << 16) |
+                    (static_cast<uint32_t>(event.payload[1]) << 8) |
+                    static_cast<uint32_t>(event.payload[2]);
+                const double bpm = microsPerQuarter > 0 ? (60000000.0 / static_cast<double>(microsPerQuarter)) : 0.0;
+                return QString("%1 us/qn (%2 BPM)")
+                    .arg(microsPerQuarter)
+                    .arg(QString::number(bpm, 'f', 2));
+            }
+            return QString("Malformed tempo (%1 bytes)").arg(event.payload.size());
+        case 0x54:
+            return event.payload.size() == 5
+                ? QString("%1:%2:%3 frame %4 subframe %5")
+                    .arg(event.payload[0])
+                    .arg(event.payload[1])
+                    .arg(event.payload[2])
+                    .arg(event.payload[3])
+                    .arg(event.payload[4])
+                : QString("Malformed SMPTE offset (%1 bytes)").arg(event.payload.size());
+        case 0x58:
+            if (event.payload.size() == 4) {
+                const int numerator = event.payload[0];
+                const int denominator = 1 << event.payload[1];
+                return QString("%1/%2, clocks=%3, 32nds=%4")
+                    .arg(numerator)
+                    .arg(denominator)
+                    .arg(event.payload[2])
+                    .arg(event.payload[3]);
+            }
+            return QString("Malformed time signature (%1 bytes)").arg(event.payload.size());
+        case 0x59:
+            if (event.payload.size() == 2) {
+                const int sharpsFlats = static_cast<int8_t>(event.payload[0]);
+                return QString("%1, %2")
+                    .arg(sharpsFlats == 0 ? "0 accidentals" : QString("%1 accidentals").arg(sharpsFlats))
+                    .arg(event.payload[1] == 0 ? "major" : "minor");
+            }
+            return QString("Malformed key signature (%1 bytes)").arg(event.payload.size());
+        default:
+            return QString("%1 bytes").arg(event.payload.size());
+        }
+    case imwrap::MidiEventType::SysEx: {
+        imwrap::IMWrapControlEvent controlEvent;
+        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(event.payload.data(), event.payload.size()), &controlEvent, dialect)) {
+            return QString("iMWrap SysEx: %1").arg(QString::fromStdString(imwrap::DescribeIMWrapSysex(controlEvent)));
+        }
+
+        QStringList bytes;
+        for (size_t index = 0; index < event.payload.size() && event.payload[index] != 0xF7; ++index) {
+            bytes.append(QString("%1").arg(event.payload[index], 2, 16, QChar('0')).toUpper());
+        }
+        return bytes.isEmpty()
+            ? "SysEx"
+            : QString("Raw: %1").arg(bytes.join(' '));
+    }
+    case imwrap::MidiEventType::System:
+        if (event.status == 0xF2 && event.payload.size() == 2) {
+            const uint16_t position = static_cast<uint16_t>(event.payload[0] | (static_cast<uint16_t>(event.payload[1]) << 7));
+            return QString("Position %1").arg(position);
+        }
+        if ((event.status == 0xF1 || event.status == 0xF3) && event.payload.size() == 1) {
+            return QString("Value %1").arg(event.payload[0]);
+        }
+        return event.payload.empty()
+            ? QString("No payload")
+            : QString("%1 bytes").arg(event.payload.size());
+    }
+
+    return "Event";
+}
+
+} // namespace
 
 PlayerWindow::WinMMSink::~WinMMSink() {
     closeDevice();
@@ -103,6 +351,8 @@ PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnable
     if (lastProfile >= 0 && lastProfile < profileCombo->count()) {
         profileCombo->setCurrentIndex(lastProfile);
     }
+    snmModeCheck->setChecked(settings.value("snmMode", false).toBool());
+    engine.setCompatibilityProfile(currentCompatibilityProfile());
     bool preview = settings.value("previewEnabled", false).toBool();
     if (preview) {
         togglePreview();
@@ -110,11 +360,59 @@ PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnable
 }
 
 PlayerWindow::~PlayerWindow() {
+    disablePreviewBackend();
     QSettings settings("imwrap", "IMWrapPlayerGui");
     settings.setValue("lastBank", bankPathEdit->text());
     settings.setValue("lastDevice", deviceCombo->currentText());
     settings.setValue("lastProfile", profileCombo->currentIndex());
+    settings.setValue("snmMode", snmModeCheck->isChecked());
     settings.setValue("previewEnabled", previewEnabled);
+}
+
+bool PlayerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::string* error) {
+    if (profile == imwrap::TargetProfile::Adlib) {
+        midiSink.closeDevice();
+        if (!adlibSink.isAvailable() && !adlibSink.start(error)) {
+            return false;
+        }
+        previewBackend = PreviewBackend::Adlib;
+        engine.setMidiSink(&adlibSink);
+        if (error) {
+            error->clear();
+        }
+        return true;
+    }
+
+    adlibSink.stop();
+    if (deviceCombo->currentIndex() < 0) {
+        if (error) {
+            *error = "No MIDI output device is selected.";
+        }
+        return false;
+    }
+
+    const UINT devId = deviceCombo->currentData().toUInt();
+    if (!midiSink.openDevice(devId)) {
+        if (error) {
+            *error = "Cannot open MIDI device.";
+        }
+        return false;
+    }
+
+    previewBackend = PreviewBackend::WinMM;
+    engine.setMidiSink(&midiSink);
+    if (error) {
+        error->clear();
+    }
+    return true;
+}
+
+void PlayerWindow::disablePreviewBackend() {
+    transportTimer->stop();
+    adlibSink.stop();
+    midiSink.closeDevice();
+    previewBackend = PreviewBackend::None;
+    engine.setMidiSink(nullptr);
 }
 
 void PlayerWindow::setupUi() {
@@ -152,6 +450,13 @@ void PlayerWindow::setupUi() {
         }
     });
     backendLayout->addWidget(profileCombo);
+
+    snmModeCheck = new QCheckBox("SNM mode");
+    connect(snmModeCheck, &QCheckBox::toggled, this, [this](bool) {
+        engine.setCompatibilityProfile(currentCompatibilityProfile());
+        updateUiState();
+    });
+    backendLayout->addWidget(snmModeCheck);
     
     previewBtn = new QPushButton("Enable Preview");
     connect(previewBtn, &QPushButton::clicked, this, &PlayerWindow::togglePreview);
@@ -174,8 +479,8 @@ void PlayerWindow::setupUi() {
     // Center: Events
     auto *centerLayout = new QVBoxLayout();
     centerLayout->addWidget(new QLabel("Sound Events:"));
-    eventsTable = new QTableWidget(0, 3);
-    eventsTable->setHorizontalHeaderLabels({"Tick", "Track", "Description"});
+    eventsTable = new QTableWidget(0, 4);
+    eventsTable->setHorizontalHeaderLabels({"Tick", "Track", "Type", "Description"});
     eventsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     centerLayout->addWidget(eventsTable);
     split->addLayout(centerLayout, 2);
@@ -290,37 +595,56 @@ void PlayerWindow::loadBank() {
 
 void PlayerWindow::togglePreview() {
     if (previewEnabled) {
-        transportTimer->stop();
-        midiSink.closeDevice();
+        disablePreviewBackend();
         engine.resetMt32Initialization();
         previewEnabled = false;
         previewBtn->setText("Enable Preview");
         statusLabel->setText("Preview disabled.");
     } else {
-        if (deviceCombo->currentIndex() >= 0) {
-            UINT devId = deviceCombo->currentData().toUInt();
-            if (midiSink.openDevice(devId)) {
-                engine.resetMt32Initialization();
-                previewEnabled = true;
-                previewBtn->setText("Disable Preview");
-                statusLabel->setText("Preview enabled.");
-                if (engine.targetProfile() == imwrap::TargetProfile::Mt32) {
-                    engine.initMt32();
-                }
-            } else {
-                QMessageBox::warning(this, "Error", "Cannot open MIDI device.");
-            }
+        std::string error;
+        if (!ensurePreviewBackend(engine.targetProfile(), &error)) {
+            QMessageBox::warning(this, "Error", QString::fromStdString(error));
+            return;
         }
+        engine.resetMt32Initialization();
+        previewEnabled = true;
+        previewBtn->setText("Disable Preview");
+        statusLabel->setText(engine.targetProfile() == imwrap::TargetProfile::Adlib
+                                 ? "Preview enabled with embedded AdLib audio."
+                                 : "Preview enabled.");
     }
 }
 
 void PlayerWindow::playSound() {
     if (soundTree->selectedItems().isEmpty()) return;
     uint16_t id = soundTree->selectedItems().first()->data(0, Qt::UserRole).toUInt();
+    engine.setCompatibilityProfile(currentCompatibilityProfile());
+    if (!previewEnabled) {
+        togglePreview();
+        if (!previewEnabled) {
+            return;
+        }
+    }
+
+    std::string error;
+    if (!ensurePreviewBackend(engine.targetProfile(), &error)) {
+        QMessageBox::warning(this, "Error", QString::fromStdString(error));
+        disablePreviewBackend();
+        engine.resetMt32Initialization();
+        previewEnabled = false;
+        previewBtn->setText("Enable Preview");
+        statusLabel->setText("Preview disabled.");
+        return;
+    }
+
     engine.stopAllSounds();
+    if (engine.targetProfile() == imwrap::TargetProfile::Mt32) {
+        engine.resetMt32Initialization();
+        engine.initMt32();
+    }
     engine.startSound(id);
-    
-    if (previewEnabled && !transportTimer->isActive()) {
+
+    if (!transportTimer->isActive()) {
         lastTime = QDateTime::currentMSecsSinceEpoch();
         tickAccumulator = 0;
         transportTimer->start();
@@ -376,11 +700,17 @@ void PlayerWindow::onTimer() {
 
 void PlayerWindow::updateUiState() {
     // Update Events Table
+    const imwrap::IMWrapSysexDialect dialect = currentSysexDialect();
     if (!soundTree->selectedItems().isEmpty()) {
         uint16_t id = soundTree->selectedItems().first()->data(0, Qt::UserRole).toUInt();
         auto res = bank.loadSound(id);
         
-        struct SimpleEvent { uint32_t tick; uint16_t track; std::string text; };
+        struct SimpleEvent {
+            uint32_t tick;
+            uint16_t track;
+            QString type;
+            QString text;
+        };
         std::vector<SimpleEvent> seqEvents;
         
         imwrap::SmfSequence seq;
@@ -390,33 +720,30 @@ void PlayerWindow::updateUiState() {
                 uint32_t absTick = 0;
                 for (const auto &evt : trk.events) {
                     absTick += evt.delta;
-                    if (evt.type == imwrap::MidiEventType::Meta && evt.metaType == 0x06) {
-                        seqEvents.push_back({absTick, tIdx, std::string(evt.payload.begin(), evt.payload.end())});
-                    } else if (evt.type == imwrap::MidiEventType::SysEx) {
-                        imwrap::IMWrapControlEvent ctrlEvt;
-                        if (imwrap::DecodeIMWrapSysex(imwrap::ByteView(evt.payload.data(), evt.payload.size()), &ctrlEvt)) {
-                            std::string desc = imwrap::DescribeIMWrapSysex(ctrlEvt);
-                            seqEvents.push_back({absTick, tIdx, "iMWrap SysEx: " + desc});
-                        } else {
-                            // Fallback raw hex for other SysEx
-                            std::stringstream ss;
-                            ss << "SysEx (raw): ";
-                            for (size_t k = 0; k < evt.payload.size() && evt.payload[k] != 0xF7; k++) {
-                                ss << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)evt.payload[k] << " ";
-                            }
-                            seqEvents.push_back({absTick, tIdx, ss.str()});
-                        }
-                    }
+                    seqEvents.push_back({
+                        absTick,
+                        tIdx,
+                        MidiEventTypeLabel(evt),
+                        DescribePlayerMidiEvent(evt, dialect)
+                    });
                 }
                 tIdx++;
             }
         }
+
+        std::stable_sort(seqEvents.begin(), seqEvents.end(), [](const SimpleEvent& lhs, const SimpleEvent& rhs) {
+            if (lhs.tick != rhs.tick) {
+                return lhs.tick < rhs.tick;
+            }
+            return lhs.track < rhs.track;
+        });
         
         eventsTable->setRowCount(seqEvents.size());
         for (size_t i = 0; i < seqEvents.size(); ++i) {
             eventsTable->setItem(i, 0, new QTableWidgetItem(QString::number(seqEvents[i].tick)));
             eventsTable->setItem(i, 1, new QTableWidgetItem(QString::number(seqEvents[i].track)));
-            eventsTable->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(seqEvents[i].text)));
+            eventsTable->setItem(i, 2, new QTableWidgetItem(seqEvents[i].type));
+            eventsTable->setItem(i, 3, new QTableWidgetItem(seqEvents[i].text));
         }
     } else {
         eventsTable->setRowCount(0);
@@ -424,6 +751,7 @@ void PlayerWindow::updateUiState() {
     
     // Update Active Sounds Table
     auto activeIds = engine.activeSoundIds();
+    snmModeCheck->setEnabled(activeIds.empty());
     activeTable->setRowCount(activeIds.size());
     for (size_t i = 0; i < activeIds.size(); ++i) {
         uint16_t id = activeIds[i];
@@ -435,4 +763,16 @@ void PlayerWindow::updateUiState() {
         activeTable->setItem(i, 2, new QTableWidgetItem(QString::number(beat)));
         activeTable->setItem(i, 3, new QTableWidgetItem(QString::number(tick)));
     }
+}
+
+imwrap::IMWrapEngine::CompatibilityProfile PlayerWindow::currentCompatibilityProfile() const {
+    return (snmModeCheck && snmModeCheck->isChecked())
+        ? imwrap::IMWrapEngine::CompatibilityProfile::Snm
+        : imwrap::IMWrapEngine::CompatibilityProfile::GenericV6;
+}
+
+imwrap::IMWrapSysexDialect PlayerWindow::currentSysexDialect() const {
+    return (snmModeCheck && snmModeCheck->isChecked())
+        ? imwrap::IMWrapSysexDialect::Snm
+        : imwrap::IMWrapSysexDialect::GenericV6;
 }

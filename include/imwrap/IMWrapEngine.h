@@ -44,7 +44,7 @@ class IMWRAP_API IMWrapEngine {
 public:
     enum class CompatibilityProfile {
         GenericV6,
-        SamAndMax
+        Snm
     };
 
     explicit IMWrapEngine(const ResourceBank *bank = nullptr) : _bank(bank) {}

@@ -5,7 +5,8 @@
 
 namespace imwrap {
 
-extern bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *seq, std::string *error);
+extern bool LoadIMWrapSequence(const SoundVariantView &variant, IMWrapSequence *seq, std::string *error,
+                               IMWrapSysexDialect dialect);
 
 namespace {
 
@@ -305,7 +306,9 @@ bool IMWrapEngine::Deserialize(std::istream &is) {
             auto variant = resource.selectVariant(_profile);
             if (variant.valid()) {
                 snd.variant = variant;
-                LoadIMWrapSequence(snd.variant, &snd.sequence, nullptr);
+                const IMWrapSysexDialect dialect =
+                    (_compatibility == CompatibilityProfile::Snm) ? IMWrapSysexDialect::Snm : IMWrapSysexDialect::GenericV6;
+                LoadIMWrapSequence(snd.variant, &snd.sequence, nullptr, dialect);
                 
                 for (int i = 0; i < 16; ++i) {
                     PartState &part = snd.parts[i];

@@ -7,8 +7,10 @@
 #include <mmsystem.h>
 
 #include "imwrap/IMWrapEngine.h"
+#include "imwrap/IMWrapSysex.h"
 #include "imwrap/MidiSink.h"
 #include "ImsProject.h"
+#include "AdlibPreviewOutput.h"
 
 class QCheckBox;
 class QComboBox;
@@ -57,6 +59,12 @@ private slots:
     void onTimer();
 
 private:
+    enum class PreviewBackend {
+        None,
+        WinMM,
+        Adlib
+    };
+
     enum class NodeType : int {
         Sound = 1,
         Variant = 2,
@@ -108,6 +116,8 @@ private:
     void updateUiState();
     void updateWindowTitle();
     void markDirty(bool dirty = true);
+    bool ensurePreviewBackend(imwrap::TargetProfile profile, std::string* error = nullptr);
+    void disablePreviewBackend();
     void loadSettings();
     void saveSettings() const;
     bool openDocumentPath(const QString& path, bool showErrorDialogs = true);
@@ -130,11 +140,13 @@ private:
     void normalizeTrackEvents(imwrap::gui::ProjectTrack* track) const;
     int insertEventIntoTrack(imwrap::gui::ProjectTrack* track, imwrap::MidiEvent event) const;
     int replaceEventInTrack(imwrap::gui::ProjectTrack* track, int modelIndex, imwrap::MidiEvent event) const;
+    imwrap::IMWrapEngine::CompatibilityProfile currentCompatibilityProfile() const;
+    imwrap::IMWrapSysexDialect currentSysexDialect() const;
 
     static QString formatPayloadHex(const std::vector<uint8_t>& payload);
-    static QString describeMidiEvent(const imwrap::MidiEvent& event, bool* editableImwrapSysEx = nullptr);
+    QString describeMidiEvent(const imwrap::MidiEvent& event, bool* editableImwrapSysEx = nullptr) const;
     static std::vector<uint8_t> encodeSmfPayload(const imwrap::IMWrapControlEvent& event);
-    static bool isRecognizedImwrapEvent(const imwrap::MidiEvent& event);
+    bool isRecognizedImwrapEvent(const imwrap::MidiEvent& event) const;
 
     QLineEdit* filePathEdit_ = nullptr;
     QTreeWidget* contentTree_ = nullptr;
@@ -143,6 +155,7 @@ private:
     QCheckBox* filterNonImwrapCheck_ = nullptr;
     QComboBox* deviceCombo_ = nullptr;
     QComboBox* profileCombo_ = nullptr;
+    QCheckBox* snmModeCheck_ = nullptr;
     QWidget* selectionPropsWidget_ = nullptr;
     QWidget* hookControlsWidget_ = nullptr;
     QLabel* selectionSummaryLabel_ = nullptr;
@@ -189,4 +202,6 @@ private:
     imwrap::ResourceBank previewBank_;
     imwrap::IMWrapEngine engine_;
     WinMMSink midiSink_;
+    imwrap::gui::AdlibPreviewOutput adlibSink_;
+    PreviewBackend previewBackend_ = PreviewBackend::None;
 };

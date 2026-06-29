@@ -18,11 +18,15 @@
 #include <mutex>
 #include <queue>
 #include <atomic>
+#include <string>
 
 #include "imwrap/IMWrapEngine.h"
+#include "imwrap/IMWrapSysex.h"
 #include "imwrap/ResourceBank.h"
 #include "imwrap/MidiSink.h"
+#include "AdlibPreviewOutput.h"
 
+class QCheckBox;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -45,13 +49,24 @@ private slots:
     void advanceTicks();
 
 private:
+    enum class PreviewBackend {
+        None,
+        WinMM,
+        Adlib
+    };
+
     void setupUi();
     void refreshDevices();
     void updateUiState();
+    bool ensurePreviewBackend(imwrap::TargetProfile profile, std::string* error = nullptr);
+    void disablePreviewBackend();
+    imwrap::IMWrapEngine::CompatibilityProfile currentCompatibilityProfile() const;
+    imwrap::IMWrapSysexDialect currentSysexDialect() const;
 
     QLineEdit *bankPathEdit;
     QComboBox *deviceCombo;
     QComboBox *profileCombo;
+    QCheckBox *snmModeCheck;
     QTreeWidget *soundTree;
     QPushButton *previewBtn;
     QPushButton *playBtn;
@@ -84,6 +99,8 @@ private:
     };
     
     WinMMSink midiSink;
+    imwrap::gui::AdlibPreviewOutput adlibSink;
+    PreviewBackend previewBackend = PreviewBackend::None;
 
     QTimer *transportTimer;
     qint64 lastTime;

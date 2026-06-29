@@ -32,6 +32,11 @@
 
 namespace imwrap {
 
+enum class IMWrapSysexDialect {
+    GenericV6,
+    Snm
+};
+
 enum class IMWrapSysexType {
     AllocatePart,
     ShutdownPart,
@@ -101,6 +106,7 @@ struct IMWrapControlEvent {
 };
 
 IMWRAP_API bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, std::string *error = nullptr);
+IMWRAP_API bool DecodeIMWrapSysex(ByteView message, IMWrapControlEvent *out, IMWrapSysexDialect dialect, std::string *error = nullptr);
 IMWRAP_API bool EncodeIMWrapSysex(const IMWrapControlEvent &event, std::vector<uint8_t> *out);
 IMWRAP_API std::string DescribeIMWrapSysex(const IMWrapControlEvent &event);
 IMWRAP_API bool ParseIMWrapSysexDescription(const std::string &desc, IMWrapControlEvent *out);
