@@ -326,9 +326,30 @@ ExplorerWindow::~ExplorerWindow() {
     disablePreviewBackend();
 }
 
+bool ExplorerWindow::promptSaveIfDirty() {
+    if (!dirty_) return true;
+
+    QMessageBox::StandardButton res = QMessageBox::warning(this, "Unsaved Changes",
+        "You have unsaved changes. Do you want to save them now?",
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+    if (res == QMessageBox::Cancel) {
+        return false;
+    }
+    if (res == QMessageBox::Yes) {
+        saveDocument();
+        if (dirty_) return false;
+    }
+    return true;
+}
+
 void ExplorerWindow::closeEvent(QCloseEvent* event) {
-    saveSettings();
-    QMainWindow::closeEvent(event);
+    if (promptSaveIfDirty()) {
+        saveSettings();
+        QMainWindow::closeEvent(event);
+    } else {
+        event->ignore();
+    }
 }
 
 void ExplorerWindow::setupUi() {
@@ -512,7 +533,12 @@ void ExplorerWindow::setupUi() {
         rebuildDetailPane();
         updateUiState();
     });
-    playbackLayout->addRow("", snmModeCheck_);
+    playbackPositionLabel_ = new QLabel();
+    auto* snmLayout = new QHBoxLayout();
+    snmLayout->addWidget(snmModeCheck_);
+    snmLayout->addWidget(playbackPositionLabel_);
+    snmLayout->addStretch();
+    playbackLayout->addRow("", snmLayout);
 
     auto* refreshBtn = new QPushButton("Refresh Devices");
     connect(refreshBtn, &QPushButton::clicked, this, &ExplorerWindow::refreshDevices);
@@ -588,6 +614,8 @@ void ExplorerWindow::setupUi() {
 }
 
 void ExplorerWindow::openDocument() {
+    if (!promptSaveIfDirty()) return;
+
     const QString path = QFileDialog::getOpenFileName(this, "Open IMS", QString(), "iMWrap IMS (*.ims *.data)");
     if (path.isEmpty()) {
         return;
@@ -604,9 +632,10 @@ void ExplorerWindow::saveDocument() {
 
     std::string error;
     if (!document_.saveToFile(currentFilePath_.toStdString(), &error)) {
-        QMessageBox::critical(this, "Save Failed", QString::fromStdString(error));
+        QMessageBox::critical(this, "Error", QString("Failed to save IMS file:\n%1").arg(QString::fromStdString(error)));
         return;
     }
+    markDirty(false);
 
     dirty_ = false;
     updateWindowTitle();
@@ -621,9 +650,10 @@ void ExplorerWindow::saveDocumentAs() {
 
     std::string error;
     if (!document_.saveToFile(path.toStdString(), &error)) {
-        QMessageBox::critical(this, "Save Failed", QString::fromStdString(error));
+        QMessageBox::critical(this, "Error", QString("Failed to save IMS file:\n%1").arg(QString::fromStdString(error)));
         return;
     }
+    markDirty(false);
 
     currentFilePath_ = path;
     filePathEdit_->setText(path);
@@ -1136,7 +1166,14 @@ void ExplorerWindow::onTimer() {
     }
 
     if (engine_.activeSoundIds().empty()) {
+        playbackPositionLabel_->setText("");
         transportTimer_->stop();
+    } else {
+        uint16_t soundId = engine_.activeSoundIds().front();
+        uint16_t track = 0, beat = 0, tick = 0;
+        if (engine_.getPlaybackLocation(soundId, &track, &beat, &tick)) {
+            playbackPositionLabel_->setText(QString("Track: %1 | Pos: %2:%3").arg(track).arg(beat).arg(tick));
+        }
     }
 
     updateUiState();

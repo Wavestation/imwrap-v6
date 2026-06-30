@@ -214,21 +214,69 @@ void PackerWindow::setupUi() {
     saveAsAct->setShortcut(QKeySequence::SaveAs);
     
     updateVariantUi();
+    updateWindowTitle();
+}
+
+void PackerWindow::setDirty(bool dirty) {
+    if (isDirty_ != dirty) {
+        isDirty_ = dirty;
+        updateWindowTitle();
+    }
+}
+
+void PackerWindow::updateWindowTitle() {
+    QString title = "iMWrap Packer";
+    if (!currentFilePath.isEmpty()) {
+        title += " - " + QFileInfo(currentFilePath).fileName();
+    }
+    if (isDirty_) {
+        title += "*";
+    }
+    setWindowTitle(title);
+}
+
+bool PackerWindow::promptSaveIfDirty() {
+    if (!isDirty_) return true;
+
+    QMessageBox::StandardButton res = QMessageBox::warning(this, "Unsaved Changes",
+        "You have unsaved changes. Do you want to save them now?",
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+    if (res == QMessageBox::Cancel) {
+        return false;
+    }
+    if (res == QMessageBox::Yes) {
+        saveProject();
+        if (isDirty_) return false;
+    }
+    return true;
+}
+
+void PackerWindow::closeEvent(QCloseEvent *event) {
+    if (promptSaveIfDirty()) {
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }
 
 void PackerWindow::newProject() {
+    if (!promptSaveIfDirty()) return;
     projectSounds.clear();
     soundList->clear();
     currentFilePath = "";
     statusLabel->setText("New project.");
     updateVariantUi();
+    setDirty(false);
 }
 
 void PackerWindow::openProject() {
+    if (!promptSaveIfDirty()) return;
     QString path = QFileDialog::getOpenFileName(this, "Open", "", "iMWrap Files (*.ims)");
     if (!path.isEmpty()) {
         loadImsToModel(path.toStdString());
         currentFilePath = path;
+        setDirty(false);
     }
 }
 
@@ -237,6 +285,7 @@ void PackerWindow::saveProject() {
         saveProjectAs();
     } else {
         saveModelToIms(currentFilePath.toStdString());
+        setDirty(false);
     }
 }
 
@@ -245,6 +294,7 @@ void PackerWindow::saveProjectAs() {
     if (!path.isEmpty()) {
         currentFilePath = path;
         saveModelToIms(path.toStdString());
+        setDirty(false);
     }
 }
 
@@ -364,7 +414,8 @@ void PackerWindow::addSound() {
     QListWidgetItem *item = new QListWidgetItem(formatSoundLabel(ps));
     item->setData(Qt::UserRole, ps.id);
     soundList->addItem(item);
-    soundList->setCurrentItem(item);
+    soundList->setCurrentRow(soundList->count() - 1);
+    setDirty(true);
 }
 
 void PackerWindow::deleteSound() {
@@ -379,6 +430,7 @@ void PackerWindow::deleteSound() {
         }
     }
     delete soundList->takeItem(row);
+    setDirty(true);
 }
 
 void PackerWindow::applySoundChanges() {
@@ -422,6 +474,7 @@ void PackerWindow::applySoundChanges() {
             
             soundList->selectedItems().first()->setText(formatSoundLabel(ps));
             soundList->selectedItems().first()->setData(Qt::UserRole, ps.id);
+            setDirty(true);
             break;
         }
     }
@@ -566,6 +619,7 @@ void PackerWindow::importMidi() {
             
             updateVariantUi();
             soundList->selectedItems().first()->setText(formatSoundLabel(ps));
+            setDirty(true);
             break;
         }
     }
@@ -586,6 +640,7 @@ void PackerWindow::deleteTrack() {
                     if (row < static_cast<int>(pv.tracks.size())) {
                         pv.tracks.erase(pv.tracks.begin() + row);
                         updateVariantUi();
+                        setDirty(true);
                         
                         if (!pv.tracks.empty()) {
                             int newRow = std::min(row, static_cast<int>(pv.tracks.size() - 1));
@@ -616,6 +671,7 @@ void PackerWindow::moveTrackUp() {
                     if (row < static_cast<int>(pv.tracks.size())) {
                         std::swap(pv.tracks[row], pv.tracks[row - 1]);
                         updateVariantUi();
+                        setDirty(true);
                         tracksTable->selectRow(row - 1);
                         tracksTable->setCurrentCell(row - 1, 0);
                     }
@@ -642,6 +698,7 @@ void PackerWindow::moveTrackDown() {
                     if (row < static_cast<int>(pv.tracks.size() - 1)) {
                         std::swap(pv.tracks[row], pv.tracks[row + 1]);
                         updateVariantUi();
+                        setDirty(true);
                         tracksTable->selectRow(row + 1);
                         tracksTable->setCurrentCell(row + 1, 0);
                     }

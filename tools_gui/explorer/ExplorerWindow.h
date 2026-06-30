@@ -114,6 +114,8 @@ private:
     void rebuildDetailPane();
     void rebuildSelectionProperties();
     void updateUiState();
+    void setDirty(bool dirty);
+    bool promptSaveIfDirty();
     void updateWindowTitle();
     void markDirty(bool dirty = true);
     bool ensurePreviewBackend(imwrap::TargetProfile profile, std::string* error = nullptr);
@@ -155,7 +157,9 @@ private:
     QCheckBox* filterNonImwrapCheck_ = nullptr;
     QComboBox* deviceCombo_ = nullptr;
     QComboBox* profileCombo_ = nullptr;
-    QCheckBox* snmModeCheck_ = nullptr;
+    QCheckBox *snmModeCheck_ = nullptr;
+    QLabel *playbackPositionLabel_ = nullptr;
+    QCheckBox *loopCheck_ = nullptr;
     QWidget* selectionPropsWidget_ = nullptr;
     QWidget* hookControlsWidget_ = nullptr;
     QLabel* selectionSummaryLabel_ = nullptr;

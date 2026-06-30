@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QCloseEvent>
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -65,8 +66,14 @@ private slots:
     void moveTrackDown();
     void onTrackSelectionChanged();
 
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
 private:
     void setupUi();
+    void updateWindowTitle();
+    void setDirty(bool dirty);
+    bool promptSaveIfDirty();
     void loadImsToModel(const std::string &path);
     void updateVariantUi();
     void saveModelToIms(const std::string &path);
@@ -93,4 +100,5 @@ private:
 
     std::vector<ProjectSound> projectSounds;
     QString currentFilePath;
+    bool isDirty_ = false;
 };
