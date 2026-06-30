@@ -516,7 +516,7 @@ void IMWrapLog(const char* msg) {
 namespace {
 ma_device g_AudioDevice;
 bool g_AudioDeviceInitialized = false;
-double g_TickAccumulator = 0.0;
+double g_MicroAccumulator = 0.0;
 
 const char *g_iMWrapScriptHeader =
     "#define IMWRAP_PLUGIN_VERSION 101\r\n"
@@ -761,14 +761,13 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 
     std::lock_guard<std::mutex> lock(g_Mutex);
 
-    double elapsed = static_cast<double>(frameCount) / 44100.0;
-    double ticksPerSecond = g_Engine.transportTicksPerSecond();
-    double exactTicks = (ticksPerSecond * elapsed) + g_TickAccumulator;
-    uint32_t wholeTicks = static_cast<uint32_t>(exactTicks);
-    g_TickAccumulator = exactTicks - wholeTicks;
+    double exactMicros = (static_cast<double>(frameCount) * 1000000.0) / 44100.0;
+    exactMicros += g_MicroAccumulator;
+    uint32_t deltaMicros = static_cast<uint32_t>(exactMicros);
+    g_MicroAccumulator = exactMicros - deltaMicros;
 
-    if (wholeTicks > 0) {
-        g_Engine.advanceAll(wholeTicks);
+    if (deltaMicros > 0) {
+        g_Engine.advanceMicroseconds(deltaMicros);
     }
 
     if (g_IMWrapDriverType == IMWrapDriverType::FluidSynth && g_FluidSynth) {

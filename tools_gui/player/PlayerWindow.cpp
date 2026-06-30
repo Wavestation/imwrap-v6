@@ -327,7 +327,7 @@ void PlayerWindow::WinMMSink::onSysEx(uint16_t soundId, imwrap::ByteView message
     }
 }
 
-PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnabled(false), tickAccumulator(0) {
+PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnabled(false), microAccumulator(0) {
     engine.setMidiSink(&midiSink);
     transportTimer = new QTimer(this);
     transportTimer->setInterval(16); // ~60fps
@@ -646,7 +646,7 @@ void PlayerWindow::playSound() {
 
     if (!transportTimer->isActive()) {
         lastTime = QDateTime::currentMSecsSinceEpoch();
-        tickAccumulator = 0;
+        microAccumulator = 0;
         transportTimer->start();
     }
     updateUiState();
@@ -683,15 +683,15 @@ void PlayerWindow::onTimer() {
     if (elapsedSecs > 0.1) elapsedSecs = 0.1; // Limit spike
     lastTime = now;
     
-    double tps = engine.transportTicksPerSecond();
-    double ticks = (tps * elapsedSecs) + tickAccumulator;
-    uint32_t wholeTicks = static_cast<uint32_t>(ticks);
-    tickAccumulator = ticks - wholeTicks;
-    
-    if (wholeTicks > 0) {
-        engine.advanceAll(wholeTicks);
-        updateUiState();
+    double exactMicros = elapsedSecs * 1000000.0;
+    exactMicros += microAccumulator;
+    uint32_t deltaMicros = static_cast<uint32_t>(exactMicros);
+    microAccumulator = exactMicros - deltaMicros;
+
+    if (deltaMicros > 0) {
+        engine.advanceMicroseconds(deltaMicros);
     }
+    updateUiState();
     
     if (engine.activeSoundIds().empty()) {
         transportTimer->stop();

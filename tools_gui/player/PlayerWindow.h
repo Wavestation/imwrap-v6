@@ -104,6 +104,6 @@ private:
 
     QTimer *transportTimer;
     qint64 lastTime;
-    double tickAccumulator;
+    double microAccumulator;
     bool previewEnabled;
 };

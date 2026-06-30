@@ -82,6 +82,7 @@ public:
     bool Deserialize(std::istream &is);
 
     void advanceAll(uint32_t deltaTicks);
+    void advanceMicroseconds(uint32_t deltaMicros);
     bool advanceSound(uint16_t soundId, uint32_t deltaTicks);
 
     int32_t doCommand(const CommandPacket &packet);
@@ -191,6 +192,7 @@ private:
         uint16_t loopFromBeat = 1;
         uint16_t loopFromTick = 0;
         uint16_t volChan = 0xFFFFu;
+        double tickAccumulator = 0.0;
         bool pendingImmediateEvents = true;
         std::size_t nextEventHint = 0;
         std::array<PartState, 16> parts = {{}};
@@ -347,6 +349,7 @@ private:
     const ResourceBank *_bank = nullptr;
     TargetProfile _profile = TargetProfile::GeneralMidi;
     uint16_t _masterVolume = 255;
+    double _globalTickAccumulator = 0.0;
     std::array<uint8_t, 8> _channelVolume = {{127, 127, 127, 127, 127, 127, 127, 127}};
     std::array<uint16_t, 8> _volchanTable = {{127, 127, 127, 127, 127, 127, 127, 127}};
     std::map<uint16_t, ActiveSound> _activeSounds;

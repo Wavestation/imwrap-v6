@@ -771,7 +771,7 @@ void ExplorerWindow::playSelectedSound() {
     }
 
     lastTime_ = QDateTime::currentMSecsSinceEpoch();
-    tickAccumulator_ = 0.0;
+    microAccumulator_ = 0.0;
     transportTimer_->start();
     if (selection.trackIndex >= 0) {
         statusLabel_->setText(QString("Playing sound %1, track %2").arg(soundId).arg(selection.trackIndex));
@@ -1126,12 +1126,13 @@ void ExplorerWindow::onTimer() {
     }
     lastTime_ = now;
 
-    const double ticks = (engine_.transportTicksPerSecond() * elapsedSeconds) + tickAccumulator_;
-    const uint32_t wholeTicks = static_cast<uint32_t>(ticks);
-    tickAccumulator_ = ticks - wholeTicks;
+    double exactMicros = elapsedSeconds * 1000000.0;
+    exactMicros += microAccumulator_;
+    uint32_t deltaMicros = static_cast<uint32_t>(exactMicros);
+    microAccumulator_ = exactMicros - deltaMicros;
 
-    if (wholeTicks > 0) {
-        engine_.advanceAll(wholeTicks);
+    if (deltaMicros > 0) {
+        engine_.advanceMicroseconds(deltaMicros);
     }
 
     if (engine_.activeSoundIds().empty()) {

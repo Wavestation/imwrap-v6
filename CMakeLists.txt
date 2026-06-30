@@ -30,6 +30,7 @@ set(IMWRAP_CORE_SOURCES
     src/IMWrapEngine.cpp
     src/IMWrapEngineSerialize.cpp
     src/ResourceBank.cpp
+    src/ScummAdlibSink.cpp
     src/SinkMidiChannel.cpp
     src/SmfSequence.cpp
 )
@@ -106,6 +107,10 @@ set(EXAMPLE_SDL2_AUDIO OFF CACHE BOOL "" FORCE)
 set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
 
 add_subdirectory(third_party/libadlmidi)
+
+if(IMWRAP_BUILD_SHARED_LIB)
+    target_link_libraries(imwrap_v6_shared PRIVATE ADLMIDI)
+endif()
 
 if(IMWRAP_BUILD_SHIM)
     add_library(imwrap_shim SHARED

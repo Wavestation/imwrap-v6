@@ -2614,6 +2614,41 @@ void IMWrapEngine::advanceAll(uint32_t deltaTicks) {
     }
 }
 
+void IMWrapEngine::advanceMicroseconds(uint32_t deltaMicros) {
+    const double elapsedSeconds = static_cast<double>(deltaMicros) / 1000000.0;
+    const double globalTicks = (transportTicksPerSecond() * elapsedSeconds) + _globalTickAccumulator;
+    const uint32_t wholeGlobalTicks = static_cast<uint32_t>(globalTicks);
+    _globalTickAccumulator = globalTicks - wholeGlobalTicks;
+
+    if (wholeGlobalTicks > 0) {
+        processDeferredCommands(wholeGlobalTicks);
+    }
+
+    std::vector<uint16_t> ids;
+    ids.reserve(_activeSounds.size());
+    for (const auto &entry : _activeSounds) {
+        ids.push_back(entry.first);
+    }
+
+    for (uint16_t soundId : ids) {
+        ActiveSound *sound = findActiveSound(soundId);
+        if (!sound) continue;
+
+        const uint32_t tempo = sound->tempoMicrosPerQuarter ? sound->tempoMicrosPerQuarter : 500000;
+        const double base = (static_cast<double>(ticksPerBeat(*sound)) * 1000000.0) / static_cast<double>(tempo);
+        const double speedScale = static_cast<double>(sound->speed ? sound->speed : 128) / 128.0;
+        const double tps = base * speedScale;
+
+        const double ticks = (tps * elapsedSeconds) + sound->tickAccumulator;
+        const uint32_t wholeTicks = static_cast<uint32_t>(ticks);
+        sound->tickAccumulator = ticks - wholeTicks;
+
+        if (wholeTicks > 0) {
+            advanceSound(soundId, wholeTicks);
+        }
+    }
+}
+
 bool IMWrapEngine::advanceSound(uint16_t soundId, uint32_t deltaTicks) {
     ActiveSound *sound = findActiveSound(soundId);
     if (!sound) {

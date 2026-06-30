@@ -293,8 +293,8 @@ foreach ($license in $licenseFiles) {
 }
 
 $exampleFiles = @(
-    @{ Source = Join-Path $RootDir "samples\openquest-lite.ims"; Name = "examples\openquest-lite.ims" },
-    @{ Source = Join-Path $RootDir "samples\oqzik.ims"; Name = "examples\oqzik.ims" }
+    @{ Source = Join-Path $RootDir "samples\ims-packs\openquest-lite.ims"; Name = "examples\openquest-lite.ims" },
+    @{ Source = Join-Path $RootDir "samples\ims-packs\oqzik.ims"; Name = "examples\oqzik.ims" }
 )
 
 foreach ($example in $exampleFiles) {

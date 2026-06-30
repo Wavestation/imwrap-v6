@@ -195,7 +195,7 @@ private:
     bool previewEnabled_ = false;
     bool updatingSelectionProps_ = false;
     qint64 lastTime_ = 0;
-    double tickAccumulator_ = 0.0;
+    double microAccumulator_ = 0.0;
     std::vector<int> visibleEventIndices_;
 
     imwrap::gui::ImsProjectDocument document_;
