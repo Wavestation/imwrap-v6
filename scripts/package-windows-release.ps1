@@ -192,13 +192,15 @@ $toolBinaries = @(
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imwrappack.exe")); Name = "imwrappack-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x32.exe" },
     @{ Sources = @((Join-Path $PluginBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x32.exe" },
+    @{ Sources = @((Join-Path $PluginBuildDir "Release\ims2soun.exe")); Name = "ims2soun-x32.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrappack.exe")); Name = "imwrappack-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imsprobe.exe")); Name = "imsprobe-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_explorer_gui.exe")); Name = "imwrap_explorer_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_packer_gui.exe")); Name = "imwrap_packer_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_player_gui.exe")); Name = "imwrap_player_gui-x64.exe" },
     @{ Sources = @((Join-Path $GuiBuildDir "Release\imwrap_sysex_gui.exe")); Name = "imwrap_sysex_gui-x64.exe" },
-    @{ Sources = @((Join-Path $GuiBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x64.exe" }
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\SetMIDI.exe")); Name = "SetMIDI-x64.exe" },
+    @{ Sources = @((Join-Path $GuiBuildDir "Release\ims2soun.exe")); Name = "ims2soun-x64.exe" }
 )
 
 foreach ($binary in $toolBinaries) {
@@ -292,13 +294,9 @@ foreach ($license in $licenseFiles) {
     Copy-FileAs -Source $license.Source -Destination (Join-Path $OutputDir $license.Name)
 }
 
-$exampleFiles = @(
-    @{ Source = Join-Path $RootDir "samples\ims-packs\openquest-lite.ims"; Name = "examples\openquest-lite.ims" },
-    @{ Source = Join-Path $RootDir "samples\ims-packs\oqzik.ims"; Name = "examples\oqzik.ims" }
-)
-
-foreach ($example in $exampleFiles) {
-    Copy-FileAs -Source $example.Source -Destination (Join-Path $OutputDir $example.Name)
+$samplesDir = Join-Path $RootDir "samples"
+if (Test-Path -LiteralPath $samplesDir -PathType Container) {
+    Copy-Item -Path (Join-Path $samplesDir "*") -Destination $examplesDir -Recurse -Force
 }
 
 Write-Host "Windows release bundle created in $OutputDir"

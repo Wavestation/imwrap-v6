@@ -93,6 +93,9 @@ if(IMWRAP_BUILD_TOOLS)
     )
     target_link_libraries(imsprobe PRIVATE imwrap_v6)
     imwrap_apply_common_target_settings(imsprobe)
+
+    add_executable(ims2soun tools/ims2soun.c)
+    # No linking to imwrap_v6 since it's a standalone C program
 endif()
 
 # Configure libADLMIDI build options

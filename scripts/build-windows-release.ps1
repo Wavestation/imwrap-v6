@@ -171,7 +171,8 @@ Invoke-CMakeBuild -BuildDir $Win32BuildDir -Targets @(
     "imwrappack",
     "imsprobe",
     "imwrap_setmidi",
-    "agsimwrap"
+    "agsimwrap",
+    "ims2soun"
 )
 
 $x64ConfigureArguments = @(
@@ -210,7 +211,8 @@ $x64Targets = @(
     "imwrap_packer_gui",
     "imwrap_player_gui",
     "imwrap_sysex_gui",
-    "imwrap_setmidi"
+    "imwrap_setmidi",
+    "ims2soun"
 )
 
 if (-not [string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
