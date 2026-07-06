@@ -2059,6 +2059,30 @@ bool IMWrapEngine::dispatchTrackTick(uint16_t soundId) {
         }
     }
 
+    const IMWrapSysexDialect dialect =
+        (_compatibility == CompatibilityProfile::Snm) ? IMWrapSysexDialect::Snm : IMWrapSysexDialect::GenericV6;
+
+    std::stable_sort(atTick.begin(), atTick.end(), [dialect](const MidiEvent &a, const MidiEvent &b) {
+        auto isPriorityImwrap = [dialect](const MidiEvent &ev) {
+            if (ev.type != MidiEventType::SysEx) return false;
+            IMWrapControlEvent dummy;
+            if (!DecodeIMWrapSysex(ByteView(ev.payload.data(), ev.payload.size()), &dummy, dialect, nullptr)) {
+                return false;
+            }
+            return dummy.type != IMWrapSysexType::HookJump &&
+                   dummy.type != IMWrapSysexType::HookGlobalTranspose &&
+                   dummy.type != IMWrapSysexType::HookPartOnOff &&
+                   dummy.type != IMWrapSysexType::HookSetVolume &&
+                   dummy.type != IMWrapSysexType::HookSetProgram &&
+                   dummy.type != IMWrapSysexType::HookSetTranspose;
+        };
+
+        bool aIsPriority = isPriorityImwrap(a);
+        bool bIsPriority = isPriorityImwrap(b);
+
+        return aIsPriority && !bIsPriority;
+    });
+
     for (const MidiEvent &event : atTick) {
         if (!handleMidiEvent(soundId, event)) {
             return false;

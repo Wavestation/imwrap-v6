@@ -76,8 +76,11 @@ static QString formatSoundLabel(const ProjectSound &ps) {
     }
 }
 
-PackerWindow::PackerWindow(QWidget *parent) : QMainWindow(parent) {
+PackerWindow::PackerWindow(QWidget *parent)
+    : QMainWindow(parent) {
     setupUi();
+    setAcceptDrops(true);
+    updateWindowTitle();
 }
 
 PackerWindow::~PackerWindow() {
@@ -176,6 +179,10 @@ void PackerWindow::setupUi() {
     importBtn = new QPushButton("Import MIDI...");
     connect(importBtn, &QPushButton::clicked, this, &PackerWindow::importMidi);
     vLayout->addWidget(importBtn);
+
+    exportTrackBtn = new QPushButton("Export MIDI...");
+    connect(exportTrackBtn, &QPushButton::clicked, this, &PackerWindow::exportSelectedTrackMidi);
+    vLayout->addWidget(exportTrackBtn);
 
     auto *trackBtnLayout = new QHBoxLayout();
     deleteTrackBtn = new QPushButton("Delete Track");
@@ -714,7 +721,146 @@ void PackerWindow::onTrackSelectionChanged() {
     bool hasSelection = !soundList->selectedItems().isEmpty();
     bool hasTrackSelected = hasSelection && !tracksTable->selectedItems().isEmpty();
     int row = tracksTable->currentRow();
+    exportTrackBtn->setEnabled(hasTrackSelected);
     deleteTrackBtn->setEnabled(hasTrackSelected);
     moveUpBtn->setEnabled(hasTrackSelected && row > 0);
     moveDownBtn->setEnabled(hasTrackSelected && row < tracksTable->rowCount() - 1);
+}
+
+void PackerWindow::dragEnterEvent(QDragEnterEvent *event) {
+    if (event->mimeData()->hasUrls()) {
+        bool hasMidi = false;
+        for (const QUrl &url : event->mimeData()->urls()) {
+            if (url.isLocalFile()) {
+                QString path = url.toLocalFile().toLower();
+                if (path.endsWith(".mid") || path.endsWith(".midi")) {
+                    hasMidi = true;
+                    break;
+                }
+            }
+        }
+        if (hasMidi) {
+            event->acceptProposedAction();
+        }
+    }
+}
+
+void PackerWindow::dropEvent(QDropEvent *event) {
+    if (soundList->selectedItems().isEmpty()) return;
+    uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
+
+    ProjectVariant *varPtr = nullptr;
+    for (auto &ps : projectSounds) {
+        if (ps.id == id) {
+            for (auto &pv : ps.variants) {
+                if (pv.kind == currentKind) {
+                    varPtr = &pv;
+                    break;
+                }
+            }
+            if (!varPtr) {
+                ProjectVariant pv;
+                pv.kind = currentKind;
+                pv.includeVariant = true;
+                ps.variants.push_back(pv);
+                varPtr = &ps.variants.back();
+            }
+            
+            bool firstFile = varPtr->tracks.empty();
+            for (const QUrl &url : event->mimeData()->urls()) {
+                if (!url.isLocalFile()) continue;
+                QString path = url.toLocalFile();
+                if (!path.toLower().endsWith(".mid") && !path.toLower().endsWith(".midi")) continue;
+                
+                std::ifstream in(path.toStdString(), std::ios::binary);
+                if (!in) continue;
+                std::vector<uint8_t> data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+                
+                imwrap::SmfSequence seq;
+                std::string err;
+                if (!imwrap::SmfParser::Parse(imwrap::ByteView(data.data(), data.size()), &seq, &err)) {
+                    QMessageBox::warning(this, "Error", QString::fromStdString("Invalid MIDI file (" + path.toStdString() + "): " + err));
+                    continue;
+                }
+                
+                if (firstFile) {
+                    varPtr->division = seq.division;
+                    firstFile = false;
+                }
+                
+                QFileInfo fi(path);
+                if (seq.format == 1) {
+                    imwrap::SmfTrack merged = mergeTracksToFormat0(seq);
+                    ProjectTrack pt;
+                    pt.name = fi.baseName().toStdString();
+                    pt.sourceFileName = fi.fileName().toStdString();
+                    pt.events = merged.events;
+                    varPtr->tracks.push_back(pt);
+                } else {
+                    int tIdx = 0;
+                    for (const auto &trk : seq.tracks) {
+                        ProjectTrack pt;
+                        pt.name = seq.tracks.size() == 1 ? fi.baseName().toStdString() : fi.baseName().toStdString() + " (T" + std::to_string(tIdx++) + ")";
+                        pt.sourceFileName = fi.fileName().toStdString();
+                        pt.events = trk.events;
+                        varPtr->tracks.push_back(pt);
+                    }
+                }
+            }
+            
+            updateVariantUi();
+            soundList->selectedItems().first()->setText(formatSoundLabel(ps));
+            setDirty(true);
+            break;
+        }
+    }
+}
+
+void PackerWindow::exportSelectedTrackMidi() {
+    if (soundList->selectedItems().isEmpty()) return;
+    uint16_t id = soundList->selectedItems().first()->data(Qt::UserRole).toUInt();
+    imwrap::VariantKind currentKind = static_cast<imwrap::VariantKind>(variantKindCombo->currentData().toInt());
+    
+    int row = tracksTable->currentRow();
+    if (row < 0) return;
+    
+    for (auto &ps : projectSounds) {
+        if (ps.id == id) {
+            for (auto &pv : ps.variants) {
+                if (pv.kind == currentKind) {
+                    if (row < static_cast<int>(pv.tracks.size())) {
+                        ProjectTrack &track = pv.tracks[row];
+                        QString path = QFileDialog::getSaveFileName(this, "Export MIDI", QString::fromStdString(track.name) + ".mid", "MIDI Files (*.mid *.midi)");
+                        if (path.isEmpty()) return;
+                        
+                        imwrap::SmfSequence seq;
+                        seq.format = 0;
+                        seq.division = pv.division;
+                        
+                        imwrap::SmfTrack smfTrack;
+                        smfTrack.events = track.events;
+                        seq.tracks.push_back(std::move(smfTrack));
+                        
+                        std::vector<uint8_t> outBytes;
+                        std::string err;
+                        if (imwrap::SmfSerializer::Serialize(seq, &outBytes, &err)) {
+                            FILE* f = fopen(path.toStdString().c_str(), "wb");
+                            if (f) {
+                                fwrite(outBytes.data(), 1, outBytes.size(), f);
+                                fclose(f);
+                                statusLabel->setText(QString("Exported track to %1").arg(path));
+                            } else {
+                                QMessageBox::critical(this, "Error", "Failed to open file for writing.");
+                            }
+                        } else {
+                            QMessageBox::critical(this, "Error", QString("Failed to serialize MIDI:\n%1").arg(err.c_str()));
+                        }
+                    }
+                    break;
+                }
+            }
+            break;
+        }
+    }
 }

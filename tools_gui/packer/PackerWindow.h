@@ -14,6 +14,10 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QUrl>
 #include <vector>
 #include <string>
 
@@ -65,9 +69,12 @@ private slots:
     void moveTrackUp();
     void moveTrackDown();
     void onTrackSelectionChanged();
+    void exportSelectedTrackMidi();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 private:
     void setupUi();
@@ -92,6 +99,7 @@ private:
 
     QPushButton *applyBtn;
     QPushButton *importBtn;
+    QPushButton *exportTrackBtn;
     QPushButton *deleteTrackBtn;
     QPushButton *moveUpBtn;
     QPushButton *moveDownBtn;

@@ -58,6 +58,10 @@ private slots:
     void editSelectedEvent();
     void onTimer();
 
+    void onDisplayFormatChanged();
+    void addNewSong();
+    void exportSelectedTrackMidi();
+
 private:
     enum class PreviewBackend {
         None,
@@ -186,6 +190,7 @@ private:
     QPushButton* stopAllBtn_ = nullptr;
     QPushButton* editEventBtn_ = nullptr;
     QPushButton* importTracksBtn_ = nullptr;
+    QPushButton* exportTrackMidiBtn_ = nullptr;
     QPushButton* deleteTrackBtn_ = nullptr;
     QPushButton* moveTrackUpBtn_ = nullptr;
     QPushButton* moveTrackDownBtn_ = nullptr;
@@ -193,6 +198,8 @@ private:
     QTimer* transportTimer_ = nullptr;
     QSplitter* mainSplitter_ = nullptr;
     QSplitter* bottomSplitter_ = nullptr;
+
+    QAction* displayMbtAction_ = nullptr;
 
     QString currentFilePath_;
     bool dirty_ = false;

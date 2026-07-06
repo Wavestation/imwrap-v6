@@ -1,0 +1,12 @@
+TODO ::
+ - Tools - Explorer 
+	- Add a MIDI 0 export feature per track
+	- Add ability to add new song in the project
+	- Add ability to rename songs in the project
+
+ - Tools - Packer 
+	- Add a MIDI 0 export feature per track
+	- Add drag & drop from Windows Explorer to the packer to add tracks in the song
+
+ - Engine : 
+	- Make the hook queues more stackable -- If an user is entering then exiting a room, the hooks have to be enqueued in order to follow the path, if the queue is overflown make sure the hook number is odd !

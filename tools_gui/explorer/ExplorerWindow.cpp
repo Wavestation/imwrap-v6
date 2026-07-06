@@ -18,10 +18,12 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QSplitter>
 #include <QKeySequence>
 #include <QSettings>
-#include <QSplitter>
-#include <QTableWidget>
+#include <QFileDialog>
+#include <QMessageBox>
+#include "imwrap/SmfSequence.h"
 #include <QTableWidgetItem>
 #include <QTextEdit>
 #include <QTimer>
@@ -432,6 +434,9 @@ void ExplorerWindow::setupUi() {
     importTracksBtn_ = new QPushButton("Import MIDI Tracks...");
     connect(importTracksBtn_, &QPushButton::clicked, this, &ExplorerWindow::importMidiTracks);
     actionRow->addWidget(importTracksBtn_);
+    exportTrackMidiBtn_ = new QPushButton("Export MIDI...");
+    connect(exportTrackMidiBtn_, &QPushButton::clicked, this, &ExplorerWindow::exportSelectedTrackMidi);
+    actionRow->addWidget(exportTrackMidiBtn_);
     deleteTrackBtn_ = new QPushButton("Delete Track");
     connect(deleteTrackBtn_, &QPushButton::clicked, this, &ExplorerWindow::deleteSelectedTrack);
     actionRow->addWidget(deleteTrackBtn_);
@@ -608,6 +613,15 @@ void ExplorerWindow::setupUi() {
     rootLayout->addWidget(statusLabel_);
 
     auto* fileMenu = menuBar()->addMenu("&File");
+    
+    displayMbtAction_ = fileMenu->addAction("Display Position as M:B:T");
+    displayMbtAction_->setCheckable(true);
+    connect(displayMbtAction_, &QAction::toggled, this, &ExplorerWindow::onDisplayFormatChanged);
+
+    fileMenu->addSeparator();
+    fileMenu->addAction("Add New Song", this, &ExplorerWindow::addNewSong);
+    fileMenu->addSeparator();
+
     fileMenu->addAction("&Open...", this, &ExplorerWindow::openDocument, QKeySequence::Open);
     fileMenu->addAction("&Save", this, &ExplorerWindow::saveDocument, QKeySequence::Save);
     fileMenu->addAction("Save &As...", this, &ExplorerWindow::saveDocumentAs, QKeySequence::SaveAs);
@@ -1435,6 +1449,7 @@ void ExplorerWindow::updateUiState() {
     addEventBtn_->setEnabled(hasTrack);
     editEventBtn_->setEnabled(editable);
     importTracksBtn_->setEnabled(hasVariant);
+    exportTrackMidiBtn_->setEnabled(hasTrack);
     deleteTrackBtn_->setEnabled(hasTrack);
     moveTrackUpBtn_->setEnabled(hasTrack && selection.trackIndex > 0);
     moveTrackDownBtn_->setEnabled(hasTrack && selectedVariant() &&
@@ -1455,6 +1470,10 @@ void ExplorerWindow::markDirty(bool dirty) {
 
 void ExplorerWindow::loadSettings() {
     QSettings settings("imwrap", "IMWrapExplorer");
+
+    if (displayMbtAction_) {
+        displayMbtAction_->setChecked(settings.value("ui/displayMbt", false).toBool());
+    }
 
     const int profileIndex = settings.value("playback/profileIndex", 0).toInt();
     if (profileIndex >= 0 && profileIndex < profileCombo_->count()) {
@@ -1504,6 +1523,9 @@ void ExplorerWindow::loadSettings() {
 
 void ExplorerWindow::saveSettings() const {
     QSettings settings("imwrap", "IMWrapExplorer");
+    if (displayMbtAction_) {
+        settings.setValue("ui/displayMbt", displayMbtAction_->isChecked());
+    }
     settings.setValue("document/lastFilePath", currentFilePath_);
     settings.setValue("playback/midiDeviceName", deviceCombo_->currentText());
     settings.setValue("playback/profileIndex", profileCombo_->currentIndex());
@@ -1884,7 +1906,30 @@ bool ExplorerWindow::mbtToTick(const std::vector<TimeSignatureSegment>& segments
 
 QString ExplorerWindow::formatMbtPosition(const std::vector<TimeSignatureSegment>& segments, uint32_t tick) const {
     const MbtPosition mbt = tickToMbt(segments, tick);
-    return QString("%1:%2:%3").arg(mbt.measure).arg(mbt.beat).arg(mbt.tick);
+    if (displayMbtAction_ && displayMbtAction_->isChecked()) {
+        return QString("%1:%2:%3").arg(mbt.measure).arg(mbt.beat).arg(mbt.tick);
+    }
+    
+    uint64_t cumulativeBeats = 0;
+    if (segments.empty()) {
+        const uint32_t ticksPerBeat = 480;
+        cumulativeBeats = tick / ticksPerBeat;
+    } else {
+        uint32_t currentTick = 0;
+        for (size_t i = 0; i < segments.size(); ++i) {
+            const TimeSignatureSegment& seg = segments[i];
+            uint32_t nextTick = (i + 1 < segments.size()) ? segments[i+1].startTick : tick;
+            if (nextTick > tick) {
+                nextTick = tick;
+            }
+            if (nextTick > currentTick) {
+                uint32_t ticksInSeg = nextTick - currentTick;
+                cumulativeBeats += ticksInSeg / seg.ticksPerBeat;
+                currentTick = nextTick;
+            }
+        }
+    }
+    return QString("%1:%2").arg(cumulativeBeats + 1).arg(mbt.tick);
 }
 
 void ExplorerWindow::normalizeTrackEvents(imwrap::gui::ProjectTrack* track) const {
@@ -2213,3 +2258,63 @@ imwrap::IMWrapSysexDialect ExplorerWindow::currentSysexDialect() const {
         ? imwrap::IMWrapSysexDialect::Snm
         : imwrap::IMWrapSysexDialect::GenericV6;
 }
+
+void ExplorerWindow::onDisplayFormatChanged() {
+    rebuildEventTable();
+    rebuildDetailPane();
+}
+
+void ExplorerWindow::addNewSong() {
+    uint16_t maxId = 0;
+    for (const auto& sound : document_.sounds()) {
+        if (sound.id > maxId) {
+            maxId = sound.id;
+        }
+    }
+    
+    imwrap::gui::ProjectSound newSound;
+    newSound.id = maxId + 1;
+    newSound.name = "New Song";
+    
+    document_.sounds().push_back(std::move(newSound));
+    markDirty(true);
+    rebuildTree();
+    selectNode(static_cast<int>(document_.sounds().size()) - 1);
+}
+
+void ExplorerWindow::exportSelectedTrackMidi() {
+    imwrap::gui::ProjectTrack* track = selectedTrack();
+    if (!track) return;
+    
+    QString path = QFileDialog::getSaveFileName(this, "Export MIDI", QString::fromStdString(track->name) + ".mid", "MIDI Files (*.mid *.midi)");
+    if (path.isEmpty()) return;
+    
+    imwrap::SmfSequence seq;
+    seq.format = 0;
+    seq.division = 480;
+    
+    imwrap::gui::ProjectVariant* variant = selectedVariant();
+    if (variant) {
+        seq.division = variant->division;
+    }
+    
+    imwrap::SmfTrack smfTrack;
+    smfTrack.events = track->events;
+    seq.tracks.push_back(std::move(smfTrack));
+    
+    std::vector<uint8_t> outBytes;
+    std::string error;
+    if (imwrap::SmfSerializer::Serialize(seq, &outBytes, &error)) {
+        FILE* f = fopen(path.toStdString().c_str(), "wb");
+        if (f) {
+            fwrite(outBytes.data(), 1, outBytes.size(), f);
+            fclose(f);
+            statusLabel_->setText(QString("Exported track to %1").arg(path));
+        } else {
+            QMessageBox::critical(this, "Error", "Failed to open file for writing.");
+        }
+    } else {
+        QMessageBox::critical(this, "Error", QString("Failed to serialize MIDI:\n%1").arg(error.c_str()));
+    }
+}
+
