@@ -34,9 +34,17 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   ```
 
 * `import void iMWrap_LoadSoundFont(const string filename);`
-  Raccourci pour charger une SoundFont (`.sf2`) et configurer le pilote sur FluidSynth d'un seul coup.
+  Raccourci pour charger une SoundFont (`.sf2`) ou `.sf3` compressée et configurer le pilote sur FluidSynth d'un seul coup.
   ```c
   iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf2");
+  ```
+
+
+* `import void iMWrap_SetSFDynLoad(int enabled);`
+  Active (`1`) ou désactive (`0`) le chargement dynamique pour les SoundFonts `.sf3`. Si activé, les échantillons sont streamés en mémoire à la demande plutôt qu'entièrement décompressés au chargement. Doit être appelé AVANT `iMWrap_LoadSoundFont`.
+  ```c
+  iMWrap_SetSFDynLoad(1); // Active le streaming dynamique pour le SF3
+  iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
   ```
 
 * `import void iMWrap_SetDriver(int driverType, const string deviceOrPath);`
@@ -235,6 +243,25 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   ```
 
 ---
+
+
+* `import int iMWrap_PopMarker();`
+  Récupère et retire le plus ancien marqueur déclenché (ou valeur de Hook) de la file d'attente. Renvoie `-1` si la file est vide. 
+  La valeur renvoyée "pacte" (pack) à la fois l'ID du son (sur les bits supérieurs) et la valeur du marqueur (sur les 8 bits inférieurs).
+  Voici comment dépacquer ces valeurs :
+  ```c
+  int packed = iMWrap_PopMarker();
+  while (packed != -1) {
+      int markerValue = packed & 0xFF;         // Les 8 bits de poids faible
+      int soundId = (packed >> 8) & 0xFFFFFF;  // Le reste des bits pour le soundId
+      
+      Display("Marqueur %d déclenché par le son %d !", markerValue, soundId);
+      packed = iMWrap_PopMarker();
+  }
+  ```
+
+* `import int iMWrap_GetLastMarker();`
+  Renvoie le marqueur déclenché le plus récent sans vider la file d'attente. (La valeur est pacquée de la même manière que `PopMarker`, ou vaut `-1` si vide).
 
 ## 8.6. Informations de Position (Playback)
 

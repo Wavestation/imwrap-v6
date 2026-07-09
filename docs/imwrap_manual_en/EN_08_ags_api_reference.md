@@ -33,10 +33,25 @@ These constants are available throughout your scripts to configure the audio dri
   iMWrap_LoadBank("$DATA$/music_data/ost.ims");
   ```
 
-* `import void iMWrap_LoadSoundFont(const string filename);`
-  Shortcut to load a SoundFont (`.sf2`) and configure the FluidSynth driver in one go.
+  * `import void iMWrap_LoadSoundFont(const string filename);`
+    Shortcut to load a SoundFont (`.sf2` or compressed `.sf3`) and configure the FluidSynth driver in one go.
+    ```c
+    iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
+    ```
+
+  * `import void iMWrap_SetSFDynLoad(int enabled);`
+    Enables (`1`) or disables (`0`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
+    ```c
+    iMWrap_SetSFDynLoad(1); // Enable dynamic streaming for SF3
+    iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
+    ```
+
+  
+* `import void iMWrap_SetSFDynLoad(int enabled);`
+  Enables (`1`) or disables (`0`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
   ```c
-  iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf2");
+  iMWrap_SetSFDynLoad(1); // Enable dynamic streaming for SF3
+  iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
   ```
 
 * `import void iMWrap_SetDriver(int driverType, const string deviceOrPath);`
@@ -234,7 +249,29 @@ These constants are available throughout your scripts to configure the audio dri
   iMWrap_SetHook(50, IMWRAP_HOOK_PART_VOLUME, 1, 0);
   ```
 
----
+    }
+    `
+
+  * `import int iMWrap_GetLastMarker();`
+    Returns the most recent triggered marker without emptying the queue.
+  
+* `import int iMWrap_PopMarker();`
+  Pops and returns the oldest triggered marker value (or Hook value) from the queue. Returns `-1` if the queue is empty.
+  The returned value "packs" both the sound ID (on the upper bits) and the marker value (on the lower 8 bits).
+  Here is how to unpack these values:
+  ```c
+  int packed = iMWrap_PopMarker();
+  while (packed != -1) {
+      int markerValue = packed & 0xFF;         // The lower 8 bits
+      int soundId = (packed >> 8) & 0xFFFFFF;  // The remaining bits for the soundId
+      
+      Display("Marker %d triggered by sound %d!", markerValue, soundId);
+      packed = iMWrap_PopMarker();
+  }
+  ```
+
+* `import int iMWrap_GetLastMarker();`
+  Returns the most recent triggered marker without emptying the queue. (The value is packed the same way as `PopMarker`, or returns `-1` if empty).
 
 ## 8.6. Playback Position Information
 
@@ -317,3 +354,4 @@ These functions are used to simulate or force specific behaviors of old LucasArt
   ```c
   iMWrap_EnableLog(1);
   ```
+
