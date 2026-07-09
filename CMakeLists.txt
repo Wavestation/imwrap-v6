@@ -22,6 +22,11 @@ if(MSVC AND IMWRAP_BUILD_AGS_PLUGIN AND NOT IMWRAP_BUILD_GUI_TOOLS)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
+if(EMSCRIPTEN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
+endif()
+
 set(IMWRAP_CORE_SOURCES
     src/Instrument.cpp
     src/IMWrapSequence.cpp
@@ -184,14 +189,46 @@ if(IMWRAP_BUILD_SHIM)
 endif()
 
 if(IMWRAP_BUILD_AGS_PLUGIN)
-    if(NOT EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
-        message(FATAL_ERROR "IMWRAP_BUILD_AGS_PLUGIN=ON requires a prebuilt FluidSynth tree with headers under ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include")
+    if(NOT EMSCRIPTEN)
+        if(NOT EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h")
+            message(FATAL_ERROR "IMWRAP_BUILD_AGS_PLUGIN=ON requires a prebuilt FluidSynth tree with headers under ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include")
+        endif()
     endif()
 
-    add_library(agsimwrap SHARED
-        src/AgsIMWrapPlugin.cpp
-        tools_gui/shared-res/imwrap_icon_bundle.rc
-    )
+    if(EMSCRIPTEN)
+        set(osal "cpp11" CACHE STRING "" FORCE)
+        set(enable-portaudio OFF CACHE BOOL "" FORCE)
+        set(enable-pulseaudio OFF CACHE BOOL "" FORCE)
+        set(enable-alsa OFF CACHE BOOL "" FORCE)
+        set(enable-dbus OFF CACHE BOOL "" FORCE)
+        set(enable-sdl2 OFF CACHE BOOL "" FORCE)
+        set(enable-jack OFF CACHE BOOL "" FORCE)
+        set(enable-sndfile OFF CACHE BOOL "" FORCE)
+        set(enable-network OFF CACHE BOOL "" FORCE)
+        set(enable-threads OFF CACHE BOOL "" FORCE)
+        set(enable-systemd OFF CACHE BOOL "" FORCE)
+        set(enable-ladspa OFF CACHE BOOL "" FORCE)
+        set(enable-coreaudio OFF CACHE BOOL "" FORCE)
+        set(enable-coremidi OFF CACHE BOOL "" FORCE)
+        set(enable-midishare OFF CACHE BOOL "" FORCE)
+        set(enable-oss OFF CACHE BOOL "" FORCE)
+        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+        
+        # Bypass check_type_size which fails due to AGS emscripten linker flags
+        set(HAVE_LONG_LONG 1 CACHE INTERNAL "")
+        set(LONG_LONG 8 CACHE INTERNAL "")
+        set(HAVE_SOCKLEN_T 1 CACHE INTERNAL "")
+        set(SOCKLEN_T 4 CACHE INTERNAL "")
+        
+        add_subdirectory(third_party/fluidsynth-master EXCLUDE_FROM_ALL)
+        
+        add_library(agsimwrap STATIC src/AgsIMWrapPlugin.cpp)
+    else()
+        add_library(agsimwrap SHARED
+            src/AgsIMWrapPlugin.cpp
+            tools_gui/shared-res/imwrap_icon_bundle.rc
+        )
+    endif()
 
     target_compile_definitions(agsimwrap PRIVATE THIS_IS_THE_PLUGIN)
 
@@ -203,22 +240,26 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
         ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include
     )
 
-    target_link_libraries(agsimwrap PRIVATE
-        imwrap_v6
-        ADLMIDI
-        "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
-        winmm
-        dsound
-        ole32
-        ksuser
-    )
+    if(EMSCRIPTEN)
+        target_link_libraries(agsimwrap PRIVATE imwrap_v6 ADLMIDI libfluidsynth)
+    else()
+        target_link_libraries(agsimwrap PRIVATE
+            imwrap_v6
+            ADLMIDI
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+            winmm
+            dsound
+            ole32
+            ksuser
+        )
+    endif()
 
     imwrap_apply_common_target_settings(agsimwrap)
 
     if(MSVC)
         target_link_libraries(agsimwrap PRIVATE winmm)
     else()
-        if(NOT APPLE)
+        if(NOT APPLE AND NOT EMSCRIPTEN)
             target_link_libraries(agsimwrap PRIVATE winmm)
         endif()
     endif()

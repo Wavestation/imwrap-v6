@@ -35,8 +35,12 @@ Le plugin AGS et certains scripts de packaging attendent aussi des artefacts tie
 - `samples/` : exemples de banques `.ims`
 - `third_party/` : sources des dépendances vendorisées
 
+## Auteur
+
+Masami Komuro
+
 ## Licence
 
-iMWrap v6 est distribué sous GNU General Public License v3.0 ou ultérieure. Voir `LICENSE`.
+iMWrap v6 est distribué sous GNU Lesser General Public License v3.0 ou ultérieure. Voir `LICENSE.LESSER` et `LICENSE.GPL`.
 
 Les licences des dépendances vendorisées sont référencées dans `THIRD_PARTY_LICENSES.md` et dans les fichiers de licence amont conservés sous `third_party/`.

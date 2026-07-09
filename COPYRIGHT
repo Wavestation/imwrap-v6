@@ -1,7 +1,8 @@
 Copyright (C) 2026 Masami Komuro and contributors
+Author: Masami Komuro
 
-This repository is distributed under the terms of the GNU General Public
-License v3.0 or, at your option, any later version. See the `LICENSE` file
+This repository is distributed under the terms of the GNU Lesser General Public
+License v3.0 or, at your option, any later version. See the `LICENSE.LESSER` and `LICENSE.GPL` files
 for the full license text.
 
 Third-party components bundled in this repository retain their own notices

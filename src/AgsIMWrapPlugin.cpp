@@ -6,16 +6,16 @@
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ========================================================================== */
@@ -25,20 +25,88 @@
  * Copyright (C) 2026 various contributors
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#if defined(_WIN32)
+#if defined(__EMSCRIPTEN__)
+#include <emscripten.h>
+#define AGS_EngineStartup agsimwrap_AGS_EngineStartup
+#define AGS_EngineShutdown agsimwrap_AGS_EngineShutdown
+#define AGS_EngineOnEvent agsimwrap_AGS_EngineOnEvent
+#define AGS_EngineDebugHook agsimwrap_AGS_EngineDebugHook
+#define AGS_EngineInitGfx agsimwrap_AGS_EngineInitGfx
+
+extern "C" {
+EM_JS(void, JS_WebMIDI_Init, (int deviceIndex), {
+    if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess({ sysex: true }).then(function(midiAccess) {
+            window.imwrapMidiAccess = midiAccess;
+            var outputs = midiAccess.outputs.values();
+            window.imwrapMidiOutput = null;
+            var count = 0;
+            for (var output = outputs.next(); output && !output.done; output = outputs.next()) {
+                if (count === deviceIndex) {
+                    window.imwrapMidiOutput = output.value;
+                    break;
+                }
+                count++;
+            }
+            if (!window.imwrapMidiOutput) {
+                // Fallback to first if index out of bounds
+                var outputs2 = midiAccess.outputs.values();
+                for (var out2 = outputs2.next(); out2 && !out2.done; out2 = outputs2.next()) {
+                    window.imwrapMidiOutput = out2.value;
+                    break;
+                }
+            }
+            if (window.imwrapMidiOutput) {
+                console.log("iMWrap WebMIDI: Connected to " + window.imwrapMidiOutput.name);
+            } else {
+                console.warn("iMWrap WebMIDI: No MIDI output ports found.");
+            }
+        }, function(msg) {
+            console.error("iMWrap WebMIDI: Failed to get MIDI access - " + msg);
+        });
+    } else {
+        console.warn("iMWrap WebMIDI: WebMIDI API is not supported in this browser.");
+    }
+});
+
+EM_JS(void, JS_WebMIDI_SendShortMsg, (unsigned int msg), {
+    if (window.imwrapMidiOutput) {
+        var status = msg & 0xFF;
+        var data1 = (msg >> 8) & 0xFF;
+        var data2 = (msg >> 16) & 0xFF;
+        // Optimization: some messages don't have data2
+        if ((status & 0xF0) === 0xC0 || (status & 0xF0) === 0xD0) {
+            window.imwrapMidiOutput.send([status, data1]);
+        } else {
+            window.imwrapMidiOutput.send([status, data1, data2]);
+        }
+    }
+});
+
+EM_JS(void, JS_WebMIDI_SendSysEx, (int dataPtr, int size), {
+    if (window.imwrapMidiOutput) {
+        var arr = new Uint8Array(size);
+        for (var i = 0; i < size; i++) {
+            arr[i] = Module.HEAPU8[dataPtr + i];
+        }
+        window.imwrapMidiOutput.send(arr);
+    }
+});
+}
+#elif defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <mmsystem.h>
@@ -306,6 +374,10 @@ struct HardwareMidiOutSink final : imwrap::MidiSink {
             }
         }
         close();
+#elif defined(__EMSCRIPTEN__)
+        JS_WebMIDI_Init(deviceIndex);
+        active = true;
+        return true;
 #endif
         return false;
     }
@@ -355,6 +427,9 @@ struct HardwareMidiOutSink final : imwrap::MidiSink {
         if (packet) {
             MIDISend(port, destination, packetList);
         }
+#elif defined(__EMSCRIPTEN__)
+        uint32_t msg = status | (data1 << 8) | (hasData2 ? (data2 << 16) : 0);
+        JS_WebMIDI_SendShortMsg(msg);
 #endif
     }
 
@@ -409,16 +484,28 @@ struct HardwareMidiOutSink final : imwrap::MidiSink {
         }
         std::vector<Byte> data(message.size() + 2);
         data[0] = 0xF0;
-        std::memcpy(data.data() + 1, message.data(), message.size());
-        data[message.size() + 1] = 0xF7;
+        std::copy(message.begin(), message.end(), data.begin() + 1);
+        data.back() = 0xF7;
 
-        Byte packetBuf[2048 + sizeof(MIDIPacketList)];
+        Byte packetBuf[1024];
         MIDIPacketList *packetList = (MIDIPacketList *)packetBuf;
         MIDIPacket *packet = MIDIPacketListInit(packetList);
         packet = MIDIPacketListAdd(packetList, sizeof(packetBuf), packet, 0, data.size(), data.data());
         if (packet) {
             MIDISend(port, destination, packetList);
         }
+#elif defined(__EMSCRIPTEN__)
+        std::vector<uint8_t> sysex;
+        if (!message.empty() && static_cast<uint8_t>(message.data()[0]) == 0xF0) {
+            sysex.assign(message.data(), message.data() + message.size());
+        } else {
+            sysex.push_back(0xF0);
+            sysex.insert(sysex.end(), message.data(), message.data() + message.size());
+        }
+        if (sysex.empty() || static_cast<uint8_t>(sysex.back()) != 0xF7) {
+            sysex.push_back(0xF7);
+        }
+        JS_WebMIDI_SendSysEx(reinterpret_cast<int>(sysex.data()), static_cast<int>(sysex.size()));
 #endif
     }
 
@@ -439,6 +526,8 @@ int GetMidiOutDeviceCount() {
     return static_cast<int>(midiOutGetNumDevs());
 #elif defined(__APPLE__)
     return static_cast<int>(MIDIGetNumberOfDestinations());
+#elif defined(__EMSCRIPTEN__)
+    return 1;
 #else
     return 0;
 #endif
@@ -463,6 +552,8 @@ std::string GetMidiOutDeviceName(int index) {
             CFRelease(nameRef);
         }
     }
+#elif defined(__EMSCRIPTEN__)
+    return "WebMIDI Output";
 #endif
     return "Unknown MIDI Device";
 }
@@ -493,6 +584,9 @@ IMWrapDriverType g_IMWrapDriverType = IMWrapDriverType::FluidSynth;
 bool g_LoggingEnabled = false;
 
 void IMWrapLog(const char* msg) {
+#if defined(__EMSCRIPTEN__)
+    printf("%s\n", msg);
+#endif
     if (!g_LoggingEnabled) return;
     if (g_AgsEngine) {
         g_AgsEngine->PrintDebugConsole(msg);
@@ -845,6 +939,10 @@ void Ags_iMWrap_LoadBank(const char *filename) {
     }
 }
 
+void FluidDummyLogCallback(int level, const char *message, void *data) {
+    // Ignore all FluidSynth logs to prevent WebAssembly console lag
+}
+
 void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     CleanupCurrentDriver();
@@ -879,6 +977,10 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
 
             g_FluidSettings = new_fluid_settings();
             if (g_FluidSettings) {
+                fluid_set_log_function(FLUID_DBG, nullptr, nullptr);
+                fluid_set_log_function(FLUID_INFO, nullptr, nullptr);
+                fluid_set_log_function(FLUID_WARN, nullptr, nullptr);
+                fluid_set_log_function(FLUID_ERR, nullptr, nullptr);
                 fluid_settings_setnum(g_FluidSettings, "synth.sample-rate", 44100.0);
                 g_FluidSynth = new_fluid_synth(g_FluidSettings);
                 if (g_FluidSynth) {
@@ -1509,6 +1611,24 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
         g_AudioDeviceInitialized = true;
         ma_device_start(&g_AudioDevice);
     }
+
+#if defined(__EMSCRIPTEN__)
+    int jsChoice = EM_ASM_INT({
+        if (typeof window.imwrapMidiChoice !== 'undefined') {
+            return window.imwrapMidiChoice;
+        }
+        return 0;
+    });
+
+    if (jsChoice == 1) {
+        Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::HardwareGM), "");
+    } else if (jsChoice == 2) {
+        Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::HardwareMT32), "");
+    } else {
+        // Explicitly initialize FluidSynth to ensure the driver is active
+        Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::FluidSynth), "");
+    }
+#endif
 }
 
 DLLEXPORT void AGS_EngineShutdown(void) {

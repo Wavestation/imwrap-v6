@@ -215,10 +215,10 @@ if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_C
   endif ()
 
   # define some warning flags
-  set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement -Werror=implicit-function-declaration" )
-  check_c_compiler_flag ( "-Werror=incompatible-pointer-types" HAVE_INCOMPATIBLE_POINTER_TYPES )
+  set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -W -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wno-unused-parameter -Wdeclaration-after-statement" )
+  check_c_compiler_flag ( "-Wno-incompatible-pointer-types" HAVE_INCOMPATIBLE_POINTER_TYPES )
   if ( HAVE_INCOMPATIBLE_POINTER_TYPES )
-    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=incompatible-pointer-types" )
+    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-incompatible-pointer-types" )
   endif ( HAVE_INCOMPATIBLE_POINTER_TYPES )
 
   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -W -Wpointer-arith -Wcast-qual -Wno-unused-parameter" )

@@ -39,10 +39,14 @@ artifacts to be available under `third_party/*-build/`.
 - `samples/`: example `.ims` banks
 - `third_party/`: vendored dependency sources
 
+## Author
+
+Masami Komuro
+
 ## Licensing
 
-iMWrap v6 is distributed under the GNU General Public License v3.0 or later.
-See `LICENSE`.
+iMWrap v6 is distributed under the GNU Lesser General Public License v3.0 or later.
+See `LICENSE.LESSER` and `LICENSE.GPL`.
 
 Vendored dependency licenses are tracked in `THIRD_PARTY_LICENSES.md` and in the
 upstream license files kept under `third_party/`.
