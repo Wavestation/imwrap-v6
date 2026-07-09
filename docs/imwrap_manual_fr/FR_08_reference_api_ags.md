@@ -251,7 +251,8 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   Voici comment dépacquer ces valeurs :
   ```c
   int packed = iMWrap_PopMarker();
-  while (packed != -1) {
+  while (packed != -1)
+  {
       int markerValue = packed & 0xFF;         // Les 8 bits de poids faible
       int soundId = (packed >> 8) & 0xFFFFFF;  // Le reste des bits pour le soundId
       

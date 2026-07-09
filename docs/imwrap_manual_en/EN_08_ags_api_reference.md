@@ -261,7 +261,8 @@ These constants are available throughout your scripts to configure the audio dri
   Here is how to unpack these values:
   ```c
   int packed = iMWrap_PopMarker();
-  while (packed != -1) {
+  while (packed != -1)
+  {
       int markerValue = packed & 0xFF;         // The lower 8 bits
       int soundId = (packed >> 8) & 0xFFFFFF;  // The remaining bits for the soundId
       
