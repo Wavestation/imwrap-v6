@@ -196,15 +196,17 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
     endif()
 
     if(EMSCRIPTEN)
-        set(osal "cpp11" CACHE STRING "" FORCE)
-        set(enable-portaudio OFF CACHE BOOL "" FORCE)
-        set(enable-pulseaudio OFF CACHE BOOL "" FORCE)
+        set(enable-network OFF CACHE BOOL "" FORCE)
+        set(enable-readline OFF CACHE BOOL "" FORCE)
+        set(enable-dsound OFF CACHE BOOL "" FORCE)
+        set(enable-waveout OFF CACHE BOOL "" FORCE)
+        set(enable-winmidi OFF CACHE BOOL "" FORCE)
         set(enable-alsa OFF CACHE BOOL "" FORCE)
-        set(enable-dbus OFF CACHE BOOL "" FORCE)
+        set(enable-pulseaudio OFF CACHE BOOL "" FORCE)
+        set(enable-portaudio OFF CACHE BOOL "" FORCE)
         set(enable-sdl2 OFF CACHE BOOL "" FORCE)
         set(enable-jack OFF CACHE BOOL "" FORCE)
-        set(enable-sndfile OFF CACHE BOOL "" FORCE)
-        set(enable-network OFF CACHE BOOL "" FORCE)
+        set(enable-openmp OFF CACHE BOOL "" FORCE)
         set(enable-threads OFF CACHE BOOL "" FORCE)
         set(enable-systemd OFF CACHE BOOL "" FORCE)
         set(enable-ladspa OFF CACHE BOOL "" FORCE)
@@ -213,6 +215,12 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
         set(enable-midishare OFF CACHE BOOL "" FORCE)
         set(enable-oss OFF CACHE BOOL "" FORCE)
         set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+        
+        # Enable libsndfile and Vorbis for SF3 support
+        set(enable-libsndfile ON CACHE BOOL "" FORCE)
+        set(SndFile_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libsndfile/build-wasm" CACHE PATH "" FORCE)
+        set(SndFile_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libsndfile/include" CACHE PATH "" FORCE)
+        set(_sndfile_library "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libsndfile/build-wasm/libsndfile.a" CACHE FILEPATH "" FORCE)
         
         # Bypass check_type_size which fails due to AGS emscripten linker flags
         set(HAVE_LONG_LONG 1 CACHE INTERNAL "")
@@ -241,12 +249,25 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
     )
 
     if(EMSCRIPTEN)
-        target_link_libraries(agsimwrap PRIVATE imwrap_v6 ADLMIDI libfluidsynth)
+        target_link_libraries(agsimwrap PRIVATE 
+            imwrap_v6 
+            ADLMIDI 
+            libfluidsynth
+            "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libsndfile/build-wasm/libsndfile.a"
+            "-sUSE_OGG=1"
+            "-sUSE_VORBIS=1"
+        )
     else()
         target_link_libraries(agsimwrap PRIVATE
             imwrap_v6
             ADLMIDI
             "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/sndfile.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/vorbis.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/vorbisenc.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/ogg.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/opus.lib"
+            "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/FLAC.lib"
             winmm
             dsound
             ole32
@@ -257,10 +278,10 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
     imwrap_apply_common_target_settings(agsimwrap)
 
     if(MSVC)
-        target_link_libraries(agsimwrap PRIVATE winmm)
+        target_link_libraries(agsimwrap PRIVATE winmm ws2_32)
     else()
         if(NOT APPLE AND NOT EMSCRIPTEN)
-            target_link_libraries(agsimwrap PRIVATE winmm)
+            target_link_libraries(agsimwrap PRIVATE winmm ws2_32)
         endif()
     endif()
 

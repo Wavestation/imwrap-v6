@@ -60,7 +60,7 @@
       <PlaySoundOnScore>0</PlaySoundOnScore>
       <ReleaseDate>2026-07-05</ReleaseDate>
       <RenderAtScreenResolution>UserDefined</RenderAtScreenResolution>
-      <RoomTransition>FadeOutAndIn</RoomTransition>
+      <RoomTransition>BlackBoxOut</RoomTransition>
       <RunGameLoopsWhileDialogOptionsDisplayed>True</RunGameLoopsWhileDialogOptionsDisplayed>
       <SaveGameFileExtension>imwrs</SaveGameFileExtension>
       <SaveGameFolderName xml:space="preserve">iMWrap Demo Game</SaveGameFolderName>

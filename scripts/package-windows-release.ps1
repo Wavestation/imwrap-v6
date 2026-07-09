@@ -4,6 +4,7 @@ param(
     [string]$GuiBuildDir,
     [string]$Vst3BuildDir,
     [string]$AgsEditorPluginBuildDir,
+    [string]$WebBuildDir,
     [string]$OutputDir
 )
 
@@ -24,6 +25,9 @@ if ([string]::IsNullOrWhiteSpace($Vst3BuildDir)) {
 if ([string]::IsNullOrWhiteSpace($AgsEditorPluginBuildDir)) {
     $AgsEditorPluginBuildDir = Join-Path $RootDir "ags-editor-plugin\bin\Release"
 }
+if ([string]::IsNullOrWhiteSpace($WebBuildDir)) {
+    $WebBuildDir = "D:\Prog\imwrap-ags-web\ags\build-web-release"
+}
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
     $OutputDir = Join-Path $RootDir "final-release\imwrap-windows"
 }
@@ -32,6 +36,7 @@ $PluginBuildDir = [System.IO.Path]::GetFullPath($PluginBuildDir)
 $GuiBuildDir = [System.IO.Path]::GetFullPath($GuiBuildDir)
 $Vst3BuildDir = [System.IO.Path]::GetFullPath($Vst3BuildDir)
 $AgsEditorPluginBuildDir = [System.IO.Path]::GetFullPath($AgsEditorPluginBuildDir)
+$WebBuildDir = [System.IO.Path]::GetFullPath($WebBuildDir)
 $OutputDir = [System.IO.Path]::GetFullPath($OutputDir)
 
 function Assert-WithinWorkspace {
@@ -166,8 +171,9 @@ $wrappersDir = Join-Path $OutputDir "wrappers"
 $licensesDir = Join-Path $OutputDir "licenses"
 $toolsDir = Join-Path $OutputDir "tools"
 $agsEditorPluginDir = Join-Path $OutputDir "ags-editor-plugin"
+$webExportDir = Join-Path $OutputDir "web-export"
 
-foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir, $agsEditorPluginDir)) {
+foreach ($dir in @($docsDir, $examplesDir, $wrappersDir, $licensesDir, $toolsDir, $agsEditorPluginDir, $webExportDir)) {
     Ensure-Directory -Path $dir
 }
 
@@ -233,6 +239,24 @@ foreach ($artifact in $agsEditorPluginFiles) {
     Copy-FirstExistingFileAs -Sources $artifact.Sources -Destination (Join-Path $agsEditorPluginDir $artifact.Name)
 }
 
+$webFiles = @(
+    @{ Sources = @((Join-Path $WebBuildDir "ags.html")); Name = "ags.html"; Optional = $true },
+    @{ Sources = @((Join-Path $WebBuildDir "ags.js")); Name = "ags.js"; Optional = $true },
+    @{ Sources = @((Join-Path $WebBuildDir "ags.wasm")); Name = "ags.wasm"; Optional = $true }
+)
+
+foreach ($artifact in $webFiles) {
+    if ($artifact.ContainsKey("Optional") -and $artifact.Optional) {
+        $optionalSource = $artifact.Sources[0]
+        if (Test-Path -LiteralPath $optionalSource -PathType Leaf) {
+            Copy-FileAs -Source $optionalSource -Destination (Join-Path $webExportDir $artifact.Name)
+        }
+        continue
+    }
+
+    Copy-FirstExistingFileAs -Sources $artifact.Sources -Destination (Join-Path $webExportDir $artifact.Name)
+}
+
 $qtRuntimeFiles = @(
     "Qt6Core.dll",
     "Qt6Gui.dll",
@@ -283,7 +307,8 @@ foreach ($wrapper in $wrapperFiles) {
 }
 
 $licenseFiles = @(
-    @{ Source = Join-Path $RootDir "LICENSE"; Name = "licenses\LICENSE-imwrap-v6.txt" },
+    @{ Source = Join-Path $RootDir "LICENSE.GPL"; Name = "licenses\LICENSE-imwrap-v6-GPL.txt" },
+    @{ Source = Join-Path $RootDir "LICENSE.LESSER"; Name = "licenses\LICENSE-imwrap-v6-LESSER.txt" },
     @{ Source = Join-Path $RootDir "third_party\libadlmidi\LICENSE"; Name = "licenses\LICENSE-libADLMIDI.txt" },
     @{ Source = Join-Path $RootDir "third_party\libadlmidi\LICENSE.GPL-3.txt"; Name = "licenses\LICENSE-libADLMIDI-GPL-3.txt" },
     @{ Source = Join-Path $RootDir "third_party\libadlmidi\LICENSE.LGPL-2.1.txt"; Name = "licenses\LICENSE-libADLMIDI-LGPL-2.1.txt" },

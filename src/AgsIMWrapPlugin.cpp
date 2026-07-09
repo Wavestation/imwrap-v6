@@ -571,6 +571,8 @@ struct PendingMarker {
 };
 
 std::vector<PendingMarker> g_PendingMarkers;
+PendingMarker g_LastMarkerData;
+bool g_HasLastMarker = false;
 
 AgsFluidSynthMidiSink g_FluidMidiSink;
 AgsAdlibMidiSink g_AdlMidiSink;
@@ -582,7 +584,7 @@ std::string g_FluidTempSoundFontPath;
 struct ADL_MIDIPlayer *g_AdlPlayer = nullptr;
 IMWrapDriverType g_IMWrapDriverType = IMWrapDriverType::FluidSynth;
 bool g_LoggingEnabled = false;
-
+bool g_FluidDynLoading = false;
 void IMWrapLog(const char* msg) {
 #if defined(__EMSCRIPTEN__)
     printf("%s\n", msg);
@@ -628,6 +630,7 @@ const char *g_iMWrapScriptHeader =
     "\r\n"
     "import void iMWrap_LoadBank(const string filename);\r\n"
     "import void iMWrap_LoadSoundFont(const string filename);\r\n"
+    "import void iMWrap_SetSFDynLoad(bool enable = true);\r\n"
     "import void iMWrap_SetDriver(int driverType, const string deviceOrPath);\r\n"
     "import int  iMWrap_GetMIDIDeviceCount();\r\n"
     "import String iMWrap_GetMIDIDeviceName(int index);\r\n"
@@ -664,7 +667,9 @@ const char *g_iMWrapScriptHeader =
     "import void iMWrap_SetWelcomeMessage(const string message);\r\n"
     "import int  iMWrap_HasExternalConfig();\r\n"
     "import int  iMWrap_ApplyExternalConfig(const string fallbackSoundFont);\r\n"
-    "import void iMWrap_EnableLog(int enabled);\r\n";
+    "import void iMWrap_EnableLog(int enabled);\r\n"
+    "import int  iMWrap_PopMarker();\r\n"
+    "import int  iMWrap_GetLastMarker();\r\n";
 
 bool ResolveAgsPath(const char *scriptPath, std::string *resolvedPath) {
     if (!scriptPath || scriptPath[0] == '\0' || !resolvedPath) {
@@ -977,11 +982,13 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
 
             g_FluidSettings = new_fluid_settings();
             if (g_FluidSettings) {
+                fluid_settings_setint(g_FluidSettings, "synth.lock-memory", 0);
                 fluid_set_log_function(FLUID_DBG, nullptr, nullptr);
                 fluid_set_log_function(FLUID_INFO, nullptr, nullptr);
                 fluid_set_log_function(FLUID_WARN, nullptr, nullptr);
                 fluid_set_log_function(FLUID_ERR, nullptr, nullptr);
                 fluid_settings_setnum(g_FluidSettings, "synth.sample-rate", 44100.0);
+                fluid_settings_setint(g_FluidSettings, "synth.dynamic-sample-loading", g_FluidDynLoading ? 1 : 0);
                 g_FluidSynth = new_fluid_synth(g_FluidSettings);
                 if (g_FluidSynth) {
                     if (fluid_synth_sfload(g_FluidSynth, loadPath.c_str(), 1) != FLUID_FAILED) {
@@ -1085,6 +1092,10 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
 
 void Ags_iMWrap_LoadSoundFont(const char *filename) {
     Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::FluidSynth), filename);
+}
+
+void Ags_iMWrap_SetSFDynLoad(int enable) {
+    g_FluidDynLoading = (enable != 0);
 }
 
 int Ags_iMWrap_GetMIDIDeviceCount() {
@@ -1512,6 +1523,21 @@ void Ags_iMWrap_EnableLog(int enabled) {
     g_LoggingEnabled = (enabled != 0);
 }
 
+int Ags_iMWrap_PopMarker() {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    if (g_PendingMarkers.empty()) return -1;
+    auto pm = g_PendingMarkers.front();
+    g_PendingMarkers.erase(g_PendingMarkers.begin());
+    return (pm.soundId << 8) | pm.marker;
+}
+
+int Ags_iMWrap_GetLastMarker() {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    if (!g_HasLastMarker) return -1;
+    g_HasLastMarker = false;
+    return (g_LastMarkerData.soundId << 8) | g_LastMarkerData.marker;
+}
+
 // AGS plugin lifecycle exports
 DLLEXPORT const char * AGS_GetPluginName(void) {
     return "iMWrap v6 AGS Plugin";
@@ -1552,11 +1578,15 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     });
     g_Engine.setMarkerCallback([](uint16_t soundId, uint8_t marker) {
         g_PendingMarkers.push_back({soundId, marker});
+        g_LastMarkerData.soundId = soundId;
+        g_LastMarkerData.marker = marker;
+        g_HasLastMarker = true;
     });
 
     // Register script functions
     g_AgsEngine->RegisterScriptFunction("iMWrap_LoadBank", (void*)Ags_iMWrap_LoadBank);
     g_AgsEngine->RegisterScriptFunction("iMWrap_LoadSoundFont", (void*)Ags_iMWrap_LoadSoundFont);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetSFDynLoad", (void*)Ags_iMWrap_SetSFDynLoad);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetDriver", (void*)Ags_iMWrap_SetDriver);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetMIDIDeviceCount", (void*)Ags_iMWrap_GetMIDIDeviceCount);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetMIDIDeviceName", (void*)Ags_iMWrap_GetMIDIDeviceName);
@@ -1594,6 +1624,8 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMWrap_HasExternalConfig", (void*)Ags_iMWrap_HasExternalConfig);
     g_AgsEngine->RegisterScriptFunction("iMWrap_ApplyExternalConfig", (void*)Ags_iMWrap_ApplyExternalConfig);
     g_AgsEngine->RegisterScriptFunction("iMWrap_EnableLog", (void*)Ags_iMWrap_EnableLog);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_PopMarker", (void*)Ags_iMWrap_PopMarker);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_GetLastMarker", (void*)Ags_iMWrap_GetLastMarker);
 
     g_AgsEngine->RequestEventHook(AGSE_PRESCREENDRAW);
     g_AgsEngine->RequestEventHook(AGSE_SAVEGAME);
@@ -1642,6 +1674,7 @@ DLLEXPORT void AGS_EngineShutdown(void) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Engine.setMarkerCallback({});
     g_PendingMarkers.clear();
+    g_HasLastMarker = false;
     CleanupCurrentDriver();
 
     g_AgsEngine = nullptr;
