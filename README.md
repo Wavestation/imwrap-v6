@@ -5,9 +5,10 @@ engine used by LucasArts iMUSE v6-era games.
 
 The repository contains:
 - the core C++ engine in `src/` and `include/`
+- maintained command-line tools in `tools/`
+- maintained Qt GUI tools in `tools_gui/`
 - AGS integration helpers in `ags-wrapper/` and `ags-editor-plugin/`
-- SwiftUI utilities in `swift-app/`
-- command-line tools in `tools/`
+- legacy compatibility surfaces in `legacy-tools/`
 - vendored dependencies in `third_party/`
 
 ## Build Notes
@@ -29,13 +30,17 @@ or `IMWRAP_QT6_PREFIX_PATH`.
 The AGS plugin and some packaging scripts also expect vendored third-party build
 artifacts to be available under `third_party/*-build/`.
 
+`IMWRAP_BUILD_SHIM` controls the legacy `imwrap_shim` compatibility DLL. It is
+still buildable, but its sources now live under `legacy-tools/`.
+
 ## Repository Layout
 
 - `src/`, `include/`: core engine sources and headers
-- `tools/`: `imwrappack` and `imsprobe`
+- `tools/`: maintained command-line tools, including the current `imwrappack`
 - `tools_gui/`: native Windows GUI utilities
-- `swift-shim/`, `swift-app/`: native shim and macOS apps
 - `ags-wrapper/`, `ags-editor-plugin/`: .NET and AGS editor integration
+- `legacy-tools/`: retired Swift tools, legacy shim sources, and the original CLI packer source
+- `Package.swift`: legacy Swift package manifest kept for compatibility with the moved legacy sources
 - `samples/`: example `.ims` banks
 - `third_party/`: vendored dependency sources
 

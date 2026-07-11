@@ -1683,19 +1683,7 @@ DLLEXPORT void AGS_EngineShutdown(void) {
 #include <sstream>
 
 DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t data) {
-    if (event == AGSE_PRESCREENDRAW && g_AgsEngine) {
-        std::vector<PendingMarker> firedMarkers;
-        {
-            std::lock_guard<std::mutex> lock(g_Mutex);
-            firedMarkers.swap(g_PendingMarkers);
-        }
-
-        for (const auto &firedMarker : firedMarkers) {
-            g_AgsEngine->QueueGameScriptFunction("iMWrap_OnTrigger", 1, 2,
-                                                 firedMarker.soundId, firedMarker.marker);
-        }
-    }
-    else if (event == AGSE_SAVEGAME && g_AgsEngine) {
+    if (event == AGSE_SAVEGAME && g_AgsEngine) {
         std::stringstream ss(std::ios::binary | std::ios::out);
         {
             std::lock_guard<std::mutex> lock(g_Mutex);

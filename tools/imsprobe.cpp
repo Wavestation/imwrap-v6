@@ -37,6 +37,8 @@ const char *VariantName(imwrap::VariantKind kind) {
         return "GMD";
     case imwrap::VariantKind::Rol:
         return "ROL";
+    case imwrap::VariantKind::Adl:
+        return "ADL";
     default:
         return "NONE";
     }
@@ -64,8 +66,12 @@ void PrintVariant(const imwrap::SoundResource &sound, imwrap::VariantKind kind) 
         return;
     }
 
-    const imwrap::TargetProfile profile =
-        (kind == imwrap::VariantKind::Rol) ? imwrap::TargetProfile::Mt32 : imwrap::TargetProfile::GeneralMidi;
+    imwrap::TargetProfile profile = imwrap::TargetProfile::GeneralMidi;
+    if (kind == imwrap::VariantKind::Rol) {
+        profile = imwrap::TargetProfile::Mt32;
+    } else if (kind == imwrap::VariantKind::Adl) {
+        profile = imwrap::TargetProfile::Adlib;
+    }
 
     imwrap::SoundVariantView variant = sound.selectVariant(profile);
     if (!variant.valid() || variant.kind != kind) {
@@ -155,6 +161,7 @@ int main(int argc, char **argv) {
 
         PrintVariant(sound, imwrap::VariantKind::Gmd);
         PrintVariant(sound, imwrap::VariantKind::Rol);
+        PrintVariant(sound, imwrap::VariantKind::Adl);
     }
 
     return 0;

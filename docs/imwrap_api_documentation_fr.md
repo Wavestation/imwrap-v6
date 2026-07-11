@@ -1,248 +1,272 @@
-# Documentation détaillée de l'API C++ iMWrap v6
+# Reference de l'API C++ iMWrap v6
 
-Ce document référence exhaustivement les méthodes publiques des classes principales du moteur iMWrap v6 (`ResourceBank`, `MidiSink` et `IMWrapEngine`), avec des exemples d'utilisation pour chacune.
+Ce document reflete les headers publics exposes actuellement dans
+`include/imwrap/`. Il sert de carte de la surface maintenue de la librairie.
 
----
+## Vue D'Ensemble
 
-## 1. Classe `imwrap::ResourceBank`
+L'API publique est organisee en cinq couches principales :
 
-La classe `ResourceBank` gère la mémoire et le chargement des fichiers `.ims` (Interactive Music System).
+- acces au format IMS et aux banques
+- parsing MIDI et sequences
+- runtime de lecture et controle type iMUSE
+- authoring et decodage SysEx
+- ecriture de banques
 
-### `bool openFromFile(const std::string &path, std::string *error = nullptr)`
-Charge une banque musicale depuis un chemin sur le disque.
-- **Paramètres** : 
-  - `path` : Le chemin vers le fichier `.ims`.
-  - `error` (optionnel) : Pointeur vers une chaîne de caractères pour récupérer un message d'erreur.
-- **Retourne** : `true` si le chargement a réussi, sinon `false`.
-- **Exemple** :
+## 1. Couche Banque Et Format
+
+Headers :
+
+- `imwrap/ImsFormat.h`
+- `imwrap/ByteView.h`
+- `imwrap/ResourceBank.h`
+
+Types principaux :
+
+- `VariantKind` : `Gmd`, `Rol`, `Adl`
+- `TargetProfile` : `GeneralMidi`, `Mt32`, `Adlib`
+- `MdhdData` : parametres runtime par defaut embarques dans une variante
+- `SoundVariantView` : acces brut a une variante stockee et a son payload SMF
+- `SoundResource` : son logique charge avec helpers de selection de variante
+- `ResourceBank` : ouverture et enumeration des banques `.ims`
+
+Points d'entree principaux :
+
+- `ResourceBank::openFromFile(...)`
+- `ResourceBank::openFromMemory(...)`
+- `ResourceBank::header()`
+- `ResourceBank::hasSound(...)`
+- `ResourceBank::loadSound(...)`
+- `ResourceBank::soundIds()`
+- `SoundResource::hasVariant(...)`
+- `SoundResource::variant(...)`
+- `SoundResource::selectVariant(...)`
+
+Exemple typique :
+
 ```cpp
 imwrap::ResourceBank bank;
-std::string err;
-if (!bank.openFromFile("data/music.ims", &err)) {
-    std::cerr << "Erreur de chargement: " << err << std::endl;
+std::string error;
+if (!bank.openFromFile("game.ims", &error)) {
+    throw std::runtime_error(error);
 }
+
+imwrap::SoundResource sound = bank.loadSound(80, &error);
+imwrap::SoundVariantView variant = sound.selectVariant(imwrap::TargetProfile::Mt32);
 ```
 
-### `bool openFromMemory(std::vector<uint8_t> data, std::string *error = nullptr)`
-Charge une banque musicale depuis un buffer mémoire (utile si vos assets sont empaquetés/compressés).
-- **Paramètres** : 
-  - `data` : Vecteur d'octets contenant la structure du fichier `.ims`.
-  - `error` (optionnel) : Pointeur vers une chaîne pour l'erreur.
-- **Retourne** : `true` en cas de succès.
-- **Exemple** :
-```cpp
-std::vector<uint8_t> myData = LoadMyVFSFile("music.ims");
-bank.openFromMemory(myData);
-```
+## 2. Couche MIDI Et Sequences
 
-### `bool isOpen() const`
-Vérifie si une banque valide est actuellement chargée.
-- **Retourne** : `true` si ouverte.
-- **Exemple** :
-```cpp
-if (bank.isOpen()) { std::cout << "Banque prête!" << std::endl; }
-```
+Headers :
 
-### `bool hasSound(uint16_t soundId) const`
-Vérifie si un numéro de son spécifique existe dans la banque.
-- **Paramètres** : `soundId` : Identifiant iMUSE du son.
-- **Exemple** :
-```cpp
-if (bank.hasSound(10)) { engine.startSound(10); }
-```
+- `imwrap/SmfSequence.h`
+- `imwrap/IMWrapSequence.h`
 
-### `std::vector<uint16_t> soundIds() const`
-Récupère la liste de tous les identifiants de sons disponibles dans cette banque.
-- **Retourne** : Un vecteur d'ID (`uint16_t`).
-- **Exemple** :
-```cpp
-for (uint16_t id : bank.soundIds()) {
-    std::cout << "Son disponible: " << id << std::endl;
-}
-```
+Types principaux :
 
----
+- `MidiEventType`
+- `MidiEvent`
+- `SmfTrack`
+- `SmfSequence`
+- `IMWrapSequence`
 
-## 2. Interface `imwrap::MidiSink`
+Points d'entree principaux :
 
-Cette interface virtuelle est utilisée par le moteur pour "cracher" les événements MIDI à jouer. Vous **devez** en dériver une classe pour le lier à votre backend audio.
+- `SmfParser::Parse(...)`
+- `SmfSerializer::Serialize(...)`
+- `LoadIMWrapSequence(...)`
 
-### `virtual void onMidiMessage(uint16_t soundId, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) = 0`
-**Obligatoire.** Appelée pour chaque instruction MIDI conventionnelle (Note On, Note Off, Control Change, Pitch Bend...).
-- **Paramètres** :
-  - `soundId` : Le son qui a émis l'instruction.
-  - `status` : L'octet de statut MIDI (ex: `0x90` pour Note On sur canal 0).
-  - `data1` : Premier octet de donnée (ex: la note, de 0 à 127).
-  - `hasData2` : Indique si la commande a un deuxième octet de donnée.
-  - `data2` : Deuxième octet de donnée (ex: la vélocité).
-- **Exemple** :
-```cpp
-void onMidiMessage(uint16_t sid, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) override {
-    uint32_t msg = status | (data1 << 8);
-    if (hasData2) msg |= (data2 << 16);
-    midiOutShortMsg(hMidiOut, msg); // Exemple WinMM API
-}
-```
+Notes de comportement :
 
-### `virtual void onSysEx(uint16_t soundId, ByteView message)`
-Appelée lorsqu'un événement System Exclusive (SysEx) long est déclenché (très utilisé sur MT-32 ou pour initialiser un synthé).
-- **Exemple** :
-```cpp
-void onSysEx(uint16_t soundId, imwrap::ByteView message) override {
-    // message.data() et message.size() pour envoyer le buffer MIDI SysEx
-    SendSysExBufferToHardware(message.data(), message.size());
-}
-```
+- le parsing SMF est expose independamment du runtime
+- `LoadIMWrapSequence(...)` combine une variante issue d'une banque avec les
+  evenements de controle iMWrap decodes
+- les outils maintenus s'appuient sur cette couche pour importer du SMF 0, 1 et 2
 
-### `virtual void onTempoChange(uint16_t soundId, uint32_t microsPerQuarter)`
-Appelée lorsque le moteur signale un changement de tempo (généralement issu du fichier SMF interne).
-- **Exemple** :
-```cpp
-void onTempoChange(uint16_t soundId, uint32_t microsPerQuarter) override {
-    double bpm = 60000000.0 / microsPerQuarter;
-    std::cout << "Le BPM passe à : " << bpm << std::endl;
-}
-```
+## 3. Couche Runtime De Lecture
 
-### `virtual void onAllNotesOff()`
-Appelée lorsque le moteur souhaite couper de force le son (ex: lors d'un `stopAllSounds()`). Pratique pour envoyer une commande "Panic" à un synthétiseur.
+Headers :
 
----
+- `imwrap/MidiSink.h`
+- `imwrap/IMWrapCommand.h`
+- `imwrap/IMWrapEngine.h`
 
-## 3. Classe `imwrap::IMWrapEngine`
+Types principaux :
 
-Le cœur du système. C'est l'instance qui gère le temps, la priorité des sons, et exécute la logique interactive.
+- `MidiSink`
+- `Command`
+- `CommandPacket`
+- `IMWrapEngine`
 
-### Initialisation et Configurations
+`MidiSink` est l'interface de callbacks du runtime :
 
-#### `explicit IMWrapEngine(const ResourceBank *bank = nullptr)`
-#### `void setResourceBank(const ResourceBank *bank)`
-#### `void setMidiSink(MidiSink *sink)`
-Associe le moteur à une banque de ressources et une interface de sortie.
-- **Exemple** :
-```cpp
-imwrap::IMWrapEngine engine;
-engine.setResourceBank(&myBank);
-engine.setMidiSink(&mySynth);
-```
+- `onMidiMessage(...)`
+- `onSysEx(...)`
+- `onCustomInstrument(...)`
+- `onTempoChange(...)`
+- `onAllNotesOff()`
 
-#### `void setTargetProfile(TargetProfile profile)`
-Configure le format de sortie cible. Utile pour adapter les événements aux standards du matériel.
-- **Paramètres** : `profile` : `TargetProfile::GeneralMidi`, `TargetProfile::RolandMT32`, etc.
-- **Exemple** :
-```cpp
-engine.setTargetProfile(imwrap::TargetProfile::GeneralMidi);
-```
+`IMWrapEngine` est l'objet runtime principal. Les methodes publiques maintenues
+incluent :
 
-#### `void setLogCallback(LogCallback cb)`
-#### `void setMarkerCallback(MarkerCallback cb)`
-Enregistre des fonctions anonymes (lambdas) pour capturer des événements textuels (logs) ou musicaux (marqueurs MIDI iMUSE).
-- **Exemple** :
-```cpp
-engine.setMarkerCallback([](uint16_t soundId, uint8_t marker) {
-    std::cout << "Le son " << soundId << " a atteint le marqueur " << (int)marker << " !\n";
-    // Parfait pour synchroniser une animation graphique avec la musique.
-});
-```
+Configuration :
 
-### Contrôle de la lecture
+- `setResourceBank(...)`
+- `setTargetProfile(...)`
+- `targetProfile()`
+- `setMidiSink(...)`
+- `initMt32()`
+- `resetMt32Initialization()`
+- `setCompatibilityProfile(...)`
+- `compatibilityProfile()`
+- `setLogCallback(...)`
+- `setMarkerCallback(...)`
+- `setNativeMt32Output(...)`
+- `nativeMt32Output()`
+- `setWelcomeMessage(...)`
 
-#### `bool startSound(uint16_t soundId)`
-Lance ou planifie la lecture d'un son.
-- **Retourne** : `true` si le son a été trouvé et initié.
-- **Exemple** : `engine.startSound(15);`
+Lecture et etat :
 
-#### `void stopSound(uint16_t soundId)`
-Arrête un son en douceur (en générant les Note Off appropriés).
-- **Exemple** : `engine.stopSound(15);`
+- `startSound(...)`
+- `stopSound(...)`
+- `stopAllSounds()`
+- `isSoundActive(...)`
+- `getSoundStatus(...)`
+- `activeSoundIds()`
+- `getPlaybackLocation(...)`
+- `currentTempoMicrosPerQuarter()`
+- `transportTicksPerSecond()`
 
-#### `void stopAllSounds()`
-Arrête l'intégralité de la musique en cours.
+Serialization :
 
-#### `bool isSoundActive(uint16_t soundId) const`
-Vérifie si un son tourne toujours.
-- **Exemple** : 
-```cpp
-if (engine.isSoundActive(10)) { /* La musique d'intro tourne encore */ }
-```
+- `Serialize(...)`
+- `Deserialize(...)`
 
-#### `int getSoundStatus(uint16_t soundId) const`
-Renvoie un entier décrivant le statut spécifique du son (0 si inactif, 1 si actif... utile pour un wrapper haut niveau).
+Avancement du temps :
 
-#### `bool getPlaybackLocation(uint16_t soundId, uint16_t *track, uint16_t *beat, uint16_t *tick) const`
-Récupère la position précise de la tête de lecture. Très utile pour le debug ou des affichages "Now Playing".
-- **Exemple** :
-```cpp
-uint16_t trk, beat, tick;
-if (engine.getPlaybackLocation(10, &trk, &beat, &tick)) {
-    printf("Position : Piste %d, Temps %d, Tick %d\n", trk, beat, tick);
-}
-```
+- `advanceAll(...)`
+- `advanceMicroseconds(...)`
+- `advanceSound(...)`
 
-### Gestion du Temps
+Controle direct :
 
-#### `double transportTicksPerSecond() const`
-Récupère la résolution du temps du moteur (nombre de "ticks" de séquenceur théoriques qui doivent passer en une seconde). En général, ce sera basé sur le format Standard MIDI (ex: 60 ou 120 Hz).
-- **Exemple** : `double ticksPerSec = engine.transportTicksPerSecond();`
+- `doCommand(const CommandPacket&)`
+- `doCommand(uint16_t argc, const int16_t* args)`
+- `checkScriptTrigger(...)`
+- `fireAllScriptTriggers(...)`
 
-#### `void advanceAll(uint32_t deltaTicks)`
-Fait avancer l'horloge principale du séquenceur pour tous les sons. **C'est la fonction la plus importante à appeler dans votre boucle principale.**
-- **Exemple** :
-```cpp
-// Si la frame dure 0.016s et que le transportTick est à 120Hz :
-// deltaTicks = 0.016 * 120 = 1.92 -> cast à 2 ticks.
-engine.advanceAll(2);
-```
+Profils de compatibilite :
 
-### Commandes Interactives (iMUSE Protocol)
+- `CompatibilityProfile::GenericV6`
+- `CompatibilityProfile::Snm`
 
-#### `int32_t doCommand(uint16_t argc, const int16_t *args)`
-Envoie une instruction arbitraire d'interaction iMUSE au séquenceur. Les codes sont dans `imwrap::Command`.
+## 4. Authoring Et Decodage SysEx
 
-**Exemple 1 : Changer le volume d'une piste spécifique d'un son**
-(Syntaxe iMUSE : Set Volume)
-```cpp
-int16_t args[] = { 
-    (int16_t)imwrap::Command::PlayerSetPartVolume, 
-    10,    // soundId
-    0,     // channel (0 = piste 1)
-    100    // Nouveau volume (0-127)
-};
-engine.doCommand(4, args);
-```
+Header :
 
-**Exemple 2 : Sauter vers un marqueur rythmique (Jump)**
-Sauter au "beat 10" de la "track 0".
-```cpp
-int16_t args[] = {
-    (int16_t)imwrap::Command::PlayerJump,
-    10,    // soundId
-    0,     // track
-    10,    // beat
-    0      // tick
-};
-engine.doCommand(5, args);
-```
+- `imwrap/IMWrapSysex.h`
 
-**Exemple 3 : Placer un "Hook" (fondu ou action conditionnelle)**
-Déclenche une commande iMUSE automatiquement lorsque la séquence musicale atteint tel endroit.
-```cpp
-// Les arguments dépendent du payload du Hook iMUSE.
-int16_t args[] = { (int16_t)imwrap::Command::PlayerSetHook, /* ... */ };
-engine.doCommand(argc, args);
-```
+Types principaux :
 
-### Sauvegarde et Restauration (Save states)
+- `IMWrapSysexDialect` : `GenericV6`, `Snm`
+- `IMWrapSysexType`
+- `IMWrapControlEvent`
 
-#### `bool Serialize(std::ostream &os) const`
-#### `bool Deserialize(std::istream &is)`
-Sauvegarde l'état exact du moteur (notes jouées, états des commandes, séquenceurs) dans un flux binaire, ou le restaure. Indispensable pour implémenter un système de sauvegarde "Save/Load" dans un jeu.
-- **Exemple** :
-```cpp
-std::ofstream saveFile("savegame.bin", std::ios::binary);
-engine.Serialize(saveFile);
+Types SysEx actuellement exposes :
 
-// Plus tard :
-std::ifstream loadFile("savegame.bin", std::ios::binary);
-engine.Deserialize(loadFile);
-```
+- `AllocatePart`
+- `ShutdownPart`
+- `StartSong`
+- `AdlibPartInstrument`
+- `AdlibGlobalInstrument`
+- `ParameterAdjust`
+- `HookJump`
+- `HookGlobalTranspose`
+- `HookPartOnOff`
+- `HookSetVolume`
+- `HookSetProgram`
+- `HookSetTranspose`
+- `Marker`
+- `SetLoop`
+- `ClearLoop`
+- `SetInstrument`
+- `Unknown`
+
+Points d'entree principaux :
+
+- `DecodeIMWrapSysex(...)`
+- `EncodeIMWrapSysex(...)`
+- `DescribeIMWrapSysex(...)`
+- `ParseIMWrapSysexDescription(...)`
+
+Cette couche est utilisee a la fois par le runtime et par les outils d'authoring.
+
+## 5. Couche D'Ecriture De Banque
+
+Header :
+
+- `imwrap/ImsWriter.h`
+
+Types principaux :
+
+- `VariantSource`
+- `SoundBankInput`
+- `ImsWriter`
+
+Points d'entree principaux :
+
+- `ImsWriter::build(...)`
+- `ImsWriter::writeFile(...)`
+
+Details importants :
+
+- une variante peut venir de `sourcePath` ou de `smfData` en memoire
+- `ImsWriter` ecrit des chunks `GMD`, `ROL` et `ADL`
+- l'injection de `MDhd` se controle par variante
+
+## 6. Instruments, Canaux Et Utilitaires
+
+Headers :
+
+- `imwrap/Instrument.h`
+- `imwrap/InstrumentState.h`
+- `imwrap/MidiChannel.h`
+- `imwrap/SinkMidiChannel.h`
+- `imwrap/ChannelAllocator.h`
+- `imwrap/ScummAdlibSink.h`
+
+Points marquants :
+
+- `Instrument` supporte `Program`, `AdLib`, `Roland` et `PcSpk`
+- `RegisterRolandTimbreMapping(...)` et `ClearRolandTimbreMappings()`
+- `SinkMidiChannel` adapte les appels `MidiChannel` vers un `MidiSink`
+- `ChannelAllocator` expose une logique d'allocation de canaux dependante du profil
+- `ScummAdlibSink` est un `MidiSink` concret pour le rendu et la preecoute AdLib
+
+## 7. Index Des Headers Publics
+
+Pour etre complet, les headers publics maintenus sont :
+
+- `ByteView.h` : vue legere sur un buffer d'octets
+- `ChannelAllocator.h` : politique d'allocation des canaux logiques/physiques
+- `Export.h` : macros d'export DLL
+- `ImsFormat.h` : metadonnees IMS et enums
+- `ImsWriter.h` : API d'ecriture de banque
+- `IMWrapCommand.h` : enum de commandes runtime et paquet de commande
+- `IMWrapEngine.h` : runtime principal de lecture
+- `IMWrapSequence.h` : variante de banque decodee plus vue des evenements de controle
+- `IMWrapSysex.h` : parsing et encodage SysEx iMWrap
+- `Instrument.h` : authoring et emission d'instruments
+- `InstrumentState.h` : structures d'etat instrument
+- `MidiChannel.h` : canal MIDI de sortie abstrait
+- `MidiSink.h` : sink runtime abstrait
+- `ResourceBank.h` : chargement IMS et lookup des sons
+- `ScummAdlibSink.h` : sink de rendu/preview AdLib
+- `SinkMidiChannel.h` : implementation de canal basee sur un sink
+- `SmfSequence.h` : API de parsing et de serialisation SMF
+
+## 8. Note De Perimetre
+
+Ce document decrit volontairement la surface maintenue de la librairie C++.
+Les anciens outils Swift et l'ancien packer CLI vivent maintenant sous
+`legacy-tools/` et ne font plus partie de la surface API principale maintenue.

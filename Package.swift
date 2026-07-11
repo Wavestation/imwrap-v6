@@ -21,8 +21,7 @@ let package = Package(
                 "baka",
                 "build",
                 "docs",
-                "swift-app",
-                "swift-shim",
+                "legacy-tools",
                 "tools",
                 "CMakeLists.txt",
                 "README.md"
@@ -45,7 +44,7 @@ let package = Package(
         .target(
             name: "CIMWrapShim",
             dependencies: ["IMWrapCpp"],
-            path: "swift-shim",
+            path: "legacy-tools/swift-shim",
             publicHeadersPath: "include",
             cxxSettings: [
                 .headerSearchPath("../include"),
@@ -72,21 +71,21 @@ let package = Package(
         ),
         .target(
             name: "IMWrapCoreSwift",
-            path: "swift-app/core"
+            path: "legacy-tools/swift-app/core"
         ),
         .executableTarget(
             name: "IMWrapAuthoringApp",
             dependencies: ["CIMWrapShim", "IMWrapCoreSwift"],
-            path: "swift-app/player"
+            path: "legacy-tools/swift-app/player"
         ),
         .executableTarget(
             name: "IMWrapSysExTool",
-            path: "swift-app/sysex"
+            path: "legacy-tools/swift-app/sysex"
         ),
         .executableTarget(
             name: "IMWrapPackerTool",
             dependencies: ["IMWrapCoreSwift"],
-            path: "swift-app/packer"
+            path: "legacy-tools/swift-app/packer"
         )
     ],
     cxxLanguageStandard: .cxx17

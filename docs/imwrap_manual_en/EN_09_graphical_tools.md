@@ -40,11 +40,11 @@ The exact opposite: copy-paste a hexadecimal mess you found in an old iMUSE MIDI
 > This is the most flexible way to work: the plugin adds a node directly in your AGS project tree, a dedicated editing panel (integrated into your workspace), and an "iMWrap" menu in the AGS top menu bar. This allows you to manipulate and view the contents of your audio banks directly without ever leaving AGS!
 > <img width="1325" height="816" alt="image" src="https://github.com/user-attachments/assets/7eb7139a-3377-443e-a0ee-fe70d8124d7b" />
 
-The `imwrappack` command-line tool is very powerful, but managing its large `.mid` files in a `.bat` script is tiresome. The **Packer GUI** replaces the command line with a visual interface where you build your soundtrack's architecture.
+The maintained `imwrappack` CLI now covers much of the same bank-editing workflow, but the **Packer GUI** remains the visual companion where you shape your soundtrack architecture more comfortably.
 
 ### How to use it?
 1. **Sound List**: On the left, add your tracks. For example, click *Add Sound*, assign it ID `80`, and the name `Tavern`.
-2. **Variant Box**: The same sound (ID 80) can contain two physical music files (one for General MIDI, one for MT-32). Select `GMD` from the dropdown and click **Import MIDI** to locate `tavern_gm.mid`.
+2. **Variant Box**: The same sound (ID 80) can contain multiple physical music files (for example General MIDI, MT-32, and AdLib). Select `GMD`, `ROL`, or `ADL` from the dropdown and click **Import MIDI** to locate the corresponding file.
 3. **Tracks Table**: When importing a `.mid`, the tool analyzes the file and displays all the tracks it contains. You can delete or rearrange them (*Move Up* / *Move Down* buttons) if your DAW exported the tracks in the wrong order.
 4. **Dynamic MDhd Header**: This is the Packer's great strength. Instead of writing AGS code like `iMWrap_SetSoundVolume(80, 50)`, you can check `Include MDHD` in the Packer and set the default **Priority**, **Volume**, **Pan**, **Transposition**, and **Speed** *directly inside the bank file*. The interface provides a "SpinBox" for each parameter.
 5. **Save**: Save everything (File `->` Save Project). The tool saves **directly** to the final `.ims` bank format! You have no intermediate project file to manage.
@@ -64,7 +64,7 @@ Note that adding a MIDI file supports **all SMF formats**, with the following be
 The **Explorer** is the ultimate tool. It doesn't just look inside `.ims` files; it lets you listen to them and even modify them surgically *after* compilation.
 
 ### Audit and Visualization
-- **Tree Widget**: On the left, navigate the hierarchy: `Sound (ID) -> Variant (GMD/ROL) -> Track`.
+- **Tree Widget**: On the left, navigate the hierarchy: `Sound (ID) -> Variant (GMD/ROL/ADL) -> Track`.
 - **Hexadecimal Details**: Click on any event to see its binary structure decoded (`DetailsEdit_` panel).
 - **Events Table**: Clicking a track displays a massive central table listing all notes, Control Changes, and SysEx of the track chronologically!
 

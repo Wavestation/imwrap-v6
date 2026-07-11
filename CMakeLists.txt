@@ -7,9 +7,9 @@ option(IMWRAP_BUILD_GUI_TOOLS "Build imwrap Qt6 GUI tools" ON)
 option(IMWRAP_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
 option(IMWRAP_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
 option(IMWRAP_BUILD_SHARED_LIB "Build the shared imwrap_v6 library" ON)
-option(IMWRAP_BUILD_SHIM "Build the native imwrap_shim DLL used by wrappers and editor tooling" ON)
+option(IMWRAP_BUILD_SHIM "Build the legacy native imwrap_shim DLL used by wrappers and editor tooling" ON)
 option(IMWRAP_BUILD_VST3_TOOL "Build the VST3 SysEx generator proof of concept" OFF)
-option(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in imwrap_shim" OFF)
+option(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in the legacy imwrap_shim" OFF)
 
 set(IMWRAP_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
 set(IMWRAP_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimwrap")
@@ -87,9 +87,11 @@ endif()
 if(IMWRAP_BUILD_TOOLS)
     add_executable(imwrappack
         tools/imwrappack.cpp
+        tools_gui/common/ImsProject.cpp
         tools_gui/shared-res/imwrappack.rc
     )
     target_link_libraries(imwrappack PRIVATE imwrap_v6)
+    target_include_directories(imwrappack PRIVATE tools_gui/common)
     imwrap_apply_common_target_settings(imwrappack)
 
     add_executable(imsprobe
@@ -122,11 +124,11 @@ endif()
 
 if(IMWRAP_BUILD_SHIM)
     add_library(imwrap_shim SHARED
-        swift-shim/CIMWrapShim.cpp
+        legacy-tools/swift-shim/CIMWrapShim.cpp
     )
 
     target_include_directories(imwrap_shim PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/swift-shim/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/legacy-tools/swift-shim/include
     )
 
     target_link_libraries(imwrap_shim PRIVATE

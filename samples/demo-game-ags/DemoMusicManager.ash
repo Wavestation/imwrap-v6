@@ -3,16 +3,14 @@
 //  Music Manager for the demo game
 // =============================================================================
 
-
-
 // Settings
 #define MIDI_OUT_MT32   "4"
 #define MIDI_OUT_GMD    "2"
 
 // Path definitions
 #define IMS_PACK        "$DATA$/iMWrapData/demo.ims"
-// #define SF2_BANK "$DATA$/iMWrapData/MS_GM.SF3"
 #define SF2_BANK "$DATA$/iMWrapData/SGM-V2.01.SF3"
+// #define SF2_BANK "$DATA$/iMWrapData/MS_GM.SF3"
 
 // Sound definitions
 #define MUSIC_BASEROOM  90
@@ -27,6 +25,3 @@
 
 #define JH_BASE_TO_HOLO 1
 #define JH_HOLO_TO_BASE 2
-
-// Routines exports
-import void music_init();

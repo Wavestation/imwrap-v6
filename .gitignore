@@ -60,3 +60,7 @@ xcuserdata/
 # ROMs (Munt MT-32 ROMs)
 *.ROM
 *.rom
+
+# AGS files
+*.ags
+*.Ags

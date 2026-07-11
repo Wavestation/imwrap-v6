@@ -1,17 +1,20 @@
 # iMWrap v6
 
-iMWrap v6 est une réimplementation C++ moderne et modulaire du moteur de musique interactive utilisé par les jeux LucasArts de l'ère iMUSE v6.
+iMWrap v6 est une reimplementation C++ moderne et modulaire du moteur de
+musique interactive utilise par les jeux LucasArts de l'ere iMUSE v6.
 
-Le dépôt contient :
+Le depot contient :
+
 - le moteur C++ principal dans `src/` et `include/`
-- les aides d'intégration AGS dans `ags-wrapper/` et `ags-editor-plugin/`
-- des utilitaires SwiftUI dans `swift-app/`
-- des outils en ligne de commande dans `tools/`
-- des dépendances vendorisées dans `third_party/`
+- des outils en ligne de commande maintenus dans `tools/`
+- des outils graphiques Qt maintenus dans `tools_gui/`
+- les aides d'integration AGS dans `ags-wrapper/` et `ags-editor-plugin/`
+- des surfaces legacy dans `legacy-tools/`
+- des dependances vendorisees dans `third_party/`
 
 ## Notes de Build
 
-Le dépôt peut être configuré dans un mode minimal sans Qt ni dépendances AGS :
+Le depot peut etre configure dans un mode minimal sans Qt ni dependances AGS :
 
 ```powershell
 cmake -S . -B build/minimal `
@@ -21,19 +24,25 @@ cmake -S . -B build/minimal `
   -DIMWRAP_BUILD_SHIM=OFF
 ```
 
-Les builds GUI Windows demandent que Qt 6 soit découvrable via `CMAKE_PREFIX_PATH` ou `IMWRAP_QT6_PREFIX_PATH`.
+Les builds GUI Windows demandent que Qt 6 soit decouvrable via
+`CMAKE_PREFIX_PATH` ou `IMWRAP_QT6_PREFIX_PATH`.
 
-Le plugin AGS et certains scripts de packaging attendent aussi des artefacts tiers vendorisés sous `third_party/*-build/`.
+Le plugin AGS et certains scripts de packaging attendent aussi des artefacts
+tiers vendorises sous `third_party/*-build/`.
 
-## Organisation du Dépôt
+`IMWRAP_BUILD_SHIM` controle le DLL de compatibilite legacy `imwrap_shim`. Il
+reste buildable, mais ses sources vivent maintenant dans `legacy-tools/`.
+
+## Organisation du Depot
 
 - `src/`, `include/` : sources et headers du moteur
-- `tools/` : `imwrappack` et `imsprobe`
+- `tools/` : outils en ligne de commande maintenus, dont le `imwrappack` actuel
 - `tools_gui/` : utilitaires Windows natifs avec interface
-- `swift-shim/`, `swift-app/` : shim natif et apps macOS
-- `ags-wrapper/`, `ags-editor-plugin/` : intégration .NET et plugin éditeur AGS
+- `ags-wrapper/`, `ags-editor-plugin/` : integration .NET et plugin editeur AGS
+- `legacy-tools/` : anciens outils Swift, sources du shim legacy et code de l'ancien packer CLI
+- `Package.swift` : manifeste Swift conserve pour compatibilite avec les sources legacy deplacees
 - `samples/` : exemples de banques `.ims`
-- `third_party/` : sources des dépendances vendorisées
+- `third_party/` : sources des dependances vendorisees
 
 ## Auteur
 
@@ -41,6 +50,9 @@ Masami Komuro
 
 ## Licence
 
-iMWrap v6 est distribué sous GNU Lesser General Public License v3.0 ou ultérieure. Voir `LICENSE.LESSER` et `LICENSE.GPL`.
+iMWrap v6 est distribue sous GNU Lesser General Public License v3.0 ou
+ulterieure. Voir `LICENSE.LESSER` et `LICENSE.GPL`.
 
-Les licences des dépendances vendorisées sont référencées dans `THIRD_PARTY_LICENSES.md` et dans les fichiers de licence amont conservés sous `third_party/`.
+Les licences des dependances vendorisees sont referencees dans
+`THIRD_PARTY_LICENSES.md` et dans les fichiers de licence amont conserves sous
+`third_party/`.

@@ -19,12 +19,16 @@ Thanks to the IMS bank, the AGS game will simply call `iMWrap_StartSound(80)`. T
 
 The `imwrappack` tool is used from the command line (in the Windows command prompt or Mac/Linux terminal).
 
-**Basic syntax:**
+The current CLI can both build a bank from scratch and edit an existing `.ims` bank.
+
+**Basic build syntax:**
 ```bash
 imwrappack build output.ims \
   --name=80:Forest \
+  --mdhd=80:gmd:90:127:0:0:0:128 \
   80:gmd=80_forest_generalmidi.mid \
   80:rol=80_forest_mt32.mid \
+  80:adl=80_forest_adlib.mid \
   81:gmd=81_interior.mid
 ```
 
@@ -33,12 +37,15 @@ In this example:
 2. `--name=80:Forest`: We assign an informative internal name to track 80 (very handy for debugging).
 3. `80:gmd=...`: We integrate our `.mid` file as the **General MIDI** variant (`gmd`) for sound 80.
 4. `80:rol=...`: We integrate our second `.mid` file as the **Roland MT-32** variant (`rol`) for the same sound 80.
-5. `81:gmd=...`: We add music 81 (GM variant only).
+5. `80:adl=...`: We integrate an **AdLib** variant (`adl`) for the same sound.
+6. `81:gmd=...`: We add music 81 (GM variant only).
 
-*(The supported variants are mainly `gmd` and `rol`.)*
+Supported variants are `gmd`, `rol`, and `adl`.
 
-> [!CAUTION]
-> The utility expects .mid files in **SMF 2** format! If you want to use files in **SMF 0** or **SMF 1** format, you must use the graphical version of the Packer.
+Unlike the original v1 CLI, the maintained packer accepts **SMF 0, 1, and 2**:
+- SMF 0 is imported as one track.
+- SMF 1 is merged into one format-0 style track.
+- SMF 2 imports each source track as its own IMS track.
 
 ### Configuring priorities and volumes (`MDhd`)
 You can force the default parameters of a variant (priority, volume, speed, etc.) directly during packaging without having to edit the MIDI, by injecting an `MDhd` chunk:
@@ -48,7 +55,16 @@ You can force the default parameters of a variant (priority, volume, speed, etc.
 ```
 *(The order is: soundId : variant : priority : volume : pan : transpose : detune : speed. Here, we force a priority of 90 and a volume of 127).*
 
-If you do not want to use the command line utility, you will see in **Chapter 9** how to use the graphical tools, specifically the **Packer**.
+The same CLI can also inspect and edit an existing bank:
+
+```bash
+imwrappack inspect output.ims
+imwrappack import-midi output.ims 80 gmd replacement.mid
+imwrappack move-track output.ims 80 gmd 1 up
+imwrappack export-track output.ims 80 gmd 0 forest_track0.mid
+```
+
+If you prefer a visual workflow, **Chapter 9** covers the graphical tools, especially the **Packer**.
 
 ---
 

@@ -23,6 +23,4 @@ managed struct IWRFlexMusic {
     /// Stops a sequence.
     import static void Stop(int soundId);
     
-    /// Bridge to Global Script Trigger
-    import static function OnTrigger(int soundId, int markerId);
 };
