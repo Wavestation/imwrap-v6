@@ -856,7 +856,7 @@ void IMWrapEngine::sendPartDetune(ActiveSound *sound, PartState *part) {
 }
 
 void IMWrapEngine::sendPartPanPosition(ActiveSound *sound, PartState *part, uint8_t value) {
-    if (!sound || !part || part->percussion || part->outputChannel < 0 || !_midiSink) {
+    if (!sound || !part || outputChannelForPart(*part) == 255 || !_midiSink) {
         return;
     }
 
@@ -864,25 +864,25 @@ void IMWrapEngine::sendPartPanPosition(ActiveSound *sound, PartState *part, uint
         value = static_cast<uint8_t>(127 - value);
     }
 
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+    SinkMidiChannel channel(_midiSink, sound->soundId, outputChannelForPart(*part));
     channel.panPosition(value);
 }
 
 void IMWrapEngine::sendPartEffectLevel(ActiveSound *sound, PartState *part, uint8_t value) {
-    if (!sound || !part || part->percussion || part->outputChannel < 0 || !_midiSink) {
+    if (!sound || !part || outputChannelForPart(*part) == 255 || !_midiSink) {
         return;
     }
 
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+    SinkMidiChannel channel(_midiSink, sound->soundId, outputChannelForPart(*part));
     channel.effectLevel(value);
 }
 
 void IMWrapEngine::sendPartPolyphony(ActiveSound *sound, PartState *part) {
-    if (!sound || !part || part->percussion || part->outputChannel < 0 || !_midiSink) {
+    if (!sound || !part || outputChannelForPart(*part) == 255 || !_midiSink) {
         return;
     }
 
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+    SinkMidiChannel channel(_midiSink, sound->soundId, outputChannelForPart(*part));
     channel.controlChange(17, part->polyphony);
 }
 
@@ -1026,14 +1026,15 @@ void IMWrapEngine::applyPartProgram(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    if (part->percussion || !clearToTransmit(sound, part) || !_midiSink) {
+    const uint8_t actualOutputChannel = outputChannelForPart(*part);
+    if (actualOutputChannel == 255 || !clearToTransmit(sound, part) || !_midiSink) {
         return;
     }
 
     DebugMidiPrintf("part program sound=%u ch=%u bank=%u prog=%u", sound->soundId, part->channel, part->bank, part->program);
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+    SinkMidiChannel channel(_midiSink, sound->soundId, actualOutputChannel);
     if (part->instrument.isValid()) {
-        if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
+        if (_profile == TargetProfile::Mt32 && actualOutputChannel >= 1 && actualOutputChannel <= 8) {
             if (!part->customRolandSysex.empty()) {
                 // Custom Roland instrument: sendPartCustomSysex handles everything.
                 sendPartCustomSysex(sound->soundId, part);
@@ -1122,18 +1123,16 @@ void IMWrapEngine::applyPartAllState(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    if (part->percussion) {
-        return;
-    }
-
     part->transposeEffective = computeEffectivePartTranspose(*sound, *part);
     part->detuneEffective = static_cast<int16_t>(ClampInt(part->detune + sound->detune, -128, 127));
     part->priorityEffective = static_cast<uint8_t>(ClampInt(part->priority + sound->priority, 0, 255));
-    if (!clearToTransmit(sound, part) || !_midiSink) {
+    
+    const uint8_t actualOutputChannel = outputChannelForPart(*part);
+    if (actualOutputChannel == 255 || !clearToTransmit(sound, part) || !_midiSink) {
         return;
     }
 
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
+    SinkMidiChannel channel(_midiSink, sound->soundId, actualOutputChannel);
     channel.pitchBendFactor(part->pitchBendFactor);
     sendPartTranspose(sound, part);
     sendPartDetune(sound, part);
@@ -1146,20 +1145,20 @@ void IMWrapEngine::applyPartAllState(ActiveSound *sound, PartState *part) {
     sendPartPanPosition(sound, part, static_cast<uint8_t>(ClampInt(part->panEffective + 0x40, 0, 127)));
     sendPartPolyphony(sound, part);
     if (part->instrument.isValid()) {
-        if (_profile == TargetProfile::Mt32 && part->outputChannel >= 1 && part->outputChannel <= 8) {
+        if (_profile == TargetProfile::Mt32 && actualOutputChannel >= 1 && actualOutputChannel <= 8) {
             if (part->customRolandSysex.empty()) {
                 // Standard factory instrument: configure patch memory to point to the correct factory timbre.
                 // sendPartCustomSysex is not called for these, so we handle it here.
                 part->currentTimbreIndex = part->program;
-                uint32_t sysexPatchAddrBase = 0x14000 + (part->outputChannel << 3);
+                uint32_t sysexPatchAddrBase = 0x14000 + (actualOutputChannel << 3);
                 uint8_t patchData[2] = { static_cast<uint8_t>(part->program >> 6), static_cast<uint8_t>(part->program & 0x3F) };
                 sendMt32Sysex(sound->soundId, sysexPatchAddrBase, patchData, sizeof(patchData));
-                part->instrumentValue = static_cast<uint8_t>(part->outputChannel);
-                part->instrument.program(part->outputChannel, 0, sound->isMt32);
+                part->instrumentValue = actualOutputChannel;
+                part->instrument.program(actualOutputChannel, 0, sound->isMt32);
                 // Dummy PC: for ch 1 use 2, for ch 2-8 use ch-1, to safely force MT-32 Patch Temp reload.
-                const uint8_t dummyPc = (part->outputChannel == 1) ? 2 : static_cast<uint8_t>(part->outputChannel - 1);
+                const uint8_t dummyPc = (actualOutputChannel == 1) ? 2 : static_cast<uint8_t>(actualOutputChannel - 1);
                 channel.programChange(dummyPc);
-                channel.programChange(static_cast<uint8_t>(part->outputChannel));
+                channel.programChange(actualOutputChannel);
             }
             // For custom Roland instruments: skip instrument.send() entirely.
             // sendPartCustomSysex() (called below) handles timbre upload, patch memory, and program change.
@@ -1182,7 +1181,8 @@ void IMWrapEngine::partAllNotesOff(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    if (part->percussion || part->outputChannel < 0) {
+    const uint8_t actualOutputChannel = outputChannelForPart(*part);
+    if (actualOutputChannel == 255) {
         return;
     }
 
@@ -1190,7 +1190,7 @@ void IMWrapEngine::partAllNotesOff(ActiveSound *sound, PartState *part) {
     clearPartActiveNotes(part);
     sound->hangingNotes.erase(
         std::remove_if(sound->hangingNotes.begin(), sound->hangingNotes.end(),
-                       [part](const HangingNote &note) { return note.channel == static_cast<uint8_t>(part->outputChannel); }),
+                       [actualOutputChannel](const HangingNote &note) { return note.channel == actualOutputChannel; }),
         sound->hangingNotes.end());
 }
 
