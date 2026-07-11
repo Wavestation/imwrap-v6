@@ -630,7 +630,7 @@ const char *g_iMWrapScriptHeader =
     "\r\n"
     "import void iMWrap_LoadBank(const string filename);\r\n"
     "import void iMWrap_LoadSoundFont(const string filename);\r\n"
-    "import void iMWrap_SetSFDynLoad(bool enable = true);\r\n"
+    "import void iMWrap_SetSFDynLoad(bool enable = false);\r\n"
     "import void iMWrap_SetDriver(int driverType, const string deviceOrPath);\r\n"
     "import int  iMWrap_GetMIDIDeviceCount();\r\n"
     "import String iMWrap_GetMIDIDeviceName(int index);\r\n"
