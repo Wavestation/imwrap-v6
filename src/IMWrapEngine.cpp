@@ -23,6 +23,7 @@
 #include "imwrap/IMWrapEngine.h"
 
 #include <algorithm>
+#include <set>
 #include <cstdarg>
 #include <cstdlib>
 #include <cstdio>
@@ -528,7 +529,7 @@ void IMWrapEngine::cancelHangingNote(ActiveSound *sound, uint8_t channel, uint8_
 
     auto best = sound->hangingNotes.end();
     for (auto it = sound->hangingNotes.begin(); it != sound->hangingNotes.end(); ++it) {
-        if (it->channel != channel || it->note != note) {
+        if (it->logicalChannel != channel || it->logicalNote != note) {
             continue;
         }
         if (best == sound->hangingNotes.end() || it->ticksLeft < best->ticksLeft) {
@@ -1190,7 +1191,7 @@ void IMWrapEngine::partAllNotesOff(ActiveSound *sound, PartState *part) {
     clearPartActiveNotes(part);
     sound->hangingNotes.erase(
         std::remove_if(sound->hangingNotes.begin(), sound->hangingNotes.end(),
-                       [actualOutputChannel](const HangingNote &note) { return note.channel == actualOutputChannel; }),
+                       [actualOutputChannel](const HangingNote &note) { return note.physicalChannel == actualOutputChannel; }),
         sound->hangingNotes.end());
 }
 
@@ -1808,7 +1809,7 @@ void IMWrapEngine::scheduleSmartJumpNotes(ActiveSound *sound) {
             continue;
         }
 
-        sound->hangingNotes.push_back(HangingNote{pending.physicalChannel, pending.outputNote, event.tick - currentTick});
+        sound->hangingNotes.push_back(HangingNote{channel, note, pending.physicalChannel, pending.outputNote, event.tick - currentTick, false});
         pending.active = false;
 
         bool hasPending = false;
@@ -1893,13 +1894,13 @@ void IMWrapEngine::emitExpiredHangingNotes(ActiveSound *sound) {
             continue;
         }
 
-        MidiChannelState &channel = sound->midiChannels[note.channel];
-        channel.heldNotes[note.note] = 0;
-        channel.soundingNotes[note.note] = 0;
+        MidiChannelState &channel = sound->midiChannels[note.logicalChannel];
+        channel.heldNotes[note.logicalNote] = 0;
+        channel.soundingNotes[note.logicalNote] = 0;
         if (_midiSink) {
             _midiSink->onMidiMessage(sound->soundId,
-                                     static_cast<uint8_t>(0x80 | note.channel),
-                                     note.note,
+                                     static_cast<uint8_t>(0x80 | note.physicalChannel),
+                                     note.physicalNote,
                                      true,
                                      0);
         }
@@ -2062,35 +2063,147 @@ bool IMWrapEngine::dispatchTrackTick(uint16_t soundId) {
     const IMWrapSysexDialect dialect =
         (_compatibility == CompatibilityProfile::Snm) ? IMWrapSysexDialect::Snm : IMWrapSysexDialect::GenericV6;
 
-    std::stable_sort(atTick.begin(), atTick.end(), [dialect](const MidiEvent &a, const MidiEvent &b) {
-        auto isPriorityImwrap = [dialect](const MidiEvent &ev) {
-            if (ev.type != MidiEventType::SysEx) return false;
-            IMWrapControlEvent dummy;
-            if (!DecodeIMWrapSysex(ByteView(ev.payload.data(), ev.payload.size()), &dummy, dialect, nullptr)) {
-                return false;
-            }
-            return dummy.type != IMWrapSysexType::HookJump &&
-                   dummy.type != IMWrapSysexType::HookGlobalTranspose &&
-                   dummy.type != IMWrapSysexType::HookPartOnOff &&
-                   dummy.type != IMWrapSysexType::HookSetVolume &&
-                   dummy.type != IMWrapSysexType::HookSetProgram &&
-                   dummy.type != IMWrapSysexType::HookSetTranspose;
-        };
+    const uint16_t originalTrack = sound->trackIndex;
+    const uint32_t originalTick = sound->tickIndex;
 
-        bool aIsPriority = isPriorityImwrap(a);
-        bool bIsPriority = isPriorityImwrap(b);
+    struct ParsedEvent {
+        const MidiEvent* event;
+        bool isImwrap;
+        IMWrapControlEvent dummy;
+    };
 
-        return aIsPriority && !bIsPriority;
-    });
-
+    std::vector<ParsedEvent> parsedEvents;
+    parsedEvents.reserve(atTick.size());
     for (const MidiEvent &event : atTick) {
-        if (!handleMidiEvent(soundId, event)) {
-            return false;
-        }
-        if (!findActiveSound(soundId)) {
-            return false;
+        ParsedEvent pe;
+        pe.event = &event;
+        pe.isImwrap = (event.type == MidiEventType::SysEx) && DecodeIMWrapSysex(ByteView(event.payload.data(), event.payload.size()), &pe.dummy, dialect, nullptr);
+        parsedEvents.push_back(pe);
+    }
+
+    std::vector<ParsedEvent*> markers;
+    std::vector<ParsedEvent*> jumpHooks;
+    std::vector<ParsedEvent*> otherHooks;
+    std::vector<ParsedEvent*> otherImwrap;
+    std::vector<ParsedEvent*> midiEvents;
+
+    for (ParsedEvent &pe : parsedEvents) {
+        if (pe.isImwrap) {
+            if (pe.dummy.type == IMWrapSysexType::Marker) {
+                markers.push_back(&pe);
+            } else if (pe.dummy.type == IMWrapSysexType::HookJump) {
+                jumpHooks.push_back(&pe);
+            } else if (pe.dummy.type == IMWrapSysexType::HookGlobalTranspose ||
+                       pe.dummy.type == IMWrapSysexType::HookPartOnOff ||
+                       pe.dummy.type == IMWrapSysexType::HookSetVolume ||
+                       pe.dummy.type == IMWrapSysexType::HookSetProgram ||
+                       pe.dummy.type == IMWrapSysexType::HookSetTranspose) {
+                otherHooks.push_back(&pe);
+            } else {
+                otherImwrap.push_back(&pe);
+            }
+        } else {
+            midiEvents.push_back(&pe);
         }
     }
+
+    auto executeGroup = [&](const std::vector<ParsedEvent*>& group) -> bool {
+        for (ParsedEvent* pe : group) {
+            if (!handleMidiEvent(soundId, *pe->event)) return false;
+            sound = findActiveSound(soundId);
+            if (!sound) return false;
+            if (sound->trackIndex != originalTrack || sound->tickIndex != originalTick) {
+                return true; // Jumped! Abort!
+            }
+        }
+        return true;
+    };
+
+    // 1. Execute Markers First (updates state for hooks)
+    for (ParsedEvent* pe : markers) {
+        if (!handleMidiEvent(soundId, *pe->event)) return false;
+        sound = findActiveSound(soundId);
+        if (!sound) return false;
+    }
+
+    // Resolve winners for hooks using CURRENT state
+    auto resolveHooks = [&](const std::vector<ParsedEvent*>& hooks, std::vector<ParsedEvent*>& winners) {
+        std::map<std::pair<IMWrapSysexType, uint8_t>, ParsedEvent*> bestHooks;
+        std::map<std::pair<IMWrapSysexType, uint8_t>, uint8_t> bestHookCmds;
+
+        for (ParsedEvent* pe : hooks) {
+            uint8_t targetChannel = (pe->dummy.type == IMWrapSysexType::HookJump || pe->dummy.type == IMWrapSysexType::HookGlobalTranspose) ? 0 : pe->dummy.channel;
+            uint8_t cmd = pe->dummy.hookCommand;
+            bool activates = false;
+
+            if (pe->dummy.type == IMWrapSysexType::HookJump || pe->dummy.type == IMWrapSysexType::HookGlobalTranspose) {
+                if (cmd == 0 || cmd >= 0x80) {
+                    activates = true;
+                } else if (pe->dummy.type == IMWrapSysexType::HookJump) {
+                    activates = (sound->hook.jump[0] == 0xFF || sound->hook.jump[0] == cmd);
+                } else {
+                    activates = (sound->hook.transpose == 0xFF || sound->hook.transpose == cmd);
+                }
+            } else {
+                if (pe->dummy.hasChannel && pe->dummy.channel < sound->parts.size()) {
+                    if (cmd == 0 || cmd >= 0x80) {
+                        activates = true;
+                    } else {
+                        switch (pe->dummy.type) {
+                            case IMWrapSysexType::HookPartOnOff:
+                                activates = (sound->hook.partOnOff[targetChannel] == 0xFF || sound->hook.partOnOff[targetChannel] == cmd);
+                                break;
+                            case IMWrapSysexType::HookSetVolume:
+                                activates = (sound->hook.partVolume[targetChannel] == 0xFF || sound->hook.partVolume[targetChannel] == cmd);
+                                break;
+                            case IMWrapSysexType::HookSetProgram:
+                                activates = (sound->hook.partProgram[targetChannel] == 0xFF || sound->hook.partProgram[targetChannel] == cmd);
+                                break;
+                            case IMWrapSysexType::HookSetTranspose:
+                                activates = (sound->hook.partTranspose[targetChannel] == 0xFF || sound->hook.partTranspose[targetChannel] == cmd);
+                                break;
+                            default: break;
+                        }
+                    }
+                }
+            }
+
+            if (activates) {
+                auto key = std::make_pair(pe->dummy.type, targetChannel);
+                auto it = bestHookCmds.find(key);
+                if (it == bestHookCmds.end() || cmd > it->second) {
+                    bestHookCmds[key] = cmd;
+                    bestHooks[key] = pe;
+                }
+            }
+        }
+
+        for (auto& pair : bestHooks) {
+            winners.push_back(pair.second);
+        }
+        std::sort(winners.begin(), winners.end(), [](ParsedEvent* a, ParsedEvent* b) {
+            return a->event < b->event;
+        });
+    };
+
+    std::vector<ParsedEvent*> winningJumpHooks;
+    std::vector<ParsedEvent*> winningOtherHooks;
+    resolveHooks(jumpHooks, winningJumpHooks);
+    resolveHooks(otherHooks, winningOtherHooks);
+
+    // 2. Execute Other Hooks
+    if (!executeGroup(winningOtherHooks)) return false;
+
+    // 3. Execute Other iMWrap Sysex
+    if (!executeGroup(otherImwrap)) return false;
+
+    // 4. Execute Other MIDI Events
+    if (!executeGroup(midiEvents)) return false;
+
+    // 5. Execute Jump Hooks (if it jumps, the function returns true and aborts the rest)
+    if (!executeGroup(winningJumpHooks)) return false;
+    if (sound->trackIndex != originalTrack || sound->tickIndex != originalTick) return true;
+
     return true;
 }
 
@@ -2213,7 +2326,8 @@ bool IMWrapEngine::executeControlEvent(uint16_t soundId, const IMWrapControlEven
     case IMWrapSysexType::ParameterAdjust:
         return true;
     case IMWrapSysexType::HookJump:
-        return maybeJump(sound, event.hookCommand, event.targetTrack, event.targetBeat, event.targetTick);
+        maybeJump(sound, event.hookCommand, event.targetTrack, event.targetBeat, event.targetTick);
+        return true;
     case IMWrapSysexType::HookGlobalTranspose:
         if (event.hookCommand && sound->hook.transpose != 0 && sound->hook.transpose != event.hookCommand) {
             return true;
@@ -2310,16 +2424,28 @@ int IMWrapEngine::enqueueTrigger(uint16_t soundId, uint8_t marker) {
 }
 
 int IMWrapEngine::enqueueCommand(uint16_t argc, const int16_t *args) {
+    if (_logCallback) {
+        _logCallback("iMWrap: enqueueCommand called with argc=" + std::to_string(argc));
+    }
     if (_triggerQueue.empty() || !args || argc < 3) {
+        if (_logCallback) {
+            _logCallback("iMWrap: enqueueCommand failed (empty queue or invalid args)");
+        }
         return -1;
     }
 
     QueuedTrigger &trigger = _triggerQueue.back();
     if (trigger.finalized) {
+        if (_logCallback) {
+            _logCallback("iMWrap: enqueueCommand failed (trigger already finalized)");
+        }
         return -1;
     }
 
     if (args[2] == -1) {
+        if (_logCallback) {
+            _logCallback("iMWrap: Finalizing trigger (CommitQueue)");
+        }
         trigger.finalized = true;
         return 0;
     }
@@ -2330,6 +2456,9 @@ int IMWrapEngine::enqueueCommand(uint16_t argc, const int16_t *args) {
     }
 
     trigger.commands.push_back(packet);
+    if (_logCallback) {
+        _logCallback("iMWrap: Enqueued command (cmd " + std::to_string(packet.args[0]) + ", " + std::to_string(packet.argc) + " args)");
+    }
     return 0;
 }
 
@@ -2447,15 +2576,29 @@ void IMWrapEngine::processDeferredCommands(uint32_t deltaTicks) {
 int IMWrapEngine::handleMarker(uint16_t soundId, uint8_t marker) {
     std::vector<CommandPacket> commandsToRun;
 
+    if (_logCallback) {
+        _logCallback("iMWrap: Marker " + std::to_string(marker) + " hit in sound " + std::to_string(soundId));
+    }
+
     if (_markerCallback) {
         _markerCallback(soundId, marker);
     }
 
     if (!_triggerQueue.empty()) {
         const QueuedTrigger &trigger = _triggerQueue.front();
+        if (_logCallback) {
+            _logCallback("iMWrap: Front trigger is for sound " + std::to_string(trigger.soundId) + " marker " + std::to_string(trigger.marker) + " (queue size: " + std::to_string(_triggerQueue.size()) + ")");
+        }
         if (trigger.soundId == soundId && trigger.marker == marker) {
             commandsToRun.insert(commandsToRun.end(), trigger.commands.begin(), trigger.commands.end());
             _triggerQueue.pop_front();
+            if (_logCallback) {
+                _logCallback("iMWrap: Executing queued trigger commands (" + std::to_string(commandsToRun.size()) + " commands)");
+            }
+        }
+    } else {
+        if (_logCallback) {
+            _logCallback("iMWrap: Trigger queue is empty");
         }
     }
 
@@ -2467,6 +2610,9 @@ int IMWrapEngine::handleMarker(uint16_t soundId, uint8_t marker) {
     clearScriptTrigger(soundId, marker);
 
     for (const CommandPacket &command : commandsToRun) {
+        if (_logCallback && command.argc > 0) {
+            _logCallback("iMWrap: Executing command from queue: cmd " + std::to_string(command.args[0]) + " arg1 " + std::to_string(command.argc > 1 ? command.args[1] : 0));
+        }
         doCommand(command.argc, command.args.data());
     }
 
@@ -2891,7 +3037,7 @@ int IMWrapEngine::dispatchPlayerCommand(uint8_t cmd, uint16_t argc, const int16_
     }
 
     ActiveSound *sound = findActiveSound(static_cast<uint16_t>(args[1]));
-    if (!sound) {
+    if (!sound && cmd != 14 && cmd != 15 && cmd != 16 && cmd != 23) {
         return -1;
     }
 

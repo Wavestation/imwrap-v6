@@ -7675,30 +7675,6 @@ stop
                   </Script>
                 </ScriptAndHeader_Script>
               </ScriptAndHeader>
-              <ScriptAndHeader>
-                <ScriptAndHeader_Header>
-                  <Script>
-                    <FileName>IWRFlexMusic.ash</FileName>
-                    <Name>IWRFlexMusic</Name>
-                    <Description />
-                    <Author />
-                    <Version />
-                    <Key>1547435413</Key>
-                    <IsHeader>True</IsHeader>
-                  </Script>
-                </ScriptAndHeader_Header>
-                <ScriptAndHeader_Script>
-                  <Script>
-                    <FileName>IWRFlexMusic.asc</FileName>
-                    <Name>IWRFlexMusic</Name>
-                    <Description />
-                    <Author />
-                    <Version />
-                    <Key>1547435413</Key>
-                    <IsHeader>False</IsHeader>
-                  </Script>
-                </ScriptAndHeader_Script>
-              </ScriptAndHeader>
             </ScriptAndHeaders>
           </ScriptFolder>
         </SubFolders>

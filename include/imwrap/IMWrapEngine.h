@@ -163,9 +163,12 @@ private:
     };
 
     struct HangingNote {
-        uint8_t channel = 0;
-        uint8_t note = 0;
+        uint8_t logicalChannel = 0;
+        uint8_t logicalNote = 0;
+        uint8_t physicalChannel = 0;
+        uint8_t physicalNote = 0;
         uint32_t ticksLeft = 0;
+        bool expired = false;
     };
 
     struct ActiveSound {
