@@ -167,7 +167,6 @@ Invoke-CMakeBuild -BuildDir $Win32BuildDir -Targets @(
     "ADLMIDI_static",
     "imwrap_v6",
     "imwrap_v6_shared",
-    "imwrap_shim",
     "imwrappack",
     "imsprobe",
     "imwrap_setmidi",
@@ -181,7 +180,7 @@ $x64ConfigureArguments = @(
     "-A", "x64",
     "-DCMAKE_PREFIX_PATH=$QtPrefixPath",
     "-DIMWRAP_QT6_PREFIX_PATH=$QtPrefixPath",
-    "-DIMWRAP_BUILD_GUI_TOOLS=ON",
+    "-DIMWRAP_BUILD_GUI_TOOLS=OFF",
     "-DIMWRAP_BUILD_AGS_PLUGIN=OFF",
     "-DIMWRAP_BUILD_SHARED_LIB=ON"
 )
@@ -207,10 +206,6 @@ $x64Targets = @(
     "imwrap_v6_shared",
     "imwrappack",
     "imsprobe",
-    "imwrap_explorer_gui",
-    "imwrap_packer_gui",
-    "imwrap_player_gui",
-    "imwrap_sysex_gui",
     "imwrap_setmidi",
     "ims2soun"
 )

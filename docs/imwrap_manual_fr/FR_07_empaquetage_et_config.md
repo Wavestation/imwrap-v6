@@ -1,128 +1,91 @@
-# Chapitre 7 : Empaquetage et Deploiement
+# Chapitre 7 : Empaquetage et Déploiement
 
-Vous avez programme vos interactions dans AGS, et vos fichiers `.mid`
-regorgent de SysEx soigneusement prepares. Il est temps d'empaqueter tout cela
-pour les joueurs.
+Vous avez programmé vos interactions dans AGS, et vos fichiers `.mid` regorgent de SysEx savamment construits. Il est temps d'empaqueter tout ça pour les joueurs !
 
-Dans ce dernier chapitre, nous verrons comment fusionner vos fichiers avec
-`imwrappack`, et comment laisser le joueur choisir sa carte son preferee grace
-au fichier de configuration `.imc`.
+Dans ce dernier chapitre, nous verrons comment fusionner vos fichiers avec `imwrappack`, et comment laisser le joueur choisir sa carte son préférée grâce au fichier de configuration `.imc`.
 
 ---
 
-## 7.1. L'utilitaire `imwrappack`
+## 7.1. L'utilitaire "imwrappack"
 
-Le moteur iMWrap ne lit pas directement des fichiers `.mid`. Il lit des banques
-`.ims` (iMWrap Music Set). Une banque IMS peut regrouper plusieurs variantes du
-meme morceau.
+Le moteur iMWrap ne lit pas directement des fichiers `.mid`. Il lit des banques `.ims` (iMWrap Music Set). 
+Non seulement, la banque IMS contient tous les morceaux de musique du jeu, mais peut regrouper **plusieurs variantes du même morceau**. 
 
-Pourquoi faire cela ? Si vous composez une "Musique 80" pour Roland MT-32 et
-une autre pour General MIDI, le jeu AGS peut simplement appeler
-`iMWrap_StartSound(80)`. Le moteur choisira ensuite la bonne variante selon la
-carte son ou le profil de sortie actif.
+Pourquoi faire ça ?
+Imaginons que vous ayez composé la "Musique 80" spécifiquement pour le rendu synthétique du Roland MT-32, mais vous avez fait une autre version pour le General MIDI.
+Grâce à la banque IMS, le jeu AGS dira simplement `iMWrap_StartSound(80)`. Le moteur regardera la carte son du joueur et piochera automatiquement la version MT-32 ou la version GM à l'intérieur du fichier .ims !
 
 ### Utiliser imwrappack
 
-L'outil `imwrappack` s'utilise en ligne de commande.
+L'outil `imwrappack` s'utilise en ligne de commande (dans l'invite de commande Windows ou le terminal Linux/Mac).
 
-Le CLI actuel sait a la fois construire une banque depuis zero et editer une
-banque `.ims` existante.
-
-**Syntaxe de build de base :**
-
+**Syntaxe basique :**
 ```bash
 imwrappack build output.ims \
   --name=80:Foret \
-  --mdhd=80:gmd:90:127:0:0:0:128 \
   80:gmd=80_foret_generalmidi.mid \
   80:rol=80_foret_mt32.mid \
-  80:adl=80_foret_adlib.mid \
   81:gmd=81_interieur.mid
 ```
 
 Dans cet exemple :
+1. On crée le fichier `output.ims`.
+2. `--name=80:Foret` : On donne un nom interne informatif au morceau 80 (très pratique pour le débogage).
+3. `80:gmd=...` : On intègre notre fichier `.mid` comme variante **General MIDI** (`gmd`) pour le son 80.
+4. `80:rol=...` : On intègre notre second fichier `.mid` comme variante **Roland MT-32** (`rol`) pour le même son 80.
+5. `81:gmd=...` : On ajoute la musique 81 (variante GM uniquement).
 
-1. On cree le fichier `output.ims`.
-2. `--name=80:Foret` donne un nom interne informatif au morceau 80.
-3. `80:gmd=...` integre le `.mid` comme variante **General MIDI** (`gmd`).
-4. `80:rol=...` integre une variante **Roland MT-32** (`rol`).
-5. `80:adl=...` integre une variante **AdLib** (`adl`).
-6. `81:gmd=...` ajoute la musique 81 en variante GM seule.
+*(Les variantes supportées sont principalement `gmd` et `rol`.)*
 
-Les variantes supportees sont `gmd`, `rol` et `adl`.
+> [!CAUTION]
+> L'utilitaire attend des fichiers .mid au format **SMF 2** ! Si vous voulez utiliser des fichiers au format **SMF 0** ou **SMF 1**, il vous faut passer par la version graphique du Packer.
 
-Contrairement a l'ancien CLI v1, le packer maintenu accepte **SMF 0, 1 et 2** :
-
-- SMF 0 : importe comme une piste
-- SMF 1 : fusionne en une seule piste type format 0
-- SMF 2 : importe chaque piste source comme une piste IMS distincte
-
-### Configurer Les Priorites Et Volumes (`MDhd`)
-
-Vous pouvez forcer les parametres par defaut d'une variante (priorite, volume,
-vitesse, etc.) directement a l'empaquetage sans editer le MIDI, en injectant un
-chunk `MDhd` :
+### Configurer les priorités et volumes (`MDhd`)
+Vous pouvez forcer les paramètres par défaut d'une variante (priorité, volume, vitesse, etc.) directement à l'empaquetage sans avoir à éditer le MIDI, en injectant un chunk `MDhd` :
 
 ```bash
 --mdhd=80:gmd:90:127:0:0:0:128
 ```
+*(L'ordre est : soundId : variante : priority : volume : pan : transpose : detune : speed. Ici, on force une priorité de 90 et un volume de 127).*
 
-L'ordre est :
-
-```text
-soundId : variante : priority : volume : pan : transpose : detune : speed
-```
-
-Le meme CLI sait aussi inspecter et editer une banque existante :
-
-```bash
-imwrappack inspect output.ims
-imwrappack import-midi output.ims 80 gmd remplacement.mid
-imwrappack move-track output.ims 80 gmd 1 up
-imwrappack export-track output.ims 80 gmd 0 foret_track0.mid
-```
-
-Si vous preferez un workflow visuel, le **Chapitre 9** couvre les outils
-graphiques, et notamment le **Packer**.
+Si vous ne voulez pas passer par l'utilitaire en ligne de commande, vous verrez dans le **Chapitre 9** comment utiliser les outils graphiques, et notamment le **Packer**.
 
 ---
 
-## 7.2. Configuration Joueur (Le Fichier `.imc`)
+## 7.2. Configuration Joueur (Le fichier `.imc`)
 
-Le charme d'un jeu retro, c'est aussi de laisser le joueur regler ses
-parametres audio. Le plugin iMWrap gere cela via un fichier de configuration
-externe.
+Le charme d'un jeu rétro, c'est aussi de laisser le joueur bidouiller ses paramètres audio. Le plugin iMWrap gère cela via un fichier de configuration externe.
 
-Ce fichier doit s'appeler **[NomDeVotreExe].imc** (par exemple `MonJeu.imc`) et
-doit etre place dans le meme dossier que l'executable du jeu.
+Ce fichier doit s'appeler **[NomDeVotreExe].imc** (par exemple `MonJeu.imc`) et doit être placé dans le même dossier que l'exécutable du jeu.
 
-### Structure Du Fichier `.imc` (Format INI)
-
+### Structure du fichier `.imc` (Format INI)
 ```ini
 [MIDI]
 Driver=2
 Device=loopMIDI Port
 ```
 
-Explication des parametres :
+**Explication des paramètres :**
+- `Driver=0` : Le joueur veut utiliser FluidSynth (Synthé logiciel General MIDI).
+- `Driver=1` : Le joueur veut l'émulation FM AdLib (bip-boup rétro).
+- `Driver=2` : Hardware General MIDI (utiliser le vrai synthé matériel branché sur l'ordi).
+- `Driver=3` : Hardware Roland MT-32 (vrai synthétiseur vintage).
+- `Device` : Nom du port matériel Windows (nécessaire uniquement pour les Drivers 2 et 3).
 
-- `Driver=0` : le joueur veut utiliser FluidSynth
-- `Driver=1` : le joueur veut l'emulation FM AdLib
-- `Driver=2` : le joueur veut du General MIDI materiel
-- `Driver=3` : le joueur veut du Roland MT-32 materiel
-- `Device` : nom du port MIDI Windows, utile pour les drivers 2 et 3
-
-### Prise En Compte Dans Le Script AGS
-
-Dans votre fonction `game_start()` (voir le chapitre 2), remplacez le code
-basique par celui-ci pour permettre au joueur de surcharger vos choix :
+### Prise en compte dans le script AGS
+Dans votre fonction `game_start()` (voir Chapitre 2), remplacez le code basique par celui-ci pour autoriser le joueur à "surcharger" vos choix :
 
 ```c
 function game_start() {
+    // Si le joueur a placé un fichier MonJeu.imc
     if (iMWrap_HasExternalConfig()) {
-        iMWrap_ApplyExternalConfig("$DATA$/music_data/SGM-V2.01.sf2");
+        // Tente d'appliquer ses paramètres. S'il a choisi FluidSynth (0), 
+        // on lui force notre propre SoundFont par défaut en paramètre de secours.
+        iMWrap_ApplyExternalConfig("$DATA$/music_data/SGM-V2.01.sf2.sf2");
     } else {
-        iMWrap_SetDriver(IMWRAP_DRIVER_FLUIDSYNTH, "$DATA$/music_data/SGM-V2.01.sf2");
+        // Sinon, aucun fichier .imc trouvé, on configure le jeu 
+        // en General MIDI moderne par défaut.
+        iMWrap_SetDriver(IMWRAP_DRIVER_FLUIDSYNTH, "$DATA$/music_data/SGM-V2.01.sf2.sf2");
     }
 
     iMWrap_LoadBank("$DATA$/music_data/game.ims");
@@ -131,17 +94,15 @@ function game_start() {
 
 ---
 
-## 7.3. L'utilitaire Graphique `SetMIDI.exe`
+## 7.3. L'utilitaire graphique `SetMIDI.exe`
 
-Plutot que de demander au joueur d'ecrire manuellement un fichier `.imc`, vous
-pouvez distribuer le petit utilitaire `SetMIDI.exe` fourni avec iMWrap.
+Plutôt que d'obliger vos joueurs à écrire un fichier texte `.imc` à la main, vous pouvez distribuer le petit utilitaire `SetMIDI.exe` fourni avec iMWrap.
 
-Placez `SetMIDI.exe` dans le meme dossier que votre jeu. Quand le joueur le
-lance, l'interface detecte l'executable du jeu, liste les ports MIDI presents
-sur la machine, puis genere automatiquement le fichier `.imc` correspondant a
-son choix.
+Mettez `SetMIDI.exe` dans le même dossier que votre jeu. Quand le joueur double-clique dessus, une interface graphique native s'ouvre (en français, espagnol ou anglais, en fonction de la langue du système). 
+L'outil scannera le dossier, trouvera l'exécutable de votre jeu, listera les vrais ports MIDI branchés sur l'ordinateur, et génèrera tout seul le fichier `.imc` correspondant au choix du joueur !
 
 ---
 
-Vous avez presque termine le manuel iMWrap v6. Les chapitres suivants servent de
-references pour les fonctions AGS et pour l'usage des outils graphiques.
+**Félicitations !** Vous êtes presque arrivé au bout du manuel iMWrap v6. Du chargement d'un plugin AGS jusqu'aux arcanes du SysEx hexadécimal, la musique interactive façon iMUSE n'a plus aucun secret pour vous. Les **deux chapitres suivants** sont des manuels de référence pour les **fonctions du plugin AGS iMWrap** ainsi que pour **l'utilisations des outils graphiques**.
+
+Bon développement et bonne composition !

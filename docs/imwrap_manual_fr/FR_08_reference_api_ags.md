@@ -233,16 +233,26 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   iMWrap_ClearLoop(50);
   ```
 
-* `import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);`
-  Arme une action asynchrone (Hook) qui s'exécutera au moment voulu par le compositeur. `hookClass` doit utiliser une constante `IMWRAP_HOOK_*`. `hookValue` est l'ID attendu du Hook dans le fichier MIDI (si `0`, le Hook s'active sur le prochain de cette classe inconditionnellement).
+* **Les Wrappers de Hook**
+  Pour armer une action asynchrone (Hook) qui s'exécutera au moment voulu par le compositeur (voir Chapitre 4), AGS met à votre disposition plusieurs fonctions claires :
+  - `import void iMWrap_SetJumpHook(int soundId, int hookId);`
+  - `import void iMWrap_SetGlobalTransposeHook(int soundId, int hookId);`
+  - `import void iMWrap_SetPartOnOffHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartVolumeHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartProgramHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartTransposeHook(int soundId, int hookId, int channel);`
+  
+  *Le paramètre `hookId` est l'ID attendu du Hook dans le fichier MIDI (si `0`, le Hook s'active inconditionnellement dès que la tête de lecture croise un événement Hook de cette catégorie).*
+  
   ```c
-  // Arme l'attente du Hook de Volume ID 1.
-  iMWrap_SetHook(50, IMWRAP_HOOK_PART_VOLUME, 1, 0);
-  // Équivalent avec le wrapper typé :
-  iMWrap_SetPartVolumeHook(50, 1, 0);
+  // Arme l'attente du Hook de Volume ID 1 sur le canal 2.
+  // L'action effective (ex: baisser le volume à 50) 
+  // est déjà préprogrammée par le compositeur dans le fichier MIDI !
+  iMWrap_SetPartVolumeHook(50, 1, 2);
   ```
-  *(Note : des wrappers existent pour chaque type de hook : `iMWrap_SetJumpHook`, `iMWrap_SetGlobalTransposeHook`, etc.)*
 
+* `import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);`
+  *Fonction historique et bas niveau.* Il est recommandé d'utiliser les wrappers ci-dessus.
 
 ---
 
@@ -266,7 +276,36 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
 * `import int iMWrap_GetLastMarker();`
   Renvoie le marqueur déclenché le plus récent sans vider la file d'attente. (La valeur est pacquée de la même manière que `PopMarker`, ou vaut `-1` si vide).
 
-## 8.6. Informations de Position (Playback)
+## 8.6. Système de File d'Attente (Queue)
+
+Le système de Queue permet d'accumuler plusieurs ordres qui s'exécuteront **exactement à la même microseconde**, synchronisés sur la ligne de temps d'un son "maître". Très utile pour des transitions complexes parfaitement synchronisées. Le premier paramètre `soundId` désigne toujours la musique "maître" sur laquelle la file d'attente se base.
+
+* `import void iMWrap_QueueTrigger(int soundId, int markerId);`
+* `import void iMWrap_QueueStartSound(int soundId, int targetSound);`
+* `import void iMWrap_QueueStopSound(int soundId, int targetSound);`
+* `import void iMWrap_QueueStopAllSounds(int soundId);`
+* `import void iMWrap_QueueSetHook(int soundId, int targetSound, int hookType, int hookValue, int channel);`
+* `import void iMWrap_QueueAddFader(int soundId, int targetSound, int targetVolume, int timeInTicks);`
+* `import void iMWrap_QueueCommand(int soundId, int cmd, int a1=0, int a2=0, int a3=0, int a4=0, int a5=0, int a6=0, int a7=0);`
+  Ces fonctions ajoutent des instructions à la file d'attente du son `soundId`, de manière muette. Rien ne s'exécutera tant que vous ne les avez pas validées.
+
+* `import void iMWrap_CommitQueue(int soundId);`
+  Valide toutes les instructions en attente pour le `soundId` et les pousse dans le moteur audio pour exécution simultanée.
+  ```c
+  // Prépare une transition parfaite
+  iMWrap_ClearQueue();
+  iMWrap_QueueTrigger(50, 64);
+  iMWrap_QueueStartSound(50, 51);
+  // Exécute le tout simultanément lié au son 50 !
+  iMWrap_CommitQueue(50);
+  ```
+
+* `import void iMWrap_ClearQueue();`
+  Vide la file d'attente (annule toutes les commandes en suspens qui n'ont pas encore été validées).
+
+---
+
+## 8.7. Informations de Position (Playback)
 
 * `import int iMWrap_GetPlaybackTrack(int soundId);`
   Renvoie la piste (Track) logique système en cours de lecture.
@@ -288,7 +327,7 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
 
 ---
 
-## 8.7. Profils Matériels et MT-32
+## 8.8. Profils Matériels et MT-32
 
 Ces fonctions servent à simuler ou forcer des comportements spécifiques aux vieux moteurs LucasArts ou Roland.
 
@@ -328,7 +367,7 @@ Ces fonctions servent à simuler ou forcer des comportements spécifiques aux vi
 
 ---
 
-## 8.8. Configuration Externe et Log
+## 8.9. Configuration Externe et Log
 
 * `import int iMWrap_HasExternalConfig();`
   Vérifie si un fichier de configuration `.imc` a été posé par le joueur dans le dossier du jeu.

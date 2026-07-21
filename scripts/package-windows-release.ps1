@@ -111,7 +111,7 @@ function Copy-FirstExistingFileAs {
         }
     }
 
-    throw "Missing required file. Tried: $($Sources -join ', ')"
+    Write-Warning "Missing required file. Tried: $($Sources -join ', ')"
 }
 
 function Copy-DirectoryTree {

@@ -33,20 +33,13 @@ These constants are available throughout your scripts to configure the audio dri
   iMWrap_LoadBank("$DATA$/music_data/ost.ims");
   ```
 
-  * `import void iMWrap_LoadSoundFont(const string filename);`
-    Shortcut to load a SoundFont (`.sf2` or compressed `.sf3`) and configure the FluidSynth driver in one go.
-    ```c
-    iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
-    ```
+* `import void iMWrap_LoadSoundFont(const string filename);`
+  Shortcut to load a SoundFont (`.sf2`) or compressed `.sf3` and configure the FluidSynth driver in one go.
+  ```c
+  iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf2");
+  ```
 
-  * `import void iMWrap_SetSFDynLoad(int enabled);`
-    Enables (`1`) or disables (`0`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
-    ```c
-    iMWrap_SetSFDynLoad(1); // Enable dynamic streaming for SF3
-    iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
-    ```
 
-  
 * `import void iMWrap_SetSFDynLoad(int enabled);`
   Enables (`1`) or disables (`0`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
   ```c
@@ -240,23 +233,30 @@ These constants are available throughout your scripts to configure the audio dri
   iMWrap_ClearLoop(50);
   ```
 
-* `import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);`
-  Arms an asynchronous action (Hook) that will be executed at the moment chosen by the composer. `hookClass` must use an `IMWRAP_HOOK_*` constant. `hookValue` is the expected ID of the Hook in the MIDI file (if `0`, the Hook triggers on the next one of this class unconditionally).
-  ```c
-  // Arms the wait for the Volume Hook with ID 1.
-  iMWrap_SetHook(50, IMWRAP_HOOK_PART_VOLUME, 1, 0);
-  // Equivalent with the typed wrapper:
-  iMWrap_SetPartVolumeHook(50, 1, 0);
-  ```
-  *(Note: wrappers exist for each hook type: `iMWrap_SetJumpHook`, `iMWrap_SetGlobalTransposeHook`, etc.)*
-
-
-    }
-    `
-
-  * `import int iMWrap_GetLastMarker();`
-    Returns the most recent triggered marker without emptying the queue.
+* **Hook Wrappers**
+  To arm an asynchronous action (Hook) that will be executed at the moment chosen by the composer (see Chapter 4), AGS provides you with several clear functions:
+  - `import void iMWrap_SetJumpHook(int soundId, int hookId);`
+  - `import void iMWrap_SetGlobalTransposeHook(int soundId, int hookId);`
+  - `import void iMWrap_SetPartOnOffHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartVolumeHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartProgramHook(int soundId, int hookId, int channel);`
+  - `import void iMWrap_SetPartTransposeHook(int soundId, int hookId, int channel);`
   
+  *The `hookId` parameter is the expected ID of the Hook in the MIDI file (if `0`, the Hook triggers unconditionally as soon as the playback head crosses a Hook event of this category).*
+  
+  ```c
+  // Arms the wait for the Volume Hook with ID 1 on channel 2.
+  // The actual action (e.g. lowering the volume to 50) 
+  // is ALREADY pre-programmed by the composer in the MIDI file!
+  iMWrap_SetPartVolumeHook(50, 1, 2);
+  ```
+
+* `import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);`
+  *Historical and low-level function.* It is recommended to use the wrappers above.
+
+---
+
+
 * `import int iMWrap_PopMarker();`
   Pops and returns the oldest triggered marker value (or Hook value) from the queue. Returns `-1` if the queue is empty.
   The returned value "packs" both the sound ID (on the upper bits) and the marker value (on the lower 8 bits).
@@ -276,7 +276,36 @@ These constants are available throughout your scripts to configure the audio dri
 * `import int iMWrap_GetLastMarker();`
   Returns the most recent triggered marker without emptying the queue. (The value is packed the same way as `PopMarker`, or returns `-1` if empty).
 
-## 8.6. Playback Position Information
+## 8.6. Queue System
+
+The Queue system allows you to accumulate several orders that must execute **at the exact same microsecond**, synchronized on the timeline of a "master" sound. Very useful for complex, perfectly synchronized transitions. The first parameter `soundId` always designates the "master" music on which the queue is based.
+
+* `import void iMWrap_QueueTrigger(int soundId, int markerId);`
+* `import void iMWrap_QueueStartSound(int soundId, int targetSound);`
+* `import void iMWrap_QueueStopSound(int soundId, int targetSound);`
+* `import void iMWrap_QueueStopAllSounds(int soundId);`
+* `import void iMWrap_QueueSetHook(int soundId, int targetSound, int hookType, int hookValue, int channel);`
+* `import void iMWrap_QueueAddFader(int soundId, int targetSound, int targetVolume, int timeInTicks);`
+* `import void iMWrap_QueueCommand(int soundId, int cmd, int a1=0, int a2=0, int a3=0, int a4=0, int a5=0, int a6=0, int a7=0);`
+  These functions add instructions to the queue of the `soundId` sound, silently. Nothing will execute until you validate them.
+
+* `import void iMWrap_CommitQueue(int soundId);`
+  Validates all pending instructions for `soundId` and pushes them into the audio engine for simultaneous execution.
+  ```c
+  // Prepares a perfect transition
+  iMWrap_ClearQueue();
+  iMWrap_QueueTrigger(50, 64);
+  iMWrap_QueueStartSound(50, 51);
+  // Executes everything simultaneously tied to sound 50!
+  iMWrap_CommitQueue(50);
+  ```
+
+* `import void iMWrap_ClearQueue();`
+  Empties the queue (cancels all pending commands that have not yet been validated).
+
+---
+
+## 8.7. Playback Position Information
 
 * `import int iMWrap_GetPlaybackTrack(int soundId);`
   Returns the logical system track currently playing (usually 0).
@@ -298,7 +327,7 @@ These constants are available throughout your scripts to configure the audio dri
 
 ---
 
-## 8.7. Hardware Profiles and MT-32
+## 8.8. Hardware Profiles and MT-32
 
 These functions are used to simulate or force specific behaviors of old LucasArts or Roland engines.
 
@@ -338,7 +367,7 @@ These functions are used to simulate or force specific behaviors of old LucasArt
 
 ---
 
-## 8.8. External Configuration and Logging
+## 8.9. External Configuration and Logging
 
 * `import int iMWrap_HasExternalConfig();`
   Checks if an `.imc` configuration file has been dropped by the player in the game folder.
@@ -357,4 +386,3 @@ These functions are used to simulate or force specific behaviors of old LucasArt
   ```c
   iMWrap_EnableLog(1);
   ```
-

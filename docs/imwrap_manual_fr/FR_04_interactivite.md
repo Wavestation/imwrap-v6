@@ -49,21 +49,37 @@ Voici la fonctionnalité la plus spectaculaire. Vous voulez qu'un personnage dan
 
 Le compositeur a préparé son fichier MIDI en insérant des **Markers** (Marqueurs). Un Marker est un message invisible (SysEx) placé sur la partition. Par exemple, le compositeur a placé le Marqueur "1" à la mesure 5, et le Marqueur "2" sur chaque temps fort de la batterie.
 
-Dans AGS, c'est très simple. Le plugin appellera automatiquement la fonction `iMWrap_OnTrigger` dans votre `GlobalScript.asc` (ou n'importe quel script qui exposera cette fonction) à chaque fois que la tête de lecture MIDI croisera un Marker. **Attention**, si cette fonction est présente dans **plusieurs scripts**, seule une seule d'entre elles sera exécutée. Il est donc préférable qu'il n'y en ait qu'une seule dans tout le jeu, soit dans le GlobalScript, soit dans un script dédié à la gestion de la musique.
+Dans AGS, c'est très simple. À chaque boucle du jeu (dans votre `repeatedly_execute`), vous allez demander au moteur "As-tu croisé un marqueur ?". C'est ce qu'on appelle du *polling*. Le moteur stocke les marqueurs rencontrés dans une file d'attente (Queue), et la fonction `iMWrap_PopMarker` permet de les dépiler un par un. Comme elle doit renvoyer deux informations (l'ID du son et l'ID du marqueur), elle renvoie un entier "packé" (combiné) qu'il faut séparer.
 
 ```c
 // À placer dans votre GlobalScript.asc
-function iMWrap_OnTrigger(int soundId, int markerId) {
-    if (soundId == 80) {
-        if (markerId == 1) {
-            // Le marqueur 1 a été atteint ! Lancer l'éclair !
-            Display("BOOM !");
-            cEgo.Say("Quel orage !");
+function repeatedly_execute()
+{
+    // On dépile le plus ancien marqueur en attente
+    int packed = iMWrap_PopMarker();
+    while (packed > 0)
+    {
+        // On extrait le soundId (les bits supérieurs) et le markerId (les 8 bits de poids faible)
+        int soundId = (packed >> 8) & 0xFFFFFF;
+        int markerId = packed & 0xFF;
+
+        if (soundId == 80)
+        {
+            if (markerId == 1)
+            {
+                // Le marqueur 1 a été atteint ! Lancer l'éclair !
+                Display("BOOM !");
+                cEgo.Say("Quel orage !");
+            }
+            else if (markerId == 2)
+            {
+                // Un temps fort de batterie, on fait danser le personnage d'une frame
+                cDanseur.Animate(1, 0, eOnce, eNoBlock);
+            }
         }
-        else if (markerId == 2) {
-            // Un temps fort de batterie, on fait danser le personnage d'une frame
-            cDanseur.Animate(1, 0, eOnce, eNoBlock);
-        }
+        
+        // On passe au marqueur suivant dans la file
+        packed = iMWrap_PopMarker();
     }
 }
 ```
@@ -78,30 +94,30 @@ Pourquoi faire ça ? Reprenons l'exemple du volume. Vous voulez que le volume de
 
 Le compositeur écrit des "SysEx de Hook" vides aux endroits stratégiques de sa partition (par exemple, au début de chaque mesure).
 
-Dans AGS, vous "armez" le crochet :
+Dans AGS, vous "armez" le crochet en utilisant les *wrappers* (des fonctions spécifiques pour chaque type de Hook) :
 ```c
-// iMWrap_SetHook(soundId, hookClass, hookValue, hookChannel)
+// iMWrap_SetPartVolumeHook(soundId, hookId, channel)
 
-// On arme un Hook de Changement de Volume (IMWRAP_HOOK_PART_VOLUME).
-// hookValue = 1 : on attend spécifiquement le Hook d'ID "1" placé par le compositeur.
-// (Si hookValue valait 0, n'importe quel Hook de volume déclencherait l'action inconditionnellement).
+// On arme un Hook de Changement de Volume sur le canal 0.
+// hookId = 1 : on attend spécifiquement le Hook d'ID "1" placé par le compositeur.
+// (Si hookId valait 0, n'importe quel Hook de volume déclencherait l'action inconditionnellement).
 // Note : Le nouveau volume n'est PAS passé dans ce code AGS. 
 // L'action réelle est DÉJÀ encodée dans le SysEx du MIDI par le compositeur !
-iMWrap_SetHook(80, IMWRAP_HOOK_PART_VOLUME, 1, 0);
+iMWrap_SetPartVolumeHook(80, 1, 0);
 ```
 
 La musique tourne... elle rencontre le point préparé par le compositeur... BAM ! Le Hook se déclenche et le volume change en rythme.
 
-**Les classes de Hooks (`hookClass`), définies par des constantes dans AGS :**
-- `IMWRAP_HOOK_JUMP` (0) : Hook de Jump (Saut asynchrone en rythme)
-- `IMWRAP_HOOK_TRANSPOSE` (1) : Hook de Transposition globale
-- `IMWRAP_HOOK_PART_ONOFF` (2) : Hook de Part On/Off (Allumer/éteindre un instrument)
-- `IMWRAP_HOOK_PART_VOLUME` (3) : Hook de Volume (Modifier le volume d'un canal)
-- `IMWRAP_HOOK_PART_PROGRAM` (4) : Hook de Program (Changer d'instrument)
-- `IMWRAP_HOOK_PART_TRANSPOSE` (5) : Hook de Transposition d'une piste
+**Les wrappers de Hooks disponibles dans AGS :**
+- `iMWrap_SetJumpHook` : Hook de Jump (Saut asynchrone en rythme)
+- `iMWrap_SetGlobalTransposeHook` : Hook de Transposition globale
+- `iMWrap_SetPartOnOffHook` : Hook de Part On/Off (Allumer/éteindre un instrument)
+- `iMWrap_SetPartVolumeHook` : Hook de Volume (Modifier le volume d'un canal)
+- `iMWrap_SetPartProgramHook` : Hook de Program (Changer d'instrument)
+- `iMWrap_SetPartTransposeHook` : Hook de Transposition d'une piste
 
 > [!TIP]
-> Si la musique que vous lisez ne contient aucun événement "Hook" codé par le compositeur, vos appels à `iMWrap_SetHook` dans AGS ne s'exécuteront **jamais**, car le moteur attendra éternellement l'autorisation de la partition. C'est un vrai travail d'équipe !
+> Si la musique que vous lisez ne contient aucun événement "Hook" codé par le compositeur, vos appels aux fonctions `iMWrap_Set...Hook` dans AGS ne s'exécuteront **jamais**, car le moteur attendra éternellement l'autorisation de la partition. C'est un vrai travail d'équipe !
 
 ### 4.5. Exemple Avancé : Combiner Hook et Callback pour une transition
 
@@ -116,24 +132,92 @@ Imaginons que le joueur résout une énigme. Nous voulons :
 **Côté Programmeur (AGS) :**
 ```c
 // Lorsque le joueur résout l'énigme :
-function resoudre_enigme() {
-    // On arme le Hook de Jump (IMWRAP_HOOK_JUMP).
-    // hookValue = 0 (inconditionnel). Quand la musique atteindra la mesure 10,
+function resoudre_enigme()
+{
+    // On arme le Hook de Jump.
+    // hookId = 0 (inconditionnel). Quand la musique atteindra la mesure 10,
     // elle validera ce Hook et sautera vers son final.
-    iMWrap_SetHook(80, IMWRAP_HOOK_JUMP, 0, 0);
+    iMWrap_SetJumpHook(80, 0);
 }
 
-// Plus tard, quand la musique lit sa fin et atteint la mesure 50...
-function iMWrap_OnTrigger(int soundId, int markerId) {
-    if (soundId == 80 && markerId == 10) {
-        // La musique 80 a fini sa conclusion proprement !
-        iMWrap_StopSound(80);
+// Plus tard, dans votre repeatedly_execute, on scrute les marqueurs :
+function repeatedly_execute()
+{
+    int packed = iMWrap_PopMarker();
+    while (packed > 0)
+    {
+        int soundId = (packed >> 8) & 0xFFFFFF;
+        int markerId = packed & 0xFF;
+
+        if (soundId == 80 && markerId == 10)
+        {
+            // La musique 80 a fini sa conclusion proprement !
+            iMWrap_StopSound(80);
+            
+            // On lance la musique de victoire !
+            iMWrap_StartSound(81);
+        }
         
-        // On lance la musique de victoire !
-        iMWrap_StartSound(81);
+        packed = iMWrap_PopMarker();
     }
 }
 ```
 Ce combo est l'essence même de la musique interactive de type iMUSE : le jeu initie le changement, la musique l'orchestre musicalement pour rester en rythme, puis la musique rend la main au jeu pour l'étape d'après !
+
+### 4.6. Exemple Avancé : Transition Parfaite avec les Queues
+
+Dans les jeux d'aventure complexes, vous aurez souvent besoin d'exécuter un lot d'actions musicales de manière parfaitement synchronisée avec un événement musical (comme un Hook). C'est là que le système de File d'Attente (Queue) brille. L'exemple suivant montre comment gérer la transition musicale entre deux pièces :
+
+```c
+// ==========================================
+// Quand le joueur entre dans la pièce :
+// ==========================================
+function room_Load()
+{
+    // 1. On nettoie la file d'attente globale au cas où de vieilles commandes traîneraient
+    iMWrap_ClearQueue();
+    
+    // 2. On prépare la séquence d'instructions pour la musique maître (MUSIC_BASEROOM) :
+    // - On lève le marqueur 64 pour signaler au jeu le changement d'état
+    iMWrap_QueueTrigger(MUSIC_BASEROOM, 64);
+    // - On demande le lancement de la nouvelle musique (MUSIC_HOLODECK)
+    iMWrap_QueueStartSound(MUSIC_BASEROOM, MUSIC_HOLODECK);
+    
+    // 3. On valide cette file d'attente sur le son maître
+    iMWrap_CommitQueue(MUSIC_BASEROOM);
+    
+    // 4. On arme le Hook de Jump. 
+    // Quand la musique de la base (MUSIC_BASEROOM) atteindra son point de transition 
+    // (prévu par le compositeur avec JH_BASE_TO_HOLO), elle exécutera instantanément
+    // toutes les commandes que nous venons de commiter dans sa Queue !
+    iMWrap_SetJumpHook(MUSIC_BASEROOM, JH_BASE_TO_HOLO);
+    
+    // 5. Cas de secours (anti-silence) :
+    // Si la musique de la base était arrêtée (par exemple après le chargement d'une sauvegarde),
+    // on lance la nouvelle musique manuellement pour éviter le silence.
+    if (iMWrap_GetActiveSoundCount() == 0)
+    {
+        iMWrap_StartSound(MUSIC_HOLODECK);
+    }
+}
+
+// ==========================================
+// Quand le joueur quitte la pièce (Retour) :
+// ==========================================
+function room_Leave()
+{
+    // On répète exactement la même logique, mais dans l'autre sens !
+    // Cette fois, c'est MUSIC_HOLODECK qui est la musique maître de la transition.
+    
+    iMWrap_ClearQueue(); 
+    iMWrap_QueueTrigger(MUSIC_HOLODECK, 64);
+    iMWrap_QueueStartSound(MUSIC_HOLODECK, MUSIC_BASEROOM);
+    iMWrap_CommitQueue(MUSIC_HOLODECK);
+    
+    iMWrap_SetJumpHook(MUSIC_HOLODECK, JH_HOLO_TO_BASE);
+}
+```
+
+Cet exemple est très parlant : il montre l'interaction entre le "Hook" qui attend l'autorisation de la partition (le bon moment rythmique), et la "Queue" qui exécute un lot d'actions précises au moment exact de ce Hook !
 
 Dans le **Chapitre 5**, nous allons passer de l'autre côté du miroir : comment le compositeur prépare tous ces éléments interactifs dans son séquenceur !

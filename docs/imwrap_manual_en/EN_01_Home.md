@@ -1,6 +1,6 @@
 # Chapter 1: Introduction to iMWrap and iMUSE
 
-Welcome to the comprehensive manual for **iMWrap v6 (current version: 1.0.4)**. If you are here, you likely have an ambition: for your game's music to react to the action, just like a film score adapts to what happens on screen.
+Welcome to the comprehensive manual for **iMWrap v6 (current version: 1.0.7)**. If you are here, you likely have an ambition: for your game's music to react to the action, just like a film score adapts to what happens on screen.
 
 In this chapter, we will demystify the basic concepts, understand where this technology comes from, and see how it integrates with the Adventure Game Studio (AGS) engine.
 

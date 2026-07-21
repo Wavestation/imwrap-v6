@@ -49,21 +49,37 @@ Here is the most spectacular feature. You want a character to dance to the tempo
 
 The composer prepared their MIDI file by inserting **Markers**. A Marker is an invisible message (SysEx) placed on the score. For example, the composer placed Marker "1" at measure 5, and Marker "2" on every strong beat of the drums.
 
-In AGS, it's very simple. The plugin will automatically call the `iMWrap_OnTrigger` function in your `GlobalScript.asc` every time the MIDI playback head crosses a Marker.
+In AGS, it's very simple. At each game loop (in your `repeatedly_execute`), you will ask the engine "Have you crossed a marker?". This is called *polling*. The engine stores the encountered markers in a Queue, and the `iMWrap_PopMarker` function allows you to pop them one by one. Since it must return two pieces of information (the sound ID and the marker ID), it returns a "packed" (combined) integer that you must split.
 
 ```c
 // To be placed in your GlobalScript.asc
-function iMWrap_OnTrigger(int soundId, int markerId) {
-    if (soundId == 80) {
-        if (markerId == 1) {
-            // Marker 1 has been reached! Launch the lightning!
-            Display("BOOM!");
-            cEgo.Say("What a storm!");
+function repeatedly_execute()
+{
+    // Pop the oldest waiting marker
+    int packed = iMWrap_PopMarker();
+    while (packed > 0)
+    {
+        // Extract the soundId (high bits) and markerId (low 8 bits)
+        int soundId = (packed >> 8) & 0xFFFFFF;
+        int markerId = packed & 0xFF;
+
+        if (soundId == 80)
+        {
+            if (markerId == 1)
+            {
+                // Marker 1 has been reached! Launch the lightning!
+                Display("BOOM!");
+                cEgo.Say("What a storm!");
+            }
+            else if (markerId == 2)
+            {
+                // A strong drum beat, we make the character dance for one frame
+                cDancer.Animate(1, 0, eOnce, eNoBlock);
+            }
         }
-        else if (markerId == 2) {
-            // A strong drum beat, we make the character dance for one frame
-            cDancer.Animate(1, 0, eOnce, eNoBlock);
-        }
+        
+        // Move to the next marker in the queue
+        packed = iMWrap_PopMarker();
     }
 }
 ```
@@ -78,30 +94,30 @@ Why do this? Let's take the volume example again. You want the volume of the vio
 
 The composer writes empty "Hook SysEx" at strategic points in their score (for example, at the beginning of each measure).
 
-In AGS, you "arm" the hook:
+In AGS, you "arm" the hook using *wrappers* (specific functions for each type of Hook):
 ```c
-// iMWrap_SetHook(soundId, hookClass, hookValue, hookChannel)
+// iMWrap_SetPartVolumeHook(soundId, hookId, channel)
 
-// We arm a Volume Change Hook (IMWRAP_HOOK_PART_VOLUME).
-// hookValue = 1: we specifically wait for the Hook with ID "1" placed by the composer.
-// (If hookValue was 0, any volume Hook would trigger the action unconditionally).
+// We arm a Volume Change Hook on channel 0.
+// hookId = 1: we specifically wait for the Hook with ID "1" placed by the composer.
+// (If hookId was 0, any volume Hook would trigger the action unconditionally).
 // Note: The new volume is NOT passed in this AGS code. 
 // The actual action is ALREADY encoded in the MIDI SysEx by the composer!
-iMWrap_SetHook(80, IMWRAP_HOOK_PART_VOLUME, 1, 0);
+iMWrap_SetPartVolumeHook(80, 1, 0);
 ```
 
 The music plays... it encounters the point prepared by the composer... BAM! The Hook triggers and the volume changes in rhythm.
 
-**The Hook classes (`hookClass`), defined by constants in AGS:**
-- `IMWRAP_HOOK_JUMP` (0): Jump Hook (Asynchronous rhythmic jump)
-- `IMWRAP_HOOK_TRANSPOSE` (1): Global Transposition Hook
-- `IMWRAP_HOOK_PART_ONOFF` (2): Part On/Off Hook (Mute/unmute an instrument)
-- `IMWRAP_HOOK_PART_VOLUME` (3): Volume Hook (Modify volume of a channel)
-- `IMWRAP_HOOK_PART_PROGRAM` (4): Program Hook (Change instrument)
-- `IMWRAP_HOOK_PART_TRANSPOSE` (5): Track Transposition Hook
+**The Hook wrappers available in AGS:**
+- `iMWrap_SetJumpHook`: Jump Hook (Asynchronous rhythmic jump)
+- `iMWrap_SetGlobalTransposeHook`: Global Transposition Hook
+- `iMWrap_SetPartOnOffHook`: Part On/Off Hook (Mute/unmute an instrument)
+- `iMWrap_SetPartVolumeHook`: Volume Hook (Modify volume of a channel)
+- `iMWrap_SetPartProgramHook`: Program Hook (Change instrument)
+- `iMWrap_SetPartTransposeHook`: Track Transposition Hook
 
 > [!TIP]
-> If the music you are playing contains no "Hook" event coded by the composer, your calls to `iMWrap_SetHook` in AGS will **never** execute, because the engine will wait forever for authorization from the score. It's real teamwork!
+> If the music you are playing contains no "Hook" event coded by the composer, your calls to `iMWrap_Set...Hook` functions in AGS will **never** execute, because the engine will wait forever for authorization from the score. It's real teamwork!
 
 ### 4.5. Advanced Example: Combining Hook and Callback for a transition
 
@@ -116,24 +132,92 @@ Imagine the player solves a puzzle. We want:
 **Programmer Side (AGS):**
 ```c
 // When the player solves the puzzle:
-function solve_puzzle() {
-    // We arm the Jump Hook (IMWRAP_HOOK_JUMP).
-    // hookValue = 0 (unconditional). When the music reaches measure 10,
+function solve_puzzle()
+{
+    // We arm the Jump Hook.
+    // hookId = 0 (unconditional). When the music reaches measure 10,
     // it will validate this Hook and jump to its finale.
-    iMWrap_SetHook(80, IMWRAP_HOOK_JUMP, 0, 0);
+    iMWrap_SetJumpHook(80, 0);
 }
 
-// Later, when the music plays its ending and reaches measure 50...
-function iMWrap_OnTrigger(int soundId, int markerId) {
-    if (soundId == 80 && markerId == 10) {
-        // Music 80 has cleanly finished its conclusion!
-        iMWrap_StopSound(80);
+// Later, in your repeatedly_execute, we poll the markers:
+function repeatedly_execute()
+{
+    int packed = iMWrap_PopMarker();
+    while (packed > 0)
+    {
+        int soundId = (packed >> 8) & 0xFFFFFF;
+        int markerId = packed & 0xFF;
+
+        if (soundId == 80 && markerId == 10)
+        {
+            // Music 80 has cleanly finished its conclusion!
+            iMWrap_StopSound(80);
+            
+            // We start the victory music!
+            iMWrap_StartSound(81);
+        }
         
-        // We start the victory music!
-        iMWrap_StartSound(81);
+        packed = iMWrap_PopMarker();
     }
 }
 ```
 This combo is the very essence of iMUSE-style interactive music: the game initiates the change, the music orchestrates it musically to stay in rhythm, then the music hands control back to the game for the next step!
+
+### 4.6. Advanced Example: Perfect Transition with Queues
+
+In complex adventure games, you will often need to execute a batch of musical actions perfectly synchronized with a musical event (like a Hook). This is where the Queue system shines. The following example shows how to manage the musical transition between two rooms:
+
+```c
+// ==========================================
+// When the player enters the room:
+// ==========================================
+function room_Load()
+{
+    // 1. We clear the global queue in case old commands are lingering
+    iMWrap_ClearQueue();
+    
+    // 2. We prepare the sequence of instructions for the master music (MUSIC_BASEROOM):
+    // - We raise marker 64 to signal the state change to the game
+    iMWrap_QueueTrigger(MUSIC_BASEROOM, 64);
+    // - We request the start of the new music (MUSIC_HOLODECK)
+    iMWrap_QueueStartSound(MUSIC_BASEROOM, MUSIC_HOLODECK);
+    
+    // 3. We validate this queue on the master sound
+    iMWrap_CommitQueue(MUSIC_BASEROOM);
+    
+    // 4. We arm the Jump Hook. 
+    // When the base music (MUSIC_BASEROOM) reaches its transition point 
+    // (planned by the composer with JH_BASE_TO_HOLO), it will instantly execute
+    // all the commands we just committed to its Queue!
+    iMWrap_SetJumpHook(MUSIC_BASEROOM, JH_BASE_TO_HOLO);
+    
+    // 5. Fallback case (anti-silence):
+    // If the base music was stopped (for example after loading a save),
+    // we start the new music manually to avoid silence.
+    if (iMWrap_GetActiveSoundCount() == 0)
+    {
+        iMWrap_StartSound(MUSIC_HOLODECK);
+    }
+}
+
+// ==========================================
+// When the player leaves the room (Return):
+// ==========================================
+function room_Leave()
+{
+    // We repeat exactly the same logic, but in reverse!
+    // This time, MUSIC_HOLODECK is the master music of the transition.
+    
+    iMWrap_ClearQueue(); 
+    iMWrap_QueueTrigger(MUSIC_HOLODECK, 64);
+    iMWrap_QueueStartSound(MUSIC_HOLODECK, MUSIC_BASEROOM);
+    iMWrap_CommitQueue(MUSIC_HOLODECK);
+    
+    iMWrap_SetJumpHook(MUSIC_HOLODECK, JH_HOLO_TO_BASE);
+}
+```
+
+This example is very telling: it shows the interaction between the "Hook" which waits for authorization from the score (the right rhythmic moment), and the "Queue" which executes a batch of precise actions at the exact moment of this Hook!
 
 In **Chapter 5**, we will step through the looking glass: how the composer prepares all these interactive elements in their sequencer!

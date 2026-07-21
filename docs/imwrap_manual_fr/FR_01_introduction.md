@@ -1,6 +1,6 @@
 # Chapitre 1 : Introduction à iMWrap et historique d'iMUSE
 
-Bienvenue dans le manuel complet de **iMWrap v6 (version actuelle : 1.0.4)**. Si vous êtes ici, c'est que vous avez probablement une ambition : que la musique de votre jeu réagisse au doigt et à l'œil du joueur, de la même manière que la bande originale d'un film s'adapte à ce qui se passe à l'écran. 
+Bienvenue dans le manuel complet de **iMWrap v6 (version actuelle : 1.0.7)**. Si vous êtes ici, c'est que vous avez probablement une ambition : que la musique de votre jeu réagisse au doigt et à l'œil du joueur, de la même manière que la bande originale d'un film s'adapte à ce qui se passe à l'écran. 
 
 Dans ce chapitre, nous allons démystifier les concepts de base, comprendre d'où vient cette technologie, et voir comment elle s'intègre au moteur d'Adventure Game Studio (AGS).
 

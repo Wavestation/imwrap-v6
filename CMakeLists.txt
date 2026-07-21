@@ -7,9 +7,7 @@ option(IMWRAP_BUILD_GUI_TOOLS "Build imwrap Qt6 GUI tools" ON)
 option(IMWRAP_BUILD_SETMIDI "Build the native Windows SetMIDI utility" ON)
 option(IMWRAP_BUILD_AGS_PLUGIN "Build the AGS runtime plugin" ON)
 option(IMWRAP_BUILD_SHARED_LIB "Build the shared imwrap_v6 library" ON)
-option(IMWRAP_BUILD_SHIM "Build the legacy native imwrap_shim DLL used by wrappers and editor tooling" ON)
 option(IMWRAP_BUILD_VST3_TOOL "Build the VST3 SysEx generator proof of concept" OFF)
-option(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS "Enable optional playback backends in the legacy imwrap_shim" OFF)
 
 set(IMWRAP_QT6_PREFIX_PATH "" CACHE PATH "Optional Qt6 installation prefix")
 set(IMWRAP_FLUIDSYNTH_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/fluidsynth-build" CACHE PATH "Path to the prebuilt FluidSynth build tree used by agsimwrap")
@@ -116,54 +114,11 @@ set(WITH_MIDIDUMP OFF CACHE BOOL "" FORCE)
 set(EXAMPLE_SDL2_AUDIO OFF CACHE BOOL "" FORCE)
 set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
 
+
 add_subdirectory(third_party/libadlmidi)
 
 if(IMWRAP_BUILD_SHARED_LIB)
     target_link_libraries(imwrap_v6_shared PRIVATE ADLMIDI)
-endif()
-
-if(IMWRAP_BUILD_SHIM)
-    add_library(imwrap_shim SHARED
-        legacy-tools/swift-shim/CIMWrapShim.cpp
-    )
-
-    target_include_directories(imwrap_shim PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/legacy-tools/swift-shim/include
-    )
-
-    target_link_libraries(imwrap_shim PRIVATE
-        imwrap_v6
-    )
-
-    set_target_properties(imwrap_shim PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS ON
-    )
-
-    if(IMWRAP_SHIM_ENABLE_EXTERNAL_BACKENDS)
-        target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_ADLIB=1)
-        target_include_directories(imwrap_shim PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libadlmidi/include
-        )
-        target_link_libraries(imwrap_shim PRIVATE ADLMIDI)
-
-        if(EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include/fluidsynth.h" AND EXISTS "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/Release/libfluidsynth-3.lib")
-            target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_FLUIDSYNTH=1)
-            target_include_directories(imwrap_shim PRIVATE
-                ${IMWRAP_FLUIDSYNTH_BUILD_DIR}/include
-            )
-            target_link_libraries(imwrap_shim PRIVATE
-                "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
-                winmm
-                dsound
-                ole32
-                ksuser
-            )
-        endif()
-        target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_MT32EMU=1)
-        target_link_libraries(imwrap_shim PRIVATE mt32emu)
-    endif()
-
-    imwrap_apply_common_target_settings(imwrap_shim)
 endif()
 
 set(WITH_PROFILING OFF CACHE BOOL "" FORCE)
