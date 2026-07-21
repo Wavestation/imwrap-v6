@@ -237,10 +237,12 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   Arme une action asynchrone (Hook) qui s'exécutera au moment voulu par le compositeur. `hookClass` doit utiliser une constante `IMWRAP_HOOK_*`. `hookValue` est l'ID attendu du Hook dans le fichier MIDI (si `0`, le Hook s'active sur le prochain de cette classe inconditionnellement).
   ```c
   // Arme l'attente du Hook de Volume ID 1.
-  // L'action effective (ex: baisser le volume du canal 2 à 50) 
-  // est déjà préprogrammée par le compositeur dans le fichier MIDI !
   iMWrap_SetHook(50, IMWRAP_HOOK_PART_VOLUME, 1, 0);
+  // Équivalent avec le wrapper typé :
+  iMWrap_SetPartVolumeHook(50, 1, 0);
   ```
+  *(Note : des wrappers existent pour chaque type de hook : `iMWrap_SetJumpHook`, `iMWrap_SetGlobalTransposeHook`, etc.)*
+
 
 ---
 

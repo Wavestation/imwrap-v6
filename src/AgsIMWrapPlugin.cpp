@@ -660,8 +660,19 @@ const char *g_iMWrapScriptHeader =
     "import void iMWrap_StopAllSounds();\r\n"
     "import int  iMWrap_IsSoundActive(int soundId);\r\n"
     "import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);\r\n"
+    "import void iMWrap_SetJumpHook(int soundId, int hookId);\r\n"
+    "import void iMWrap_SetGlobalTransposeHook(int soundId, int hookId);\r\n"
+    "import void iMWrap_SetPartOnOffHook(int soundId, int hookId, int channel);\r\n"
+    "import void iMWrap_SetPartVolumeHook(int soundId, int hookId, int channel);\r\n"
+    "import void iMWrap_SetPartProgramHook(int soundId, int hookId, int channel);\r\n"
+    "import void iMWrap_SetPartTransposeHook(int soundId, int hookId, int channel);\r\n"
     "import void iMWrap_QueueTrigger(int soundId, int markerId);\r\n"
     "import void iMWrap_QueueCommand(int soundId, int cmd, int a1=0, int a2=0, int a3=0, int a4=0, int a5=0, int a6=0, int a7=0);\r\n"
+    "import void iMWrap_QueueStartSound(int soundId, int targetSound);\r\n"
+    "import void iMWrap_QueueStopSound(int soundId, int targetSound);\r\n"
+    "import void iMWrap_QueueStopAllSounds(int soundId);\r\n"
+    "import void iMWrap_QueueSetHook(int soundId, int targetSound, int hookType, int hookValue, int channel);\r\n"
+    "import void iMWrap_QueueAddFader(int soundId, int targetSound, int targetVolume, int timeInTicks);\r\n"
     "import void iMWrap_CommitQueue(int soundId);\r\n"
     "import void iMWrap_ClearQueue();\r\n"
     "import void iMWrap_SetMasterVolume(int volume);\r\n"
@@ -1189,6 +1200,30 @@ void Ags_iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChann
     g_Engine.doCommand(5, command);
 }
 
+void Ags_iMWrap_SetJumpHook(int soundId, int hookId) {
+    Ags_iMWrap_SetHook(soundId, 0, hookId, 0);
+}
+
+void Ags_iMWrap_SetGlobalTransposeHook(int soundId, int hookId) {
+    Ags_iMWrap_SetHook(soundId, 1, hookId, 0);
+}
+
+void Ags_iMWrap_SetPartOnOffHook(int soundId, int hookId, int channel) {
+    Ags_iMWrap_SetHook(soundId, 2, hookId, channel);
+}
+
+void Ags_iMWrap_SetPartVolumeHook(int soundId, int hookId, int channel) {
+    Ags_iMWrap_SetHook(soundId, 3, hookId, channel);
+}
+
+void Ags_iMWrap_SetPartProgramHook(int soundId, int hookId, int channel) {
+    Ags_iMWrap_SetHook(soundId, 4, hookId, channel);
+}
+
+void Ags_iMWrap_SetPartTransposeHook(int soundId, int hookId, int channel) {
+    Ags_iMWrap_SetHook(soundId, 5, hookId, channel);
+}
+
 void Ags_iMWrap_QueueTrigger(int soundId, int markerId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     const int16_t command[] = {
@@ -1209,6 +1244,26 @@ void Ags_iMWrap_QueueCommand(int soundId, int cmd, int a1, int a2, int a3, int a
         static_cast<int16_t>(a6), static_cast<int16_t>(a7)
     };
     g_Engine.doCommand(10, args);
+}
+
+void Ags_iMWrap_QueueStartSound(int soundId, int targetSound) {
+    Ags_iMWrap_QueueCommand(soundId, 8, targetSound, 0, 0, 0, 0, 0, 0);
+}
+
+void Ags_iMWrap_QueueStopSound(int soundId, int targetSound) {
+    Ags_iMWrap_QueueCommand(soundId, 9, targetSound, 0, 0, 0, 0, 0, 0);
+}
+
+void Ags_iMWrap_QueueStopAllSounds(int soundId) {
+    Ags_iMWrap_QueueCommand(soundId, 10, 0, 0, 0, 0, 0, 0, 0);
+}
+
+void Ags_iMWrap_QueueSetHook(int soundId, int targetSound, int hookType, int hookValue, int channel) {
+    Ags_iMWrap_QueueCommand(soundId, 268, targetSound, hookType, hookValue, channel, 0, 0, 0);
+}
+
+void Ags_iMWrap_QueueAddFader(int soundId, int targetSound, int targetVolume, int timeInTicks) {
+    Ags_iMWrap_QueueCommand(soundId, 269, targetSound, targetVolume, timeInTicks, 0, 0, 0, 0);
 }
 
 void Ags_iMWrap_CommitQueue(int soundId) {
@@ -1661,8 +1716,19 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMWrap_StopAllSounds", (void*)Ags_iMWrap_StopAllSounds);
     g_AgsEngine->RegisterScriptFunction("iMWrap_IsSoundActive", (void*)Ags_iMWrap_IsSoundActive);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetHook", (void*)Ags_iMWrap_SetHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetJumpHook", (void*)Ags_iMWrap_SetJumpHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetGlobalTransposeHook", (void*)Ags_iMWrap_SetGlobalTransposeHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetPartOnOffHook", (void*)Ags_iMWrap_SetPartOnOffHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetPartVolumeHook", (void*)Ags_iMWrap_SetPartVolumeHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetPartProgramHook", (void*)Ags_iMWrap_SetPartProgramHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetPartTransposeHook", (void*)Ags_iMWrap_SetPartTransposeHook);
     g_AgsEngine->RegisterScriptFunction("iMWrap_QueueTrigger", (void*)Ags_iMWrap_QueueTrigger);
     g_AgsEngine->RegisterScriptFunction("iMWrap_QueueCommand", (void*)Ags_iMWrap_QueueCommand);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_QueueStartSound", (void*)Ags_iMWrap_QueueStartSound);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_QueueStopSound", (void*)Ags_iMWrap_QueueStopSound);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_QueueStopAllSounds", (void*)Ags_iMWrap_QueueStopAllSounds);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_QueueSetHook", (void*)Ags_iMWrap_QueueSetHook);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_QueueAddFader", (void*)Ags_iMWrap_QueueAddFader);
     g_AgsEngine->RegisterScriptFunction("iMWrap_CommitQueue", (void*)Ags_iMWrap_CommitQueue);
     g_AgsEngine->RegisterScriptFunction("iMWrap_ClearQueue", (void*)Ags_iMWrap_ClearQueue);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetMasterVolume", (void*)Ags_iMWrap_SetMasterVolume);

@@ -244,10 +244,12 @@ These constants are available throughout your scripts to configure the audio dri
   Arms an asynchronous action (Hook) that will be executed at the moment chosen by the composer. `hookClass` must use an `IMWRAP_HOOK_*` constant. `hookValue` is the expected ID of the Hook in the MIDI file (if `0`, the Hook triggers on the next one of this class unconditionally).
   ```c
   // Arms the wait for the Volume Hook with ID 1.
-  // The actual action (e.g. lowering channel 2's volume to 50) 
-  // is ALREADY pre-programmed by the composer in the MIDI file!
   iMWrap_SetHook(50, IMWRAP_HOOK_PART_VOLUME, 1, 0);
+  // Equivalent with the typed wrapper:
+  iMWrap_SetPartVolumeHook(50, 1, 0);
   ```
+  *(Note: wrappers exist for each hook type: `iMWrap_SetJumpHook`, `iMWrap_SetGlobalTransposeHook`, etc.)*
+
 
     }
     `

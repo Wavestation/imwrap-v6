@@ -61,6 +61,27 @@ import int  iMWrap_IsSoundActive(int soundId);
 // - hookChannel : Canal MIDI cible
 import void iMWrap_SetHook(int soundId, int hookClass, int hookValue, int hookChannel);
 
+// Wrappers simplifiés pour les Hooks
+import void iMWrap_SetJumpHook(int soundId, int hookId);
+import void iMWrap_SetGlobalTransposeHook(int soundId, int hookId);
+import void iMWrap_SetPartOnOffHook(int soundId, int hookId, int channel);
+import void iMWrap_SetPartVolumeHook(int soundId, int hookId, int channel);
+import void iMWrap_SetPartProgramHook(int soundId, int hookId, int channel);
+import void iMWrap_SetPartTransposeHook(int soundId, int hookId, int channel);
+
+// File d'attente (Queue)
+import void iMWrap_QueueTrigger(int soundId, int markerId);
+import void iMWrap_QueueCommand(int soundId, int cmd, int a1=0, int a2=0, int a3=0, int a4=0, int a5=0, int a6=0, int a7=0);
+import void iMWrap_CommitQueue(int soundId);
+import void iMWrap_ClearQueue();
+
+// Wrappers simplifiés pour la File d'attente
+import void iMWrap_QueueStartSound(int soundId, int targetSound);
+import void iMWrap_QueueStopSound(int soundId, int targetSound);
+import void iMWrap_QueueStopAllSounds(int soundId);
+import void iMWrap_QueueSetHook(int soundId, int targetSound, int hookType, int hookValue, int channel);
+import void iMWrap_QueueAddFader(int soundId, int targetSound, int targetVolume, int timeInTicks);
+
 // --- CONTRÔLE GLOBAL DU LECTEUR ---
 
 // Modifie le volume maître de la bibliothèque (0 à 127)
