@@ -159,36 +159,16 @@ if(IMWRAP_BUILD_SHIM)
                 ksuser
             )
         endif()
-
-        find_path(IMWRAP_MT32EMU_INCLUDE_DIR
-            NAMES mt32emu.h
-            PATHS
-                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/include
-            NO_DEFAULT_PATH
-        )
-        find_library(IMWRAP_MT32EMU_LIBRARY
-            NAMES mt32emu libmt32emu
-            PATHS
-                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build
-                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/Release
-                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/lib
-                ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mt32emu-build/lib/Release
-            NO_DEFAULT_PATH
-        )
-
-        if(IMWRAP_MT32EMU_INCLUDE_DIR AND IMWRAP_MT32EMU_LIBRARY)
-            target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_MT32EMU=1)
-            target_include_directories(imwrap_shim PRIVATE
-                ${IMWRAP_MT32EMU_INCLUDE_DIR}
-            )
-            target_link_libraries(imwrap_shim PRIVATE
-                ${IMWRAP_MT32EMU_LIBRARY}
-            )
-        endif()
+        target_compile_definitions(imwrap_shim PRIVATE IMWRAP_SHIM_WITH_MT32EMU=1)
+        target_link_libraries(imwrap_shim PRIVATE mt32emu)
     endif()
 
     imwrap_apply_common_target_settings(imwrap_shim)
 endif()
+
+set(WITH_PROFILING OFF CACHE BOOL "" FORCE)
+set(libmt32emu_SHARED OFF CACHE BOOL "" FORCE)
+add_subdirectory(third_party/munt/mt32emu EXCLUDE_FROM_ALL)
 
 if(IMWRAP_BUILD_AGS_PLUGIN)
     if(NOT EMSCRIPTEN)
@@ -255,6 +235,7 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
             imwrap_v6 
             ADLMIDI 
             libfluidsynth
+            mt32emu
             "${CMAKE_CURRENT_SOURCE_DIR}/third_party/libsndfile/build-wasm/libsndfile.a"
             "-sUSE_OGG=1"
             "-sUSE_VORBIS=1"
@@ -263,6 +244,7 @@ if(IMWRAP_BUILD_AGS_PLUGIN)
         target_link_libraries(agsimwrap PRIVATE
             imwrap_v6
             ADLMIDI
+            mt32emu
             "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/src/$<CONFIG>/libfluidsynth-3.lib"
             "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/sndfile.lib"
             "${IMWRAP_FLUIDSYNTH_BUILD_DIR}/lib/vorbis.lib"

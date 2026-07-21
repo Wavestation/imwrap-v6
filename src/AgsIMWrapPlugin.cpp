@@ -124,6 +124,8 @@ EM_JS(void, JS_WebMIDI_SendSysEx, (int dataPtr, int size), {
 
 #include <fluidsynth.h>
 #include <adlmidi.h>
+#define MT32EMU_API_TYPE 1
+#include <mt32emu.h>
 #include "imwrap/IMWrapEngine.h"
 #include "imwrap/ResourceBank.h"
 
@@ -145,7 +147,8 @@ enum class IMWrapDriverType : int {
     FluidSynth = 0,
     AdLib = 1,
     HardwareGM = 2,
-    HardwareMT32 = 3
+    HardwareMT32 = 3,
+    MuntEmu = 4
 };
 
 struct AgsFluidSynthMidiSink final : imwrap::MidiSink {
@@ -325,6 +328,41 @@ struct AgsAdlibMidiSink final : imwrap::MidiSink {
         }
     }
 };
+
+struct AgsMuntMidiSink final : imwrap::MidiSink {
+    mt32emu_context context = nullptr;
+
+    void onMidiMessage(uint16_t, uint8_t status, uint8_t data1, bool hasData2, uint8_t data2) override {
+        if (!context) return;
+        uint32_t msg = status | (data1 << 8) | (hasData2 ? (data2 << 16) : 0);
+        mt32emu_play_msg(context, msg);
+    }
+
+    void onSysEx(uint16_t, imwrap::ByteView message) override {
+        if (!context) return;
+        std::vector<uint8_t> sysex;
+        if (!message.empty() && message.data()[0] == 0xF0) {
+            sysex.assign(message.data(), message.data() + message.size());
+        } else {
+            sysex.push_back(0xF0);
+            sysex.insert(sysex.end(), message.data(), message.data() + message.size());
+        }
+        if (sysex.empty() || sysex.back() != 0xF7) {
+            sysex.push_back(0xF7);
+        }
+        mt32emu_play_sysex(context, sysex.data(), static_cast<uint32_t>(sysex.size()));
+    }
+
+    void onAllNotesOff() override {
+        if (!context) return;
+        for (uint8_t chan = 0; chan < 16; ++chan) {
+            mt32emu_play_msg(context, 0xB0 | chan | (120 << 8)); // All Sound Off
+            mt32emu_play_msg(context, 0xB0 | chan | (123 << 8)); // All Notes Off
+            mt32emu_play_msg(context, 0xB0 | chan | (121 << 8)); // Reset All Controllers
+        }
+    }
+};
+
 struct HardwareMidiOutSink final : imwrap::MidiSink {
 #if defined(_WIN32)
     HMIDIOUT hMidiOut = nullptr;
@@ -582,6 +620,12 @@ fluid_settings_t *g_FluidSettings = nullptr;
 fluid_synth_t *g_FluidSynth = nullptr;
 std::string g_FluidTempSoundFontPath;
 struct ADL_MIDIPlayer *g_AdlPlayer = nullptr;
+
+mt32emu_context g_MuntCtx = nullptr;
+std::string g_MuntTempControlRomPath;
+std::string g_MuntTempPcmRomPath;
+AgsMuntMidiSink g_MuntMidiSink;
+
 IMWrapDriverType g_IMWrapDriverType = IMWrapDriverType::FluidSynth;
 bool g_LoggingEnabled = false;
 bool g_FluidDynLoading = false;
@@ -870,6 +914,22 @@ void CleanupCurrentDriver() {
     g_Engine.setMidiSink(nullptr);
     g_FluidMidiSink.synth = nullptr;
     g_AdlMidiSink.player = nullptr;
+    g_MuntMidiSink.context = nullptr;
+
+    if (g_MuntCtx) {
+        mt32emu_free_context(g_MuntCtx);
+        g_MuntCtx = nullptr;
+    }
+    if (!g_MuntTempControlRomPath.empty()) {
+        std::error_code ec;
+        std::filesystem::remove(std::filesystem::path(g_MuntTempControlRomPath), ec);
+        g_MuntTempControlRomPath.clear();
+    }
+    if (!g_MuntTempPcmRomPath.empty()) {
+        std::error_code ec;
+        std::filesystem::remove(std::filesystem::path(g_MuntTempPcmRomPath), ec);
+        g_MuntTempPcmRomPath.clear();
+    }
 
     if (g_FluidSynth) {
         delete_fluid_synth(g_FluidSynth);
@@ -914,6 +974,8 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
                                 pOutputFloat,
                                 1,
                                 2);
+    } else if (g_IMWrapDriverType == IMWrapDriverType::MuntEmu && g_MuntCtx) {
+        mt32emu_render_float(g_MuntCtx, pOutputFloat, static_cast<uint32_t>(frameCount));
     } else if (g_IMWrapDriverType == IMWrapDriverType::AdLib && g_AdlPlayer) {
         ADLMIDI_AudioFormat format;
         format.type = ADLMIDI_SampleType_F32;
@@ -1053,6 +1115,80 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                 } else {
                     delete_fluid_settings(g_FluidSettings);
                     g_FluidSettings = nullptr;
+                }
+            }
+        }
+        break;
+    }
+    case IMWrapDriverType::MuntEmu: {
+        g_Engine.setNativeMt32Output(true);
+        g_Engine.setTargetProfile(imwrap::TargetProfile::Mt32);
+
+        if (deviceOrPath && deviceOrPath[0] != '\0') {
+            std::string paths(deviceOrPath);
+            size_t pipePos = paths.find('|');
+            std::string ctrlRom;
+            std::string pcmRom;
+            
+            if (pipePos != std::string::npos) {
+                ctrlRom = paths.substr(0, pipePos);
+                pcmRom = paths.substr(pipePos + 1);
+            } else {
+                if (g_AgsEngine) {
+                    IMWrapLog("iMWrap Error: MuntEmu requires two ROMs separated by a pipe '|'.");
+                }
+                break;
+            }
+
+            std::string ctrlResolved = ctrlRom;
+            ResolveAgsPath(ctrlRom.c_str(), &ctrlResolved);
+            std::string pcmResolved = pcmRom;
+            ResolveAgsPath(pcmRom.c_str(), &pcmResolved);
+
+            std::string ctrlTemp;
+            std::string pcmTemp;
+            std::string err;
+
+            bool ctrlOk = ExtractAgsFileToTemp(ctrlRom.c_str(), ctrlResolved.c_str(), &ctrlTemp, &err);
+            if (!ctrlOk && PathExists(ctrlResolved)) {
+                ctrlTemp = ctrlResolved;
+                ctrlOk = true;
+            }
+            
+            bool pcmOk = ExtractAgsFileToTemp(pcmRom.c_str(), pcmResolved.c_str(), &pcmTemp, &err);
+            if (!pcmOk && PathExists(pcmResolved)) {
+                pcmTemp = pcmResolved;
+                pcmOk = true;
+            }
+
+            if (ctrlOk && pcmOk) {
+                mt32emu_report_handler_i reportHandler = { nullptr };
+                g_MuntCtx = mt32emu_create_context(reportHandler, nullptr);
+                if (g_MuntCtx) {
+                    mt32emu_add_rom_file(g_MuntCtx, ctrlTemp.c_str());
+                    mt32emu_add_rom_file(g_MuntCtx, pcmTemp.c_str());
+                    mt32emu_set_stereo_output_samplerate(g_MuntCtx, 44100.0);
+                    if (mt32emu_open_synth(g_MuntCtx) == MT32EMU_RC_OK) {
+                        g_MuntTempControlRomPath = (ctrlTemp != ctrlResolved) ? ctrlTemp : "";
+                        g_MuntTempPcmRomPath = (pcmTemp != pcmResolved) ? pcmTemp : "";
+                        g_MuntMidiSink.context = g_MuntCtx;
+                        g_Engine.setMidiSink(&g_MuntMidiSink);
+                        g_MuntMidiSink.onAllNotesOff();
+                        if (g_AgsEngine) {
+                            IMWrapLog("iMWrap: MuntEmu initialized successfully.");
+                        }
+                    } else {
+                        mt32emu_free_context(g_MuntCtx);
+                        g_MuntCtx = nullptr;
+                        if (g_AgsEngine) {
+                            IMWrapLog("iMWrap Error: MuntEmu failed to open synth (missing ROMs?).");
+                        }
+                    }
+                }
+            } else {
+                if (g_AgsEngine) {
+                    std::string msg = "iMWrap Error: Failed to extract Munt ROMs: " + err;
+                    IMWrapLog(msg.c_str());
                 }
             }
         }
@@ -1792,6 +1928,8 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
         Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::HardwareGM), "");
     } else if (jsChoice == 2) {
         Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::HardwareMT32), "");
+    } else if (jsChoice == 3) {
+        Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::MuntEmu), "");
     } else {
         // Explicitly initialize FluidSynth to ensure the driver is active
         Ags_iMWrap_SetDriver(static_cast<int>(IMWrapDriverType::FluidSynth), "");
