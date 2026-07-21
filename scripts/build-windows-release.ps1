@@ -180,7 +180,7 @@ $x64ConfigureArguments = @(
     "-A", "x64",
     "-DCMAKE_PREFIX_PATH=$QtPrefixPath",
     "-DIMWRAP_QT6_PREFIX_PATH=$QtPrefixPath",
-    "-DIMWRAP_BUILD_GUI_TOOLS=OFF",
+    "-DIMWRAP_BUILD_GUI_TOOLS=ON",
     "-DIMWRAP_BUILD_AGS_PLUGIN=OFF",
     "-DIMWRAP_BUILD_SHARED_LIB=ON"
 )
@@ -207,11 +207,14 @@ $x64Targets = @(
     "imwrappack",
     "imsprobe",
     "imwrap_setmidi",
-    "ims2soun"
+    "ims2soun",
+    "imwrap_explorer_gui",
+    "imwrap_packer_gui",
+    "imwrap_player_gui"
 )
 
 if (-not [string]::IsNullOrWhiteSpace($Vst3SdkDir)) {
-    $x64Targets += "imwrap_sysex_tool"
+    $x64Targets += "imwrap_sysex_gui"
 }
 
 Invoke-CMakeBuild -BuildDir $X64BuildDir -Targets $x64Targets
