@@ -726,6 +726,7 @@ const char *g_iMWrapScriptHeader =
     "import void iMWrap_SetSoundTranspose(int soundId, int relative, int transpose);\r\n"
     "import void iMWrap_SetSoundSpeed(int soundId, int speed);\r\n"
     "import void iMWrap_SetSoundPriority(int soundId, int priority);\r\n"
+    "import void iMWrap_SetSoundDetune(int soundId, int detune);\r\n"
     "import void iMWrap_SetPartVolume(int soundId, int channel, int volume);\r\n"
     "import void iMWrap_SetPartOnOff(int soundId, int channel, int onOff);\r\n"
     "import void iMWrap_Jump(int soundId, int track, int beat, int tick);\r\n"
@@ -1440,6 +1441,12 @@ void Ags_iMWrap_SetSoundPan(int soundId, int pan) {
     g_Engine.doCommand(3, args);
 }
 
+void Ags_iMWrap_SetSoundDetune(int soundId, int detune) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    int16_t args[3] = {0x0105, static_cast<int16_t>(soundId), static_cast<int16_t>(detune)};
+    g_Engine.doCommand(3, args);
+}
+
 void Ags_iMWrap_SetSoundTranspose(int soundId, int relative, int transpose) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     int16_t args[4] = {0x0104, static_cast<int16_t>(soundId), static_cast<int16_t>(relative), static_cast<int16_t>(transpose)};
@@ -1891,6 +1898,7 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundVolume", (void*)Ags_iMWrap_SetSoundVolume);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundPan", (void*)Ags_iMWrap_SetSoundPan);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundTranspose", (void*)Ags_iMWrap_SetSoundTranspose);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundDetune", (void*)Ags_iMWrap_SetSoundDetune);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundSpeed", (void*)Ags_iMWrap_SetSoundSpeed);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSoundPriority", (void*)Ags_iMWrap_SetSoundPriority);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetPartVolume", (void*)Ags_iMWrap_SetPartVolume);

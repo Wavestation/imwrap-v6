@@ -848,12 +848,7 @@ void IMWrapEngine::sendPartTranspose(ActiveSound *sound, PartState *part) {
 }
 
 void IMWrapEngine::sendPartDetune(ActiveSound *sound, PartState *part) {
-    if (!sound || !part || part->percussion || part->outputChannel < 0 || !_midiSink) {
-        return;
-    }
-
-    SinkMidiChannel channel(_midiSink, sound->soundId, static_cast<uint8_t>(part->outputChannel));
-    channel.detune(part->detuneEffective);
+    applyPartPitchBend(sound, part);
 }
 
 void IMWrapEngine::sendPartPanPosition(ActiveSound *sound, PartState *part, uint8_t value) {
@@ -919,7 +914,7 @@ void IMWrapEngine::applyPartPitchBend(ActiveSound *sound, PartState *part) {
         return;
     }
 
-    int bend = ClampInt(static_cast<int>(part->pitchBend) + 0x2000, 0, 0x3FFF);
+    int bend = ClampInt(static_cast<int>(part->pitchBend) + (part->detuneEffective * 64) + 0x2000, 0, 0x3FFF);
     emitPartMidiMessage(sound,
                         part,
                         0xE0,
@@ -2667,7 +2662,7 @@ bool IMWrapEngine::startSound(uint16_t soundId) {
     active.pan = static_cast<int8_t>(ClampInt(active.variant.mdhd.pan, -128, 127));
     active.transpose = active.variant.mdhd.transpose;
     active.detune = active.variant.mdhd.detune;
-    active.speed = active.variant.mdhd.speed;
+    active.speed = active.variant.mdhd.speed ? active.variant.mdhd.speed : 128;
     active.volChan = kDefaultVolChan;
     active.hook.reset();
     active.pendingImmediateEvents = true;
@@ -2785,7 +2780,7 @@ double IMWrapEngine::transportTicksPerSecond() const {
     const ActiveSound &sound = _activeSounds.begin()->second;
     const uint32_t tempo = sound.tempoMicrosPerQuarter ? sound.tempoMicrosPerQuarter : 500000;
     const double base = (static_cast<double>(ticksPerBeat(sound)) * 1000000.0) / static_cast<double>(tempo);
-    const double speedScale = static_cast<double>(sound.speed ? sound.speed : 128) / 128.0;
+    const double speedScale = static_cast<double>(sound.speed) / 128.0;
     return base * speedScale;
 }
 
@@ -2825,7 +2820,7 @@ void IMWrapEngine::advanceMicroseconds(uint32_t deltaMicros) {
 
         const uint32_t tempo = sound->tempoMicrosPerQuarter ? sound->tempoMicrosPerQuarter : 500000;
         const double base = (static_cast<double>(ticksPerBeat(*sound)) * 1000000.0) / static_cast<double>(tempo);
-        const double speedScale = static_cast<double>(sound->speed ? sound->speed : 128) / 128.0;
+        const double speedScale = static_cast<double>(sound->speed) / 128.0;
         const double tps = base * speedScale;
 
         const double ticks = (tps * elapsedSeconds) + sound->tickAccumulator;
@@ -3107,6 +3102,7 @@ int IMWrapEngine::dispatchPlayerCommand(uint8_t cmd, uint16_t argc, const int16_
         for (PartState &part : sound->parts) {
             if (part.initialized) {
                 part.detuneEffective = static_cast<int16_t>(ClampInt(part.detune + sound->detune, -128, 127));
+                sendPartDetune(sound, &part);
             }
         }
         return 0;
