@@ -127,6 +127,10 @@ Namespace AgsIMWrap
         Public Shared Function EngineGetSoundStatus(ByVal handle As IntPtr, ByVal soundId As UShort) As Integer
         End Function
 
+        <DllImport(DLL_NAME, EntryPoint:="imwrap_engine_get_sound_param", CallingConvention:=CallingConvention.Cdecl)>
+        Public Shared Function EngineGetSoundParam(ByVal handle As IntPtr, ByVal soundId As UShort, ByVal param As Integer, ByVal channel As Byte) As Integer
+        End Function
+
         <DllImport(DLL_NAME, EntryPoint:="imwrap_engine_active_sound_count", CallingConvention:=CallingConvention.Cdecl)>
         Public Shared Function EngineActiveSoundCount(ByVal handle As IntPtr) As UIntPtr
         End Function

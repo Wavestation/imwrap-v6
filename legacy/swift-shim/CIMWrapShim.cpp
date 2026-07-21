@@ -579,6 +579,15 @@ int imwrap_engine_get_sound_status(const IMWrapEngineHandle *handle, uint16_t so
     return handle ? handle->engine.getSoundStatus(soundId) : 0;
 }
 
+int imwrap_engine_get_sound_param(const IMWrapEngineHandle *handle, uint16_t soundId, int param, uint8_t channel) {
+    if (handle) {
+        if (const imwrap::ActiveSound* snd = handle->engine.findActiveSound(soundId)) {
+            return handle->engine.getSoundParam(*snd, param, channel);
+        }
+    }
+    return -1;
+}
+
 size_t imwrap_engine_active_sound_count(const IMWrapEngineHandle *handle) {
     return handle ? handle->engine.activeSoundIds().size() : 0;
 }

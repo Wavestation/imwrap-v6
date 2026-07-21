@@ -73,6 +73,7 @@ public:
     void stopAllSounds();
     bool isSoundActive(uint16_t soundId) const;
     int getSoundStatus(uint16_t soundId) const;
+    int getSoundParam(uint16_t soundId, int param, uint8_t chan) const;
     std::vector<uint16_t> activeSoundIds() const;
     bool getPlaybackLocation(uint16_t soundId, uint16_t *track, uint16_t *beat, uint16_t *tick) const;
     uint32_t currentTempoMicrosPerQuarter() const;

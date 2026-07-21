@@ -106,6 +106,9 @@ namespace AgsIMWrap
         [DllImport(DLL_NAME, EntryPoint = "imwrap_engine_get_sound_status", CallingConvention = CallingConvention.Cdecl)]
         public static extern int EngineGetSoundStatus(IntPtr handle, ushort soundId);
 
+        [DllImport(DLL_NAME, EntryPoint = "imwrap_engine_get_sound_param", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int EngineGetSoundParam(IntPtr handle, ushort soundId, int param, byte channel);
+
         [DllImport(DLL_NAME, EntryPoint = "imwrap_engine_active_sound_count", CallingConvention = CallingConvention.Cdecl)]
         public static extern UIntPtr EngineActiveSoundCount(IntPtr handle);
 

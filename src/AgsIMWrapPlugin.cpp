@@ -737,6 +737,7 @@ const char *g_iMWrapScriptHeader =
     "import int  iMWrap_GetPlaybackBeat(int soundId);\r\n"
     "import int  iMWrap_GetPlaybackTick(int soundId);\r\n"
     "import int  iMWrap_GetSoundStatus(int soundId);\r\n"
+    "import int  iMWrap_GetSoundParam(int soundId, int param, int channel);\r\n"
     "import int  iMWrap_GetActiveSoundCount();\r\n"
     "import int  iMWrap_GetActiveSoundId(int index);\r\n"
     "import int  iMWrap_GetTempo();\r\n"
@@ -1537,6 +1538,11 @@ int Ags_iMWrap_GetSoundStatus(int soundId) {
     return g_Engine.getSoundStatus(static_cast<uint16_t>(soundId));
 }
 
+int Ags_iMWrap_GetSoundParam(int soundId, int param, int channel) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    return g_Engine.getSoundParam(static_cast<uint16_t>(soundId), param, static_cast<uint8_t>(channel));
+}
+
 int Ags_iMWrap_GetActiveSoundCount() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     return static_cast<int>(g_Engine.activeSoundIds().size());
@@ -1873,6 +1879,7 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetPlaybackBeat", (void*)Ags_iMWrap_GetPlaybackBeat);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetPlaybackTick", (void*)Ags_iMWrap_GetPlaybackTick);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetSoundStatus", (void*)Ags_iMWrap_GetSoundStatus);
+    g_AgsEngine->RegisterScriptFunction("iMWrap_GetSoundParam", (void*)Ags_iMWrap_GetSoundParam);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetActiveSoundCount", (void*)Ags_iMWrap_GetActiveSoundCount);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetActiveSoundId", (void*)Ags_iMWrap_GetActiveSoundId);
     g_AgsEngine->RegisterScriptFunction("iMWrap_GetTempo", (void*)Ags_iMWrap_GetTempo);

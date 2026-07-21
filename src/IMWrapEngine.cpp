@@ -96,11 +96,11 @@ void DebugMidiPrintf(const char *fmt, ...) {
 
 void IMWrapEngine::HookState::reset() {
     jump = {{0xFF, 0xFF}};
-    transpose = 0xFF;
-    partOnOff.fill(0xFF);
-    partVolume.fill(0xFF);
-    partProgram.fill(0xFF);
-    partTranspose.fill(0xFF);
+    transpose = 0;
+    partOnOff.fill(0);
+    partVolume.fill(0);
+    partProgram.fill(0);
+    partTranspose.fill(0);
 }
 
 void IMWrapEngine::MidiChannelState::reset() {
@@ -2142,25 +2142,25 @@ bool IMWrapEngine::dispatchTrackTick(uint16_t soundId) {
                 } else if (pe->dummy.type == IMWrapSysexType::HookJump) {
                     activates = (sound->hook.jump[0] == 0xFF || sound->hook.jump[0] == cmd);
                 } else {
-                    activates = (sound->hook.transpose == 0xFF || sound->hook.transpose == cmd);
+                    activates = (sound->hook.transpose == cmd);
                 }
             } else {
-                if (pe->dummy.hasChannel && pe->dummy.channel < sound->parts.size()) {
+                if (pe->dummy.hasChannel && pe->dummy.channel < sound->hook.partOnOff.size()) {
                     if (cmd == 0 || cmd >= 0x80) {
                         activates = true;
                     } else {
                         switch (pe->dummy.type) {
                             case IMWrapSysexType::HookPartOnOff:
-                                activates = (sound->hook.partOnOff[targetChannel] == 0xFF || sound->hook.partOnOff[targetChannel] == cmd);
+                                activates = (sound->hook.partOnOff[targetChannel] == cmd);
                                 break;
                             case IMWrapSysexType::HookSetVolume:
-                                activates = (sound->hook.partVolume[targetChannel] == 0xFF || sound->hook.partVolume[targetChannel] == cmd);
+                                activates = (sound->hook.partVolume[targetChannel] == cmd);
                                 break;
                             case IMWrapSysexType::HookSetProgram:
-                                activates = (sound->hook.partProgram[targetChannel] == 0xFF || sound->hook.partProgram[targetChannel] == cmd);
+                                activates = (sound->hook.partProgram[targetChannel] == cmd);
                                 break;
                             case IMWrapSysexType::HookSetTranspose:
-                                activates = (sound->hook.partTranspose[targetChannel] == 0xFF || sound->hook.partTranspose[targetChannel] == cmd);
+                                activates = (sound->hook.partTranspose[targetChannel] == cmd);
                                 break;
                             default: break;
                         }
@@ -2333,50 +2333,62 @@ bool IMWrapEngine::executeControlEvent(uint16_t soundId, const IMWrapControlEven
             return true;
         }
         if (event.hookCommand != 0 && event.hookCommand < 0x80) {
-            sound->hook.transpose = 0xFF;
+            sound->hook.transpose = 0;
         }
         return setSoundTranspose(sound, event.relative ? 1 : 0, event.signedValue) == 0;
     case IMWrapSysexType::HookPartOnOff:
-        if (event.hasChannel && event.channel < sound->parts.size()) {
-            if (event.hookCommand && sound->hook.partOnOff[event.channel] != 0 && sound->hook.partOnOff[event.channel] != event.hookCommand) {
-                return true;
-            }
-            if (event.hookCommand != 0 && event.hookCommand < 0x80) {
-                sound->hook.partOnOff[event.channel] = 0xFF;
-            }
+        if (!event.hasChannel || event.channel >= sound->hook.partOnOff.size()) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80 && sound->hook.partOnOff[event.channel] != event.hookCommand) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80) {
+            sound->hook.partOnOff[event.channel] = 0;
+        }
+        if (event.channel < sound->parts.size()) {
             partSetOnOff(sound, event.channel, event.value != 0);
         }
         return true;
     case IMWrapSysexType::HookSetVolume:
-        if (event.hasChannel && event.channel < sound->parts.size()) {
-            if (event.hookCommand && sound->hook.partVolume[event.channel] != 0 && sound->hook.partVolume[event.channel] != event.hookCommand) {
-                return true;
-            }
-            if (event.hookCommand != 0 && event.hookCommand < 0x80) {
-                sound->hook.partVolume[event.channel] = 0xFF;
-            }
+        if (!event.hasChannel || event.channel >= sound->hook.partVolume.size()) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80 && sound->hook.partVolume[event.channel] != event.hookCommand) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80) {
+            sound->hook.partVolume[event.channel] = 0;
+        }
+        if (event.channel < sound->parts.size()) {
             partSetVolume(sound, event.channel, event.value);
         }
         return true;
     case IMWrapSysexType::HookSetProgram:
-        if (event.hasChannel && event.channel < sound->parts.size()) {
-            if (event.hookCommand && sound->hook.partProgram[event.channel] != 0 && sound->hook.partProgram[event.channel] != event.hookCommand) {
-                return true;
-            }
-            if (event.hookCommand != 0 && event.hookCommand < 0x80) {
-                sound->hook.partProgram[event.channel] = 0xFF;
-            }
+        if (!event.hasChannel || event.channel >= sound->hook.partProgram.size()) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80 && sound->hook.partProgram[event.channel] != event.hookCommand) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80) {
+            sound->hook.partProgram[event.channel] = 0;
+        }
+        if (event.channel < sound->parts.size()) {
             partSetProgram(sound, event.channel, event.value);
         }
         return true;
     case IMWrapSysexType::HookSetTranspose:
-        if (event.hasChannel && event.channel < sound->parts.size()) {
-            if (event.hookCommand && sound->hook.partTranspose[event.channel] != 0 && sound->hook.partTranspose[event.channel] != event.hookCommand) {
-                return true;
-            }
-            if (event.hookCommand != 0 && event.hookCommand < 0x80) {
-                sound->hook.partTranspose[event.channel] = 0xFF;
-            }
+        if (!event.hasChannel || event.channel >= sound->hook.partTranspose.size()) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80 && sound->hook.partTranspose[event.channel] != event.hookCommand) {
+            return true;
+        }
+        if (event.hookCommand != 0 && event.hookCommand < 0x80) {
+            sound->hook.partTranspose[event.channel] = 0;
+        }
+        if (event.channel < sound->parts.size()) {
             int value = event.signedValue;
             if (event.relative) {
                 const PartState *part = getPart(sound, event.channel);
@@ -2720,6 +2732,13 @@ int IMWrapEngine::getSoundStatus(uint16_t soundId) const {
     }
 
     return 0;
+}
+
+int IMWrapEngine::getSoundParam(uint16_t soundId, int param, uint8_t chan) const {
+    if (const ActiveSound* snd = findActiveSound(soundId)) {
+        return getSoundParam(*snd, param, chan);
+    }
+    return -1;
 }
 
 std::vector<uint16_t> IMWrapEngine::activeSoundIds() const {

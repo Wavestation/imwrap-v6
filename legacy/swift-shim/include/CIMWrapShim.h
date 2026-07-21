@@ -60,6 +60,7 @@ void imwrap_engine_stop_all(IMWrapEngineHandle *handle);
 void imwrap_engine_advance(IMWrapEngineHandle *handle, uint32_t deltaTicks);
 double imwrap_engine_ticks_per_second(const IMWrapEngineHandle *handle);
 int imwrap_engine_get_sound_status(const IMWrapEngineHandle *handle, uint16_t soundId);
+int imwrap_engine_get_sound_param(const IMWrapEngineHandle *handle, uint16_t soundId, int param, uint8_t channel);
 size_t imwrap_engine_active_sound_count(const IMWrapEngineHandle *handle);
 uint16_t imwrap_engine_active_sound_id_at(const IMWrapEngineHandle *handle, size_t index);
 int imwrap_engine_get_location(const IMWrapEngineHandle *handle, uint16_t soundId, uint16_t *track, uint16_t *beat, uint16_t *tick);
