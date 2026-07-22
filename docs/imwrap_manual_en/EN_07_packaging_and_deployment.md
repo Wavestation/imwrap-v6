@@ -37,8 +37,8 @@ In this example:
 
 *(The supported variants are mainly `gmd` and `rol`.)*
 
-> [!CAUTION]
-> The utility expects .mid files in **SMF 2** format! If you want to use files in **SMF 0** or **SMF 1** format, you must use the graphical version of the Packer.
+> [!TIP]
+> Good news: the utility now accepts any MIDI format! **SMF 0** and **SMF 2** files are imported as-is, while **SMF 1** files are happily merged into a single track (format 0 style) to make your life easier. 😎
 
 ### Configuring priorities and volumes (`MDhd`)
 You can force the default parameters of a variant (priority, volume, speed, etc.) directly during packaging without having to edit the MIDI, by injecting an `MDhd` chunk:
@@ -70,7 +70,8 @@ Device=loopMIDI Port
 - `Driver=1`: The player wants AdLib FM emulation (retro bleep-bloop).
 - `Driver=2`: Hardware General MIDI (use the real hardware synth plugged into the computer).
 - `Driver=3`: Hardware Roland MT-32 (real vintage synthesizer).
-- `Device`: Name of the Windows hardware port (only required for Drivers 2 and 3).
+- `Driver=4`: MUNT emulator (software MT-32).
+- `Device`: Name of the Windows hardware port (required for Drivers 2 and 3), or path to ROMs separated by `|` (for Driver 4).
 
 ### Handling it in the AGS script
 In your `game_start()` function (see Chapter 2), replace the basic code with this to allow the player to "override" your choices:

@@ -79,8 +79,17 @@ public:
     uint32_t currentTempoMicrosPerQuarter() const;
     double transportTicksPerSecond() const;
 
+    enum class DeserializeResult {
+        Success,
+        SuccessWithMissingResources,
+        InvalidFormat,
+        UnsupportedVersion,
+        CorruptedData,
+        IOError
+    };
+
     bool Serialize(std::ostream &os) const;
-    bool Deserialize(std::istream &is);
+    DeserializeResult Deserialize(std::istream &is);
 
     void advanceAll(uint32_t deltaTicks);
     void advanceMicroseconds(uint32_t deltaMicros);

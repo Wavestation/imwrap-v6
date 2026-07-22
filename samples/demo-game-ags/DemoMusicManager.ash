@@ -9,8 +9,8 @@
 
 // Path definitions
 #define IMS_PACK        "$DATA$/iMWrapData/demo.ims"
-// #define SF2_BANK "$DATA$/iMWrapData/SGM-V2.01.SF3"
-#define SF2_BANK "$DATA$/iMWrapData/SGM-15.SF2"
+#define SF2_BANK "$DATA$/iMWrapData/SGM-V2.01.SF3"
+//#define SF2_BANK "$DATA$/iMWrapData/SGM-V2.01.SF2"
 
 // Sound definitions
 #define MUSIC_BASEROOM  90

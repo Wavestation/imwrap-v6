@@ -7,7 +7,10 @@ Ce chapitre répertorie **l'exhaustivité des fonctions, constantes et définiti
 > [!IMPORTANT]
 > **Indexation à zéro (0-indexed)**
 > Dans toute l'API AGS d'iMWrap, les identifiants et les canaux sont indexés à 0. 
-> Par exemple, si vous voulez affecter le **Canal MIDI 1** de votre musique, vous devez utiliser la valeur `0` pour le paramètre `channel`. De même, les mesures (beats) commencent à 0 (la "mesure 1" de votre DAW correspond au `beat` 0 dans le code).
+> Par exemple, si vous voulez affecter le **Canal MIDI 1** de votre musique, vous devez utiliser la valeur `0` pour le paramètre `channel`. 
+> 
+> **Attention : Seule exception à la règle, les mesures (beats) !**
+> Pour préserver la compatibilité historique avec les vieux scripts iMUSE et la logique des DAW, les mesures commencent à 1. Donc la "mesure 1" de votre séquenceur correspond bien au `beat` 1 dans le code ! 🤘
 
 ## 8.1. Constantes du Plugin
 
@@ -20,13 +23,14 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
 #define IMWRAP_DRIVER_ADLIB         1  // Émulation FM style SoundBlaster/OPL3 (Support non vérifié à 100% dans la v1.0.4)
 #define IMWRAP_DRIVER_HARDWARE_GM   2  // Carte son matérielle externe (General MIDI)
 #define IMWRAP_DRIVER_HARDWARE_MT32 3  // Synthétiseur Roland MT-32 matériel
+#define IMWRAP_DRIVER_MUNT          4  // Émulateur MUNT (MT-32)
 ```
 
 ---
 
 ## 8.2. Initialisation et Périphériques
 
-* `import void iMWrap_LoadBank(const string filename);`
+* `import int iMWrap_LoadBank(const string filename);`
   Charge la banque `.ims` principale en mémoire. À utiliser généralement une seule fois dans `game_start()`.
   ```c
   // Charge le fichier de séquences musicales du jeu
@@ -40,15 +44,15 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   ```
 
 
-* `import void iMWrap_SetSFDynLoad(int enabled);`
-  Active (`1`) ou désactive (`0`) le chargement dynamique pour les SoundFonts `.sf3`. Si activé, les échantillons sont streamés en mémoire à la demande plutôt qu'entièrement décompressés au chargement. Doit être appelé AVANT `iMWrap_LoadSoundFont`.
+* `import void iMWrap_SetSFDynLoad(bool enable = false);`
+  Active (`true`) ou désactive (`false`) le chargement dynamique pour les SoundFonts `.sf3`. Si activé, les échantillons sont streamés en mémoire à la demande plutôt qu'entièrement décompressés au chargement. Doit être appelé AVANT `iMWrap_LoadSoundFont`.
   ```c
-  iMWrap_SetSFDynLoad(1); // Active le streaming dynamique pour le SF3
+  iMWrap_SetSFDynLoad(true); // Active le streaming dynamique pour le SF3
   iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
   ```
 
-* `import void iMWrap_SetDriver(int driverType, const string deviceOrPath);`
-  Permet de définir manuellement le pilote (`IMWRAP_DRIVER_...`). Le `deviceOrPath` sert à donner le chemin de la `.sf2` (pour FluidSynth) ou l'index du port (pour le Hardware MIDI). Laissez `""` pour AdLib.
+* `import int iMWrap_SetDriver(int driverType, const string deviceOrPath);`
+  Permet de définir manuellement le pilote (`IMWRAP_DRIVER_...`). Le `deviceOrPath` sert à donner le chemin de la `.sf2` (pour FluidSynth), le chemin des ROMs séparé par un `|` (pour Munt), ou l'index du port (pour le Hardware MIDI). Laissez `""` pour AdLib.
   ```c
   // Configurer pour un Roland MT-32 branché sur le port MIDI "1" de Windows
   iMWrap_SetDriver(IMWRAP_DRIVER_HARDWARE_MT32, "1");
@@ -61,7 +65,7 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
   Display("Vous avez %d appareils MIDI connectés.", nbPorts);
   ```
 
-* `import const string iMWrap_GetMIDIDeviceName(int index);`
+* `import String iMWrap_GetMIDIDeviceName(int index);`
   Renvoie le nom textuel du port matériel à l'index donné.
   ```c
   // Affiche le nom du premier port MIDI
@@ -72,8 +76,8 @@ Ces constantes sont disponibles partout dans vos scripts pour paramétrer le pil
 
 ## 8.3. Contrôle de la lecture (Play / Stop)
 
-* `import void iMWrap_StartSound(int soundId);`
-  Démarre la lecture de la séquence portant l'ID `soundId`.
+* `import int iMWrap_StartSound(int soundId);`
+  Démarre la lecture de la séquence portant l'ID `soundId`. Renvoie 1 en cas de succès, 0 sinon.
   ```c
   // Lance la musique de la taverne (ID 50)
   iMWrap_StartSound(50);

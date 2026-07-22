@@ -7,7 +7,10 @@ This chapter lists **the complete set of functions, constants, and definitions**
 > [!IMPORTANT]
 > **Zero-indexed Values**
 > Throughout the iMWrap AGS API, all IDs, parts, and channels are 0-indexed. 
-> For example, if you want to affect **MIDI Channel 1** of your music, you must use the value `0` for the `channel` parameter. Similarly, measures (beats) start at 0 ("Measure 1" in your DAW is `beat` 0 in code).
+> For example, if you want to affect **MIDI Channel 1** of your music, you must use the value `0` for the `channel` parameter.
+>
+> **Heads up: The only exception is measures (beats)!**
+> To preserve historical compatibility with old iMUSE scripts and standard DAW logic, measures start at 1. So "Measure 1" in your DAW sequencer is indeed `beat` 1 in code! 🤘
 
 ## 8.1. Plugin Constants
 
@@ -20,13 +23,14 @@ These constants are available throughout your scripts to configure the audio dri
 #define IMWRAP_DRIVER_ADLIB         1  // FM emulation (SoundBlaster/OPL3 style) (Support not 100% verified in v1.0.4)
 #define IMWRAP_DRIVER_HARDWARE_GM   2  // External hardware sound card (General MIDI)
 #define IMWRAP_DRIVER_HARDWARE_MT32 3  // Hardware Roland MT-32 synthesizer
+#define IMWRAP_DRIVER_MUNT          4  // MUNT emulator (MT-32)
 ```
 
 ---
 
 ## 8.2. Initialization and Devices
 
-* `import void iMWrap_LoadBank(const string filename);`
+* `import int iMWrap_LoadBank(const string filename);`
   Loads the main `.ims` bank into memory. Usually used once in `game_start()`.
   ```c
   // Loads the game's musical sequence file
@@ -40,15 +44,15 @@ These constants are available throughout your scripts to configure the audio dri
   ```
 
 
-* `import void iMWrap_SetSFDynLoad(int enabled);`
-  Enables (`1`) or disables (`0`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
+* `import void iMWrap_SetSFDynLoad(bool enable = false);`
+  Enables (`true`) or disables (`false`) dynamic loading for `.sf3` SoundFonts. When enabled, samples are streamed into memory on demand rather than entirely decompressed at load time. Must be called BEFORE `iMWrap_LoadSoundFont`.
   ```c
-  iMWrap_SetSFDynLoad(1); // Enable dynamic streaming for SF3
+  iMWrap_SetSFDynLoad(true); // Enable dynamic streaming for SF3
   iMWrap_LoadSoundFont("$DATA$/music_data/SGM-V2.01.sf3");
   ```
 
-* `import void iMWrap_SetDriver(int driverType, const string deviceOrPath);`
-  Allows manually setting the driver (`IMWRAP_DRIVER_...`). `deviceOrPath` provides the path to the `.sf2` (for FluidSynth) or the port index (for Hardware MIDI). Leave `""` for AdLib.
+* `import int iMWrap_SetDriver(int driverType, const string deviceOrPath);`
+  Allows manually setting the driver (`IMWRAP_DRIVER_...`). `deviceOrPath` provides the path to the `.sf2` (for FluidSynth), the pipe-separated ROMs paths (for Munt), or the port index (for Hardware MIDI). Leave `""` for AdLib.
   ```c
   // Configure for a Roland MT-32 connected to Windows MIDI port "1"
   iMWrap_SetDriver(IMWRAP_DRIVER_HARDWARE_MT32, "1");
@@ -61,7 +65,7 @@ These constants are available throughout your scripts to configure the audio dri
   Display("You have %d MIDI devices connected.", nbPorts);
   ```
 
-* `import const string iMWrap_GetMIDIDeviceName(int index);`
+* `import String iMWrap_GetMIDIDeviceName(int index);`
   Returns the textual name of the hardware port at the given index.
   ```c
   // Displays the name of the first MIDI port
@@ -72,8 +76,8 @@ These constants are available throughout your scripts to configure the audio dri
 
 ## 8.3. Playback Control (Play / Stop)
 
-* `import void iMWrap_StartSound(int soundId);`
-  Starts playing the sequence with ID `soundId`.
+* `import int iMWrap_StartSound(int soundId);`
+  Starts playing the sequence with ID `soundId`. Returns 1 on success, 0 otherwise.
   ```c
   // Starts the tavern music (ID 50)
   iMWrap_StartSound(50);

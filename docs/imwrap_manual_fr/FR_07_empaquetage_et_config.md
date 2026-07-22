@@ -37,8 +37,8 @@ Dans cet exemple :
 
 *(Les variantes supportées sont principalement `gmd` et `rol`.)*
 
-> [!CAUTION]
-> L'utilitaire attend des fichiers .mid au format **SMF 2** ! Si vous voulez utiliser des fichiers au format **SMF 0** ou **SMF 1**, il vous faut passer par la version graphique du Packer.
+> [!TIP]
+> Bonne nouvelle : l'utilitaire accepte désormais n'importe quel format MIDI ! Les fichiers **SMF 0** et **SMF 2** sont importés tels quels, tandis que les fichiers **SMF 1** sont joyeusement fusionnés en une seule track (façon format 0) pour vous simplifier la vie. 😎
 
 ### Configurer les priorités et volumes (`MDhd`)
 Vous pouvez forcer les paramètres par défaut d'une variante (priorité, volume, vitesse, etc.) directement à l'empaquetage sans avoir à éditer le MIDI, en injectant un chunk `MDhd` :
@@ -70,7 +70,8 @@ Device=loopMIDI Port
 - `Driver=1` : Le joueur veut l'émulation FM AdLib (bip-boup rétro).
 - `Driver=2` : Hardware General MIDI (utiliser le vrai synthé matériel branché sur l'ordi).
 - `Driver=3` : Hardware Roland MT-32 (vrai synthétiseur vintage).
-- `Device` : Nom du port matériel Windows (nécessaire uniquement pour les Drivers 2 et 3).
+- `Driver=4` : Émulateur MUNT (logiciel MT-32).
+- `Device` : Nom du port matériel Windows (nécessaire pour Drivers 2 et 3), ou chemin vers les ROMs séparées par un `|` (pour Driver 4).
 
 ### Prise en compte dans le script AGS
 Dans votre fonction `game_start()` (voir Chapitre 2), remplacez le code basique par celui-ci pour autoriser le joueur à "surcharger" vos choix :
@@ -81,11 +82,11 @@ function game_start() {
     if (iMWrap_HasExternalConfig()) {
         // Tente d'appliquer ses paramètres. S'il a choisi FluidSynth (0), 
         // on lui force notre propre SoundFont par défaut en paramètre de secours.
-        iMWrap_ApplyExternalConfig("$DATA$/music_data/SGM-V2.01.sf2.sf2");
+        iMWrap_ApplyExternalConfig("$DATA$/music_data/SGM-V2.01.sf2");
     } else {
         // Sinon, aucun fichier .imc trouvé, on configure le jeu 
         // en General MIDI moderne par défaut.
-        iMWrap_SetDriver(IMWRAP_DRIVER_FLUIDSYNTH, "$DATA$/music_data/SGM-V2.01.sf2.sf2");
+        iMWrap_SetDriver(IMWRAP_DRIVER_FLUIDSYNTH, "$DATA$/music_data/SGM-V2.01.sf2");
     }
 
     iMWrap_LoadBank("$DATA$/music_data/game.ims");

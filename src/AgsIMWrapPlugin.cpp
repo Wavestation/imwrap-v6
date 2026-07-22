@@ -664,6 +664,7 @@ const char *g_iMWrapScriptHeader =
     "#define IMWRAP_DRIVER_ADLIB         1\r\n"
     "#define IMWRAP_DRIVER_HARDWARE_GM   2\r\n"
     "#define IMWRAP_DRIVER_HARDWARE_MT32 3\r\n"
+    "#define IMWRAP_DRIVER_MUNT          4\r\n"
     "\r\n"
     "#define IMWRAP_HOOK_JUMP            0\r\n"
     "#define IMWRAP_HOOK_TRANSPOSE       1\r\n"
@@ -693,13 +694,13 @@ const char *g_iMWrapScriptHeader =
     "#define IMWRAP_CMD_CLEAR_QUEUE       272\r\n"
     "#define IMWRAP_CMD_SET_PART_VOLUME   278\r\n"
     "\r\n"
-    "import void iMWrap_LoadBank(const string filename);\r\n"
+    "import int  iMWrap_LoadBank(const string filename);\r\n"
     "import void iMWrap_LoadSoundFont(const string filename);\r\n"
     "import void iMWrap_SetSFDynLoad(bool enable = false);\r\n"
-    "import void iMWrap_SetDriver(int driverType, const string deviceOrPath);\r\n"
+    "import int  iMWrap_SetDriver(int driverType, const string deviceOrPath);\r\n"
     "import int  iMWrap_GetMIDIDeviceCount();\r\n"
     "import String iMWrap_GetMIDIDeviceName(int index);\r\n"
-    "import void iMWrap_StartSound(int soundId);\r\n"
+    "import int  iMWrap_StartSound(int soundId);\r\n"
     "import void iMWrap_StopSound(int soundId);\r\n"
     "import void iMWrap_StopAllSounds();\r\n"
     "import int  iMWrap_IsSoundActive(int soundId);\r\n"
@@ -996,10 +997,10 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 } // namespace
 
 // AGS script exported functions
-void Ags_iMWrap_LoadBank(const char *filename) {
+int Ags_iMWrap_LoadBank(const char *filename) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (!filename || filename[0] == '\0') {
-        return;
+        return 0;
     }
 
     std::string error;
@@ -1034,25 +1035,31 @@ void Ags_iMWrap_LoadBank(const char *filename) {
                 std::string msg = "iMWrap Error: " + error;
                 IMWrapLog(msg.c_str());
             }
-        } else if (g_AgsEngine) {
-            std::string msg = "iMWrap: Loaded bank from file '" + resolvedPath + "'";
-            IMWrapLog(msg.c_str());
+        } else {
+            loaded = true;
+            if (g_AgsEngine) {
+                std::string msg = "iMWrap: Loaded bank from file '" + resolvedPath + "'";
+                IMWrapLog(msg.c_str());
+            }
         }
     } else if (g_AgsEngine && !error.empty()) {
         std::string msg = "iMWrap Error: " + error;
         IMWrapLog(msg.c_str());
     }
+    
+    return loaded ? 1 : 0;
 }
 
 void FluidDummyLogCallback(int level, const char *message, void *data) {
     // Ignore all FluidSynth logs to prevent WebAssembly console lag
 }
 
-void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
+int Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     CleanupCurrentDriver();
 
     g_IMWrapDriverType = static_cast<IMWrapDriverType>(driverType);
+    int success = 0;
 
     switch (g_IMWrapDriverType) {
     case IMWrapDriverType::FluidSynth: {
@@ -1100,6 +1107,7 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                             std::string msg = "iMWrap: FluidSynth driver initialized with SoundFont '" + loadPath + "'";
                             IMWrapLog(msg.c_str());
                         }
+                        success = 1;
                     } else {
                         if (!extractedTempPath.empty()) {
                             std::error_code ec;
@@ -1133,8 +1141,24 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
             std::string pcmRom;
             
             if (pipePos != std::string::npos) {
-                ctrlRom = paths.substr(0, pipePos);
-                pcmRom = paths.substr(pipePos + 1);
+                std::string part1 = paths.substr(0, pipePos);
+                std::string part2 = paths.substr(pipePos + 1);
+                
+                auto toUpperStr = [](std::string s) {
+                    for (char &c : s) c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+                    return s;
+                };
+                
+                if (toUpperStr(part1).find("PCM") != std::string::npos) {
+                    pcmRom = part1;
+                    ctrlRom = part2;
+                } else if (toUpperStr(part2).find("PCM") != std::string::npos) {
+                    pcmRom = part2;
+                    ctrlRom = part1;
+                } else {
+                    ctrlRom = part1;
+                    pcmRom = part2;
+                }
             } else {
                 if (g_AgsEngine) {
                     IMWrapLog("iMWrap Error: MuntEmu requires two ROMs separated by a pipe '|'.");
@@ -1179,6 +1203,7 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                         if (g_AgsEngine) {
                             IMWrapLog("iMWrap: MuntEmu initialized successfully.");
                         }
+                        success = 1;
                     } else {
                         mt32emu_free_context(g_MuntCtx);
                         g_MuntCtx = nullptr;
@@ -1212,6 +1237,7 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
             if (g_AgsEngine) {
                 IMWrapLog("iMWrap: AdLib driver initialized (OPL3, 4 chips).");
             }
+            success = 1;
         } else if (g_AgsEngine) {
             IMWrapLog("iMWrap Error: Failed to initialize AdLib player.");
         }
@@ -1233,6 +1259,7 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                 std::string msg = "iMWrap: Hardware GM driver initialized on port " + std::to_string(deviceIndex);
                 IMWrapLog(msg.c_str());
             }
+            success = 1;
         } else if (g_AgsEngine) {
             std::string msg = "iMWrap Error: Failed to open Hardware GM MIDI port " + std::to_string(deviceIndex);
             IMWrapLog(msg.c_str());
@@ -1255,6 +1282,7 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
                 std::string msg = "iMWrap: Hardware MT-32 driver initialized on port " + std::to_string(deviceIndex);
                 IMWrapLog(msg.c_str());
             }
+            success = 1;
         } else if (g_AgsEngine) {
             std::string msg = "iMWrap Error: Failed to open Hardware MT-32 MIDI port " + std::to_string(deviceIndex);
             IMWrapLog(msg.c_str());
@@ -1262,6 +1290,8 @@ void Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
         break;
     }
     }
+    
+    return success;
 }
 
 void Ags_iMWrap_LoadSoundFont(const char *filename) {
@@ -1295,13 +1325,14 @@ const char * Ags_iMWrap_GetMIDIDeviceName(int index) {
     return lastDeviceName.c_str();
 }
 
-void Ags_iMWrap_StartSound(int soundId) {
+int Ags_iMWrap_StartSound(int soundId) {
     std::lock_guard<std::mutex> lock(g_Mutex);
-    g_Engine.startSound(static_cast<uint16_t>(soundId));
+    bool ok = g_Engine.startSound(static_cast<uint16_t>(soundId));
     if (g_AgsEngine) {
         std::string msg = "iMWrap: Playing sound ID " + std::to_string(soundId);
         IMWrapLog(msg.c_str());
     }
+    return ok ? 1 : 0;
 }
 
 void Ags_iMWrap_StopSound(int soundId) {
@@ -1729,23 +1760,24 @@ bool OpenHardwareMidi(const std::string &deviceOrPath) {
 int Ags_iMWrap_HasExternalConfig() {
     std::string configPath = GetConfigFilePath();
     IMWrapConfig cfg = LoadIMWrapConfig(configPath);
-    return (cfg.driverType >= 0 && cfg.driverType <= 3) ? 1 : 0;
+    return (cfg.driverType >= 0 && cfg.driverType <= 4) ? 1 : 0;
 }
 
 int Ags_iMWrap_ApplyExternalConfig(const char *fallbackSoundFont) {
     std::string configPath = GetConfigFilePath();
     IMWrapConfig cfg = LoadIMWrapConfig(configPath);
-    if (cfg.driverType < 0 || cfg.driverType > 3) {
+    if (cfg.driverType < 0 || cfg.driverType > 4) {
         return 0;
     }
 
     std::string sfPath = fallbackSoundFont ? fallbackSoundFont : "";
     if (cfg.driverType == static_cast<int>(IMWrapDriverType::FluidSynth)) {
-        Ags_iMWrap_SetDriver(cfg.driverType, sfPath.c_str());
-        return 1;
+        return Ags_iMWrap_SetDriver(cfg.driverType, sfPath.c_str());
     } else if (cfg.driverType == static_cast<int>(IMWrapDriverType::AdLib)) {
-        Ags_iMWrap_SetDriver(cfg.driverType, "");
-        return 1;
+        return Ags_iMWrap_SetDriver(cfg.driverType, "");
+    } else if (cfg.driverType == static_cast<int>(IMWrapDriverType::MuntEmu)) {
+        std::string romsPath = cfg.deviceName.empty() ? sfPath : cfg.deviceName;
+        return Ags_iMWrap_SetDriver(cfg.driverType, romsPath.c_str());
     } else if (cfg.driverType == static_cast<int>(IMWrapDriverType::HardwareGM) ||
                cfg.driverType == static_cast<int>(IMWrapDriverType::HardwareMT32)) {
         
@@ -1804,7 +1836,6 @@ int Ags_iMWrap_PopMarker() {
 int Ags_iMWrap_GetLastMarker() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (!g_HasLastMarker) return -1;
-    g_HasLastMarker = false;
     return (g_LastMarkerData.soundId << 8) | g_LastMarkerData.marker;
 }
 
@@ -1973,10 +2004,14 @@ DLLEXPORT void AGS_EngineShutdown(void) {
 
 DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t data) {
     if (event == AGSE_SAVEGAME && g_AgsEngine) {
+        bool serializeSuccess = false;
         std::stringstream ss(std::ios::binary | std::ios::out);
         {
             std::lock_guard<std::mutex> lock(g_Mutex);
-            g_Engine.Serialize(ss);
+            serializeSuccess = g_Engine.Serialize(ss);
+        }
+        if (!serializeSuccess) {
+            IMWrapLog("iMWrap Warning: Engine serialization failed.");
         }
         std::string dataStr = ss.str();
         int32_t size = static_cast<int32_t>(dataStr.size());
@@ -1994,7 +2029,16 @@ DLLEXPORT intptr_t AGS_EngineOnEvent(int event, intptr_t data) {
             std::string dataStr(buf.begin(), buf.end());
             std::stringstream ss(dataStr, std::ios::binary | std::ios::in);
             std::lock_guard<std::mutex> lock(g_Mutex);
-            g_Engine.Deserialize(ss);
+            auto result = g_Engine.Deserialize(ss);
+            if (result == imwrap::IMWrapEngine::DeserializeResult::InvalidFormat ||
+                result == imwrap::IMWrapEngine::DeserializeResult::UnsupportedVersion ||
+                result == imwrap::IMWrapEngine::DeserializeResult::CorruptedData) {
+                IMWrapLog("iMWrap Warning: Save game audio state could not be loaded (incompatible or corrupted data). Audio may behave unexpectedly.");
+            } else if (result == imwrap::IMWrapEngine::DeserializeResult::IOError) {
+                IMWrapLog("iMWrap Warning: Save game audio state could not be loaded due to an I/O error.");
+            } else if (result == imwrap::IMWrapEngine::DeserializeResult::SuccessWithMissingResources) {
+                IMWrapLog("iMWrap Warning: Save game loaded but some audio resources are missing from the current banks.");
+            }
         }
     }
     return 0;
