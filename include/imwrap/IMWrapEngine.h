@@ -121,7 +121,6 @@ private:
         bool transmitted = false;
         bool on = false;
         bool percussion = false;
-        bool unassignedInstrument = false;
         uint8_t channel = 0;
         uint8_t volume = 127;
         uint8_t effectiveVolume = 127;
@@ -160,6 +159,7 @@ private:
         uint8_t param = 0;
         int target = 0;
         int time = 0;
+        double currentVolume = 0.0;
     };
 
     struct MidiChannelState {

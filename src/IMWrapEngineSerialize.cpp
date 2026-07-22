@@ -105,7 +105,8 @@ bool IMWrapEngine::Serialize(std::ostream &os) const {
             if (!writeVal(os, part.transmitted)) return false;
             if (!writeVal(os, part.on)) return false;
             if (!writeVal(os, part.percussion)) return false;
-            if (!writeVal(os, part.unassignedInstrument)) return false;
+            bool dummyUnassigned = false;
+            if (!writeVal(os, dummyUnassigned)) return false;
             if (!writeVal(os, part.channel)) return false;
             if (!writeVal(os, part.volume)) return false;
             if (!writeVal(os, part.effectiveVolume)) return false;
@@ -275,7 +276,8 @@ IMWrapEngine::DeserializeResult IMWrapEngine::Deserialize(std::istream &is) {
             if (!readVal(is, part.transmitted)) return DeserializeResult::IOError;
             if (!readVal(is, part.on)) return DeserializeResult::IOError;
             if (!readVal(is, part.percussion)) return DeserializeResult::IOError;
-            if (!readVal(is, part.unassignedInstrument)) return DeserializeResult::IOError;
+            bool dummyUnassigned = false;
+            if (!readVal(is, dummyUnassigned)) return DeserializeResult::IOError;
             if (!readVal(is, part.channel)) return DeserializeResult::IOError;
             if (!readVal(is, part.volume)) return DeserializeResult::IOError;
             if (!readVal(is, part.effectiveVolume)) return DeserializeResult::IOError;
@@ -343,6 +345,7 @@ IMWrapEngine::DeserializeResult IMWrapEngine::Deserialize(std::istream &is) {
         if (!readVal(is, snd.fade.param)) return DeserializeResult::IOError;
         if (!readVal(is, snd.fade.target)) return DeserializeResult::IOError;
         if (!readVal(is, snd.fade.time)) return DeserializeResult::IOError;
+        snd.fade.currentVolume = static_cast<double>(snd.volume);
 
         if (is.fail()) return DeserializeResult::IOError;
 

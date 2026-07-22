@@ -588,7 +588,6 @@ void IMWrapEngine::initializePart(ActiveSound *sound, PartState *part, uint8_t c
     part->transmitted = false;
     part->on = true;
     part->percussion = sound->supportsPercussion && channel == 9;
-    part->unassignedInstrument = true;
     part->channel = channel;
     part->ownerSoundId = sound->soundId;
     part->volume = 127;
@@ -1304,7 +1303,6 @@ void IMWrapEngine::partSetProgram(ActiveSound *sound, uint8_t channel, uint8_t p
 
     part->instrumentValue = instrumentProgram;
     part->instrument.program(instrumentProgram, 0, sound->isMt32);
-    part->unassignedInstrument = false;
     applyPartProgram(sound, part);
 }
 
@@ -1401,7 +1399,6 @@ void IMWrapEngine::partSetInstrument(ActiveSound *sound, uint8_t channel, uint16
     part->bank = static_cast<uint8_t>(value >> 8);
     part->program = static_cast<uint8_t>(value & 0xFF);
     part->instrument.program(part->program, part->bank, sound->isMt32);
-    part->unassignedInstrument = false;
     applyPartProgram(sound, part);
 }
 
@@ -2839,6 +2836,34 @@ bool IMWrapEngine::advanceSound(uint16_t soundId, uint32_t deltaTicks) {
         return false;
     }
 
+    if (sound->fade.active && deltaTicks > 0) {
+        if (sound->fade.time > 0) {
+            uint32_t ticksToProcess = std::min(deltaTicks, static_cast<uint32_t>(sound->fade.time));
+            double step = (static_cast<double>(sound->fade.target) - sound->fade.currentVolume) / static_cast<double>(sound->fade.time);
+            sound->fade.currentVolume += step * ticksToProcess;
+            sound->volume = static_cast<uint8_t>(ClampInt(static_cast<int>(sound->fade.currentVolume), 0, 127));
+            sound->fade.time -= static_cast<int>(ticksToProcess);
+            
+            refreshEffectiveVolume(sound);
+            for (PartState &part : sound->parts) {
+                if (part.initialized) {
+                    applyPartVolume(sound, &part);
+                }
+            }
+        }
+        
+        if (sound->fade.time <= 0) {
+            sound->volume = static_cast<uint8_t>(ClampInt(sound->fade.target, 0, 127));
+            sound->fade.active = false;
+            refreshEffectiveVolume(sound);
+            for (PartState &part : sound->parts) {
+                if (part.initialized) {
+                    applyPartVolume(sound, &part);
+                }
+            }
+        }
+    }
+
     uint32_t remaining = deltaTicks;
     while (remaining > 0 || (sound && sound->pendingImmediateEvents)) {
         sound = findActiveSound(soundId);
@@ -3147,6 +3172,7 @@ int IMWrapEngine::dispatchPlayerCommand(uint8_t cmd, uint16_t argc, const int16_
         sound->fade.param = 1;
         sound->fade.target = args[2];
         sound->fade.time = args[3];
+        sound->fade.currentVolume = static_cast<double>(sound->volume);
         if (args[3] == 0) {
             sound->volume = static_cast<uint8_t>(ClampInt(args[2], 0, 127));
             refreshEffectiveVolume(sound);
