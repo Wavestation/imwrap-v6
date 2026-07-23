@@ -56,8 +56,10 @@ public:
 private slots:
     void newProject();
     void openProject();
+    void openXoredProject();
     void saveProject();
     void saveProjectAs();
+    void saveProjectAsXored();
     
     void onSoundSelected();
     void onVariantKindChanged();

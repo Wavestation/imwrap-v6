@@ -14,6 +14,8 @@
 #include <QIcon>
 #include <QLabel>
 #include <QLineEdit>
+#include <QInputDialog>
+#include <fstream>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPushButton>
@@ -531,6 +533,7 @@ void ExplorerWindow::setupUi() {
     profileCombo_->addItem("AdLib", static_cast<int>(imwrap::TargetProfile::Adlib));
     playbackLayout->addRow("Fallback Profile:", profileCombo_);
 
+    muntModeCheck_ = new QCheckBox("Use MT-32 emulator");
     snmModeCheck_ = new QCheckBox("SNM mode");
     connect(snmModeCheck_, &QCheckBox::toggled, this, [this](bool) {
         engine_.setCompatibilityProfile(currentCompatibilityProfile());
@@ -540,6 +543,7 @@ void ExplorerWindow::setupUi() {
     });
     playbackPositionLabel_ = new QLabel();
     auto* snmLayout = new QHBoxLayout();
+    snmLayout->addWidget(muntModeCheck_);
     snmLayout->addWidget(snmModeCheck_);
     snmLayout->addWidget(playbackPositionLabel_);
     snmLayout->addStretch();
@@ -623,8 +627,10 @@ void ExplorerWindow::setupUi() {
     fileMenu->addSeparator();
 
     fileMenu->addAction("&Open...", this, &ExplorerWindow::openDocument, QKeySequence::Open);
+    fileMenu->addAction("Open XORed Bank...", this, &ExplorerWindow::openXoredDocument, QKeySequence("Ctrl+Shift+O"));
     fileMenu->addAction("&Save", this, &ExplorerWindow::saveDocument, QKeySequence::Save);
     fileMenu->addAction("Save &As...", this, &ExplorerWindow::saveDocumentAs, QKeySequence::SaveAs);
+    fileMenu->addAction("Save XORed Bank...", this, &ExplorerWindow::saveXoredDocumentAs, QKeySequence("Ctrl+Shift+S"));
 }
 
 void ExplorerWindow::openDocument() {
@@ -636,6 +642,49 @@ void ExplorerWindow::openDocument() {
     }
 
     openDocumentPath(path, true);
+}
+
+void ExplorerWindow::openXoredDocument() {
+    if (!promptSaveIfDirty()) return;
+
+    const QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS", QString(), "iMWrap IMS (*.ims *.data)");
+    if (path.isEmpty()) return;
+
+    bool ok;
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    if (!ok) return;
+
+    std::ifstream in(path.toStdString(), std::ios::binary);
+    if (!in) {
+        QMessageBox::critical(this, "Error", "Failed to open file for reading.");
+        return;
+    }
+    
+    in.seekg(0, std::ios::end);
+    size_t size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    
+    std::vector<uint8_t> buffer(size);
+    if (in.read(reinterpret_cast<char*>(buffer.data()), size)) {
+        if (key != 0) {
+            for (size_t i = 0; i < buffer.size(); ++i) {
+                buffer[i] ^= static_cast<uint8_t>(key);
+            }
+        }
+        
+        std::string error;
+        if (!document_.loadFromMemory(std::move(buffer), &error)) {
+            QMessageBox::critical(this, "Error", QString("Failed to parse XORed IMS file:\n%1").arg(QString::fromStdString(error)));
+            return;
+        }
+        
+        currentFilePath_ = path;
+        markDirty(false);
+        refreshDevices();
+        updateWindowTitle();
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to read file.");
+    }
 }
 
 void ExplorerWindow::saveDocument() {
@@ -670,8 +719,39 @@ void ExplorerWindow::saveDocumentAs() {
     markDirty(false);
 
     currentFilePath_ = path;
-    filePathEdit_->setText(path);
-    dirty_ = false;
+    updateWindowTitle();
+    statusLabel_->setText(QString("Saved %1").arg(path));
+}
+
+void ExplorerWindow::saveXoredDocumentAs() {
+    const QString path = QFileDialog::getSaveFileName(this, "Save XORed IMS As", currentFilePath_, "iMWrap IMS (*.ims)");
+    if (path.isEmpty()) return;
+
+    bool ok;
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    if (!ok) return;
+
+    std::vector<uint8_t> buffer;
+    std::string error;
+    if (!document_.buildBankBytes(&buffer, &error)) {
+        QMessageBox::critical(this, "Error", QString("Failed to serialize IMS file:\n%1").arg(QString::fromStdString(error)));
+        return;
+    }
+
+    if (key != 0) {
+        for (size_t i = 0; i < buffer.size(); ++i) {
+            buffer[i] ^= static_cast<uint8_t>(key);
+        }
+    }
+
+    std::ofstream out(path.toStdString(), std::ios::binary);
+    if (!out || !out.write(reinterpret_cast<const char*>(buffer.data()), buffer.size())) {
+        QMessageBox::critical(this, "Error", "Failed to write XORed file.");
+        return;
+    }
+
+    currentFilePath_ = path;
+    markDirty(false);
     updateWindowTitle();
     statusLabel_->setText(QString("Saved %1").arg(path));
 }
@@ -701,7 +781,23 @@ bool ExplorerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::st
         return true;
     }
 
+    if (profile == imwrap::TargetProfile::Mt32 && muntModeCheck_->isChecked()) {
+        midiSink_.closeDevice();
+        adlibSink_.stop();
+        if (!muntSink_.isAvailable() && !muntSink_.start(error)) {
+            // fallback to winmm
+        } else {
+            previewBackend_ = PreviewBackend::Munt;
+            engine_.setMidiSink(&muntSink_);
+            if (error) {
+                error->clear();
+            }
+            return true;
+        }
+    }
+
     adlibSink_.stop();
+    muntSink_.stop();
     if (deviceCombo_->currentIndex() < 0) {
         if (error) {
             *error = "No MIDI output device is selected.";
@@ -728,6 +824,7 @@ bool ExplorerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::st
 void ExplorerWindow::disablePreviewBackend() {
     transportTimer_->stop();
     adlibSink_.stop();
+    muntSink_.stop();
     midiSink_.closeDevice();
     previewBackend_ = PreviewBackend::None;
     engine_.setMidiSink(nullptr);
@@ -1479,6 +1576,7 @@ void ExplorerWindow::loadSettings() {
     if (profileIndex >= 0 && profileIndex < profileCombo_->count()) {
         profileCombo_->setCurrentIndex(profileIndex);
     }
+    muntModeCheck_->setChecked(settings.value("playback/muntMode", false).toBool());
     snmModeCheck_->setChecked(settings.value("playback/snmMode", false).toBool());
     engine_.setCompatibilityProfile(currentCompatibilityProfile());
 
@@ -1529,6 +1627,7 @@ void ExplorerWindow::saveSettings() const {
     settings.setValue("document/lastFilePath", currentFilePath_);
     settings.setValue("playback/midiDeviceName", deviceCombo_->currentText());
     settings.setValue("playback/profileIndex", profileCombo_->currentIndex());
+    settings.setValue("playback/muntMode", muntModeCheck_->isChecked());
     settings.setValue("playback/snmMode", snmModeCheck_->isChecked());
     settings.setValue("events/filterNonImwrap", filterNonImwrapCheck_->isChecked());
     settings.setValue("window/layoutVersion", kLayoutVersion);

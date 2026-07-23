@@ -25,6 +25,7 @@
 #include "imwrap/ResourceBank.h"
 #include "imwrap/MidiSink.h"
 #include "AdlibPreviewOutput.h"
+#include "MuntPreviewOutput.h"
 
 class QCheckBox;
 class QTreeWidget;
@@ -39,6 +40,7 @@ public:
 
 private slots:
     void browseBank();
+    void browseXoredBank();
     void loadBank();
     void togglePreview();
     void playSound();
@@ -52,7 +54,8 @@ private:
     enum class PreviewBackend {
         None,
         WinMM,
-        Adlib
+        Adlib,
+        Munt
     };
 
     void setupUi();
@@ -67,6 +70,7 @@ private:
     QComboBox *deviceCombo;
     QComboBox *profileCombo;
     QCheckBox *snmModeCheck;
+    QCheckBox *muntModeCheck;
     QTreeWidget *soundTree;
     QPushButton *previewBtn;
     QPushButton *playBtn;
@@ -100,6 +104,7 @@ private:
     
     WinMMSink midiSink;
     imwrap::gui::AdlibPreviewOutput adlibSink;
+    imwrap::gui::MuntPreviewOutput muntSink;
     PreviewBackend previewBackend = PreviewBackend::None;
 
     QTimer *transportTimer;

@@ -6,8 +6,12 @@
 #include <QSettings>
 #include <QStringList>
 #include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QInputDialog>
 #include <QDateTime>
 #include <QCheckBox>
+#include <fstream>
+#include <vector>
 #include <thread>
 #include <mutex>
 #include <queue>
@@ -351,6 +355,7 @@ PlayerWindow::PlayerWindow(QWidget *parent) : QMainWindow(parent), previewEnable
     if (lastProfile >= 0 && lastProfile < profileCombo->count()) {
         profileCombo->setCurrentIndex(lastProfile);
     }
+    muntModeCheck->setChecked(settings.value("muntMode", false).toBool());
     snmModeCheck->setChecked(settings.value("snmMode", false).toBool());
     engine.setCompatibilityProfile(currentCompatibilityProfile());
     bool preview = settings.value("previewEnabled", false).toBool();
@@ -365,6 +370,7 @@ PlayerWindow::~PlayerWindow() {
     settings.setValue("lastBank", bankPathEdit->text());
     settings.setValue("lastDevice", deviceCombo->currentText());
     settings.setValue("lastProfile", profileCombo->currentIndex());
+    settings.setValue("muntMode", muntModeCheck->isChecked());
     settings.setValue("snmMode", snmModeCheck->isChecked());
     settings.setValue("previewEnabled", previewEnabled);
 }
@@ -383,7 +389,23 @@ bool PlayerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::stri
         return true;
     }
 
+    if (profile == imwrap::TargetProfile::Mt32 && muntModeCheck->isChecked()) {
+        midiSink.closeDevice();
+        adlibSink.stop();
+        if (!muntSink.isAvailable() && !muntSink.start(error)) {
+            // Fall back to winmm
+        } else {
+            previewBackend = PreviewBackend::Munt;
+            engine.setMidiSink(&muntSink);
+            if (error) {
+                error->clear();
+            }
+            return true;
+        }
+    }
+
     adlibSink.stop();
+    muntSink.stop();
     if (deviceCombo->currentIndex() < 0) {
         if (error) {
             *error = "No MIDI output device is selected.";
@@ -410,6 +432,7 @@ bool PlayerWindow::ensurePreviewBackend(imwrap::TargetProfile profile, std::stri
 void PlayerWindow::disablePreviewBackend() {
     transportTimer->stop();
     adlibSink.stop();
+    muntSink.stop();
     midiSink.closeDevice();
     previewBackend = PreviewBackend::None;
     engine.setMidiSink(nullptr);
@@ -430,6 +453,9 @@ void PlayerWindow::setupUi() {
     auto *browseBankBtn = new QPushButton("Browse...");
     connect(browseBankBtn, &QPushButton::clicked, this, &PlayerWindow::browseBank);
     bankLayout->addWidget(browseBankBtn);
+    auto *browseXoredBankBtn = new QPushButton("Open XORed...");
+    connect(browseXoredBankBtn, &QPushButton::clicked, this, &PlayerWindow::browseXoredBank);
+    bankLayout->addWidget(browseXoredBankBtn);
     configLayout->addLayout(bankLayout);
 
     auto *backendLayout = new QHBoxLayout();
@@ -450,6 +476,9 @@ void PlayerWindow::setupUi() {
         }
     });
     backendLayout->addWidget(profileCombo);
+    
+    muntModeCheck = new QCheckBox("Use MT-32 emulator");
+    backendLayout->addWidget(muntModeCheck);
 
     snmModeCheck = new QCheckBox("SNM mode");
     connect(snmModeCheck, &QCheckBox::toggled, this, [this](bool) {
@@ -556,41 +585,85 @@ void PlayerWindow::refreshDevices() {
 }
 
 void PlayerWindow::browseBank() {
-    QString path = QFileDialog::getOpenFileName(this, "Open IMS", "", "iMWrap Banks (*.ims *.data)");
+    QString path = QFileDialog::getOpenFileName(this, "Open IMS Bank", "", "iMWrap Files (*.ims)");
     if (!path.isEmpty()) {
         bankPathEdit->setText(path);
         loadBank();
     }
 }
 
-void PlayerWindow::loadBank() {
-    std::string err;
-    if (bank.openFromFile(bankPathEdit->text().toStdString(), &err)) {
-        statusLabel->setText(QString("Bank loaded: %1").arg(bankPathEdit->text()));
-        engine.setResourceBank(&bank);
-        
-        soundTree->clear();
-        for (uint16_t id : bank.soundIds()) {
-            auto res = bank.loadSound(id);
-            QTreeWidgetItem *soundItem = new QTreeWidgetItem(soundTree);
-            soundItem->setText(0, QString("%1: %2").arg(id).arg(QString::fromStdString(res.name())));
-            soundItem->setData(0, Qt::UserRole, id);
-            
-            // Add tracks as children
-            imwrap::SmfSequence seq;
-            if (res.valid() && imwrap::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
-                uint16_t tIdx = 0;
-                for (const auto &trk : seq.tracks) {
-                    QTreeWidgetItem *trackItem = new QTreeWidgetItem(soundItem);
-                    trackItem->setText(0, QString("Track %1 (%2 evts)").arg(tIdx).arg(trk.events.size()));
-                    trackItem->setData(0, Qt::UserRole, id); // Keep parent ID
-                    tIdx++;
-                }
+void PlayerWindow::browseXoredBank() {
+    QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS Bank", "", "iMWrap Files (*.ims)");
+    if (path.isEmpty()) return;
+
+    bool ok;
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    if (!ok) return;
+
+    std::ifstream in(path.toStdString(), std::ios::binary);
+    if (!in) {
+        QMessageBox::critical(this, "Error", "Failed to open file for reading.");
+        return;
+    }
+    
+    in.seekg(0, std::ios::end);
+    size_t size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    
+    std::vector<uint8_t> buffer(size);
+    if (in.read(reinterpret_cast<char*>(buffer.data()), size)) {
+        if (key != 0) {
+            for (size_t i = 0; i < buffer.size(); ++i) {
+                buffer[i] ^= static_cast<uint8_t>(key);
             }
         }
+        
+        std::string err;
+        if (bank.openFromMemory(std::move(buffer), &err)) {
+            bankPathEdit->setText(path + " (XORed In Memory)");
+            loadBank();
+        } else {
+            QMessageBox::critical(this, "Error", QString::fromStdString(err));
+        }
     } else {
-        statusLabel->setText(QString("Error: %1").arg(QString::fromStdString(err)));
+        QMessageBox::critical(this, "Error", "Failed to read file.");
     }
+}
+
+void PlayerWindow::loadBank() {
+    if (bankPathEdit->text().endsWith("(XORed In Memory)")) {
+        // Already loaded in memory by browseXoredBank, just update UI
+    } else {
+        std::string err;
+        if (!bank.openFromFile(bankPathEdit->text().toStdString(), &err)) {
+            statusLabel->setText(QString("Error: %1").arg(QString::fromStdString(err)));
+            return;
+        }
+    }
+
+    statusLabel->setText(QString("Bank loaded: %1").arg(bankPathEdit->text()));
+    engine.setResourceBank(&bank);
+    
+    soundTree->clear();
+    for (uint16_t id : bank.soundIds()) {
+        auto res = bank.loadSound(id);
+        QTreeWidgetItem *soundItem = new QTreeWidgetItem(soundTree);
+        soundItem->setText(0, QString("%1: %2").arg(id).arg(QString::fromStdString(res.name())));
+        soundItem->setData(0, Qt::UserRole, id);
+        
+        // Add tracks as children
+        imwrap::SmfSequence seq;
+        if (res.valid() && imwrap::SmfParser::Parse(res.selectVariant(engine.targetProfile()).smfData, &seq)) {
+            uint16_t tIdx = 0;
+            for (const auto &trk : seq.tracks) {
+                QTreeWidgetItem *trackItem = new QTreeWidgetItem(soundItem);
+                trackItem->setText(0, QString("Track %1 (%2 evts)").arg(tIdx).arg(trk.events.size()));
+                trackItem->setData(0, Qt::UserRole, id); // Keep parent ID
+                tIdx++;
+            }
+        }
+    }
+    updateUiState();
 }
 
 void PlayerWindow::togglePreview() {

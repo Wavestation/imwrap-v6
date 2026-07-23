@@ -629,6 +629,7 @@ AgsMuntMidiSink g_MuntMidiSink;
 IMWrapDriverType g_IMWrapDriverType = IMWrapDriverType::FluidSynth;
 bool g_LoggingEnabled = false;
 bool g_FluidDynLoading = false;
+uint8_t g_ResXorKey = 0;
 void IMWrapLog(const char* msg) {
 #if defined(__EMSCRIPTEN__)
     printf("%s\n", msg);
@@ -694,6 +695,7 @@ const char *g_iMWrapScriptHeader =
     "#define IMWRAP_CMD_CLEAR_QUEUE       272\r\n"
     "#define IMWRAP_CMD_SET_PART_VOLUME   278\r\n"
     "\r\n"
+    "import void iMWrap_SetResXORKey(int xorkey);\r\n"
     "import int  iMWrap_LoadBank(const string filename);\r\n"
     "import void iMWrap_LoadSoundFont(const string filename);\r\n"
     "import void iMWrap_SetSFDynLoad(bool enable = false);\r\n"
@@ -790,6 +792,54 @@ void RemoveTempSoundFontFile() {
     std::filesystem::remove(std::filesystem::path(g_FluidTempSoundFontPath), ec);
     g_FluidTempSoundFontPath.clear();
 }
+
+bool LoadResourceToMemory(const char *scriptPath, const char *resolvedPath, std::vector<uint8_t> &outBuffer, std::string *error) {
+    outBuffer.clear();
+    
+    // First try loading from disk directly if it exists
+    if (PathExists(resolvedPath)) {
+        std::ifstream in(resolvedPath, std::ios::binary);
+        if (in) {
+            in.seekg(0, std::ios::end);
+            size_t size = in.tellg();
+            in.seekg(0, std::ios::beg);
+            outBuffer.resize(size);
+            if (in.read(reinterpret_cast<char*>(outBuffer.data()), size)) {
+                return true;
+            }
+        }
+    }
+    
+    // If not on disk, try AGS stream
+    if (!g_AgsEngine || g_AgsEngine->version < 28) {
+        if (error) *error = "AGS file streaming is unavailable";
+        return false;
+    }
+
+    IAGSStream *stream = g_AgsEngine->OpenFileStream(scriptPath, AGSSTREAM_FILE_OPEN, AGSSTREAM_MODE_READ);
+    if (!stream) {
+        if (error) *error = "AGS could not open the packaged resource";
+        return false;
+    }
+
+    std::vector<uint8_t> buffer(64 * 1024);
+    while (!stream->EOS()) {
+        size_t bytesRead = stream->Read(buffer.data(), buffer.size());
+        if (bytesRead == 0) {
+            if (stream->GetError()) {
+                stream->Dispose();
+                if (error) *error = "failed while reading stream";
+                return false;
+            }
+            break;
+        }
+        outBuffer.insert(outBuffer.end(), buffer.begin(), buffer.begin() + bytesRead);
+    }
+    
+    stream->Dispose();
+    return !outBuffer.empty();
+}
+
 
 bool ExtractAgsFileToTemp(const char *scriptPath,
                           const char *resolvedPath,
@@ -923,16 +973,6 @@ void CleanupCurrentDriver() {
         mt32emu_free_context(g_MuntCtx);
         g_MuntCtx = nullptr;
     }
-    if (!g_MuntTempControlRomPath.empty()) {
-        std::error_code ec;
-        std::filesystem::remove(std::filesystem::path(g_MuntTempControlRomPath), ec);
-        g_MuntTempControlRomPath.clear();
-    }
-    if (!g_MuntTempPcmRomPath.empty()) {
-        std::error_code ec;
-        std::filesystem::remove(std::filesystem::path(g_MuntTempPcmRomPath), ec);
-        g_MuntTempPcmRomPath.clear();
-    }
 
     if (g_FluidSynth) {
         delete_fluid_synth(g_FluidSynth);
@@ -997,6 +1037,11 @@ void AudioCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 } // namespace
 
 // AGS script exported functions
+void Ags_iMWrap_SetResXORKey(int key) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    g_ResXorKey = static_cast<uint8_t>(key & 0xFF);
+}
+
 int Ags_iMWrap_LoadBank(const char *filename) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     if (!filename || filename[0] == '\0') {
@@ -1005,50 +1050,41 @@ int Ags_iMWrap_LoadBank(const char *filename) {
 
     std::string error;
     bool loaded = false;
+    std::string resolvedPath = filename;
+    ResolveAgsPath(filename, &resolvedPath);
 
-    if (g_AgsEngine && g_AgsEngine->version >= 28) {
-        IAGSStream *stream = g_AgsEngine->OpenFileStream(filename, 1, 1);
-        if (stream) {
-            int64_t len = stream->GetLength();
-            if (len > 0) {
-                std::vector<uint8_t> bytes(static_cast<size_t>(len));
-                size_t readBytes = stream->Read(bytes.data(), static_cast<size_t>(len));
-                if (readBytes > 0) {
-                    bytes.resize(readBytes);
-                    if (g_Bank.openFromMemory(std::move(bytes), &error)) {
-                        loaded = true;
-                        if (g_AgsEngine) {
-                            IMWrapLog("iMWrap: Loaded bank from memory stream.");
-                        }
-                    }
+    std::vector<uint8_t> buffer;
+    if (LoadResourceToMemory(filename, resolvedPath.c_str(), buffer, &error)) {
+        if (buffer.size() >= 4) {
+            bool isImsb = (buffer[0] == 'I' && buffer[1] == 'M' && buffer[2] == 'S' && buffer[3] == 'B');
+            if (!isImsb && g_ResXorKey != 0) {
+                for (size_t i = 0; i < buffer.size(); ++i) {
+                    buffer[i] ^= g_ResXorKey;
                 }
             }
-            stream->Dispose();
+        }
+        
+        if (g_Bank.openFromMemory(std::move(buffer), &error)) {
+            loaded = true;
+            if (g_AgsEngine) {
+                IMWrapLog("iMWrap: Loaded bank from memory (with auto-detect XOR).");
+            }
         }
     }
 
     if (!loaded) {
-        std::string resolvedPath = filename;
-        ResolveAgsPath(filename, &resolvedPath);
-        if (!g_Bank.openFromFile(resolvedPath, &error)) {
-            if (g_AgsEngine && !error.empty()) {
-                std::string msg = "iMWrap Error: " + error;
-                IMWrapLog(msg.c_str());
-            }
-        } else {
-            loaded = true;
-            if (g_AgsEngine) {
-                std::string msg = "iMWrap: Loaded bank from file '" + resolvedPath + "'";
-                IMWrapLog(msg.c_str());
-            }
+        if (g_AgsEngine && !error.empty()) {
+            std::string msg = "iMWrap Error: " + error;
+            IMWrapLog(msg.c_str());
         }
     } else if (g_AgsEngine && !error.empty()) {
-        std::string msg = "iMWrap Error: " + error;
+        std::string msg = "iMWrap Warning: " + error;
         IMWrapLog(msg.c_str());
     }
-    
+
     return loaded ? 1 : 0;
 }
+
 
 void FluidDummyLogCallback(int level, const char *message, void *data) {
     // Ignore all FluidSynth logs to prevent WebAssembly console lag
@@ -1171,32 +1207,37 @@ int Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
             std::string pcmResolved = pcmRom;
             ResolveAgsPath(pcmRom.c_str(), &pcmResolved);
 
-            std::string ctrlTemp;
-            std::string pcmTemp;
+            std::vector<uint8_t> ctrlBuffer, pcmBuffer;
             std::string err;
 
-            bool ctrlOk = ExtractAgsFileToTemp(ctrlRom.c_str(), ctrlResolved.c_str(), &ctrlTemp, &err);
-            if (!ctrlOk && PathExists(ctrlResolved)) {
-                ctrlTemp = ctrlResolved;
-                ctrlOk = true;
-            }
-            
-            bool pcmOk = ExtractAgsFileToTemp(pcmRom.c_str(), pcmResolved.c_str(), &pcmTemp, &err);
-            if (!pcmOk && PathExists(pcmResolved)) {
-                pcmTemp = pcmResolved;
-                pcmOk = true;
-            }
+            bool ctrlOk = LoadResourceToMemory(ctrlRom.c_str(), ctrlResolved.c_str(), ctrlBuffer, &err);
+            bool pcmOk = LoadResourceToMemory(pcmRom.c_str(), pcmResolved.c_str(), pcmBuffer, &err);
 
             if (ctrlOk && pcmOk) {
+                auto applyXor = [](std::vector<uint8_t>& buf) {
+                    if (g_ResXorKey != 0) {
+                        for (size_t i = 0; i < buf.size(); ++i) {
+                            buf[i] ^= g_ResXorKey;
+                        }
+                    }
+                };
+
+                // Identify to check if XOR is needed
+                mt32emu_rom_info info;
+                if (mt32emu_identify_rom_data(&info, ctrlBuffer.data(), ctrlBuffer.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
+                    applyXor(ctrlBuffer);
+                }
+                if (mt32emu_identify_rom_data(&info, pcmBuffer.data(), pcmBuffer.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
+                    applyXor(pcmBuffer);
+                }
+
                 mt32emu_report_handler_i reportHandler = { nullptr };
                 g_MuntCtx = mt32emu_create_context(reportHandler, nullptr);
                 if (g_MuntCtx) {
-                    mt32emu_add_rom_file(g_MuntCtx, ctrlTemp.c_str());
-                    mt32emu_add_rom_file(g_MuntCtx, pcmTemp.c_str());
+                    mt32emu_add_rom_data(g_MuntCtx, ctrlBuffer.data(), ctrlBuffer.size(), nullptr);
+                    mt32emu_add_rom_data(g_MuntCtx, pcmBuffer.data(), pcmBuffer.size(), nullptr);
                     mt32emu_set_stereo_output_samplerate(g_MuntCtx, 44100.0);
                     if (mt32emu_open_synth(g_MuntCtx) == MT32EMU_RC_OK) {
-                        g_MuntTempControlRomPath = (ctrlTemp != ctrlResolved) ? ctrlTemp : "";
-                        g_MuntTempPcmRomPath = (pcmTemp != pcmResolved) ? pcmTemp : "";
                         g_MuntMidiSink.context = g_MuntCtx;
                         g_Engine.setMidiSink(&g_MuntMidiSink);
                         g_MuntMidiSink.onAllNotesOff();
@@ -1885,6 +1926,7 @@ DLLEXPORT void AGS_EngineStartup(IAGSEngine *lpEngine) {
     });
 
     // Register script functions
+    g_AgsEngine->RegisterScriptFunction("iMWrap_SetResXORKey", (void*)Ags_iMWrap_SetResXORKey);
     g_AgsEngine->RegisterScriptFunction("iMWrap_LoadBank", (void*)Ags_iMWrap_LoadBank);
     g_AgsEngine->RegisterScriptFunction("iMWrap_LoadSoundFont", (void*)Ags_iMWrap_LoadSoundFont);
     g_AgsEngine->RegisterScriptFunction("iMWrap_SetSFDynLoad", (void*)Ags_iMWrap_SetSFDynLoad);

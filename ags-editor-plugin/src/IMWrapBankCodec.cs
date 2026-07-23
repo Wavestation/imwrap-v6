@@ -50,7 +50,7 @@ namespace AgsIMWrap.Editor
             Chunk rootChunk = ReadChunk(bytes, 0);
             if (rootChunk.Id != "IMSB")
             {
-                throw new InvalidOperationException("Root chunk is not IMSB.");
+                throw new InvalidOperationException("This bank appears to be encrypted. The AGS Editor can only preview unencrypted banks. Please use an unencrypted bank during development.");
             }
 
             List<DirectoryEntry> directoryEntries = new List<DirectoryEntry>();

@@ -4,7 +4,19 @@
 #include <QMessageBox>
 #include <QHeaderView>
 #include <QFormLayout>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QSplitter>
+#include <QLabel>
+#include <QPushButton>
+#include <QListWidget>
+#include <QGroupBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <fstream>
+#include <QInputDialog>
 #include <algorithm>
 #include "imwrap/SmfSequence.h"
 
@@ -215,10 +227,14 @@ void PackerWindow::setupUi() {
     newAct->setShortcut(QKeySequence::New);
     auto *openAct = fileMenu->addAction("&Open...", this, &PackerWindow::openProject);
     openAct->setShortcut(QKeySequence::Open);
+    auto *openXorAct = fileMenu->addAction("Open XORed Bank...", this, &PackerWindow::openXoredProject);
+    openXorAct->setShortcut(QKeySequence("Ctrl+Shift+O"));
     auto *saveAct = fileMenu->addAction("&Save", this, &PackerWindow::saveProject);
     saveAct->setShortcut(QKeySequence::Save);
     auto *saveAsAct = fileMenu->addAction("Save &As...", this, &PackerWindow::saveProjectAs);
     saveAsAct->setShortcut(QKeySequence::SaveAs);
+    auto *saveAsXorAct = fileMenu->addAction("Save XORed Bank...", this, &PackerWindow::saveProjectAsXored);
+    saveAsXorAct->setShortcut(QKeySequence("Ctrl+Shift+S"));
     
     updateVariantUi();
     updateWindowTitle();
@@ -287,6 +303,100 @@ void PackerWindow::openProject() {
     }
 }
 
+void PackerWindow::openXoredProject() {
+    if (!promptSaveIfDirty()) return;
+    QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS", "", "iMWrap Files (*.ims)");
+    if (path.isEmpty()) return;
+
+    bool ok;
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    if (!ok) return;
+
+    std::ifstream in(path.toStdString(), std::ios::binary);
+    if (!in) {
+        QMessageBox::critical(this, "Error", "Failed to open file for reading.");
+        return;
+    }
+    
+    in.seekg(0, std::ios::end);
+    size_t size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    
+    std::vector<uint8_t> buffer(size);
+    if (in.read(reinterpret_cast<char*>(buffer.data()), size)) {
+        if (key != 0) {
+            for (size_t i = 0; i < buffer.size(); ++i) {
+                buffer[i] ^= static_cast<uint8_t>(key);
+            }
+        }
+        
+        imwrap::ResourceBank bank;
+        std::string err;
+        if (!bank.openFromMemory(std::move(buffer), &err)) {
+            statusLabel->setText(QString("Open error: %1").arg(QString::fromStdString(err)));
+            return;
+        }
+
+        projectSounds.clear();
+        for (uint16_t id : bank.soundIds()) {
+            auto res = bank.loadSound(id);
+            ProjectSound ps;
+            ps.id = id;
+            ps.name = res.name();
+            
+            std::vector<imwrap::VariantKind> kinds = {imwrap::VariantKind::Gmd, imwrap::VariantKind::Rol, imwrap::VariantKind::Adl};
+            for (auto k : kinds) {
+                if (res.hasVariant(k)) {
+                    auto view = res.variant(k);
+                    ProjectVariant pv;
+                    pv.kind = k;
+                    pv.includeVariant = true;
+                    pv.includeMdhd = view.mdhd.present;
+                    if (pv.includeMdhd) {
+                        pv.mdhd.priority = view.mdhd.priority;
+                        pv.mdhd.volume = view.mdhd.volume;
+                        pv.mdhd.pan = view.mdhd.pan;
+                        pv.mdhd.transpose = view.mdhd.transpose;
+                        pv.mdhd.detune = view.mdhd.detune;
+                        pv.mdhd.speed = view.mdhd.speed;
+                    }
+                    
+                    imwrap::SmfSequence seq;
+                    if (imwrap::SmfParser::Parse(view.smfData, &seq)) {
+                        pv.division = seq.division;
+                        int tIdx = 0;
+                        for (const auto &trk : seq.tracks) {
+                            ProjectTrack pt;
+                            pt.name = "Track " + std::to_string(tIdx++);
+                            pt.sourceFileName = "Imported";
+                            pt.events = trk.events;
+                            pv.tracks.push_back(pt);
+                        }
+                    }
+                    ps.variants.push_back(pv);
+                }
+            }
+            projectSounds.push_back(ps);
+        }
+
+        soundList->clear();
+        for (const auto &ps2 : projectSounds) {
+            QListWidgetItem *item = new QListWidgetItem(formatSoundLabel(ps2));
+            item->setData(Qt::UserRole, ps2.id);
+            soundList->addItem(item);
+        }
+        if (soundList->count() > 0) {
+            soundList->setCurrentRow(0);
+        }
+        
+        currentFilePath = path;
+        setDirty(false);
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to read file.");
+    }
+}
+
+
 void PackerWindow::saveProject() {
     if (currentFilePath.isEmpty()) {
         saveProjectAs();
@@ -303,6 +413,56 @@ void PackerWindow::saveProjectAs() {
         saveModelToIms(path.toStdString());
         setDirty(false);
     }
+}
+
+void PackerWindow::saveProjectAsXored() {
+    QString path = QFileDialog::getSaveFileName(this, "Save XORed IMS As", "bank.ims", "iMWrap Files (*.ims)");
+    if (path.isEmpty()) return;
+
+    bool ok;
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    if (!ok) return;
+
+    // We can use a temporary file, then read it, xor it, and write it back.
+    // Or we can save to memory, but ImsWriter only has writeFile().
+    // So we use a temporary file.
+    
+    std::string tempPath = path.toStdString() + ".tmp";
+    saveModelToIms(tempPath);
+    
+    std::ifstream in(tempPath, std::ios::binary);
+    if (!in) {
+        QMessageBox::critical(this, "Error", "Failed to read temp file.");
+        return;
+    }
+    
+    in.seekg(0, std::ios::end);
+    size_t size = in.tellg();
+    in.seekg(0, std::ios::beg);
+    
+    std::vector<uint8_t> buffer(size);
+    if (!in.read(reinterpret_cast<char*>(buffer.data()), size)) {
+        QMessageBox::critical(this, "Error", "Failed to read temp file.");
+        in.close();
+        return;
+    }
+    in.close();
+    std::remove(tempPath.c_str());
+    
+    if (key != 0) {
+        for (size_t i = 0; i < buffer.size(); ++i) {
+            buffer[i] ^= static_cast<uint8_t>(key);
+        }
+    }
+    
+    std::ofstream out(path.toStdString(), std::ios::binary);
+    if (!out || !out.write(reinterpret_cast<const char*>(buffer.data()), buffer.size())) {
+        QMessageBox::critical(this, "Error", "Failed to write XORed file.");
+        return;
+    }
+
+    currentFilePath = path;
+    setDirty(false);
 }
 
 void PackerWindow::loadImsToModel(const std::string &path) {

@@ -253,10 +253,11 @@ if(IMWRAP_BUILD_GUI_TOOLS)
         tools_gui/player/main.cpp
         tools_gui/player/PlayerWindow.cpp
         tools_gui/common/AdlibPreviewOutput.cpp
+        tools_gui/common/MuntPreviewOutput.cpp
         tools_gui/shared-res/imwrap_gui_resources.qrc
         tools_gui/shared-res/imwrap_player_gui.rc
     )
-    target_link_libraries(imwrap_player_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI winmm dsound ole32 ksuser)
+    target_link_libraries(imwrap_player_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI mt32emu winmm dsound ole32 ksuser)
     target_include_directories(imwrap_player_gui PRIVATE tools_gui/player tools_gui/common)
 
     # Packer Tool
@@ -275,12 +276,13 @@ if(IMWRAP_BUILD_GUI_TOOLS)
         tools_gui/explorer/ExplorerWindow.cpp
         tools_gui/explorer/IMWrapSysExDialog.cpp
         tools_gui/common/AdlibPreviewOutput.cpp
+        tools_gui/common/MuntPreviewOutput.cpp
         tools_gui/common/ImsProject.cpp
         tools_gui/common/OplSbi.cpp
         tools_gui/shared-res/imwrap_gui_resources.qrc
         tools_gui/shared-res/imwrap_explorer_gui.rc
     )
-    target_link_libraries(imwrap_explorer_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI winmm dsound ole32 ksuser)
+    target_link_libraries(imwrap_explorer_gui PRIVATE Qt6::Widgets imwrap_v6 ADLMIDI mt32emu winmm dsound ole32 ksuser)
     target_include_directories(imwrap_explorer_gui PRIVATE tools_gui/explorer tools_gui/common)
 
     # Windeployqt to copy required DLLs and plugins

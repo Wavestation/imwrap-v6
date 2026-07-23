@@ -11,6 +11,7 @@
 #include "imwrap/MidiSink.h"
 #include "ImsProject.h"
 #include "AdlibPreviewOutput.h"
+#include "MuntPreviewOutput.h"
 
 class QCheckBox;
 class QComboBox;
@@ -38,8 +39,10 @@ protected:
 
 private slots:
     void openDocument();
+    void openXoredDocument();
     void saveDocument();
     void saveDocumentAs();
+    void saveXoredDocumentAs();
     void refreshDevices();
     void togglePreview();
     void playSelectedSound();
@@ -66,7 +69,8 @@ private:
     enum class PreviewBackend {
         None,
         WinMM,
-        Adlib
+        Adlib,
+        Munt
     };
 
     enum class NodeType : int {
@@ -162,6 +166,7 @@ private:
     QComboBox* deviceCombo_ = nullptr;
     QComboBox* profileCombo_ = nullptr;
     QCheckBox *snmModeCheck_ = nullptr;
+    QCheckBox *muntModeCheck_ = nullptr;
     QLabel *playbackPositionLabel_ = nullptr;
     QCheckBox *loopCheck_ = nullptr;
     QWidget* selectionPropsWidget_ = nullptr;
@@ -214,5 +219,6 @@ private:
     imwrap::IMWrapEngine engine_;
     WinMMSink midiSink_;
     imwrap::gui::AdlibPreviewOutput adlibSink_;
+    imwrap::gui::MuntPreviewOutput muntSink_;
     PreviewBackend previewBackend_ = PreviewBackend::None;
 };
