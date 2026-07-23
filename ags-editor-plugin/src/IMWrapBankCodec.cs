@@ -48,9 +48,13 @@ namespace AgsIMWrap.Editor
             }
 
             Chunk rootChunk = ReadChunk(bytes, 0);
+            if (rootChunk.Id == "KOGX")
+            {
+                throw new InvalidOperationException("This bank appears to be encrypted (KOGX format). The AGS Editor can only preview unencrypted banks. Please use an unencrypted bank during development.");
+            }
             if (rootChunk.Id != "IMSB")
             {
-                throw new InvalidOperationException("This bank appears to be encrypted. The AGS Editor can only preview unencrypted banks. Please use an unencrypted bank during development.");
+                throw new InvalidOperationException("This file is not a valid iMWrap Sound Bank (expected IMSB header). It might be corrupt or encrypted in an older format.");
             }
 
             List<DirectoryEntry> directoryEntries = new List<DirectoryEntry>();

@@ -171,7 +171,8 @@ Invoke-CMakeBuild -BuildDir $Win32BuildDir -Targets @(
     "imsprobe",
     "imwrap_setmidi",
     "agsimwrap",
-    "ims2soun"
+    "ims2soun",
+    "kogxor"
 )
 
 $x64ConfigureArguments = @(
@@ -208,6 +209,7 @@ $x64Targets = @(
     "imsprobe",
     "imwrap_setmidi",
     "ims2soun",
+    "kogxor",
     "imwrap_explorer_gui",
     "imwrap_packer_gui",
     "imwrap_player_gui"

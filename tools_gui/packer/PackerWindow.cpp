@@ -324,9 +324,21 @@ void PackerWindow::openXoredProject() {
     
     std::vector<uint8_t> buffer(size);
     if (in.read(reinterpret_cast<char*>(buffer.data()), size)) {
-        if (key != 0) {
-            for (size_t i = 0; i < buffer.size(); ++i) {
-                buffer[i] ^= static_cast<uint8_t>(key);
+        if (buffer.size() >= 4) {
+            bool isKogx = (buffer[0] == 'K' && buffer[1] == 'O' && buffer[2] == 'G' && buffer[3] == 'X');
+            if (isKogx) {
+                if (key != 0) {
+                    for (size_t i = 4; i < buffer.size(); ++i) {
+                        buffer[i] ^= static_cast<uint8_t>(key);
+                    }
+                }
+                buffer.erase(buffer.begin(), buffer.begin() + 4);
+            } else {
+                if (key != 0) {
+                    for (size_t i = 0; i < buffer.size(); ++i) {
+                        buffer[i] ^= static_cast<uint8_t>(key);
+                    }
+                }
             }
         }
         
@@ -416,7 +428,12 @@ void PackerWindow::saveProjectAs() {
 }
 
 void PackerWindow::saveProjectAsXored() {
-    QString path = QFileDialog::getSaveFileName(this, "Save XORed Bank As", "bank.kog", "iMWrap KOG (*.kog)");
+    QString defaultPath = "bank.kog";
+    if (!currentFilePath.isEmpty()) {
+        QFileInfo fi(currentFilePath);
+        defaultPath = fi.absolutePath() + "/" + fi.completeBaseName() + ".kog";
+    }
+    QString path = QFileDialog::getSaveFileName(this, "Save XORed Bank As", defaultPath, "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
@@ -456,7 +473,12 @@ void PackerWindow::saveProjectAsXored() {
     }
     
     std::ofstream out(path.toStdString(), std::ios::binary);
-    if (!out || !out.write(reinterpret_cast<const char*>(buffer.data()), buffer.size())) {
+    if (!out) {
+        QMessageBox::critical(this, "Error", "Failed to open file for writing.");
+        return;
+    }
+    out.write("KOGX", 4);
+    if (!out.write(reinterpret_cast<const char*>(buffer.data()), buffer.size())) {
         QMessageBox::critical(this, "Error", "Failed to write XORed file.");
         return;
     }

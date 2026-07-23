@@ -1056,10 +1056,20 @@ int Ags_iMWrap_LoadBank(const char *filename) {
     std::vector<uint8_t> buffer;
     if (LoadResourceToMemory(filename, resolvedPath.c_str(), buffer, &error)) {
         if (buffer.size() >= 4) {
-            bool isImsb = (buffer[0] == 'I' && buffer[1] == 'M' && buffer[2] == 'S' && buffer[3] == 'B');
-            if (!isImsb && g_ResXorKey != 0) {
-                for (size_t i = 0; i < buffer.size(); ++i) {
-                    buffer[i] ^= g_ResXorKey;
+            bool isKogx = (buffer[0] == 'K' && buffer[1] == 'O' && buffer[2] == 'G' && buffer[3] == 'X');
+            if (isKogx) {
+                if (g_ResXorKey != 0) {
+                    for (size_t i = 4; i < buffer.size(); ++i) {
+                        buffer[i] ^= g_ResXorKey;
+                    }
+                }
+                buffer.erase(buffer.begin(), buffer.begin() + 4);
+            } else {
+                bool isImsb = (buffer[0] == 'I' && buffer[1] == 'M' && buffer[2] == 'S' && buffer[3] == 'B');
+                if (!isImsb && g_ResXorKey != 0) {
+                    for (size_t i = 0; i < buffer.size(); ++i) {
+                        buffer[i] ^= g_ResXorKey;
+                    }
                 }
             }
         }
@@ -1214,22 +1224,33 @@ int Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
             bool pcmOk = LoadResourceToMemory(pcmRom.c_str(), pcmResolved.c_str(), pcmBuffer, &err);
 
             if (ctrlOk && pcmOk) {
-                auto applyXor = [](std::vector<uint8_t>& buf) {
-                    if (g_ResXorKey != 0) {
-                        for (size_t i = 0; i < buf.size(); ++i) {
-                            buf[i] ^= g_ResXorKey;
+                auto decryptRom = [](std::vector<uint8_t>& buf) {
+                    if (buf.size() >= 4) {
+                        bool isKogx = (buf[0] == 'K' && buf[1] == 'O' && buf[2] == 'G' && buf[3] == 'X');
+                        if (isKogx) {
+                            if (g_ResXorKey != 0) {
+                                for (size_t i = 4; i < buf.size(); ++i) {
+                                    buf[i] ^= g_ResXorKey;
+                                }
+                            }
+                            buf.erase(buf.begin(), buf.begin() + 4);
+                            return;
+                        }
+                    }
+
+                    // Legacy fallback: check if it's already a valid ROM
+                    mt32emu_rom_info info;
+                    if (mt32emu_identify_rom_data(&info, buf.data(), buf.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
+                        if (g_ResXorKey != 0) {
+                            for (size_t i = 0; i < buf.size(); ++i) {
+                                buf[i] ^= g_ResXorKey;
+                            }
                         }
                     }
                 };
 
-                // Identify to check if XOR is needed
-                mt32emu_rom_info info;
-                if (mt32emu_identify_rom_data(&info, ctrlBuffer.data(), ctrlBuffer.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
-                    applyXor(ctrlBuffer);
-                }
-                if (mt32emu_identify_rom_data(&info, pcmBuffer.data(), pcmBuffer.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
-                    applyXor(pcmBuffer);
-                }
+                decryptRom(ctrlBuffer);
+                decryptRom(pcmBuffer);
 
                 mt32emu_report_handler_i reportHandler = { nullptr };
                 g_MuntCtx = mt32emu_create_context(reportHandler, nullptr);
