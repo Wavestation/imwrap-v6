@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -54,45 +55,74 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    fseek(fin, 0, SEEK_END);
+    long file_size = ftell(fin);
+    fseek(fin, 0, SEEK_SET);
+
     unsigned char buffer[4096];
     size_t bytes_read;
-    unsigned char k = (unsigned char)key;
+    uint32_t state = 0x9E3779B9u ^ (uint32_t)key;
 
-    // Check for KOGX header
-    unsigned char header[4];
-    bytes_read = fread(header, 1, 4, fin);
-    int is_encrypted = 0;
-    if (bytes_read == 4 && memcmp(header, "KOGX", 4) == 0) {
-        is_encrypted = 1;
-        printf("Detected KOGX header. Decrypting file...\n");
-        // We just skip writing the KOGX header to fout
-    } else {
-        printf("No KOGX header detected. Encrypting file...\n");
-        // Write KOGX header to output
-        fwrite("KOGX", 1, 4, fout);
-        // Process the 4 bytes we already read
-        for (size_t i = 0; i < bytes_read; ++i) {
-            header[i] ^= k;
-        }
-        fwrite(header, 1, bytes_read, fout);
-    }
-
-    while ((bytes_read = fread(buffer, 1, sizeof(buffer), fin)) > 0) {
-        for (size_t i = 0; i < bytes_read; ++i) {
-            buffer[i] ^= k;
-        }
-        size_t bytes_written = fwrite(buffer, 1, bytes_read, fout);
-        if (bytes_written != bytes_read) {
-            printf("Error: Failed to write to output file\n");
+    if (file_size >= 11) {
+        unsigned char header[4];
+        fread(header, 1, 4, fin);
+        
+        if (memcmp(header, "KOGX", 4) == 0) {
+            unsigned char tail[7];
+            fseek(fin, file_size - 7, SEEK_SET);
+            fread(tail, 1, 7, fin);
+            if (memcmp(tail, "FELONIA", 7) != 0) {
+                printf("Error: Invalid KOGX file. Missing FELONIA suffix.\n");
+                fclose(fin);
+                fclose(fout);
+                return 1;
+            }
+            
+            printf("Detected KOGX+FELONIA. Decrypting file...\n");
+            fseek(fin, 4, SEEK_SET); // Skip KOGX
+            long payload_left = file_size - 11;
+            
+            while (payload_left > 0) {
+                long to_read = payload_left < (long)sizeof(buffer) ? payload_left : (long)sizeof(buffer);
+                bytes_read = fread(buffer, 1, to_read, fin);
+                if (bytes_read == 0) break;
+                
+                for (size_t i = 0; i < bytes_read; ++i) {
+                    state ^= state << 13;
+                    state ^= state >> 17;
+                    state ^= state << 5;
+                    buffer[i] ^= (unsigned char)state;
+                }
+                fwrite(buffer, 1, bytes_read, fout);
+                payload_left -= bytes_read;
+            }
+            
             fclose(fin);
             fclose(fout);
-            return 1;
+            printf("Success: %s generated (Decrypted, XOR Key: %d).\n", output_path, key);
+            return 0;
         }
     }
+    
+    // Encrypt mode
+    printf("Encrypting file...\n");
+    fseek(fin, 0, SEEK_SET);
+    fwrite("KOGX", 1, 4, fout);
+    
+    while ((bytes_read = fread(buffer, 1, sizeof(buffer), fin)) > 0) {
+        for (size_t i = 0; i < bytes_read; ++i) {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            buffer[i] ^= (unsigned char)state;
+        }
+        fwrite(buffer, 1, bytes_read, fout);
+    }
+    fwrite("FELONIA", 1, 7, fout);
 
     fclose(fin);
     fclose(fout);
 
-    printf("Success: %s generated (XOR Key: %d).\n", output_path, key);
+    printf("Success: %s generated (Encrypted, XOR Key: %d).\n", output_path, key);
     return 0;
 }

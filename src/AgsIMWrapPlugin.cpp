@@ -1055,22 +1055,25 @@ int Ags_iMWrap_LoadBank(const char *filename) {
 
     std::vector<uint8_t> buffer;
     if (LoadResourceToMemory(filename, resolvedPath.c_str(), buffer, &error)) {
-        if (buffer.size() >= 4) {
+        if (buffer.size() >= 11) {
             bool isKogx = (buffer[0] == 'K' && buffer[1] == 'O' && buffer[2] == 'G' && buffer[3] == 'X');
-            if (isKogx) {
+            bool isFelonia = (buffer[buffer.size() - 7] == 'F' && buffer[buffer.size() - 6] == 'E' &&
+                              buffer[buffer.size() - 5] == 'L' && buffer[buffer.size() - 4] == 'O' &&
+                              buffer[buffer.size() - 3] == 'N' && buffer[buffer.size() - 2] == 'I' &&
+                              buffer[buffer.size() - 1] == 'A');
+            
+            if (isKogx && isFelonia) {
                 if (g_ResXorKey != 0) {
-                    for (size_t i = 4; i < buffer.size(); ++i) {
-                        buffer[i] ^= g_ResXorKey;
+                    std::uint32_t state = 0x9E3779B9u ^ static_cast<std::uint32_t>(g_ResXorKey);
+                    for (size_t i = 4; i < buffer.size() - 7; ++i) {
+                        state ^= state << 13;
+                        state ^= state >> 17;
+                        state ^= state << 5;
+                        buffer[i] ^= static_cast<std::uint8_t>(state);
                     }
                 }
+                buffer.erase(buffer.end() - 7, buffer.end());
                 buffer.erase(buffer.begin(), buffer.begin() + 4);
-            } else {
-                bool isImsb = (buffer[0] == 'I' && buffer[1] == 'M' && buffer[2] == 'S' && buffer[3] == 'B');
-                if (!isImsb && g_ResXorKey != 0) {
-                    for (size_t i = 0; i < buffer.size(); ++i) {
-                        buffer[i] ^= g_ResXorKey;
-                    }
-                }
             }
         }
         
@@ -1225,26 +1228,25 @@ int Ags_iMWrap_SetDriver(int driverType, const char *deviceOrPath) {
 
             if (ctrlOk && pcmOk) {
                 auto decryptRom = [](std::vector<uint8_t>& buf) {
-                    if (buf.size() >= 4) {
+                    if (buf.size() >= 11) {
                         bool isKogx = (buf[0] == 'K' && buf[1] == 'O' && buf[2] == 'G' && buf[3] == 'X');
-                        if (isKogx) {
+                        bool isFelonia = (buf[buf.size() - 7] == 'F' && buf[buf.size() - 6] == 'E' &&
+                                          buf[buf.size() - 5] == 'L' && buf[buf.size() - 4] == 'O' &&
+                                          buf[buf.size() - 3] == 'N' && buf[buf.size() - 2] == 'I' &&
+                                          buf[buf.size() - 1] == 'A');
+                        
+                        if (isKogx && isFelonia) {
                             if (g_ResXorKey != 0) {
-                                for (size_t i = 4; i < buf.size(); ++i) {
-                                    buf[i] ^= g_ResXorKey;
+                                std::uint32_t state = 0x9E3779B9u ^ static_cast<std::uint32_t>(g_ResXorKey);
+                                for (size_t i = 4; i < buf.size() - 7; ++i) {
+                                    state ^= state << 13;
+                                    state ^= state >> 17;
+                                    state ^= state << 5;
+                                    buf[i] ^= static_cast<std::uint8_t>(state);
                                 }
                             }
+                            buf.erase(buf.end() - 7, buf.end());
                             buf.erase(buf.begin(), buf.begin() + 4);
-                            return;
-                        }
-                    }
-
-                    // Legacy fallback: check if it's already a valid ROM
-                    mt32emu_rom_info info;
-                    if (mt32emu_identify_rom_data(&info, buf.data(), buf.size(), nullptr) != MT32EMU_RC_OK || (!info.control_rom_id && !info.pcm_rom_id)) {
-                        if (g_ResXorKey != 0) {
-                            for (size_t i = 0; i < buf.size(); ++i) {
-                                buf[i] ^= g_ResXorKey;
-                            }
                         }
                     }
                 };

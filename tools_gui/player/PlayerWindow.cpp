@@ -612,22 +612,31 @@ void PlayerWindow::browseXoredBank() {
     
     std::vector<uint8_t> buffer(size);
     if (in.read(reinterpret_cast<char*>(buffer.data()), size)) {
-        if (buffer.size() >= 4) {
+        if (buffer.size() >= 11) {
             bool isKogx = (buffer[0] == 'K' && buffer[1] == 'O' && buffer[2] == 'G' && buffer[3] == 'X');
-            if (isKogx) {
+            bool isFelonia = (buffer[buffer.size() - 7] == 'F' && buffer[buffer.size() - 6] == 'E' &&
+                              buffer[buffer.size() - 5] == 'L' && buffer[buffer.size() - 4] == 'O' &&
+                              buffer[buffer.size() - 3] == 'N' && buffer[buffer.size() - 2] == 'I' &&
+                              buffer[buffer.size() - 1] == 'A');
+            if (isKogx && isFelonia) {
                 if (key != 0) {
-                    for (size_t i = 4; i < buffer.size(); ++i) {
-                        buffer[i] ^= static_cast<uint8_t>(key);
+                    std::uint32_t state = 0x9E3779B9u ^ static_cast<std::uint32_t>(key);
+                    for (size_t i = 4; i < buffer.size() - 7; ++i) {
+                        state ^= state << 13;
+                        state ^= state >> 17;
+                        state ^= state << 5;
+                        buffer[i] ^= static_cast<std::uint8_t>(state);
                     }
                 }
+                buffer.erase(buffer.end() - 7, buffer.end());
                 buffer.erase(buffer.begin(), buffer.begin() + 4);
             } else {
-                if (key != 0) {
-                    for (size_t i = 0; i < buffer.size(); ++i) {
-                        buffer[i] ^= static_cast<uint8_t>(key);
-                    }
-                }
+                QMessageBox::critical(this, "Error", "Invalid KOGX file: Missing magic headers.");
+                return;
             }
+        } else {
+            QMessageBox::critical(this, "Error", "Invalid KOGX file: File too small.");
+            return;
         }
         
         std::string err;
