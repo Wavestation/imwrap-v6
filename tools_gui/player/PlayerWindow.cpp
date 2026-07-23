@@ -593,11 +593,11 @@ void PlayerWindow::browseBank() {
 }
 
 void PlayerWindow::browseXoredBank() {
-    QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS Bank", "", "iMWrap Files (*.ims)");
+    QString path = QFileDialog::getOpenFileName(this, "Open XORed Bank", "", "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
-    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 39, 0, 255, 1, &ok);
     if (!ok) return;
 
     std::ifstream in(path.toStdString(), std::ios::binary);

@@ -629,7 +629,7 @@ void ExplorerWindow::setupUi() {
     fileMenu->addAction("&Open...", this, &ExplorerWindow::openDocument, QKeySequence::Open);
     fileMenu->addAction("Open XORed Bank...", this, &ExplorerWindow::openXoredDocument, QKeySequence("Ctrl+Shift+O"));
     fileMenu->addAction("&Save", this, &ExplorerWindow::saveDocument, QKeySequence::Save);
-    fileMenu->addAction("Save &As...", this, &ExplorerWindow::saveDocumentAs, QKeySequence::SaveAs);
+    fileMenu->addAction("Save &As...", this, &ExplorerWindow::saveDocumentAs, QKeySequence("Ctrl+Alt+S"));
     fileMenu->addAction("Save XORed Bank...", this, &ExplorerWindow::saveXoredDocumentAs, QKeySequence("Ctrl+Shift+S"));
 }
 
@@ -647,11 +647,11 @@ void ExplorerWindow::openDocument() {
 void ExplorerWindow::openXoredDocument() {
     if (!promptSaveIfDirty()) return;
 
-    const QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS", QString(), "iMWrap IMS (*.ims *.data)");
+    const QString path = QFileDialog::getOpenFileName(this, "Open XORed Bank", QString(), "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
-    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 39, 0, 255, 1, &ok);
     if (!ok) return;
 
     std::ifstream in(path.toStdString(), std::ios::binary);
@@ -724,11 +724,11 @@ void ExplorerWindow::saveDocumentAs() {
 }
 
 void ExplorerWindow::saveXoredDocumentAs() {
-    const QString path = QFileDialog::getSaveFileName(this, "Save XORed IMS As", currentFilePath_, "iMWrap IMS (*.ims)");
+    const QString path = QFileDialog::getSaveFileName(this, "Save XORed Bank As", currentFilePath_, "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
-    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 39, 0, 255, 1, &ok);
     if (!ok) return;
 
     std::vector<uint8_t> buffer;

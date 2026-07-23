@@ -100,6 +100,7 @@ if(IMWRAP_BUILD_TOOLS)
     imwrap_apply_common_target_settings(imsprobe)
 
     add_executable(ims2soun tools/ims2soun.c)
+    add_executable(kogxor tools/kogxor.c)
     # No linking to imwrap_v6 since it's a standalone C program
 endif()
 

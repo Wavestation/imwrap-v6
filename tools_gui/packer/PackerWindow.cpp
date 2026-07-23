@@ -232,7 +232,7 @@ void PackerWindow::setupUi() {
     auto *saveAct = fileMenu->addAction("&Save", this, &PackerWindow::saveProject);
     saveAct->setShortcut(QKeySequence::Save);
     auto *saveAsAct = fileMenu->addAction("Save &As...", this, &PackerWindow::saveProjectAs);
-    saveAsAct->setShortcut(QKeySequence::SaveAs);
+    saveAsAct->setShortcut(QKeySequence("Ctrl+Alt+S"));
     auto *saveAsXorAct = fileMenu->addAction("Save XORed Bank...", this, &PackerWindow::saveProjectAsXored);
     saveAsXorAct->setShortcut(QKeySequence("Ctrl+Shift+S"));
     
@@ -305,11 +305,11 @@ void PackerWindow::openProject() {
 
 void PackerWindow::openXoredProject() {
     if (!promptSaveIfDirty()) return;
-    QString path = QFileDialog::getOpenFileName(this, "Open XORed IMS", "", "iMWrap Files (*.ims)");
+    QString path = QFileDialog::getOpenFileName(this, "Open XORed Bank", "", "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
-    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 39, 0, 255, 1, &ok);
     if (!ok) return;
 
     std::ifstream in(path.toStdString(), std::ios::binary);
@@ -416,11 +416,11 @@ void PackerWindow::saveProjectAs() {
 }
 
 void PackerWindow::saveProjectAsXored() {
-    QString path = QFileDialog::getSaveFileName(this, "Save XORed IMS As", "bank.ims", "iMWrap Files (*.ims)");
+    QString path = QFileDialog::getSaveFileName(this, "Save XORed Bank As", "bank.kog", "iMWrap KOG (*.kog)");
     if (path.isEmpty()) return;
 
     bool ok;
-    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 42, 0, 255, 1, &ok);
+    int key = QInputDialog::getInt(this, "XOR Encryption", "Enter XOR Key (0-255):", 39, 0, 255, 1, &ok);
     if (!ok) return;
 
     // We can use a temporary file, then read it, xor it, and write it back.
